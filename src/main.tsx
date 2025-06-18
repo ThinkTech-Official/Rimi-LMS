@@ -12,17 +12,13 @@ import LoginAdmin from "./pages/LoginAdmin.tsx";
 import Dashboard from "./pages/Dashboard.tsx";
 import ClientDashboard from "./components/client/ClientDashboard.tsx";
 import CoursePlay from "./components/client/CoursePlay.tsx";
-import CreateCourse from "./components/CreateCourse.tsx";
 // import Quiz from './components/client/Quiz.tsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />}>
       <Route path="/" element={<LoginAdmin />} />
-
       <Route path="/admindashboard" element={<Dashboard />} />
-      <Route path="/create-course" element={<CreateCourse />} />
-
       <Route path="/client" element={<ClientDashboard />} />
       <Route path="/play/:id" element={<CoursePlay />} />
       {/* <Route path='/quiz' element={<Quiz />} /> */}
