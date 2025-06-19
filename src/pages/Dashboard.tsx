@@ -9,11 +9,11 @@ import {
   ChevronLeftIcon,
 } from "@heroicons/react/24/outline";
 import AdminHome from "../components/AdminHome";
-import AllCourses from "../components/AllCourses";
 import Certificates from "../components/Certificates";
 import AllTests from "../components/AllTests";
 import { UserManagement } from "../components/UserManagement";
 import Header from "../components/Header";
+import Courses from "../components/Courses";
 
 const Dashboard: React.FC = () => {
   const [active, setActive] = useState<
@@ -109,7 +109,7 @@ const Dashboard: React.FC = () => {
       <main className={`w-full flex-1 overflow-auto`}>
         <Header />
         {active === "home" && <AdminHome isSidebarOpen={isSidebarOpen} />}
-        {active === "courses" && <AllCourses />}
+        {active === "courses" && <Courses />}
         {active === "certificates" && <Certificates />}
         {active === "tests" && <AllTests />}
         {active === "users" && <UserManagement />}

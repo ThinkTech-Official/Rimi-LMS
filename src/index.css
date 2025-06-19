@@ -2,6 +2,10 @@
 
 @theme {
     --color-primary: #2B00B7;
+    --color-text-dark: #1B1B1B;
+    --color-text-light: #6F6B7D;
+    --color-text-light-2: #4B465C;
+    --color-inputBorder: #DBDADE;
 }
 
 @layer utilities{

@@ -380,7 +380,7 @@ const AdminHome: React.FC<AdminHomeProps> = ({ isSidebarOpen }) => {
             <div className="flex items-center justify-center p-4 space-x-2">
               <button
                 disabled
-                className="px-3 py-[10px] bg-[#CCCCCC] text-[#6F6B7D]"
+                className="px-3 py-[10px] bg-[#CCCCCC] text-[#6F6B7D] cursor-pointer"
                 title="Previous"
               >
                 <ChevronLeftIcon className="h-5 w-5" />
@@ -399,7 +399,7 @@ const AdminHome: React.FC<AdminHomeProps> = ({ isSidebarOpen }) => {
                 </button>
               ))}
               <button
-                className="px-3 py-[10px] bg-[#CCCCCC] text-[#6F6B7D]"
+                className="px-3 py-[10px] bg-[#CCCCCC] text-[#6F6B7D] cursor-pointer"
                 title="Next"
               >
                 <ChevronRightIcon className="h-5 w-5" />

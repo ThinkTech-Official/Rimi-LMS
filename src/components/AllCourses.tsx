@@ -1,6 +1,5 @@
 import React, { useState, type ChangeEvent } from "react";
 import { BiSearch } from "react-icons/bi";
-import { FaAngleRight } from "react-icons/fa6";
 import { GoClock } from "react-icons/go";
 
 interface Course {
@@ -41,7 +40,11 @@ const sampleCourses: Course[] = [
   },
 ];
 
-const AllCourses: React.FC = () => {
+interface AllCoursesProps {
+  onCreateCourse: () => void;
+}
+
+const AllCourses: React.FC<AllCoursesProps> = ({ onCreateCourse }) => {
   const [selectedCategory, setSelectedCategory] = useState<string>(
     categories[0]
   );
@@ -65,9 +68,7 @@ const AllCourses: React.FC = () => {
     <div className="min-h-screen bg-white">
       <div className="max-w-7xl px-2 sm:px-4 py-8">
         {/* Page Title & Breadcrumb */}
-        <nav className="text-sm 2xl:text-base text-primary font-medium mb-3 smmb-6 flex items-center gap-1">
-          <FaAngleRight /> All Courses
-        </nav>
+
         <h1 className="text-lg 2xl:text-2xl font-bold text-[#1B1B1B] mb-3 sm:mb-6">
           All Courses
         </h1>
@@ -86,7 +87,10 @@ const AllCourses: React.FC = () => {
               <BiSearch className="text-[#6F6B7D]" />
             </button>
           </div>
-          <button className="inline-block text-sm sm:text-[16px] px-5 py-1 sm:py-3 bg-primary text-white text-nowrap font-semibold hover:bg-indigo-700 cursor-pointer transition-colors delay-150">
+          <button
+            className="inline-block text-sm sm:text-[16px] px-5 py-1 sm:py-3 bg-primary text-white text-nowrap font-semibold hover:bg-indigo-700 cursor-pointer transition-colors delay-150"
+            onClick={onCreateCourse}
+          >
             Create Course
           </button>
         </div>
