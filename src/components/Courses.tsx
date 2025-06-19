@@ -9,7 +9,7 @@ const Courses: React.FC = () => {
   return (
     <div>
       <nav
-        className="text-sm text-primary font-medium my-4 px-8"
+        className="text-sm text-primary font-medium my-4 px-2 sm:px-8"
         aria-label="breadcrumb"
       >
         <ol className="flex items-center space-x-2">
