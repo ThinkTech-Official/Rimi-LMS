@@ -1,28 +1,32 @@
 @import "tailwindcss";
+@import url("https://fonts.googleapis.com/css2?family=Rufina:wght@400;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=MonteCarlo:wght@400;700&display=swap");
 
 @theme {
-    --color-primary: #2B00B7;
-    --color-text-dark: #1B1B1B;
-    --color-text-light: #6F6B7D;
-    --color-text-light-2: #4B465C;
-    --color-inputBorder: #DBDADE;
+  --color-primary: #2b00b7;
+  --color-text-dark: #1b1b1b;
+  --color-text-light: #6f6b7d;
+  --color-text-light-2: #4b465c;
+  --color-inputBorder: #dbdade;
+  --font-rufina: "Rufina", serif;
+  --font-monte: "MonteCarlo", cursive;
 }
 
-@layer utilities{
-    .custom-scrollbar::-webkit-scrollbar {
-        height: 8px; 
-      }
-      
-      .custom-scrollbar::-webkit-scrollbar-thumb {
-        background-color: #2B00B7;
-        border-radius: 4px;
-      }
-      .custom-scrollbar::-webkit-scrollbar-track {
-        background-color: #7367F029;
-        border-radius: 2px;
-      }
+@layer utilities {
+  .custom-scrollbar::-webkit-scrollbar {
+    height: 8px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: #2b00b7;
+    border-radius: 4px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background-color: #7367f029;
+    border-radius: 2px;
+  }
 }
 
-body{
-    font-family: public-sans, sans-serif;
+body {
+  font-family: "Public Sans", sans-serif;
 }
