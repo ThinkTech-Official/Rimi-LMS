@@ -19,6 +19,7 @@ import Courses from "./components/Courses.tsx";
 import Certificates from "./components/Certificates.tsx";
 import AllTests from "./components/AllTests.tsx";
 import { UserManagement } from "./components/UserManagement.tsx";
+import AdminProfile from "./components/AdminProfile.tsx";
 // import Quiz from './components/client/Quiz.tsx';
 
 const router = createBrowserRouter(
@@ -31,6 +32,7 @@ const router = createBrowserRouter(
       <Route path="/admin" element={<AdminLayout />}>
         {/* Admin Routes */}
         <Route index element={<AdminHome />} />
+        <Route path="/admin/profile" element={<AdminProfile />} />
         <Route path="/admin/all-courses" element={<Courses />} />
         <Route path="/admin/certificates" element={<Certificates />} />
         <Route path="/admin/tests" element={<AllTests />} />

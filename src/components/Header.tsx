@@ -3,14 +3,14 @@ import { FaUserCircle } from "react-icons/fa";
 import { FaUser } from "react-icons/fa6";
 import { IoIosLogOut } from "react-icons/io";
 import { MdKeyboardArrowRight } from "react-icons/md";
-
-
+import { useNavigate } from "react-router-dom";
 
 const Header: React.FC = () => {
   const [isLanguageSelectOpen, setIsLanguageSelectOpen] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   type Language = "En" | "Fr";
   const [selectedLanguage, setSelectedLanguage] = useState<Language>("En");
+  const navigate = useNavigate();
 
   const handleLanguageSelect = (lang: Language) => {
     if (lang === selectedLanguage) {
@@ -24,7 +24,7 @@ const Header: React.FC = () => {
   };
 
   const handleProfileClick = () => {
-    // setShowProfile(true);
+    navigate("/admin/profile");
     toggleProfileMenu();
   };
 

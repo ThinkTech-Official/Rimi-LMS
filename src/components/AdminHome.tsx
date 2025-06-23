@@ -127,7 +127,6 @@ const AdminHome: React.FC = () => {
     );
   }
   return (
-    <div className="flex w-full">
       <div className="flex-1 flex flex-col">
         {/* Dashboard */}
         <main
@@ -419,7 +418,6 @@ const AdminHome: React.FC = () => {
           </div>
         </main>
       </div>
-    </div>
   );
 };
 

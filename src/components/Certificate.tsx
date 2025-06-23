@@ -79,7 +79,7 @@ const Certificate: React.FC = () => {
               className="h-full w-full object-cover -mt-4"
             />
             <img
-              src="RIMI.svg"
+              src="/RIMI.svg"
               alt="RIMI Logo"
               className="w-[120px] absolute top-[10%] left-[50%] translate-x-[-50%]"
             />
