@@ -118,7 +118,7 @@ const AllCourses: React.FC<AllCoursesProps> = ({ onCreateCourse }) => {
 
         {/* Category Tabs */}
         <div className="border-b border-[#E9E9E9] mb-6">
-          <ul className="flex space-x-3 sm:space-x-8">
+          <ul className="flex space-x-3  sm:space-x-8">
             {categories.map((cat) => (
               <li
                 key={cat}
