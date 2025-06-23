@@ -110,11 +110,8 @@ const recentUsers = [
     certs: 4,
   },
 ];
-type AdminHomeProps = {
-  isSidebarOpen: boolean;
-};
 
-const AdminHome: React.FC<AdminHomeProps> = ({ isSidebarOpen }) => {
+const AdminHome: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const handleBackHome = useCallback(() => {
@@ -134,9 +131,7 @@ const AdminHome: React.FC<AdminHomeProps> = ({ isSidebarOpen }) => {
       <div className="flex-1 flex flex-col">
         {/* Dashboard */}
         <main
-          className={`px-2 py-4 sm:p-6 xl:p-8 overflow-auto space-y-8 flex flex-col justify-center items-center ${
-            isSidebarOpen ? "w-[calc(100vw-300px)]" : "w-[calc(100vw-65px)]"
-          }`}
+          className={`px-2 py-4 sm:p-6 xl:p-8 overflow-auto space-y-8 flex flex-col justify-center items-center `}
         >
           {/* Stats Cards */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 xl:gap-8 w-full">
