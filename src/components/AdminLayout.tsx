@@ -17,7 +17,7 @@ export const AdminLayout: React.FC = () => {
   >("home");
   const [isSidebarOpen, setSidebarOpen] = useState(true);
   const navigate = useNavigate();
-
+// trying new code
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 768 && isSidebarOpen) {
@@ -127,7 +127,7 @@ export const AdminLayout: React.FC = () => {
         </nav>
       </aside>
       <div className={`${
-            isSidebarOpen ? "w-[calc(100vw-300px)]" : "w-[calc(100vw-65px)]"
+            isSidebarOpen ? "w-[calc(100vw-270px)]" : "w-[calc(100vw-65px)]"
           }`}>
         <Header />
         <main
