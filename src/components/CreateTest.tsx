@@ -1,5 +1,4 @@
 import React, { useState, type FormEvent } from "react";
-import { IoClose } from "react-icons/io5";
 
 interface Option {
   id: number;

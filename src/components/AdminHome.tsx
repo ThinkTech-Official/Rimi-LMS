@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import {
   ResponsiveContainer,
   LineChart,
@@ -12,6 +12,7 @@ import {
   LabelList,
 } from "recharts";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
+import UserProfile, { type User } from "./UserProfile";
 
 // Dummy stats
 const stats = [
@@ -115,7 +116,19 @@ type AdminHomeProps = {
 
 const AdminHome: React.FC<AdminHomeProps> = ({ isSidebarOpen }) => {
   const [currentPage, setCurrentPage] = useState(1);
-
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const handleBackHome = useCallback(() => {
+    setSelectedUser(null);
+  }, []);
+  if (selectedUser) {
+    return (
+      <UserProfile
+        user={selectedUser}
+        onBack={handleBackHome}
+        breadcrumbTrail={["Home", "View Profile"]}
+      />
+    );
+  }
   return (
     <div className="flex w-full">
       <div className="flex-1 flex flex-col">
@@ -366,7 +379,10 @@ const AdminHome: React.FC<AdminHomeProps> = ({ isSidebarOpen }) => {
                           borderColor: "#AAA9A9",
                         }}
                       >
-                        <button className="text-primary hover:underline hover:underline-offset-2 cursor-pointer font-medium px-4">
+                        <button
+                          className="text-primary hover:underline hover:underline-offset-2 cursor-pointer font-medium px-4"
+                          onClick={() => setSelectedUser(user)}
+                        >
                           View Profile
                         </button>
                       </td>

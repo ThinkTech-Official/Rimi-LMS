@@ -1,6 +1,7 @@
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { BiSearch } from "react-icons/bi";
+import UserProfile from "./UserProfile";
 
 export interface User {
   id: number;
@@ -42,6 +43,7 @@ export const UserManagement: React.FC = () => {
   const [filter, setFilter] = useState<"all" | "certified">("all");
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
   const filteredUsers = sampleUsers.filter((u) => {
     const matchesFilter =
@@ -49,11 +51,24 @@ export const UserManagement: React.FC = () => {
     const matchesSearch = u.name.toLowerCase().includes(search.toLowerCase());
     return matchesFilter && matchesSearch;
   });
+  const handleBackToUsers = useCallback(() => {
+    setSelectedUser(null);
+  }, []);
+
+  if (selectedUser) {
+    return (
+      <UserProfile
+        user={selectedUser}
+        onBack={handleBackToUsers}
+        breadcrumbTrail={["User Management", "View Profile"]}
+      />
+    );
+  }
 
   return (
     <div className="relative bg-white overflow-hidden min-h-screen">
       <div className="px-2 sm:px-6 py-4">
-        <h2 className="text-primary text-sm font-medium mb-2">
+        <h2 className="text-primary text-sm font-medium mb-3">
           &gt; Users Management{" "}
         </h2>
         <h1 className="text-lg 2xl:text-2xl font-bold text-text-dark mb-3 sm:mb-6">
@@ -196,7 +211,10 @@ export const UserManagement: React.FC = () => {
                     }}
                   >
                     {" "}
-                    <button className="text-primary hover:underline hover:underline-offset-2 cursor-pointer font-medium px-4 text-center w-full">
+                    <button
+                      className="text-primary hover:underline hover:underline-offset-2 cursor-pointer font-medium px-4 text-center w-full"
+                      onClick={() => setSelectedUser(user)}
+                    >
                       View Profile
                     </button>
                   </td>

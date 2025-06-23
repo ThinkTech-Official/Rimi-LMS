@@ -1,6 +1,4 @@
 @import "tailwindcss";
-@import url("https://fonts.googleapis.com/css2?family=Rufina:wght@400;700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=MonteCarlo:wght@400;700&display=swap");
 
 @theme {
   --color-primary: #2b00b7;
