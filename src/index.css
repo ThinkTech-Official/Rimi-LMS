@@ -1,1 +1,5 @@
 @import "tailwindcss";
+
+@theme {
+    --color-sample-blue: #3674B5
+}
