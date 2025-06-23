@@ -1,4 +1,6 @@
-import React, { useState, type ChangeEvent } from 'react';
+import React, { useState, type ChangeEvent } from "react";
+import { BiSearch } from "react-icons/bi";
+import { GoClock } from "react-icons/go";
 
 interface Course {
   id: number;
@@ -9,39 +11,44 @@ interface Course {
   category: string;
 }
 
-const categories = ['Health Insurance', 'Life Insurance', 'Vehicle Insurance'];
+const categories = ["Health Insurance", "Life Insurance", "Vehicle Insurance"];
 
 const sampleCourses: Course[] = [
   {
     id: 1,
-    title: 'RIMI Insurance Video 1',
-    duration: '1hr 20min',
+    title: "RIMI Insurance Video 1",
+    duration: "1hr 20min",
     questions: 30,
-    imageUrl: 'https://placehold.co/400x200?text=Course+Image',
-    category: 'Health Insurance',
+    imageUrl: "https://placehold.co/400x200?text=Course+Image",
+    category: "Health Insurance",
   },
   {
     id: 2,
-    title: 'RIMI Life Plan Basics',
-    duration: '2hr 05min',
+    title: "RIMI Life Plan Basics",
+    duration: "2hr 05min",
     questions: 20,
-    imageUrl: 'https://placehold.co/400x200?text=Course+Image',
-    category: 'Life Insurance',
+    imageUrl: "https://placehold.co/400x200?text=Course+Image",
+    category: "Life Insurance",
   },
   {
     id: 3,
-    title: 'Vehicle Coverage Essentials',
-    duration: '1hr 45min',
+    title: "Vehicle Coverage Essentials",
+    duration: "1hr 45min",
     questions: 25,
-    imageUrl: 'https://placehold.co/400x200?text=Course+Image',
-    category: 'Vehicle Insurance',
+    imageUrl: "https://placehold.co/400x200?text=Course+Image",
+    category: "Vehicle Insurance",
   },
-  
 ];
 
-const AllCourses: React.FC = () => {
-  const [selectedCategory, setSelectedCategory] = useState<string>(categories[0]);
-  const [searchTerm, setSearchTerm] = useState<string>('');
+interface AllCoursesProps {
+  onCreateCourse: () => void;
+}
+
+const AllCourses: React.FC<AllCoursesProps> = ({ onCreateCourse }) => {
+  const [selectedCategory, setSelectedCategory] = useState<string>(
+    categories[0]
+  );
+  const [searchTerm, setSearchTerm] = useState<string>("");
 
   const handleCategoryClick = (category: string) => {
     setSelectedCategory(category);
@@ -59,56 +66,46 @@ const AllCourses: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      <div className="max-w-7xl mx-auto px-4 py-8">
+      <div className="max-w-7xl px-2 sm:px-4 py-8">
         {/* Page Title & Breadcrumb */}
-        <nav className="text-sm text-indigo-600 mb-2">
-          &gt; All Courses
-        </nav>
-        <h1 className="text-2xl font-bold text-gray-900 mb-6">All Courses</h1>
+
+        <h1 className="text-lg 2xl:text-2xl font-bold text-[#1B1B1B] mb-3 sm:mb-6">
+          All Courses
+        </h1>
 
         {/* Search & Action */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
-          <div className="flex items-center border border-gray-300 rounded">
+        <div className="flex flex-col sm:flex-row sm:items-center mb-6 gap-4 w-fit">
+          <div className="flex items-center border border-[#DBDADE] w-[230px] sm:w-[330px]">
             <input
               type="text"
               placeholder="Search by name"
               value={searchTerm}
               onChange={handleSearchChange}
-              className="px-4 py-2 w-full focus:outline-none"
+              className="px-2 sm:px-4 py-1 sm:py-3 w-[200px] sm:w-[330px] focus:outline-none"
             />
-            <button className="px-3">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5 text-gray-500"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M8 16l4-4-4-4m4 4H2"
-                />
-              </svg>
+            <button className="px-1 sm:px-3 cursor-pointer">
+              <BiSearch className="text-[#6F6B7D]" />
             </button>
           </div>
-          <button className="px-5 py-2 bg-indigo-600 text-white font-medium rounded hover:bg-indigo-700">
+          <button
+            className="inline-block text-sm sm:text-[16px] px-5 py-1 sm:py-3 bg-primary text-white text-nowrap font-semibold hover:bg-indigo-700 cursor-pointer transition-colors delay-150"
+            onClick={onCreateCourse}
+          >
             Create Course
           </button>
         </div>
 
         {/* Category Tabs */}
-        <div className="border-b border-gray-200 mb-6">
-          <ul className="flex space-x-8">
+        <div className="border-b border-[#E9E9E9] mb-6">
+          <ul className="flex space-x-3 sm:space-x-8">
             {categories.map((cat) => (
               <li
                 key={cat}
                 onClick={() => handleCategoryClick(cat)}
-                className={`pb-2 cursor-pointer font-medium text-sm ${
+                className={`pb-2 cursor-pointer font-medium text-nowrap text-sm sm:text-base 2xl:text-xl ${
                   selectedCategory === cat
-                    ? 'text-indigo-600 border-b-2 border-indigo-600'
-                    : 'text-gray-500'
+                    ? "text-primary border-b-2 border-primary"
+                    : "text-[#6F6B7D]"
                 }`}
               >
                 {cat}
@@ -120,41 +117,28 @@ const AllCourses: React.FC = () => {
         {/* Courses Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {filteredCourses.map((course) => (
-            <div key={course.id} className="bg-gray-50 rounded-lg overflow-hidden shadow-sm">
-              <div className="h-40 bg-blue-200 relative">
+            <div
+              key={course.id}
+              className="rounded-[2px] overflow-hidden w-[200px] 2xl:w-[250px]"
+            >
+              <div className="relative">
                 <img
                   src={course.imageUrl}
                   alt={course.title}
-                  className="object-cover w-full h-full"
+                  className="object-cover rounded-b-[2px] w-full h-32 2xl:h-40"
                 />
               </div>
-              <div className="p-4">
-                <h2 className="text-base font-semibold text-gray-900 mb-2">
+              <div className="p-2">
+                <h2 className="text-base 2xl:text-xl font-semibold text-[#1B1B1B]">
                   {course.title}
                 </h2>
-                <div className="flex items-center text-gray-500 text-xs space-x-4">
+                <div className="flex items-center text-[#6F6B7D] text-xs 2xl:text-base space-x-4">
                   <div className="flex items-center gap-1">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-4 w-4"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3" />
-                    </svg>
+                    <GoClock />
                     <span>{course.duration}</span>
                   </div>
                   <div className="flex items-center gap-1">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-4 w-4"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
+                    <img src="Document.svg" alt="" />
                     <span>{course.questions} Questions</span>
                   </div>
                 </div>

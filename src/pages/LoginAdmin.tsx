@@ -20,7 +20,7 @@ const LoginAdmin: React.FC = () => {
           <img
             src="/rimilogo.png"
             alt="RIMI Logo"
-            className="h-20 w-40"
+            className="h-12 w-32 sm:h-[75px] sm:w-40"
           />
         </div>
 

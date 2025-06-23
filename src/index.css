@@ -1,5 +1,32 @@
 @import "tailwindcss";
+@import url("https://fonts.googleapis.com/css2?family=Rufina:wght@400;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=MonteCarlo:wght@400;700&display=swap");
 
 @theme {
-    --color-sample-blue: #3674B5
+  --color-primary: #2b00b7;
+  --color-text-dark: #1b1b1b;
+  --color-text-light: #6f6b7d;
+  --color-text-light-2: #4b465c;
+  --color-inputBorder: #dbdade;
+  --font-rufina: "Rufina", serif;
+  --font-monte: "MonteCarlo", cursive;
+}
+
+@layer utilities {
+  .custom-scrollbar::-webkit-scrollbar {
+    height: 8px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: #2b00b7;
+    border-radius: 4px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background-color: #7367f029;
+    border-radius: 2px;
+  }
+}
+
+body {
+  font-family: "Public Sans", sans-serif;
 }
