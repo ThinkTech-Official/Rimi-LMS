@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import {
   HomeIcon,
   BookOpenIcon,
@@ -126,12 +126,11 @@ export const AdminLayout: React.FC = () => {
           </ul>
         </nav>
       </aside>
-      <div className="flex-1">
+      <div className={`${
+            isSidebarOpen ? "w-[calc(100vw-300px)]" : "w-[calc(100vw-65px)]"
+          }`}>
         <Header />
         <main
-          className={`flex flex-col justify-center items-center ${
-            isSidebarOpen ? "w-[calc(100vw-300px)]" : "w-[calc(100vw-65px)]"
-          }`}
         >
           <Outlet />
         </main>
