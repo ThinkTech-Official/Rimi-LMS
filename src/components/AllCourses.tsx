@@ -11,7 +11,7 @@ interface Course {
   category: string;
 }
 
-const categories = ["Health Insurance", "Life Insurance", "Vehicle Insurance"];
+const initialCategories = ["Health Insurance", "Life Insurance", "Vehicle Insurance"];
 
 const sampleCourses: Course[] = [
   {
@@ -45,10 +45,17 @@ interface AllCoursesProps {
 }
 
 const AllCourses: React.FC<AllCoursesProps> = ({ onCreateCourse }) => {
+  const [categories, setCategories] = useState<string[]>(initialCategories);
   const [selectedCategory, setSelectedCategory] = useState<string>(
     categories[0]
   );
   const [searchTerm, setSearchTerm] = useState<string>("");
+
+  // Category Handelling State 
+  
+   const [showAddCategoryModal, setShowAddCategoryModal] = useState<boolean>(false);
+   const [newCategory, setNewCategory] = useState<string>("");
+  // 
 
   const handleCategoryClick = (category: string) => {
     setSelectedCategory(category);
@@ -57,6 +64,20 @@ const AllCourses: React.FC<AllCoursesProps> = ({ onCreateCourse }) => {
   const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
   };
+
+  // Category adding method
+  const handleAddCategory = () => {
+    const trimmed = newCategory.trim();
+    if (!trimmed) return;
+    if (!categories.includes(trimmed)) {
+      setCategories(prev => [...prev, trimmed]);
+      setSelectedCategory(trimmed);
+    }
+    setNewCategory("");
+    setShowAddCategoryModal(false);
+  };
+
+  //
 
   const filteredCourses = sampleCourses.filter(
     (course) =>
@@ -111,7 +132,17 @@ const AllCourses: React.FC<AllCoursesProps> = ({ onCreateCourse }) => {
                 {cat}
               </li>
             ))}
+            <li
+              onClick={() => setShowAddCategoryModal(true)}
+              className="cursor-pointer border-2 border-primary px-3 py-1 text-sm sm:text-base text-primary"
+            >
+              Add Category
+            </li>
           </ul>
+        </div>
+
+        <div>
+          
         </div>
 
         {/* Courses Grid */}
@@ -146,6 +177,38 @@ const AllCourses: React.FC<AllCoursesProps> = ({ onCreateCourse }) => {
             </div>
           ))}
         </div>
+
+
+           {/* Add Category Modal */}
+        {showAddCategoryModal && (
+          <div className="fixed inset-0 bg-primary/10 flex items-center justify-center z-50">
+            <div className="bg-white p-6 rounded-lg shadow-lg w-80">
+              <h2 className="text-lg font-semibold mb-4">Add New Category</h2>
+              <input
+                type="text"
+                value={newCategory}
+                onChange={(e) => setNewCategory(e.target.value)}
+                placeholder="Category Name"
+                className="w-full border border-gray-300 rounded px-3 py-2 mb-4 focus:outline-none"
+              />
+              <div className="flex justify-end space-x-2">
+                <button
+                  onClick={() => setShowAddCategoryModal(false)}
+                  className="px-4 py-2 rounded border"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleAddCategory}
+                  className="px-4 py-2 rounded bg-primary text-white hover:bg-indigo-700"
+                >
+                  Add
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
       </div>
     </div>
   );
