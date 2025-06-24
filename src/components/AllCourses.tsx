@@ -9,15 +9,16 @@ interface Course {
   questions: number;
   imageUrl: string;
   category: string;
+  description?: string;
 }
 
-const initialCategories = [
+export const initialCategories = [
   "Health Insurance",
   "Life Insurance",
   "Vehicle Insurance",
 ];
 
-const sampleCourses: Course[] = [
+export const sampleCourses: Course[] = [
   {
     id: 1,
     title: "RIMI Insurance Video 1",
@@ -25,6 +26,8 @@ const sampleCourses: Course[] = [
     questions: 30,
     imageUrl: "https://placehold.co/400x200?text=Course+Image",
     category: "Health Insurance",
+    description:
+      "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Aliquam non corrupti debitis pariatur optio consectetur nam cumque doloremque dicta in, quis voluptatem eius incidunt, officiis consequuntur, cum doloribus ut magnam!",
   },
   {
     id: 2,
@@ -33,6 +36,8 @@ const sampleCourses: Course[] = [
     questions: 20,
     imageUrl: "https://placehold.co/400x200?text=Course+Image",
     category: "Life Insurance",
+    description:
+      "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Aliquam non corrupti debitis pariatur optio consectetur nam cumque doloremque dicta in, quis voluptatem eius incidunt, officiis consequuntur, cum doloribus ut magnam!",
   },
   {
     id: 3,
@@ -41,6 +46,8 @@ const sampleCourses: Course[] = [
     questions: 25,
     imageUrl: "https://placehold.co/400x200?text=Course+Image",
     category: "Vehicle Insurance",
+    description:
+      "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Aliquam non corrupti debitis pariatur optio consectetur nam cumque doloremque dicta in, quis voluptatem eius incidunt, officiis consequuntur, cum doloribus ut magnam!",
   },
   {
     id: 4,
@@ -49,6 +56,8 @@ const sampleCourses: Course[] = [
     questions: 25,
     imageUrl: "https://placehold.co/400x200?text=Course+Image",
     category: "Health Insurance",
+    description:
+      "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Aliquam non corrupti debitis pariatur optio consectetur nam cumque doloremque dicta in, quis voluptatem eius incidunt, officiis consequuntur, cum doloribus ut magnam!",
   },
   {
     id: 5,

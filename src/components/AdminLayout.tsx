@@ -3,13 +3,13 @@ import { Outlet, useNavigate } from "react-router-dom";
 import {
   HomeIcon,
   BookOpenIcon,
-  CheckBadgeIcon,
   ClipboardDocumentListIcon,
   UserGroupIcon,
   ChevronRightIcon,
   ChevronLeftIcon,
 } from "@heroicons/react/24/outline";
 import Header from "./Header";
+import { PiCertificateLight } from "react-icons/pi";
 
 export const AdminLayout: React.FC = () => {
   const [active, setActive] = useState<
@@ -17,7 +17,7 @@ export const AdminLayout: React.FC = () => {
   >("home");
   const [isSidebarOpen, setSidebarOpen] = useState(true);
   const navigate = useNavigate();
-// trying new code
+  // trying new code
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 768 && isSidebarOpen) {
@@ -40,7 +40,7 @@ export const AdminLayout: React.FC = () => {
     },
     {
       label: "Certificates",
-      icon: CheckBadgeIcon,
+      icon: PiCertificateLight,
       key: "certificates",
       url: "/admin/certificates",
     },
@@ -126,12 +126,13 @@ export const AdminLayout: React.FC = () => {
           </ul>
         </nav>
       </aside>
-      <div className={`${
-            isSidebarOpen ? "w-[calc(100vw-270px)]" : "w-[calc(100vw-50px)]"
-          }`}>
-        <Header />
-        <main
-        >
+      <div
+        className={`${
+          isSidebarOpen ? "w-[calc(100vw-270px)]" : "w-[calc(100vw-50px)]"
+        }`}
+      >
+        <Header/>
+        <main>
           <Outlet />
         </main>
       </div>
