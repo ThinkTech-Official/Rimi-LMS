@@ -23,8 +23,34 @@
     background-color: #7367f029;
     border-radius: 2px;
   }
+  .custom-scrollbar2::-webkit-scrollbar {
+    height: 4px;
+  }
+
+  .custom-scrollbar2::-webkit-scrollbar-thumb {
+    background-color: #2b00b7;
+    border-radius: 4px;
+  }
+  .custom-scrollbar2::-webkit-scrollbar-track {
+    background-color: #7367f029;
+    border-radius: 2px;
+  }
 }
 
 body {
   font-family: "Public Sans", sans-serif;
+}
+
+/* Hide password reveal icon in Microsoft Edge and Chromium */
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+  display: none;
+}
+
+input[type="password"]::-webkit-credentials-auto-fill-button {
+  visibility: hidden;
+  display: none !important;
+  pointer-events: none;
+  height: 0;
+  width: 0;
 }

@@ -11,7 +11,11 @@ interface Course {
   category: string;
 }
 
-const initialCategories = ["Health Insurance", "Life Insurance", "Vehicle Insurance"];
+const initialCategories = [
+  "Health Insurance",
+  "Life Insurance",
+  "Vehicle Insurance",
+];
 
 const sampleCourses: Course[] = [
   {
@@ -38,6 +42,54 @@ const sampleCourses: Course[] = [
     imageUrl: "https://placehold.co/400x200?text=Course+Image",
     category: "Vehicle Insurance",
   },
+  {
+    id: 4,
+    title: "Vehicle Coverage Essentials",
+    duration: "1hr 45min",
+    questions: 25,
+    imageUrl: "https://placehold.co/400x200?text=Course+Image",
+    category: "Health Insurance",
+  },
+  {
+    id: 5,
+    title: "RIMI Insurance Video 1",
+    duration: "1hr 20min",
+    questions: 30,
+    imageUrl: "https://placehold.co/400x200?text=Course+Image",
+    category: "Health Insurance",
+  },
+  {
+    id: 6,
+    title: "RIMI Insurance Video 1",
+    duration: "1hr 20min",
+    questions: 30,
+    imageUrl: "https://placehold.co/400x200?text=Course+Image",
+    category: "Health Insurance",
+  },
+  {
+    id: 7,
+    title: "RIMI Insurance Video 1",
+    duration: "1hr 20min",
+    questions: 30,
+    imageUrl: "https://placehold.co/400x200?text=Course+Image",
+    category: "Health Insurance",
+  },
+  {
+    id: 8,
+    title: "RIMI Insurance Video 1",
+    duration: "1hr 20min",
+    questions: 30,
+    imageUrl: "https://placehold.co/400x200?text=Course+Image",
+    category: "Health Insurance",
+  },
+  {
+    id: 9,
+    title: "RIMI Insurance Video 1",
+    duration: "1hr 20min",
+    questions: 30,
+    imageUrl: "https://placehold.co/400x200?text=Course+Image",
+    category: "Health Insurance",
+  },
 ];
 
 interface AllCoursesProps {
@@ -51,11 +103,12 @@ const AllCourses: React.FC<AllCoursesProps> = ({ onCreateCourse }) => {
   );
   const [searchTerm, setSearchTerm] = useState<string>("");
 
-  // Category Handelling State 
-  
-   const [showAddCategoryModal, setShowAddCategoryModal] = useState<boolean>(false);
-   const [newCategory, setNewCategory] = useState<string>("");
-  // 
+  // Category Handelling State
+
+  const [showAddCategoryModal, setShowAddCategoryModal] =
+    useState<boolean>(false);
+  const [newCategory, setNewCategory] = useState<string>("");
+  //
 
   const handleCategoryClick = (category: string) => {
     setSelectedCategory(category);
@@ -70,7 +123,7 @@ const AllCourses: React.FC<AllCoursesProps> = ({ onCreateCourse }) => {
     const trimmed = newCategory.trim();
     if (!trimmed) return;
     if (!categories.includes(trimmed)) {
-      setCategories(prev => [...prev, trimmed]);
+      setCategories((prev) => [...prev, trimmed]);
       setSelectedCategory(trimmed);
     }
     setNewCategory("");
@@ -87,7 +140,7 @@ const AllCourses: React.FC<AllCoursesProps> = ({ onCreateCourse }) => {
 
   return (
     <div className="min-h-screen bg-white">
-      <div className="max-w-7xl px-2 sm:px-4 py-8">
+      <div className="px-2 sm:px-4 py-8">
         {/* Page Title & Breadcrumb */}
 
         <h1 className="text-lg 2xl:text-2xl font-bold text-[#1B1B1B] mb-3 sm:mb-6">
@@ -118,7 +171,7 @@ const AllCourses: React.FC<AllCoursesProps> = ({ onCreateCourse }) => {
 
         {/* Category Tabs */}
         <div className="border-b border-[#E9E9E9] mb-6">
-          <ul className="flex space-x-3  sm:space-x-8">
+          <ul className="flex space-x-3 sm:space-x-8 items-center overflow-x-auto custom-scrollbar2 pb-2 sm:pb-0">
             {categories.map((cat) => (
               <li
                 key={cat}
@@ -134,52 +187,51 @@ const AllCourses: React.FC<AllCoursesProps> = ({ onCreateCourse }) => {
             ))}
             <li
               onClick={() => setShowAddCategoryModal(true)}
-              className="cursor-pointer border-2 border-primary px-3 py-1 text-sm sm:text-base text-primary"
+              className="cursor-pointer border-2 border-primary px-3 py-1 text-sm sm:text-base text-nowrap text-primary hover:bg-primary hover:text-white transition-colors delay-100"
             >
               Add Category
             </li>
           </ul>
         </div>
 
-        <div>
-          
-        </div>
+        <div></div>
 
         {/* Courses Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {filteredCourses.map((course) => (
-            <div
-              key={course.id}
-              className="rounded-[2px] overflow-hidden w-[200px] 2xl:w-[250px]"
-            >
-              <div className="relative">
-                <img
-                  src={course.imageUrl}
-                  alt={course.title}
-                  className="object-cover rounded-b-[2px] w-full h-32 2xl:h-40"
-                />
-              </div>
-              <div className="p-2">
-                <h2 className="text-base 2xl:text-xl font-semibold text-[#1B1B1B]">
-                  {course.title}
-                </h2>
-                <div className="flex items-center text-[#6F6B7D] text-xs 2xl:text-base space-x-4">
-                  <div className="flex items-center gap-1">
-                    <GoClock />
-                    <span>{course.duration}</span>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <img src="Document.svg" alt="" />
-                    <span>{course.questions} Questions</span>
+        <div className="flex items-center justify-center sm:justify-start w-full">
+          <div className="flex flex-wrap gap-6 items-center justify-center sm:justify-start sm:items-start">
+            {filteredCourses.map((course) => (
+              <div
+                key={course.id}
+                className="rounded-[2px] overflow-hidden w-[80vw] max-w-[300px] sm:w-[200px] 2xl:w-[250px]"
+              >
+                <div className="relative">
+                  <img
+                    src={course.imageUrl}
+                    alt={course.title}
+                    className="object-cover rounded-b-[2px] w-full h-40 sm:h-32 2xl:h-40"
+                  />
+                </div>
+                <div className="p-2">
+                  <h2 className="text-base 2xl:text-xl font-semibold text-[#1B1B1B]">
+                    {course.title}
+                  </h2>
+                  <div className="flex items-center text-[#6F6B7D] text-xs 2xl:text-base space-x-4">
+                    <div className="flex items-center gap-1">
+                      <GoClock />
+                      <span>{course.duration}</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <img src="Document.svg" alt="" />
+                      <span>{course.questions} Questions</span>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
 
-
-           {/* Add Category Modal */}
+        {/* Add Category Modal */}
         {showAddCategoryModal && (
           <div className="fixed inset-0 bg-primary/10 flex items-center justify-center z-50">
             <div className="bg-white p-6 rounded-lg shadow-lg w-80">
@@ -208,7 +260,6 @@ const AllCourses: React.FC<AllCoursesProps> = ({ onCreateCourse }) => {
             </div>
           </div>
         )}
-
       </div>
     </div>
   );

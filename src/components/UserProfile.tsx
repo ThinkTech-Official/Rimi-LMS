@@ -1,6 +1,8 @@
-import { useState, type FC } from "react";
+import { useEffect, useRef, useState, type FC } from "react";
 import { GoClock } from "react-icons/go";
 import { ImUser } from "react-icons/im";
+import { IoMdClose } from "react-icons/io";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 
 export interface Certificate {
   id: string;
@@ -23,6 +25,7 @@ export interface User {
   name: string;
   email: string;
   avatarUrl?: string;
+  password?: string;
 }
 
 export interface UserProfileProps {
@@ -96,9 +99,30 @@ const UserProfile: FC<UserProfileProps> = ({
   breadcrumbTrail,
 }) => {
   const [activeTab, setActiveTab] = useState<string>(userTabs[0]);
+  const [showResetPasswordModal, setShowResetPasswordModal] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+
   const handleCategoryClick = (activeTab: string) => {
     setActiveTab(activeTab);
   };
+
+  const modalRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        modalRef.current &&
+        !modalRef.current.contains(event.target as Node)
+      ) {
+        setShowResetPasswordModal(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
     <div className="flex min-h-screen bg-white">
@@ -124,8 +148,8 @@ const UserProfile: FC<UserProfileProps> = ({
           </nav>
 
           {/* Profile Info */}
-          <div className="flex items-start space-x-8 mb-8">
-            <ImUser className="w-16 h-16 bg-gray-200 rounded-md" />
+          <div className="flex space-x-4 sm:space-x-8 mb-8 items-center">
+            <ImUser className="w-20 h-full bg-gray-200 rounded-md" />
             <div className="space-y-2">
               <div className="flex items-center space-x-2 text-base">
                 <span className="font-semibold text-black">Name:</span>
@@ -135,13 +159,18 @@ const UserProfile: FC<UserProfileProps> = ({
                 <span className="font-semibold text-black">Email:</span>
                 <span className="text-black opacity-50">{user.email}</span>
               </div>
-              {/* <div className="flex items-center space-x-2 text-base">
-                <span className="font-semibold">Password:</span>
-                <span className="text-gray-500">{user.password}</span>
-                <button className="text-indigo-600 underline text-sm">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center space-x-2 text-base">
+                <div className="flex gap-2">
+                  <span className="font-semibold">Password:</span>
+                  <span className="text-gray-500">{user.password}</span>
+                </div>
+                <button
+                  className="text-primary underline text-sm underline-offset-2 cursor-pointer"
+                  onClick={() => setShowResetPasswordModal(true)}
+                >
                   Reset password
                 </button>
-              </div> */}
+              </div>
             </div>
           </div>
 
@@ -166,7 +195,7 @@ const UserProfile: FC<UserProfileProps> = ({
 
           {/* Tab content */}
           {activeTab === "Enrolled Courses" && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 w-fit">
+            <div className="flex flex-wrap gap-6 items-center justify-center sm:justify-start sm:items-start">
               {enrolledCourses.map((course) => (
                 <div
                   key={course.id}
@@ -205,7 +234,7 @@ const UserProfile: FC<UserProfileProps> = ({
           )}
 
           {activeTab === "Certificates" && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 w-fit">
+            <div className="flex flex-wrap gap-6 items-center justify-center sm:justify-start sm:items-start">
               {certificates.map((course) => (
                 <div
                   key={course.id}
@@ -236,6 +265,56 @@ const UserProfile: FC<UserProfileProps> = ({
           )}
         </main>
       </div>
+      {showResetPasswordModal && (
+        <div className="fixed inset-0 z-50 bg-black/20 flex items-center justify-center">
+          <div
+            className="w-[90vw] sm:w-[540px] flex flex-col gap-6 p-4 sm:p-7 bg-white relative"
+            ref={modalRef}
+            style={{
+              boxShadow: `
+    0px 7px 16px 0px #0000001A,
+    0px 29px 29px 0px #00000017,
+    0px 65px 39px 0px #0000000D,
+    0px 115px 46px 0px #00000003,
+    0px 179px 50px 0px #00000000
+  `,
+            }}
+          >
+            <IoMdClose
+              onClick={() => setShowResetPasswordModal(false)}
+              className="absolute top-2 right-2 text-2xl cursor-pointer text-primary"
+            />
+
+            <h2 className="text-xl sm:text-[1.8rem] leading-[19px] font-bold text-center">
+              Reset Password?
+            </h2>
+            <form action="submit" className="flex flex-col gap-2">
+              <div className="flex flex-col relative">
+                <label className="text-sm text-text-light-2">
+                  Reset Password
+                </label>
+                <input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Enter New Password"
+                  className="w-full border border-inputBorder py-1 px-2 sm:px-4 sm:py-3 focus:outline-none focus:ring-1 focus:ring-primary pr-10"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  className="absolute right-3 top-[38px] text-xl text-gray-500 cursor-pointer"
+                >
+                  {showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
+                </button>
+              </div>
+
+              <button className="inline-block text-sm sm:text-[16px] px-5 py-2 sm:py-3 bg-primary text-white text-nowrap font-semibold hover:bg-indigo-700 cursor-pointer transition-colors delay-150">
+                Update Password
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

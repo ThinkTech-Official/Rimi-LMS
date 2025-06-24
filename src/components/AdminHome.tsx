@@ -48,6 +48,7 @@ const recentUsers = [
     email: "liam.carter@email.com",
     date: "Jan 10, 2023",
     certs: 1,
+    password: "password123",
   },
   {
     name: "Emma Johnson",

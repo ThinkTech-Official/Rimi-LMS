@@ -11,7 +11,6 @@ import LoginAdmin from "./pages/LoginAdmin.tsx";
 // import Dashboard from "./pages/Dashboard.tsx";
 import ClientDashboard from "./components/client/ClientDashboard.tsx";
 import CoursePlay from "./components/client/CoursePlay.tsx";
-import Certificate from "./components/Certificate.tsx";
 import { AdminLayout } from "./components/AdminLayout.tsx";
 import ClientLayout from "./components/client/ClientLayout.tsx";
 import AdminHome from "./components/AdminHome.tsx";

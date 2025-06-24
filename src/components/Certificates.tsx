@@ -1,6 +1,6 @@
 const Certificates: React.FC = () => {
   return (
-    <div className="flex flex-col gap-10 my-10">
+    <div className="flex flex-col gap-10 my-10 overflow-auto">
       <div className="w-[1050px] mx-auto m-4 border">
         <div className="flex flex-col bg-white mx-auto">
           <div className="w-full bg-primary p-4 pb-0 h-fit">

@@ -127,7 +127,7 @@ export const AdminLayout: React.FC = () => {
         </nav>
       </aside>
       <div className={`${
-            isSidebarOpen ? "w-[calc(100vw-270px)]" : "w-[calc(100vw-65px)]"
+            isSidebarOpen ? "w-[calc(100vw-270px)]" : "w-[calc(100vw-50px)]"
           }`}>
         <Header />
         <main
