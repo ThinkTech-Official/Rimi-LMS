@@ -20,23 +20,30 @@ import Certificates from "./components/Certificates.tsx";
 import AllTests from "./components/AllTests.tsx";
 import { UserManagement } from "./components/UserManagement.tsx";
 import AdminProfile from "./components/AdminProfile.tsx";
+import EditCourse from "./components/EditCourse.tsx";
+import CreateTest from "./components/CreateTest.tsx";
+import LoginClient from "./pages/ClientLogin.tsx";
 // import Quiz from './components/client/Quiz.tsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <>
       {/* Public / Login */}
-      <Route path="/" element={<LoginAdmin />} />
+      <Route path="/" element={<LoginClient />} />
+      <Route path="/adminlogin" element={<LoginAdmin />} />
 
       {/* Admin-only routes */}
       <Route path="/admin" element={<AdminLayout />}>
         {/* Admin Routes */}
-        <Route index element={<AdminHome />} />
+        {/* <Route index element={<AdminHome />} /> */}
+        <Route path="/admin/home" element={<AdminHome />} />
         <Route path="/admin/profile" element={<AdminProfile />} />
         <Route path="/admin/all-courses" element={<Courses />} />
         <Route path="/admin/certificates" element={<Certificates />} />
         <Route path="/admin/tests" element={<AllTests />} />
         <Route path="/admin/users" element={<UserManagement />} />
+        <Route path="/admin/edit-course/:courseId" element={<EditCourse />} />
+        <Route path="/admin/:courseId/create-test" element={<CreateTest />} />
 
         {/* <Route path="users" element={<UserList />} /> */}
       </Route>

@@ -4,6 +4,7 @@ import { BiSearch } from "react-icons/bi";
 import { MdUpload } from "react-icons/md";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { TbEdit } from "react-icons/tb";
+import { useNavigate } from "react-router-dom";
 
 interface TestEntry {
   id: number;
@@ -60,6 +61,7 @@ interface CreateCourseProps {
   onCreateTest: () => void;
 }
 const CreateCourse: React.FC<CreateCourseProps> = ({ onCreateTest }) => {
+  const navigate = useNavigate()
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [videos, setVideos] = useState<FileList | null>(null);
@@ -84,6 +86,10 @@ const CreateCourse: React.FC<CreateCourseProps> = ({ onCreateTest }) => {
   const filteredTests = attachedTestsSample.filter((test) =>
     test.testName.toLowerCase().includes(testSearch.toLowerCase())
   );
+
+  const handleNavigate = (id: string) => {
+    navigate(`/admin/edit-course/${id}`)
+  }
 
   return (
     <div className="min-h-screen flex bg-white">
@@ -170,7 +176,7 @@ const CreateCourse: React.FC<CreateCourseProps> = ({ onCreateTest }) => {
 
           {/* Attached Tests Section */}
           <section className="space-y-6">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between">
+            {/* <div className="flex flex-col sm:flex-row sm:items-center justify-between">
               <h2 className="text-lg font-bold text-gray-900 mb-2">
                 Attached Tests
               </h2>
@@ -194,10 +200,10 @@ const CreateCourse: React.FC<CreateCourseProps> = ({ onCreateTest }) => {
                   Create New Test
                 </button>
               </div>
-            </div>
+            </div> */}
 
             {/* Tests Table */}
-            <div className="w-full overflow-x-auto custom-scrollbar pb-2">
+            {/* <div className="w-full overflow-x-auto custom-scrollbar pb-2">
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-primary text-white text-[16px] 2xl:text-xl text-center">
                   <tr>
@@ -292,10 +298,10 @@ const CreateCourse: React.FC<CreateCourseProps> = ({ onCreateTest }) => {
                   ))}
                 </tbody>
               </table>
-            </div>
+            </div> */}
 
             {/* Pagination */}
-            <div className="flex items-center justify-center p-4 space-x-2">
+            {/* <div className="flex items-center justify-center p-4 space-x-2">
               <button
                 disabled
                 className="px-3 py-[10px] bg-[#CCCCCC] text-[#6F6B7D] cursor-pointer"
@@ -322,13 +328,14 @@ const CreateCourse: React.FC<CreateCourseProps> = ({ onCreateTest }) => {
               >
                 <ChevronRightIcon className="h-5 w-5" />
               </button>
-            </div>
+            </div> */}
           </section>
 
           {/* Save Button */}
           <div>
             <button
-              type="submit"
+              // type="submit"
+              onClick={()=> handleNavigate('1651651')}
               className="inline-block text-sm sm:text-[16px] px-5 py-1 sm:py-3 bg-primary text-white text-nowrap font-semibold hover:bg-indigo-700 cursor-pointer transition-colors delay-150"
             >
               Save Course
