@@ -31,7 +31,7 @@ export const AdminLayout: React.FC = () => {
   }, []);
 
   const menuItems = [
-    { label: "Home", icon: HomeIcon, key: "home", url: "/admin" },
+    { label: "Home", icon: HomeIcon, key: "home", url: "/admin/home" },
     {
       label: "All Courses",
       icon: BookOpenIcon,

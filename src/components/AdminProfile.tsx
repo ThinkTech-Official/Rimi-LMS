@@ -16,7 +16,7 @@ const AdminProfile: React.FC = () => {
           <div className="w-full bg-[#F8F8F8] px-2 py-4 sm:p-6 md:p-8 lg:px-14 lg:py-15">
             <div className="flex flex-col lg:flex-row w-full justify-between items-center gap-6">
               <div className="flex flex-col gap-1 sm:gap-2 items-center lg:items-start">
-                <ImUser className="w-16 sm:w-24 h-16 sm:h-24 bg-gray-200 rounded-md" />
+                <ImUser className="w-16 sm:w-24 h-16 sm:h-24 bg-gray-200 rounded-md text-text-light" />
                 <p className="text-lg sm:text-xl text-[#1B1B1B]">Username</p>
                 <div className="flex items-center space-x-2 text-sm sm:text-base">
                   <span className="font-semibold text-black">Password:</span>

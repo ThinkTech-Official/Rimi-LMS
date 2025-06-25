@@ -1,10 +1,11 @@
 
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { initialCategories, sampleCourses } from "../AllCourses";
 import { GoClock } from "react-icons/go";
 
 const ClientHome = () => {
+  const navigate = useNavigate();
   const [categories, setCategories] = useState<string[]>(initialCategories);
   const [selectedCategory, setSelectedCategory] = useState<string>(
     categories[0]
@@ -26,9 +27,9 @@ const ClientHome = () => {
   const filteredCourses = sampleCourses.filter(
     (course) => course.category === selectedCategory
   );
-
-  console.log(filteredCourses);
-
+const handleStartCourse = (id: number) => {
+  navigate(`/client/play/${id}`);
+}
   return (
     <main className="flex-1 p-2 sm:p-8 sm:pr-0 overflow-auto space-y-6">
       {/* Header */}
@@ -99,12 +100,12 @@ const ClientHome = () => {
                     className="text-primary text-xs mt-1 underline underline-offset-2 inline cursor-pointer"
                     onClick={() => setShowFullDescription(!showFullDescription)}
                   >
-                    {showFullDescription ? "See less" : "See more"}
+                    {showFullDescription ? "less" : "more"}
                   </button>
                 )}
             </div>
 
-            <button className="inline-block mt-2 text-sm sm:text-[16px] px-5 py-1 sm:py-3 bg-primary text-white text-nowrap font-semibold hover:bg-indigo-700 cursor-pointer transition-colors delay-150">
+            <button className="inline-block mt-2 text-sm sm:text-[16px] px-5 py-1 sm:py-3 bg-primary text-white text-nowrap font-semibold hover:bg-indigo-700 cursor-pointer transition-colors delay-150" onClick={() => handleStartCourse(course.id)}>
               Start Course
             </button>
           </div>
