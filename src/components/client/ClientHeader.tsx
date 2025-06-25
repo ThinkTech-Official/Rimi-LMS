@@ -44,7 +44,7 @@ const ClientHeader: React.FC = () => {
           <span className="flex gap-2 items-center">
             {" "}
             <img
-              src="/public/ion_language.svg"
+              src="/ion_language.svg"
               alt=""
               className="h-5 w-5 2xl:w-6 2xl:h-6"
             />{" "}

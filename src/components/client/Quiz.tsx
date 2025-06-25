@@ -168,7 +168,7 @@ const Quiz: FC<QuizProps> = ({
       {/* Header: timer */}
       <div className="flex flex-col justify-center items-center mb-6 gap-3">
         <div className="text-xl font-medium flex items-center gap-2">
-          <img src="/public/timerClock.svg" alt="timer" className="h-10 w-10" />{" "}
+          <img src="/timerClock.svg" alt="timer" className="h-10 w-10" />{" "}
           <div className="flex flex-col items-center">
             <span className="text-lg font-medium text-text-dark">
               {" "}
