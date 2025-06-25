@@ -8,10 +8,7 @@ import {
 } from "react-router-dom";
 import "./index.css";
 import LoginAdmin from "./pages/LoginAdmin.tsx";
-// import Dashboard from "./pages/Dashboard.tsx";
-import ClientDashboard from "./components/client/ClientDashboard.tsx";
 import CoursePlay from "./components/client/CoursePlay.tsx";
-import Certificate from "./components/Certificate.tsx";
 import { AdminLayout } from "./components/AdminLayout.tsx";
 import ClientLayout from "./components/client/ClientLayout.tsx";
 import AdminHome from "./components/AdminHome.tsx";
@@ -23,6 +20,8 @@ import AdminProfile from "./components/AdminProfile.tsx";
 import EditCourse from "./components/EditCourse.tsx";
 import CreateTest from "./components/CreateTest.tsx";
 import LoginClient from "./pages/ClientLogin.tsx";
+import ClientHome from "./components/client/ClientHome.tsx";
+import ClientCertificates from "./components/client/ClientCertificates.tsx";
 // import Quiz from './components/client/Quiz.tsx';
 
 const router = createBrowserRouter(
@@ -51,7 +50,8 @@ const router = createBrowserRouter(
       {/* Client routes */}
       <Route path="/client" element={<ClientLayout />}>
         {/* /client */}
-        <Route index element={<ClientDashboard />} />
+        <Route index element={<ClientHome />} />
+        <Route path="certificates" element={<ClientCertificates />} />
         {/* /client/play/:id */}
         <Route path="play/:id" element={<CoursePlay />} />
       </Route>

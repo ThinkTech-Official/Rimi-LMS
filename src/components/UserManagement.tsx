@@ -10,6 +10,7 @@ export interface User {
   course: string;
   progress: string;
   certificateIssued: boolean;
+  password?: string;
 }
 
 const sampleUsers: User[] = [
@@ -20,6 +21,7 @@ const sampleUsers: User[] = [
     course: "Course 1",
     progress: "100%",
     certificateIssued: true,
+    password: "password123",
   },
   {
     id: 2,

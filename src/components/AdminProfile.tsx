@@ -1,6 +1,10 @@
+import { useState } from "react";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { ImUser } from "react-icons/im";
 
 const AdminProfile: React.FC = () => {
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   return (
     <div className="max-w-[1600px]">
       <div className="px-2 sm:px-6 py-4">
@@ -24,31 +28,53 @@ const AdminProfile: React.FC = () => {
                   Reset Password
                 </h1>
                 <form action="submit" className="flex flex-col gap-2">
-                  <div className="flex flex-col">
+                  <div className="flex flex-col relative">
                     <label className="text-sm text-text-light-2">
                       New Password
                     </label>
                     <input
-                      type="text"
+                      type={showNewPassword ? "text" : "password"}
                       //   value={name}
                       //   onChange={(e) => setName(e.target.value)}
                       placeholder="Enter New Password"
                       className="w-full border border-inputBorder py-1 px-2 sm:px-4 sm:py-3 focus:outline-none focus:ring-1 focus:ring-primary"
                       required
                     />
+                    <button
+                      type="button"
+                      onClick={() => setShowNewPassword((prev) => !prev)}
+                      className="absolute right-3 top-[38px] text-xl text-gray-500 cursor-pointer"
+                    >
+                      {showNewPassword ? (
+                        <AiOutlineEyeInvisible />
+                      ) : (
+                        <AiOutlineEye />
+                      )}
+                    </button>
                   </div>
-                  <div className="flex flex-col">
+                  <div className="flex flex-col relative">
                     <label className="text-sm text-text-light-2">
                       Confirm Password
                     </label>
                     <input
-                      type="text"
+                      type={showConfirmPassword ? "text" : "password"}
                       //   value={name}
                       //   onChange={(e) => setName(e.target.value)}
                       placeholder="Renter Your Password"
                       className="w-full border border-inputBorder py-1 px-2 sm:px-4 sm:py-3 focus:outline-none focus:ring-1 focus:ring-primary"
                       required
                     />
+                    <button
+                      type="button"
+                      onClick={() => setShowConfirmPassword((prev) => !prev)}
+                      className="absolute right-3 top-[38px] text-xl text-gray-500 cursor-pointer"
+                    >
+                      {showConfirmPassword ? (
+                        <AiOutlineEyeInvisible />
+                      ) : (
+                        <AiOutlineEye />
+                      )}
+                    </button>
                   </div>
                   <button className="inline-block mt-1 text-sm sm:text-[16px] px-5 py-2 sm:py-3 bg-primary text-white text-nowrap font-semibold hover:bg-indigo-700 cursor-pointer transition-colors delay-150">
                     Update Password

@@ -1,95 +1,117 @@
-import {
-  ClipboardDocumentListIcon,
-  ClockIcon
-} from "@heroicons/react/24/outline";
+
+import { useState } from "react";
 import { Link } from "react-router-dom";
+import { initialCategories, sampleCourses } from "../AllCourses";
+import { GoClock } from "react-icons/go";
 
 const ClientHome = () => {
+  const [categories, setCategories] = useState<string[]>(initialCategories);
+  const [selectedCategory, setSelectedCategory] = useState<string>(
+    categories[0]
+  );
+  const [showFullDescription, setShowFullDescription] = useState(false);
+   const progress = 40;
+  const steps = ["Test 1", "Test 2", "Test 3", "Test 4"];
+  const currentStep = 1;
+  const getTruncatedText = (text: string, wordLimit: number) => {
+    const words = text.split(" ");
+    return words.length > wordLimit
+      ? words.slice(0, wordLimit).join(" ") + "..."
+      : text;
+  };
+  const handleCategoryClick = (category: string) => {
+    setSelectedCategory(category);
+  };
 
-    const progress = 40
-  const steps = ['Test 1', 'Test 2', 'Test 3', 'Test 4']
-  const currentStep = 1
+  const filteredCourses = sampleCourses.filter(
+    (course) => course.category === selectedCategory
+  );
 
-  const course = {
-    title: 'RIMI Insurance Video 1',
-    description:
-      'Discover the essentials of Rimi Health Insurance with our in-depth courses tailored to empower your understanding of health coverage. Explore various topics, from policy details to claims processes, and equip yourself with the knowledge to make informed decisions about your health. Join us on this enlightening journey where health education meets practical insights.',
-    duration: '2hr 20min',
-    questions: 40,
-    imageUrl: 'https://placehold.co/180x180',
-  }
-
+  console.log(filteredCourses);
 
   return (
-    <main className="flex-1 p-8 overflow-auto">
-        {/* Header */}
-        <h1 className="text-2xl font-bold text-gray-900">All Courses</h1>
+    <main className="flex-1 p-2 sm:p-8 sm:pr-0 overflow-auto space-y-6">
+      {/* Header */}
+      <h1 className="text-2xl font-bold text-gray-900">All Courses</h1>
 
-        {/* Tabs */}
-        <div className="mt-4 border-b border-gray-200">
-          <nav className="-mb-px flex space-x-8">
-            <button className="pb-2 border-b-2 border-indigo-600 text-indigo-600 font-medium">
-              Health Insurance
-            </button>
-            <button className="pb-2 text-gray-500">Life Insurance</button>
-            <button className="pb-2 text-gray-500">Vehicle Insurance</button>
-          </nav>
-        </div>
-
-        {/* Progress bar */}
-        <div className="mt-6">
-          <div className="flex items-center text-sm text-gray-500">
-            <span>Progress:</span>
-            <span className="ml-1 font-semibold text-gray-900">{progress}%</span>
-          </div>
-          <div className="relative mt-2 h-1 bg-gray-300 rounded-full">
-            <div
-              className="absolute top-0 left-0 h-1 bg-indigo-600 rounded-full"
-              style={{ width: `${progress}%` }}
-            />
-            {/* step circles */}
-            <div className="absolute inset-0 flex justify-between items-center">
-              {steps.map((_, idx) => (
-                <div key={idx} className="flex flex-col items-center">
-                  <div
-                    className={`w-7 h-7 rounded-full flex items-center justify-center ${
-                      idx <= currentStep
-                        ? 'bg-indigo-600 text-white'
-                        : 'bg-gray-300 text-gray-500'
-                    }`}
-                  >
-                    <ClipboardDocumentListIcon className="h-5 w-5" />
-                  </div>
-                  <span className="mt-1 text-xs text-gray-900">{steps[idx]}</span>
+      {/* Category Tabs */}
+      <div className="border-b border-[#E9E9E9] mb-6">
+        <ul className="flex space-x-3 sm:space-x-8 items-center overflow-x-auto custom-scrollbar2 pb-2 sm:pb-0">
+          {categories.map((cat) => (
+            <li
+              key={cat}
+              onClick={() => handleCategoryClick(cat)}
+              className={`pb-2 cursor-pointer font-medium text-nowrap text-sm sm:text-base 2xl:text-xl ${
+                selectedCategory === cat
+                  ? "text-primary border-b-2 border-primary"
+                  : "text-[#6F6B7D]"
+              }`}
+            >
+              {cat}
+            </li>
+          ))}
+        </ul>
+      </div>
+      {/* courses */}
+      <div className="flex flex-wrap gap-5 items-center justify-center sm:justify-start sm:items-start">
+        {filteredCourses.map((course) => (
+          <div
+            key={course.id}
+            className="w-[95%] sm:w-[320px] xl:w-[380px] flex flex-col gap-2 p-4 justify-center items-centr md:justify-start"
+            style={{
+              boxShadow: "0px 4px 6.7px 0px rgba(0, 0, 0, 0.04)",
+              border: "1px solid rgba(235, 235, 235, 1)",
+            }}
+          >
+            <div className="relative bg-blue-200 rounded-sm overflow-hidden h-60">
+              <img
+                src={course.imageUrl}
+                alt={course.title}
+                className="absolute inset-0 m-auto h-40 w-40 mix-blend-multiply"
+              />
+              <div className="absolute h-1 bg-red-500 w-10 bottom-0 left-0" style={{ width: `${progress}%` }}></div>
+              <div className="absolute top-2 right-2 flex items-center text-[#6F6B7D] text-xs 2xl:text-base space-x-3 bg-white px-2.5 py-2 rounded-full">
+                <div className="flex items-center gap-1">
+                  <GoClock />
+                  <span>{course.duration}</span>
                 </div>
-              ))}
+                <div className="flex items-center gap-1">
+                  <img src="Document.svg" alt="" />
+                  <span>{course.questions} Questions</span>
+                </div>
+              </div>
             </div>
+            <h2 className="text-lg font-semibold text-gray-900">
+              {course.title}
+            </h2>
+            <div>
+              <p className="text-gray-600 text-sm pr-2">
+                {showFullDescription
+                  ? course.description
+                  : course.description
+                  ? getTruncatedText(course.description, 20)
+                  : ""}
+              </p>
+
+              {course.description &&
+                course.description.split(" ").length > 20 && (
+                  <button
+                    className="text-primary text-xs mt-1 underline underline-offset-2 inline cursor-pointer"
+                    onClick={() => setShowFullDescription(!showFullDescription)}
+                  >
+                    {showFullDescription ? "See less" : "See more"}
+                  </button>
+                )}
+            </div>
+
+            <button className="inline-block mt-2 text-sm sm:text-[16px] px-5 py-1 sm:py-3 bg-primary text-white text-nowrap font-semibold hover:bg-indigo-700 cursor-pointer transition-colors delay-150">
+              Start Course
+            </button>
           </div>
-        </div>
+        ))}
+      </div>
+    </main>
+  );
+};
 
-        {/* Course Card */}
-        <div className="mt-8 relative bg-blue-200 rounded-sm overflow-hidden h-56">
-          <img
-            src={course.imageUrl}
-            alt={course.title}
-            className="absolute inset-0 m-auto h-40 w-40 mix-blend-multiply"
-          />
-          <div className="absolute top-2 right-2 bg-white rounded-full px-3 py-1 inline-flex items-center space-x-2 text-xs text-gray-500">
-            <span><ClockIcon className="h-5 w-5" /> {course.duration}</span>
-            <span><ClipboardDocumentListIcon className="h-5 w-5" /> {course.questions} Questions</span>
-          </div>
-        </div>
-
-        {/* Course Info */}
-        <h2 className="mt-6 text-lg font-semibold text-gray-900">{course.title}</h2>
-        <p className="mt-2 text-gray-600">{course.description}</p>
-
-        {/* Continue/ Start Button */}
-        <Link to={'/play/123'} className="mt-6 px-8 py-4 bg-indigo-600 text-white font-medium rounded-sm">
-          Continue With Course
-        </Link>
-      </main>
-  )
-}
-
-export default ClientHome
+export default ClientHome;
