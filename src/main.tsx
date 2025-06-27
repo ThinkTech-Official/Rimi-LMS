@@ -23,6 +23,7 @@ import LoginClient from "./pages/ClientLogin.tsx";
 import ClientHome from "./components/client/ClientHome.tsx";
 import ClientCertificates from "./components/client/ClientCertificates.tsx";
 import EditTest from "./components/EditTest.tsx";
+import ClientProfile from "./components/client/ClientProfile.tsx";
 // import Quiz from './components/client/Quiz.tsx';
 
 const router = createBrowserRouter(
@@ -57,6 +58,7 @@ const router = createBrowserRouter(
         {/* /client/play/:id */}
         <Route path="play/:id" element={<CoursePlay />} />
         <Route path="profile" element={< ClientProfile/>} />
+        
       </Route>
     </>
   )

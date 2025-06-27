@@ -1,17 +1,33 @@
-import React, { useState } from 'react';
-import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
+import React, { useState } from "react";
+import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
+import { useForm } from "react-hook-form";
+import type { SubmitHandler } from "react-hook-form";
+import useNotification from "../hooks/useNotification";
+
+interface LoginFormInput {
+  email: string;
+  password: string;
+}
 
 const LoginClient: React.FC = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const { register, handleSubmit } = useForm<LoginFormInput>();
+  const {NotificationComponent, triggerNotification } = useNotification();
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    //  integrate login API
-    console.log({ email, password });
+  // const handleSubmit = (e: React.FormEvent) => {
+  //   e.preventDefault();
+  //   //  integrate login API
+  //   console.log({ email, password });
+  // };
+
+  const onSubmit: SubmitHandler<LoginFormInput> = (data) => {
+    console.log(data);
+    triggerNotification({
+      type: "info",
+      message: "Login successful",
+      duration: 3000,
+    });
   };
-
   return (
     <div className="min-h-screen flex items-center justify-center bg-white px-4">
       <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-md">
@@ -30,21 +46,25 @@ const LoginClient: React.FC = () => {
         </h2>
 
         {/* Login Form */}
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <div>
             <label htmlFor="email" className="sr-only">
               Username/email
             </label>
             <input
               id="email"
-              name="email"
               type="email"
               autoComplete="email"
               required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Username/email"
-              className="w-full px-4 py-3 border border-zinc-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              {...register("email", {
+                required: true,
+                pattern: {
+                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                  message: "Invalid email address",
+                },
+              })}
+              placeholder="email"
+              className="w-full px-4 py-3 border border-zinc-300 focus:outline-none focus:ring-1 focus:ring-primary"
             />
           </div>
 
@@ -54,14 +74,12 @@ const LoginClient: React.FC = () => {
             </label>
             <input
               id="password"
-              name="password"
-              type={showPassword ? 'text' : 'password'}
+              {...register("password", { required: true, minLength: 4 })}
+              type={showPassword ? "text" : "password"}
               autoComplete="current-password"
               required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
               placeholder="Password"
-              className="w-full px-4 py-3 border border-zinc-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full px-4 py-3 border border-zinc-300 focus:outline-none focus:ring-1 focus:ring-primary"
             />
             <button
               type="button"
@@ -78,12 +96,13 @@ const LoginClient: React.FC = () => {
 
           <button
             type="submit"
-            className="w-full py-3 bg-indigo-800 text-white font-semibold rounded shadow hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="w-full py-3 bg-primary text-white font-semibold cursor-pointer transition-all delay-100 shadow hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
           >
             Sign in CC
           </button>
         </form>
       </div>
+      {NotificationComponent}
     </div>
   );
 };
