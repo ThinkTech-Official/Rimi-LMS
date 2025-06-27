@@ -56,6 +56,7 @@ const router = createBrowserRouter(
         <Route path="certificates" element={<ClientCertificates />} />
         {/* /client/play/:id */}
         <Route path="play/:id" element={<CoursePlay />} />
+        <Route path="profile" element={< ClientProfile/>} />
       </Route>
     </>
   )

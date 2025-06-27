@@ -1,16 +1,16 @@
-
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { initialCategories, sampleCourses } from "../AllCourses";
 import { GoClock } from "react-icons/go";
 
 const ClientHome = () => {
+  const navigate = useNavigate();
   const [categories, setCategories] = useState<string[]>(initialCategories);
   const [selectedCategory, setSelectedCategory] = useState<string>(
     categories[0]
   );
   const [showFullDescription, setShowFullDescription] = useState(false);
-   const progress = 40;
+  const progress = 40;
   const steps = ["Test 1", "Test 2", "Test 3", "Test 4"];
   const currentStep = 1;
   const getTruncatedText = (text: string, wordLimit: number) => {
@@ -26,9 +26,9 @@ const ClientHome = () => {
   const filteredCourses = sampleCourses.filter(
     (course) => course.category === selectedCategory
   );
-
-  console.log(filteredCourses);
-
+  const handleStartCourse = (id: number) => {
+    navigate(`/client/play/${id}`);
+  };
   return (
     <main className="flex-1 p-2 sm:p-8 sm:pr-0 overflow-auto space-y-6">
       {/* Header */}
@@ -69,7 +69,10 @@ const ClientHome = () => {
                 alt={course.title}
                 className="absolute inset-0 m-auto h-40 w-40 mix-blend-multiply"
               />
-              <div className="absolute h-1 bg-red-500 w-10 bottom-0 left-0" style={{ width: `${progress}%` }}></div>
+              <div
+                className="absolute h-1 bg-red-500 w-10 bottom-0 left-0"
+                style={{ width: `${progress}%` }}
+              ></div>
               <div className="absolute top-2 right-2 flex items-center text-[#6F6B7D] text-xs 2xl:text-base space-x-3 bg-white px-2.5 py-2 rounded-full">
                 <div className="flex items-center gap-1">
                   <GoClock />
@@ -99,12 +102,15 @@ const ClientHome = () => {
                     className="text-primary text-xs mt-1 underline underline-offset-2 inline cursor-pointer"
                     onClick={() => setShowFullDescription(!showFullDescription)}
                   >
-                    {showFullDescription ? "See less" : "See more"}
+                    {showFullDescription ? "less" : "more"}
                   </button>
                 )}
             </div>
 
-            <button className="inline-block mt-2 text-sm sm:text-[16px] px-5 py-1 sm:py-3 bg-primary text-white text-nowrap font-semibold hover:bg-indigo-700 cursor-pointer transition-colors delay-150">
+            <button
+              className="inline-block mt-2 text-sm sm:text-[16px] px-5 py-1 sm:py-3 bg-primary text-white text-nowrap font-semibold hover:bg-indigo-700 cursor-pointer transition-colors delay-150"
+              onClick={() => handleStartCourse(course.id)}
+            >
               Start Course
             </button>
           </div>

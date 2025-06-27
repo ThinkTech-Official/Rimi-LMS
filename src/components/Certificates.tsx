@@ -5,7 +5,7 @@ const Certificates: React.FC = () => {
         <div className="flex flex-col bg-white mx-auto">
           <div className="w-full bg-primary p-4 pb-0 h-fit">
             <div className="w-full flex flex-col items-center justify-center gap-1 font-rufina text-white border border-b-0 border-[#CB5A31]">
-              <img src="RIMI.svg" alt="" className="w-[110px] mt-10" />
+              <img src="/RIMI.svg" alt="" className="w-[110px] mt-10" />
               <h1 className=" text-[4rem] uppercase mt-2">Certificate</h1>
               <div className="relative w-full flex justify-center">
                 <h2 className=" text-[2rem] -mt-5 uppercase bg-primary px-1 z-5">
@@ -74,12 +74,12 @@ const Certificates: React.FC = () => {
         <div className="border border-[#CB5A31] h-full flex gap-10">
           <div className="relative h-[820px] w-auto ml-5">
             <img
-              src="admin/certFrame.png"
+              src="/certFrame.png"
               alt="Frame"
               className="h-full w-full object-cover -mt-4"
             />
             <img
-              src="RIMI.svg"
+              src="/RIMI.svg"
               alt="RIMI Logo"
               className="w-[120px] absolute top-[10%] left-[50%] translate-x-[-50%]"
             />
