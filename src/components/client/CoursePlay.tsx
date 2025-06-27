@@ -338,7 +338,7 @@ const CoursePlay: FC = () => {
               ref={videoRef}
               src={course.videoUrl}
               controls
-              controlsList="nofullscreen noplaybackrate nodownload"
+              controlsList="nofullscreen"
               disableRemotePlayback
               disablePictureInPicture
               className="w-full h-full"
