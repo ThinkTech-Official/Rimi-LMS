@@ -1,6 +1,7 @@
 import { type FC, useEffect, useState } from "react";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa6";
 import { PiSmiley, PiSmileySad } from "react-icons/pi";
+import type { Test } from "./CoursePlay";
 
 export interface Question {
   id: string;
@@ -8,31 +9,25 @@ export interface Question {
   options: string[];
   correctIndex: number;
 }
-
 export interface QuizProps {
-  questions: Question[];
-  duration: number; // total quiz time in seconds
-  passingScore?: number; // fraction required to pass, e.g. 0.7 = 70%
-  onComplete: (passed: boolean, score: number) => void;
+  test: Test;
+  onBack: () => void;
+  onResume: () => void;
 }
-
 const formatTime = (sec: number) => {
   const m = Math.floor(sec / 60);
   const s = sec % 60;
   return `${m.toString().padStart(2, "0")} : ${s.toString().padStart(2, "0")}`;
 };
 
-const Quiz: FC<QuizProps> = ({
-  questions,
-  duration,
-  passingScore = 0.7,
-  onComplete,
-}) => {
-  const [timeLeft, setTimeLeft] = useState(duration);
+const Quiz: FC<QuizProps> = ({ test, onBack, onResume }) => {
+  const [timeLeft, setTimeLeft] = useState(Number(test.duration));
   const [current, setCurrent] = useState(0);
   const [answers, setAnswers] = useState<Record<string, number>>({});
   const [finished, setFinished] = useState(false);
   const [passed, setPassed] = useState(false);
+  const questions = test.questions;
+  const passingScore = 0.7;
 
   // countdown timer
   useEffect(() => {
@@ -65,16 +60,19 @@ const Quiz: FC<QuizProps> = ({
     ).length;
     const score = correct / questions.length;
     const isPassed = score >= passingScore;
+    if (isPassed) {
+      test.isCleared = true;
+    }
     setPassed(isPassed);
-    onComplete(isPassed, score);
+    // onComplete(isPassed, score);
   }
   // new comment
-  const retry = () => {
-    setTimeLeft(duration);
-    setCurrent(0);
-    setAnswers({});
-    setFinished(false);
-  };
+  // const retry = () => {
+  //   setTimeLeft(duration);
+  //   setCurrent(0);
+  //   setAnswers({});
+  //   setFinished(false);
+  // };
 
   if (finished) {
     const correctCount = questions.filter(
@@ -142,19 +140,27 @@ const Quiz: FC<QuizProps> = ({
             </div>
           )}
           {passed ? (
-            <button className="px-2.5 py-3 bg-primary text-white flex gap-2 items-center justify-center cursor-pointer font-semibold mt-5">
+            <button
+              className="px-2.5 py-3 bg-primary text-white flex gap-2 items-center justify-center cursor-pointer font-semibold mt-5"
+              onClick={() => {
+                onResume(), onBack();
+              }}
+            >
               Proceed to Next Session
             </button>
           ) : (
-            <button className="px-2.5 py-3 bg-primary text-white flex gap-2 items-center justify-center cursor-pointer font-semibold mt-5">
+            <button
+              className="px-2.5 py-3 bg-primary text-white flex gap-2 items-center justify-center cursor-pointer font-semibold mt-5"
+              onClick={onBack}
+            >
               Watch Video Again
             </button>
           )}
-          {
-            !passed && (
-              <span className="text-2xl text-text-dark mt-3 font-semibold">Passing Score : {}/{questions.length}</span>
-            )
-          }
+          {!passed && (
+            <span className="text-2xl text-text-dark mt-3 font-semibold">
+              Passing Score : {}/{questions.length}
+            </span>
+          )}
         </div>
       </div>
     );
@@ -235,7 +241,10 @@ const Quiz: FC<QuizProps> = ({
           </button>
         </div>
       </div>
-      <button className="px-2.5 py-2 cursor-pointer bg-primary text-white flex gap-2 items-center justify-center font-semibold absolute left-5 top-5">
+      <button
+        className="px-2.5 py-2 cursor-pointer bg-primary text-white flex gap-2 items-center justify-center font-semibold absolute left-5 top-5"
+        onClick={onBack}
+      >
         <FaArrowLeft /> Back
       </button>
       <div className="flex flex-col absolute right-4 top-3">
