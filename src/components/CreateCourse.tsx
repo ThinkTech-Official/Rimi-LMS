@@ -1,5 +1,5 @@
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
-import React, { useState, type ChangeEvent, type FormEvent } from "react";
+import React, { useEffect, useState, type ChangeEvent, type FormEvent } from "react";
 import { BiSearch } from "react-icons/bi";
 import { MdUpload } from "react-icons/md";
 import { RiDeleteBinLine } from "react-icons/ri";
@@ -7,6 +7,8 @@ import { TbEdit } from "react-icons/tb";
 import { useNavigate } from "react-router-dom";
 
 import { useCreateCourse } from "../hooks/useCreateCourse";
+import { useFetchCategories } from "../hooks/useFetchCategories";
+import { useCreateCategory } from "../hooks/useCreateCategory";
 
 interface TestEntry {
   id: number;
@@ -25,15 +27,51 @@ const CreateCourse: React.FC<CreateCourseProps> = ({ onCreateTest }) => {
   const navigate = useNavigate()
 
   const { createCourse, progress, loading, error } = useCreateCourse()
+  const { categories , loading: catLoading , error: catError , refetch: reloadCategories } = useFetchCategories()
+  const { createCategory, loading: creatingCat , error: catCreateError } = useCreateCategory()
 
 
+  // Form Fields 
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [video, setVideo] = useState<File | null>(null)
   const [thumbnail, setThumbnail] = useState<File | null>(null);
+  const [documents, setDocuments] = useState<FileList | null>(null)
   // const [testSearch, setTestSearch] = useState("");
   // const [searchTerm, setSearchTerm] = useState<string>("");
   // const [currentPage, setCurrentPage] = useState(1);
+
+  // Category Selection 
+  // const [selectedCategory , setSelectedCategory] = useState<string>("")
+  const [addingCat, setAddingCat] = useState<boolean>(false)
+  const [newCategory, setNewCategory] = useState<string>("")
+  const [selectedCategoryId, setSelectedCategoryId] = useState<number>();
+
+  // useEffect(() => {
+  //   if(categories.length && !selectedCategory) {
+  //     setSelectedCategory(categories[0])
+  //   }
+  // }, [categories])
+
+  useEffect(() => {
+  if (categories.length && selectedCategoryId === undefined) {
+    setSelectedCategoryId(categories[0].id);
+  }
+}, [categories, selectedCategoryId]);
+
+  const handleAddCategory = async () => {
+    const trimmed = newCategory.trim()
+    if(!trimmed) return
+    try {
+      const newCat = await createCategory(trimmed)
+      setNewCategory("")
+      setAddingCat(false)
+      reloadCategories();
+      setSelectedCategoryId(newCat.id)
+    } catch (error) {
+      // create a ... what ever  just do something   !!!
+    }
+  }
 
  const handleVideoChange = (e: ChangeEvent<HTMLInputElement>) => {
   if (e.target.files?.[0]) {
@@ -45,24 +83,40 @@ const CreateCourse: React.FC<CreateCourseProps> = ({ onCreateTest }) => {
     if (e.target.files) setThumbnail(e.target.files[0]);
   };
 
+  const handleDocsChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) setDocuments(e.target.files)
+  }
+
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     const formData = new FormData();
     formData.append('name', name);
     formData.append('description', description);
+    // formData.append("categoryId", selectedCategory)
+    if (selectedCategoryId !== undefined) {
+  formData.append("categoryId", String(selectedCategoryId));
+} else {
+  alert('no category selected')
+  return
+}
     if (thumbnail){
       formData.append('thumbnail', thumbnail);
     } 
     if (video) {
-  formData.append('video', video)
-}
+    formData.append('video', video)
+    }
+    if (documents) {
+      Array.from(documents).forEach((file) => formData.append("documents" , file))
+    }
+
+    console.log([...formData.entries()]);
 
     try {
       const savedCourse = await createCourse(formData);
       navigate(`/admin/edit-course/${savedCourse.id}`);
     } catch {
-      // error handled in hook
+      // error handled in hook or somethink like that ... figure it out
     }
   };
 
@@ -106,6 +160,79 @@ const CreateCourse: React.FC<CreateCourseProps> = ({ onCreateTest }) => {
                   required
                 />
               </div>
+
+              
+
+
+                {/* category dropdown & add */}
+          <div className="flex flex-col">
+            <label>Category</label>
+            {catLoading ? (
+              <p>Loading categories...</p>
+            ) : catError ? (
+              <p className="text-red-500">Load error: {catError}</p>
+            ) : (
+              // <div className="flex space-x-2 items-center">
+              //   <select value={selectedCategory} onChange={e => setSelectedCategory(e.target.value)}
+              //     className="border px-3 py-2 focus:ring-primary" required>
+              //     {categories.map((cat: any) => <option key={cat.id} value={cat.id}>{cat.name}</option>)}
+              //   </select>
+              //   <button type="button" onClick={() => setAddingCat(!addingCat)}
+              //     className="text-primary hover:underline">+ Add</button>
+              // </div>
+               <div className="flex space-x-2 items-center">
+      <select
+        value={selectedCategoryId ?? ""}
+        onChange={e => setSelectedCategoryId(Number(e.target.value))}
+        className="border px-3 py-2 focus:ring-primary"
+        required
+      >
+        <option value="" disabled>
+          -- Select category --
+        </option>
+        {categories.map((cat: any) => (
+          <option key={cat.id} value={cat.id}>
+            {cat.name}
+          </option>
+        ))}
+      </select>
+      <button
+        type="button"
+        onClick={() => setAddingCat(!addingCat)}
+        className="text-primary hover:underline"
+      >
+        + Add
+      </button>
+    </div>
+            )}
+            {addingCat && (
+              <div className="mt-2 flex space-x-2">
+                <input value={newCategory} onChange={e => setNewCategory(e.target.value)}
+                  className="border px-3 py-2 flex-1" placeholder="New category" />
+                <button type="button" onClick={handleAddCategory}
+                  className="px-4 py-2 bg-primary text-white disabled:opacity-50"
+                  disabled={creatingCat}>
+                  {creatingCat ? 'Adding…' : 'Add'}
+                </button>
+              </div>
+            )}
+            {catCreateError && <p className="text-red-500">{catCreateError}</p>}
+          </div>
+
+
+
+           {/* file uploads */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            
+            <div className="flex flex-col md:col-span-2">
+              <label>Documents (optional)</label>
+              <input type="file" multiple onChange={handleDocsChange} />
+            </div>
+          </div>
+
+
+
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 {/* Add Video */}
                 <div className="flex flex-col">
@@ -138,7 +265,7 @@ const CreateCourse: React.FC<CreateCourseProps> = ({ onCreateTest }) => {
                     <input
                       type="file"
                       accept="image/png,image/jpeg"
-                      className="hidden"
+                      // className="hidden"
                       onChange={handleThumbnailChange}
                     />
                     <span className="text-[#59BDE2] flex items-center gap-2">

@@ -1,16 +1,20 @@
-import React, { useState, type ChangeEvent } from "react";
+import React, { useEffect, useState, type ChangeEvent } from "react";
 import { BiSearch } from "react-icons/bi";
 import { GoClock } from "react-icons/go";
+import { useFetchCategories } from "../hooks/useFetchCategories";
+import { useFetchCourses , type Course } from "../hooks/useFetchCourses";
+import { Navigate, useNavigate } from "react-router-dom";
+import { useCreateCategory } from "../hooks/useCreateCategory";
 
-interface Course {
-  id: number;
-  title: string;
-  duration: string;
-  questions: number;
-  imageUrl: string;
-  category: string;
-  description?: string;
-}
+// interface Course {
+//   id: number;
+//   title: string;
+//   duration: string;
+//   questions: number;
+//   imageUrl: string;
+//   category: string;
+//   description?: string;
+// }
 
 export const initialCategories = [
   "Health Insurance",
@@ -18,7 +22,7 @@ export const initialCategories = [
   "Vehicle Insurance",
 ];
 
-export const sampleCourses: Course[] = [
+export const sampleCourses: any[] = [
   {
     id: 1,
     title: "RIMI Insurance Video 1",
@@ -106,46 +110,89 @@ interface AllCoursesProps {
 }
 
 const AllCourses: React.FC<AllCoursesProps> = ({ onCreateCourse }) => {
-  const [categories, setCategories] = useState<string[]>(initialCategories);
-  const [selectedCategory, setSelectedCategory] = useState<string>(
-    categories[0]
+
+  const navigate = useNavigate()
+
+  const { categories , loading: catLoading , error: catError , refetch: reloadCategories, } = useFetchCategories()
+  const { createCategory , loading: creatingCat , error: catCreateError } = useCreateCategory()
+  const { courses, loading: courseLoading , error: courseError } = useFetchCourses()
+
+// which category is showing?
+  const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(
+    null
   );
   const [searchTerm, setSearchTerm] = useState<string>("");
 
   // Category Handelling State
+  // add‐category UI
 
-  const [showAddCategoryModal, setShowAddCategoryModal] =
-    useState<boolean>(false);
+  const [showAddCategoryModal, setShowAddCategoryModal] = useState<boolean>(false);
   const [newCategory, setNewCategory] = useState<string>("");
   //
 
-  const handleCategoryClick = (category: string) => {
-    setSelectedCategory(category);
-  };
+  
 
-  const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(e.target.value);
-  };
-
-  // Category adding method
-  const handleAddCategory = () => {
-    const trimmed = newCategory.trim();
-    if (!trimmed) return;
-    if (!categories.includes(trimmed)) {
-      setCategories((prev) => [...prev, trimmed]);
-      setSelectedCategory(trimmed);
+ // when categories first load, default to the first one
+  useEffect(() => {
+    if (categories.length > 0 && selectedCategoryId === null) {
+      setSelectedCategoryId(categories[0].id);
     }
+  }, [categories, selectedCategoryId]);
+
+    const handleCategoryClick = (id: number) => {
+    setSelectedCategoryId(id);
+  };
+
+  const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => setSearchTerm(e.target.value);
+  
+
+  const handleAddCategory = async () => {
+    const name = newCategory.trim();
+    if (!name) return;
+    await createCategory(name);
     setNewCategory("");
     setShowAddCategoryModal(false);
+    await reloadCategories();
+    // select the newly created category (it will be at the end of the array)
+    const cat = categories.find((c) => c.name === name);
+    if (cat) setSelectedCategoryId(cat.id);
   };
+
+
+  const handleSelectCourse = (id: any) => {
+    navigate(`/admin/edit-course/${id}`)
+  }
 
   //
 
-  const filteredCourses = sampleCourses.filter(
-    (course) =>
-      course.category === selectedCategory &&
-      course.title.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // const filteredCourses = courses.filter(
+  //   (course) =>
+  //     course.category === selectedCategory &&
+  //     course.title.toLowerCase().includes(searchTerm.toLowerCase())
+  // );
+
+    // Safe filtering if courses empty or selectedCategory unset, result is empty array
+    const filteredCourses = (courses || []).filter((c) => {
+    const byCat =
+      selectedCategoryId !== null ? c.categoryId === selectedCategoryId : true;
+    const bySearch = c.title
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase());
+    return byCat && bySearch;
+  });
+
+
+    // Render loading / errors
+   if (catLoading || courseLoading) return <p>Loading…</p>;
+  if (catError)
+    return <p className="text-red-500">Error loading categories: {catError}</p>;
+  if (courseError)
+    return <p className="text-red-500">Error loading courses: {courseError}</p>;
+
+
+
+  console.log('from all courses component',courses)
+
 
   return (
     <div className="min-h-screen bg-white">
@@ -181,17 +228,19 @@ const AllCourses: React.FC<AllCoursesProps> = ({ onCreateCourse }) => {
         {/* Category Tabs */}
         <div className="border-b border-[#E9E9E9] mb-6">
           <ul className="flex space-x-3 sm:space-x-8 items-center overflow-x-auto custom-scrollbar2 pb-2 sm:pb-0">
-            {categories.map((cat) => (
+            {categories.map((cat: any) => (
+              
               <li
-                key={cat}
-                onClick={() => handleCategoryClick(cat)}
+                key={cat.id}
+                onClick={() => handleCategoryClick(cat.id)}
                 className={`pb-2 cursor-pointer font-medium text-nowrap text-sm sm:text-base 2xl:text-xl ${
-                  selectedCategory === cat
-                    ? "text-primary border-b-2 border-primary"
-                    : "text-[#6F6B7D]"
-                }`}
+                  selectedCategoryId === cat.id
+                  ? "text-primary border-b-2 border-primary"
+                  : "text-gray-600"
+              }`}
               >
-                {cat}
+                
+                {cat.name}
               </li>
             ))}
             <li
@@ -206,12 +255,21 @@ const AllCourses: React.FC<AllCoursesProps> = ({ onCreateCourse }) => {
         <div></div>
 
         {/* Courses Grid */}
+        {(catLoading || courseLoading) 
+         ? 
+      (
+        <p>Loading...</p>
+      )  
+      :
+
+      
         <div className="flex items-center justify-center sm:justify-start w-full">
           <div className="flex flex-wrap gap-6 items-center justify-center sm:justify-start sm:items-start">
             {filteredCourses.map((course) => (
               <div
                 key={course.id}
-                className="rounded-[2px] overflow-hidden w-[80vw] max-w-[300px] sm:w-[200px] 2xl:w-[250px]"
+                className="rounded-[2px] overflow-hidden w-[80vw] max-w-[300px] sm:w-[200px] 2xl:w-[250px] cursor-pointer"
+                onClick={() => handleSelectCourse(course.id)}
               >
                 <div className="relative">
                   <img
@@ -231,7 +289,7 @@ const AllCourses: React.FC<AllCoursesProps> = ({ onCreateCourse }) => {
                     </div>
                     <div className="flex items-center gap-1">
                       <img src="Document.svg" alt="" />
-                      <span>{course.questions} Questions</span>
+                      {/* <span>{course.questions} Questions</span> */}
                     </div>
                   </div>
                 </div>
@@ -239,6 +297,8 @@ const AllCourses: React.FC<AllCoursesProps> = ({ onCreateCourse }) => {
             ))}
           </div>
         </div>
+
+        }
 
         {/* Add Category Modal */}
         {showAddCategoryModal && (
@@ -259,13 +319,17 @@ const AllCourses: React.FC<AllCoursesProps> = ({ onCreateCourse }) => {
                 >
                   Cancel
                 </button>
-                <button
-                  onClick={handleAddCategory}
-                  className="px-4 py-2 rounded bg-primary text-white hover:bg-indigo-700"
-                >
-                  Add
-                </button>
+                 <button
+                className="px-4 py-2 bg-primary text-white rounded disabled:opacity-50"
+                onClick={handleAddCategory}
+                disabled={creatingCat}
+              >
+                {creatingCat ? "Adding…" : "Add"}
+              </button>
               </div>
+              {catCreateError && (
+              <p className="text-red-500 mt-2">{catCreateError}</p>
+            )}
             </div>
           </div>
         )}
