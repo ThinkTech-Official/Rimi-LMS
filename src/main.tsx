@@ -58,6 +58,7 @@ const router = createBrowserRouter(
         {/* /client/play/:id */}
         <Route path="play/:id" element={<CoursePlay />} />
         <Route path="profile" element={< ClientProfile/>} />
+        
       </Route>
     </>
   )
