@@ -22,6 +22,7 @@ import CreateTest from "./components/CreateTest.tsx";
 import LoginClient from "./pages/ClientLogin.tsx";
 import ClientHome from "./components/client/ClientHome.tsx";
 import ClientCertificates from "./components/client/ClientCertificates.tsx";
+import EditTest from "./components/EditTest.tsx";
 // import Quiz from './components/client/Quiz.tsx';
 
 const router = createBrowserRouter(
@@ -42,7 +43,8 @@ const router = createBrowserRouter(
         <Route path="/admin/tests" element={<AllTests />} />
         <Route path="/admin/users" element={<UserManagement />} />
         <Route path="/admin/edit-course/:courseId" element={<EditCourse />} />
-        <Route path="/admin/:courseId/create-test" element={<CreateTest />} />
+        <Route path="/admin/edit-course/:courseId/create-test" element={<CreateTest />} />
+        <Route path="/admin/edit-course/:courseId/edit-test/:testId" element={<EditTest />} />
 
         {/* <Route path="users" element={<UserList />} /> */}
       </Route>

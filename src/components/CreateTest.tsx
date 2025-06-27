@@ -1,4 +1,6 @@
 import React, { useState, type FormEvent } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { useCreateTest } from "../hooks/useCreateTest";
 
 interface Option {
   id: number;
@@ -12,8 +14,14 @@ interface Question {
 }
 
 const CreateTest: React.FC = () => {
+
+  const { courseId } = useParams<{ courseId: string }>()
+  const navigate = useNavigate()
+  const { createTest , loading , error } = useCreateTest(courseId!) 
+
+
   const [name, setName] = useState("");
-  const [courseId, setCourseId] = useState("");
+  // const [courseId, setCourseId] = useState("");
   const [duration, setDuration] = useState("");
   const [startTime, setStartTime] = useState("");
   const [questions, setQuestions] = useState<Question[]>([
@@ -87,14 +95,39 @@ const CreateTest: React.FC = () => {
       })
     );
   };
+
   const handleRemoveQuestion = (qid: number) => {
     setQuestions((prev) => prev.filter((q) => q.id !== qid));
   };
 
-  const handleSave = (e: FormEvent) => {
+  // const handleSave = (e: FormEvent) => {
+  //   e.preventDefault();
+  //   // handle submit
+  //   console.log({ name, courseId, duration, startTime, questions });
+  // };
+
+    const handleSave = async (e: FormEvent) => {
     e.preventDefault();
-    // handle submit
-    console.log({ name, courseId, duration, startTime, questions });
+    if (!courseId) return;
+
+    const dto = {
+      name,
+      duration: Number(duration),
+      startTime: Number(startTime),
+      questions: questions.map((q) => ({
+        text: q.text,
+        options: q.options.map((o) => ({ text: o.text, isCorrect: o.isCorrect })),
+      })),
+    };
+
+    console.log('from create test submit', dto)
+
+    try {
+      await createTest(dto);
+      navigate(`/admin/edit-course/${courseId}`);
+    } catch {
+      // error displayed by hook
+    }
   };
 
   return (
@@ -123,14 +156,14 @@ const CreateTest: React.FC = () => {
                 className="w-full border border-inputBorder p-2 sm:px-4 sm:py-3 focus:outline-none focus:ring-1 focus:ring-primary"
                 required
               />
-              <input
+              {/* <input
                 type="text"
                 value={courseId}
                 onChange={(e) => setCourseId(e.target.value)}
                 placeholder="Enter Course ID"
                 className="w-full border border-inputBorder p-2 sm:px-4 sm:py-3 focus:outline-none focus:ring-1 focus:ring-primary"
                 required
-              />
+              /> */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <input
                   type="text"
