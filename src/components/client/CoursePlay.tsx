@@ -1,141 +1,37 @@
 import { type FC, useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { FaFilePdf } from "react-icons/fa";
 import Quiz, { type Question } from "./Quiz";
 import { MdFullscreen } from "react-icons/md";
 
-interface StudyMaterial {
-  id: string;
-  title: string;
-  description: string;
-  url: string;
-}
+import { useFetchCourse, type Test as BasicTest } from '../../hooks/useFetchCourse'
+import { useFetchTest, type TestWithQuestions } from '../../hooks/useFetchTestClient';
 
-export interface Test {
-  id: number;
-  testName: string;
-  duration: string;
-  startTime: number;
-  passingMarks: number;
-  isCleared: boolean;
-  questions: Question[];
-}
 
-const course = {
-  id: 1,
-  title: "RIMI Insurance Masterclass",
-  duration: 30,
-  imageUrl: "/images/rimi-insurance.jpg",
-  videoUrl:
-    "https://data-1.utreon.com/v/Nj/Y3/Yj/V4P1iTHWQv6/V4P1iTHWQv6_1080p.mp4",
-  category: "Insurance",
-  description:
-    "Master the essentials of RIMI Insurance, policies, and claim processing.",
-  tests: [
-    {
-      id: 101,
-      testName: "Insurance Basics",
-      duration: "120",
-      startTime: 10,
-      passingMarks: 1,
-      isCleared: false,
-      questions: [
-        {
-          id: "q1",
-          question: "What is RIMI Insurance?",
-          options: ["Health", "Auto", "Travel", "Life"],
-          correctIndex: 0,
-        },
-        {
-          id: "q2",
-          question: "What does a premium mean?",
-          options: ["Bonus", "Monthly payment", "Policy name", "Tax"],
-          correctIndex: 1,
-        },
-      ],
-    },
-    {
-      id: 102,
-      testName: "Understanding Policies",
-      duration: "120",
-      startTime: 20,
-      passingMarks: 2,
-      isCleared: false,
-      questions: [
-        {
-          id: "q3",
-          question: "What is a policy term?",
-          options: ["Premium", "Duration of coverage", "Claim", "Policyholder"],
-          correctIndex: 1,
-        },
-        {
-          id: "q4",
-          question: "What is a deductible?",
-          options: [
-            "Insurer payout",
-            "Customer's upfront cost",
-            "Discount",
-            "Late fee",
-          ],
-          correctIndex: 1,
-        },
-      ],
-    },
-    {
-      id: 103,
-      testName: "Claims & Processing",
-      duration: "120",
-      startTime: 25,
-      passingMarks: 1,
-      isCleared: false,
-      questions: [
-        {
-          id: "q5",
-          question: "What is a claim in insurance?",
-          options: [
-            "A contract",
-            "A request for payment",
-            "A refund",
-            "An invoice",
-          ],
-          correctIndex: 1,
-        },
-        {
-          id: "q6",
-          question: "Who processes insurance claims?",
-          options: ["Insurer", "Client", "Bank", "Government"],
-          correctIndex: 0,
-        },
-      ],
-    },
-  ],
-};
 
-const studyMaterials: StudyMaterial[] = [
-  {
-    id: "1",
-    title: "RIMI Insurance Video 1",
-    description:
-      "Discover the essentials of Rimi Health Insurance with our in-depth courses tailored to empower your understanding of health coverage.",
-    url: "/materials/insurance-video-1.pdf",
-  },
-  {
-    id: "2",
-    title: "Policy Deep Dive",
-    description: "A detailed PDF on policy terms, claims processes, and more.",
-    url: "/materials/policy-deep-dive.pdf",
-  },
-  {
-    id: "3",
-    title: "Claims Checklist",
-    description: "Step-by-step checklist to follow when filing a claim.",
-    url: "/materials/claims-checklist.pdf",
-  },
-];
 
-type View = "home" | "certificates" | "play";
 
 const CoursePlay: FC = () => {
+
+  const { id: courseId } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+
+    // fetch course and basic tests/docs
+  const { course, loading, error } = useFetchCourse(courseId);
+
+  // current test id (basic)
+  const [activeTestBasic, setActiveTestBasic] = useState<BasicTest | null>(null);
+
+  // fetch test questions when basic selected
+  const {
+    test: activeTestFull,
+    loading: loadingTest,
+    error: errorTest
+  } = useFetchTest(courseId, activeTestBasic?.id);
+
+
+  // refs and Ui State 
+
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [showFull, setShowFull] = useState(false);
@@ -148,11 +44,13 @@ const CoursePlay: FC = () => {
   const [maxAllowedTime, setMaxAllowedTime] = useState(
     course.tests[0].startTime
   );
+
+  
   const hideMarkersTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
     null
   );
   const [isVideoPaused, setIsVideoPaused] = useState(false);
-  const navigate = useNavigate();
+
 
   // Toggle fullscreen for the video container
   const toggleFullscreen = () => {
