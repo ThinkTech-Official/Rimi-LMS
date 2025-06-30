@@ -62,6 +62,8 @@ export function useFetchTest(
       .then((res: any) => {
         const raw = res.data;
 
+        console.log('from use fetch test clients' , raw)
+
         const mappedQuestions: Question[] = raw.questions.map((q: any) => ({
           id: q.id.toString(),
           question: q.question,

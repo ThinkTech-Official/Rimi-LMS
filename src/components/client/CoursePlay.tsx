@@ -40,9 +40,9 @@ const CoursePlay: FC = () => {
     number | null
   >(null);
   const [showMarkers, setShowMarkers] = useState(true);
-  const [showTest, setShowTest] = useState<Test | null>(null);
-  const [maxAllowedTime, setMaxAllowedTime] = useState(
-    course.tests[0].startTime
+  const [showTest, setShowTest] = useState<TestWithQuestions | null>(null);
+  const [maxAllowedTime, setMaxAllowedTime] = useState<number>(
+    course?.tests[0].startTime!
   );
 
   
@@ -80,12 +80,12 @@ const CoursePlay: FC = () => {
       const currentTime = video.currentTime;
 
       // Prevent skipping ahead
-      if (currentTime > maxAllowedTime) {
+      if (currentTime > maxAllowedTime!) {
         video.currentTime = maxAllowedTime;
       }
 
       // Detect if test should be triggered
-      const hitTest = course.tests.find(
+      const hitTest = course?.tests.find(
         (test) =>
           Math.abs(currentTime - test.startTime) < 0.5 &&
           lastPausedBreakpoint !== test.startTime
@@ -155,13 +155,13 @@ const CoursePlay: FC = () => {
 
   const handleResume = () => {
     // Find the index of the cleared test
-    const clearedIndex = course.tests.findIndex((t) => t.id === showTest?.id);
+    const clearedIndex = course?.tests.findIndex((t) => t.id === showTest?.id);
 
     // Update the max allowed time to next test's start time (if exists), or full duration
-    const nextTest = course.tests[clearedIndex + 1];
+    const nextTest = course?.tests[clearedIndex! + 1];
     const nextAllowedTime = nextTest
       ? Math.max(0, nextTest.startTime - 1)
-      : course.duration;
+      : course?.duration;
 
     setMaxAllowedTime((prev) => Math.max(prev, nextAllowedTime));
 
@@ -188,7 +188,7 @@ const CoursePlay: FC = () => {
 
     // If one or more are cleared, jump to the next test's startTime
     if (lastClearedIndex !== -1) {
-      const actualIndex = course.tests.length - 1 - lastClearedIndex;
+      const actualIndex = course?.tests.length! - 1 - lastClearedIndex;
       const currentTest = course.tests[actualIndex];
       resumeTime = currentTest.startTime + 0.5; // move slightly ahead of test trigger point
     }
@@ -234,7 +234,7 @@ const CoursePlay: FC = () => {
           >
             <video
               ref={videoRef}
-              src={course.videoUrl}
+              src={course?.videoUrl}
               controls
               controlsList="nofullscreen"
               disableRemotePlayback

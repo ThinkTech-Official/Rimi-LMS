@@ -37,6 +37,12 @@ const CreateCourse: React.FC<CreateCourseProps> = ({ onCreateTest }) => {
   const [video, setVideo] = useState<File | null>(null)
   const [thumbnail, setThumbnail] = useState<File | null>(null);
   const [documents, setDocuments] = useState<FileList | null>(null)
+
+  // Duration
+  const [duration, setDuration] = useState<number | null>(null) 
+
+
+
   // const [testSearch, setTestSearch] = useState("");
   // const [searchTerm, setSearchTerm] = useState<string>("");
   // const [currentPage, setCurrentPage] = useState(1);
@@ -73,9 +79,24 @@ const CreateCourse: React.FC<CreateCourseProps> = ({ onCreateTest }) => {
     }
   }
 
+  // handle video change with meta data
  const handleVideoChange = (e: ChangeEvent<HTMLInputElement>) => {
-  if (e.target.files?.[0]) {
-    setVideo(e.target.files[0])
+  // if (e.target.files?.[0]) {
+  //   setVideo(e.target.files[0])
+  // }
+  const file = e.target.files?.[0] ?? null
+  setVideo(file)
+  setDuration(null)
+
+  if(file) {
+    const url = URL.createObjectURL(file);
+    const vid = document.createElement("video")
+    vid.preload = 'metadata'
+    vid.src = url
+    vid.onloadedmetadata = () => {
+      URL.revokeObjectURL(url)
+      setDuration(Math.floor(vid.duration))  // in seconds
+    }
   }
 }
 
@@ -105,6 +126,7 @@ const CreateCourse: React.FC<CreateCourseProps> = ({ onCreateTest }) => {
     } 
     if (video) {
     formData.append('video', video)
+    formData.append("duration",String(duration))
     }
     if (documents) {
       Array.from(documents).forEach((file) => formData.append("documents" , file))
@@ -248,11 +270,18 @@ const CreateCourse: React.FC<CreateCourseProps> = ({ onCreateTest }) => {
                     />
                     <span className="text-[#59BDE2] flex items-center gap-4">
                       <img src="VideoUpload.svg" alt="" />
-                      Select File to Upload
+                      {video ? video.name : "Select File to Upload"}
+
                     </span>
                   </label>
+                  {duration !== null && (
+              <p className="text-xs text-text-light-2 mt-2">
+                Video length: {Math.floor(duration / 60)}min{" "}
+                {duration % 60}s
+              </p>
+            )}
                   <p className="text-xs text-text-light-2 mt-2">
-                    Select multiple videos from your local storage * Max. upto
+                    Select single videos from your local storage * Max. upto
                     5Gb per video
                   </p>
                 </div>
