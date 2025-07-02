@@ -37,6 +37,9 @@ const CreateTest: React.FC = () => {
     },
   ]);
 
+  const [passingMarks, setPassingMarks] = useState<string>('')
+  const [quizQuestionNumber, setQuizQuestionNumber] = useState<string>('')
+
   const handleAddQuestion = () => {
     setQuestions((prev) => [
       ...prev,
@@ -114,6 +117,8 @@ const CreateTest: React.FC = () => {
       name,
       duration: Number(duration),
       startTime: Number(startTime),
+      passingMarks: Number(passingMarks),
+      quizQuestionNumber: Number(quizQuestionNumber),
       questions: questions.map((q) => ({
         text: q.text,
         options: q.options.map((o) => ({ text: o.text, isCorrect: o.isCorrect })),
@@ -152,7 +157,7 @@ const CreateTest: React.FC = () => {
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="Enter Course Name"
+                placeholder="Enter Test Name"
                 className="w-full border border-inputBorder p-2 sm:px-4 sm:py-3 focus:outline-none focus:ring-1 focus:ring-primary"
                 required
               />
@@ -169,14 +174,32 @@ const CreateTest: React.FC = () => {
                   type="text"
                   value={duration}
                   onChange={(e) => setDuration(e.target.value)}
-                  placeholder="Select Test Duration"
+                  placeholder="Select Test Duration in Seconds"
                   className="w-full border border-inputBorder p-2 sm:px-4 sm:py-3 focus:outline-none focus:ring-1 focus:ring-primary"
                 />
                 <input
                   type="text"
                   value={startTime}
                   onChange={(e) => setStartTime(e.target.value)}
-                  placeholder="Enter the starting time for the test in minutes during the video."
+                  placeholder="Enter the starting time for the test in seconds during the video."
+                  className="w-full border border-inputBorder p-2 sm:px-4 sm:py-3 focus:outline-none focus:ring-1 focus:ring-primary"
+                />
+              </div>
+
+                {/* Passing Marks and Quiz Questions  */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <input
+                  type="text"
+                  value={passingMarks}
+                  onChange={(e) => setPassingMarks(e.target.value)}
+                  placeholder="Passing Percentage"
+                  className="w-full border border-inputBorder p-2 sm:px-4 sm:py-3 focus:outline-none focus:ring-1 focus:ring-primary"
+                />
+                <input
+                  type="text"
+                  value={quizQuestionNumber}
+                  onChange={(e) => setQuizQuestionNumber(e.target.value)}
+                  placeholder="Number of Question In Quiz , if Not filled sets all the questions in test for quiz"
                   className="w-full border border-inputBorder p-2 sm:px-4 sm:py-3 focus:outline-none focus:ring-1 focus:ring-primary"
                 />
               </div>

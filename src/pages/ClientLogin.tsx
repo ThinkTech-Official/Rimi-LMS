@@ -3,6 +3,9 @@ import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 import { useForm } from "react-hook-form";
 import type { SubmitHandler } from "react-hook-form";
 import useNotification from "../hooks/useNotification";
+import { useLogin } from "../hooks/useLogin";
+import { useUser } from "../hooks/useUser";
+import { useNavigate } from "react-router-dom";
 
 interface LoginFormInput {
   email: string;
@@ -10,9 +13,13 @@ interface LoginFormInput {
 }
 
 const LoginClient: React.FC = () => {
+  const navigate = useNavigate()
   const [showPassword, setShowPassword] = useState(false);
   const { register, handleSubmit } = useForm<LoginFormInput>();
   const {NotificationComponent, triggerNotification } = useNotification();
+
+   const { login, loading, error } = useLogin();
+  const { refreshUser } = useUser();
 
   // const handleSubmit = (e: React.FormEvent) => {
   //   e.preventDefault();
@@ -20,14 +27,27 @@ const LoginClient: React.FC = () => {
   //   console.log({ email, password });
   // };
 
-  const onSubmit: SubmitHandler<LoginFormInput> = (data) => {
-    console.log(data);
-    triggerNotification({
-      type: "info",
-      message: "Login successful",
-      duration: 3000,
-    });
+  // const onSubmit: SubmitHandler<LoginFormInput> = (data) => {
+  //   console.log(data);
+  //   triggerNotification({
+  //     type: "info",
+  //     message: "Login successful",
+  //     duration: 3000,
+  //   });
+  // };
+
+   const onSubmit: SubmitHandler<LoginFormInput> = async (data) => {
+    try {
+      await login(data);
+      await refreshUser();
+      triggerNotification({ type: 'success', message: 'Logged in!', duration: 3000 });
+      navigate('/client');
+    } catch {
+      triggerNotification({ type: 'error', message: error || 'Login failed', duration: 3000 });
+    }
   };
+
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-white px-4">
       <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-md">
@@ -98,7 +118,7 @@ const LoginClient: React.FC = () => {
             type="submit"
             className="w-full py-3 bg-primary text-white font-semibold cursor-pointer transition-all delay-100 shadow hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
           >
-            Sign in CC
+            {loading ? 'Signing in...' : 'Sign in Client'}
           </button>
         </form>
       </div>
