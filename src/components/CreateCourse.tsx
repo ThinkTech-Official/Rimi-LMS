@@ -288,7 +288,7 @@ const CreateCourse: React.FC<CreateCourseProps> = ({ onCreateTest }) => {
                       onChange={handleVideoChange}
                     />
                     <span className="text-[#59BDE2] flex items-center gap-4">
-                      <img src="VideoUpload.svg" alt="" />
+                      <img src="/VideoUpload.svg" alt="" />
                       {video ? video.name : "Select File to Upload"}
 
                     </span>
