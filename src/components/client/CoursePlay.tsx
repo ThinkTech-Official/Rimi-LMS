@@ -38,6 +38,8 @@ const CoursePlay = () => {
   const [showMarkers, setShowMarkers] = useState(true);
   const [showTest, setShowTest] = useState<TestWithQuestions | null>(null);
 
+  const [showFull, setShowFull] = useState(false);
+
   // keep track to avoid re-trigger
   const triggeredTests = useRef<Set<number>>(new Set());
 
@@ -102,6 +104,36 @@ const CoursePlay = () => {
     if (fetchedTest) setShowTest(fetchedTest);
   }, [fetchedTest]);
 
+
+  // Prevent scrubbing past the next un-cleared test
+useEffect(() => {
+  const video = videoRef.current;
+  if (!video || !course) return;
+
+  const onSeeking = () => {
+    // find the next test the user hasn't cleared
+    const nextTest = course.tests
+      .filter(t => !t.isCleared)
+      .sort((a, b) => a.startTime - b.startTime)[0];
+
+    // allowed limit is either the next test start, or full duration
+    const limit = nextTest
+      ? nextTest.startTime
+      : (course.duration ?? video.duration);
+
+    // if they tried to jump ahead, snap back to the limit
+    if (video.currentTime > limit) {
+      video.currentTime = limit;
+    }
+  };
+
+  video.addEventListener("seeking", onSeeking);
+  return () => {
+    video.removeEventListener("seeking", onSeeking);
+  };
+}, [course]);
+
+
   // if user passed update checkpoint and resume
   const handleResume = async () => {
     if (activeTestBasic){
@@ -145,8 +177,8 @@ const CoursePlay = () => {
   };
 
 
-
-
+  // Show/hide long description
+  const toggleDescription = () => setShowFull((f) => !f);
 
 
 
@@ -167,7 +199,7 @@ const CoursePlay = () => {
 
         <div className="mt-6 bg-black rounded overflow-hidden relative max-w-[1100px] 2xl:max-w-[1200px]">
           <div
-            className="relative w-full aspect-video bg-black rounded overflow-hidden"
+            className="relative w-full aspect-video  rounded overflow-hidden"
             // ref={containerRef}
             // onMouseMove={handleMouseActivity}
             // onMouseLeave={handleMouseLeave}
@@ -181,6 +213,8 @@ const CoursePlay = () => {
               disablePictureInPicture
               className="w-full h-full"
             />
+
+            
 
             {/* <button
               onClick={toggleFullscreen}
@@ -236,7 +270,7 @@ const CoursePlay = () => {
         <h1 className="mt-6 text-xl sm:text-2xl font-semibold text-text-dark">
           {course?.name}
         </h1>
-        {/* <p className="mt-2 text-text-light">
+        <p className="mt-2 text-text-light">
           {showFull ? course?.description : course?.description.slice(0, 120) + "…"}
           <button
             onClick={toggleDescription}
@@ -244,7 +278,7 @@ const CoursePlay = () => {
           >
             {showFull ? "less" : "more"}
           </button>
-        </p> */}
+        </p>
 
         {/* // DONE 1 */}
 
