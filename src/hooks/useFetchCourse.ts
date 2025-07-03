@@ -50,6 +50,7 @@ export interface MappedCourse {
   id: number;
   title: string;
   description: string;
+  duration: number;
   imageUrl: string;
   videoUrl: string;
   tests: Test[];
@@ -107,6 +108,7 @@ export function useFetchCourse(courseId?: string) {
           id: raw.id,
           title: raw.name,
           description: raw.description,
+          duration: raw.duration,
           imageUrl: `http://localhost:3000/uploads/courses/${raw.thumbnail}`,
           videoUrl: `http://localhost:3000/uploads/courses/${raw.videoUrl}`,
           tests: mappedTests,

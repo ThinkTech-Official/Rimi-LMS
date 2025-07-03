@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import type { Question } from '../components/client/Quiz';
 
-// --- Raw DTO from backend ---
+//  Raw DTO from backend 
 interface RawTestDTO {
   id: number;
   name: string;
@@ -29,10 +29,12 @@ interface RawTestDTO {
 //  Shape UI expects 
 export interface TestWithQuestions {
   id: number;
+  courseId: number;
   testName: string;
-  duration: string;        // UI expects string
+  duration: string;        
   startTime: number;
   questions: Question[];
+  passingMarks: number;
 }
 
 /**
@@ -42,7 +44,7 @@ export interface TestWithQuestions {
  * @param testId number | string | undefined
  * @returns { test, loading, error }
  */
-export function useFetchTest(
+export function useFetchTestClient(
   courseId?: string,
   testId?: number | string
 ) {
@@ -62,19 +64,23 @@ export function useFetchTest(
       .then((res: any) => {
         const raw = res.data;
 
+        console.log('from use fetch test clients' , raw)
+
         const mappedQuestions: Question[] = raw.questions.map((q: any) => ({
           id: q.id.toString(),
-          question: q.question,
+          question: q.text,
           options: q.options.map((o: any) => o.text),
           correctIndex: q.options.findIndex((o: any) => o.isCorrect),
         }));
 
         setTest({
           id: raw.id,
+          courseId: raw.courseId,
           testName: raw.name,
           duration: raw.duration.toString(),
           startTime: raw.startTime,
           questions: mappedQuestions,
+          passingMarks: raw.passingMarks
         });
       })
       .catch((err: any) => {

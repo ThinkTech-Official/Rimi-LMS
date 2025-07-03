@@ -2,6 +2,7 @@ import { type FC, useEffect, useState } from "react";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa6";
 import { PiSmiley, PiSmileySad } from "react-icons/pi";
 import type { Test } from "./CoursePlay";
+import { useSubmitTest } from "../../hooks/useSubmitTest";
 
 export interface Question {
   id: string;
@@ -13,6 +14,9 @@ export interface QuizProps {
   test: Test;
   onBack: () => void;
   onResume: () => void;
+  course: any;
+  setCourse: any;
+  activeTestBasic: any;
 }
 const formatTime = (sec: number) => {
   const m = Math.floor(sec / 60);
@@ -20,14 +24,19 @@ const formatTime = (sec: number) => {
   return `${m.toString().padStart(2, "0")} : ${s.toString().padStart(2, "0")}`;
 };
 
-const Quiz: FC<QuizProps> = ({ test, onBack, onResume }) => {
+const Quiz: FC<QuizProps> = ({ test, onBack, onResume, course , setCourse , activeTestBasic }) => {
   const [timeLeft, setTimeLeft] = useState(Number(test.duration));
   const [current, setCurrent] = useState(0);
   const [answers, setAnswers] = useState<Record<string, number>>({});
   const [finished, setFinished] = useState(false);
   const [passed, setPassed] = useState(false);
+
+  const { submit , loading: submitting , error: submitError } = useSubmitTest()
+
   const questions = test.questions;
-  const passingScore = 0.7;
+  const passingScore = 0.5;
+
+  console.log('from quiz component printing the test', test)
 
   // countdown timer
   useEffect(() => {
@@ -53,18 +62,50 @@ const Quiz: FC<QuizProps> = ({ test, onBack, onResume }) => {
   };
   const prev = () => current > 0 && setCurrent(current - 1);
 
-  function finishQuiz() {
+  async function finishQuiz() {
     setFinished(true);
     const correct = questions.filter(
-      (q) => answers[q.id] === q.correctIndex
+      (q: any) => answers[q.id] === q.correctIndex
     ).length;
     const score = correct / questions.length;
-    const isPassed = score >= passingScore;
+    const threshold = (test.passingMarks ?? 0) / 100;
+    const isPassed = score >= threshold;
     if (isPassed) {
       test.isCleared = true;
     }
     setPassed(isPassed);
     // onComplete(isPassed, score);
+    if(!isPassed){
+      return;
+    }
+
+  //    const payload = test.questions.map(q => ({
+  //   questionId: Number(q.id),
+  //   optionId:   Number(q.options[answers[q.id]]!.id),
+  // }))
+
+  const percent   = Math.round(score * 100); 
+
+   try {
+    // await submit(test.courseId, test.id, payload);
+    await submit(test.courseId, test.id, {
+      score:  percent,
+      passed: isPassed,
+    });
+
+    // Optimistically mark this test as cleared in our local copy:
+      setCourse((c: any) => c && {
+        ...c,
+        tests: c.tests.map((t) =>
+          t.id === activeTestBasic?.id ? { ...t, isCleared: true } : t
+        ),
+      });
+
+  } catch (err) {
+    console.error("Submission failed", err);
+  }
+
+
   }
   // new comment
   // const retry = () => {
@@ -96,7 +137,7 @@ const Quiz: FC<QuizProps> = ({ test, onBack, onResume }) => {
                 {correctCount}/{questions.length}
               </span>
               {passed ? (
-                <span className="text-green-600">Weel done!</span>
+                <span className="text-green-600">Well done!</span>
               ) : (
                 <span className="text-[#CD4947] text-base">
                   Needs Improvement
@@ -142,9 +183,7 @@ const Quiz: FC<QuizProps> = ({ test, onBack, onResume }) => {
           {passed ? (
             <button
               className="px-2.5 py-3 bg-primary text-white flex gap-2 items-center justify-center cursor-pointer font-semibold mt-5"
-              onClick={() => {
-                onResume(), onBack();
-              }}
+              onClick={() => {onResume()}}
             >
               Proceed to Next Session
             </button>
@@ -156,9 +195,10 @@ const Quiz: FC<QuizProps> = ({ test, onBack, onResume }) => {
               Watch Video Again
             </button>
           )}
+          {/* {test.passingMarks}/{questions.length}  */}
           {!passed && (
             <span className="text-2xl text-text-dark mt-3 font-semibold">
-              Passing Score : {}/{questions.length}
+              Passing Score :  {test.passingMarks} %
             </span>
           )}
         </div>
