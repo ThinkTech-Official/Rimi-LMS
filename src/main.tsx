@@ -24,7 +24,7 @@ import ClientHome from "./components/client/ClientHome.tsx";
 import ClientCertificates from "./components/client/ClientCertificates.tsx";
 import EditTest from "./components/EditTest.tsx";
 import ClientProfile from "./components/client/ClientProfile.tsx";
-// import Quiz from './components/client/Quiz.tsx';
+import i18n from "./i18n/i18.ts";
 
 const router = createBrowserRouter(
   createRoutesFromElements(

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { FaUserCircle } from "react-icons/fa";
 import { FaUser } from "react-icons/fa6";
 import { IoIosLogOut } from "react-icons/io";
@@ -8,8 +9,12 @@ import { useNavigate } from "react-router-dom";
 const ClientHeader: React.FC = () => {
   const [isLanguageSelectOpen, setIsLanguageSelectOpen] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
-  type Language = "En" | "Fr";
-  const [selectedLanguage, setSelectedLanguage] = useState<Language>("En");
+  const { i18n } = useTranslation();
+  type Language = "en" | "fr";
+  const previousSelectedLanguage = localStorage.getItem("i18nextLng");
+  const [selectedLanguage, setSelectedLanguage] = useState<Language>(
+    previousSelectedLanguage as Language
+  );
   const navigate = useNavigate();
 
   const handleLanguageSelect = (lang: Language) => {
@@ -18,9 +23,9 @@ const ClientHeader: React.FC = () => {
       return;
     }
 
+    i18n.changeLanguage(lang);
     setSelectedLanguage(lang);
     setIsLanguageSelectOpen(false);
-    toggleProfileMenu();
   };
 
   const handleProfileClick = () => {
@@ -61,7 +66,7 @@ const ClientHeader: React.FC = () => {
             <ul className="py-1 text-sm 2xl:text-lg text-gray-700">
               <li>
                 <button
-                  onClick={() => handleLanguageSelect("En")}
+                  onClick={() => handleLanguageSelect("en")}
                   className="block w-full text-left px-4 py-2 hover:bg-primary hover:text-white cursor-pointer"
                 >
                   En
@@ -69,7 +74,7 @@ const ClientHeader: React.FC = () => {
               </li>
               <li>
                 <button
-                  onClick={() => handleLanguageSelect("Fr")}
+                  onClick={() => handleLanguageSelect("fr")}
                   className="block w-full text-left px-4 py-2 hover:bg-primary hover:text-white cursor-pointer"
                 >
                   Fr

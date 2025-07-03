@@ -10,6 +10,7 @@ import {
 } from "@heroicons/react/24/outline";
 import Header from "./Header";
 import { PiCertificateLight } from "react-icons/pi";
+import { useTranslation } from "react-i18next";
 
 export const AdminLayout: React.FC = () => {
   const [active, setActive] = useState<
@@ -17,6 +18,8 @@ export const AdminLayout: React.FC = () => {
   >("home");
   const [isSidebarOpen, setSidebarOpen] = useState(true);
   const navigate = useNavigate();
+  const { t } = useTranslation();
+
   // trying new code
   useEffect(() => {
     const handleResize = () => {
@@ -30,28 +33,28 @@ export const AdminLayout: React.FC = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const menuItems = [
-    { label: "Home", icon: HomeIcon, key: "home", url: "/admin/home" },
+    const menuItems = [
+    { label: "home", icon: HomeIcon, key: "home", url: "/admin/home" },
     {
-      label: "All Courses",
+      label: "all Courses",
       icon: BookOpenIcon,
       key: "courses",
       url: "/admin/all-courses",
     },
     {
-      label: "Certificates",
+      label: "certificates",
       icon: PiCertificateLight,
       key: "certificates",
       url: "/admin/certificates",
     },
     {
-      label: "All Tests",
+      label: "allTests",
       icon: ClipboardDocumentListIcon,
       key: "tests",
       url: "/admin/tests",
     },
     {
-      label: "Users Management",
+      label: "users Management",
       icon: UserGroupIcon,
       key: "users",
       url: "/admin/users",
@@ -64,7 +67,7 @@ export const AdminLayout: React.FC = () => {
   };
 
   return (
-    <div className="flex">
+     <div className="flex">
       {/* Sidebar  */}
       <aside
         className={`bg-[#F6F6F6] min-h-screen transition-all duration-300 ${
@@ -114,7 +117,7 @@ export const AdminLayout: React.FC = () => {
                   }`}
                 >
                   <Icon className="h-5 w-5 2xl:h-6 2xl:w-6" />
-                  {isSidebarOpen && <span>{item.label}</span>}
+                  {isSidebarOpen && <span className="capitalize">{t(item.label)}</span>}
                   {!isSidebarOpen && (
                     <span className="absolute left-full top-1/2 -translate-y-1/2 ml-1 z-50 bg-[#393939] text-white text-xs px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
                       {item.label}
@@ -131,7 +134,7 @@ export const AdminLayout: React.FC = () => {
           isSidebarOpen ? "w-[calc(100vw-270px)]" : "w-[calc(100vw-50px)]"
         }`}
       >
-        <Header/>
+        <Header />
         <main>
           <Outlet />
         </main>

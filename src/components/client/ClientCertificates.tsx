@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { sampleCourses } from "../AllCourses";
+import { useTranslation } from "react-i18next";
 
-const tabs = ["Completed Courses", "Certificates"];
+const tabs = ["completed courses", "certificates"];
 
 const ClientCertificates = () => {
   const [active, setActive] = useState(tabs[0]);
+  const {t} = useTranslation()
   return (
     <div className="p-2 sm:p-8">
       {/* tabs */}
@@ -14,13 +16,13 @@ const ClientCertificates = () => {
             <li
               key={tab}
               onClick={() => setActive(tab)}
-              className={`pb-2 cursor-pointer font-medium text-nowrap text-sm sm:text-base 2xl:text-xl ${
+              className={`pb-2 cursor-pointer font-medium capitalize text-nowrap text-sm sm:text-base 2xl:text-xl ${
                 active === tab
                   ? "text-primary border-b-2 border-primary"
                   : "text-[#6F6B7D]"
               }`}
             >
-              {tab}
+              {t(tab)}
             </li>
           ))}
         </ul>
