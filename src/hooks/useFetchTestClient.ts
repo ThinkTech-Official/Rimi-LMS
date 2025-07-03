@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import type { Question } from '../components/client/Quiz';
 
-// --- Raw DTO from backend ---
+//  Raw DTO from backend 
 interface RawTestDTO {
   id: number;
   name: string;
@@ -31,7 +31,7 @@ export interface TestWithQuestions {
   id: number;
   courseId: number;
   testName: string;
-  duration: string;        // UI expects string
+  duration: string;        
   startTime: number;
   questions: Question[];
   passingMarks: number;
