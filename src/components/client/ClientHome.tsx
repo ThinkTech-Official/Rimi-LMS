@@ -3,8 +3,11 @@ import { useNavigate } from "react-router-dom";
 import { initialCategories, sampleCourses } from "../AllCourses";
 import { GoClock } from "react-icons/go";
 import { useFetchCategories } from "../../hooks/useFetchCategories";
-import { useFetchCourses } from "../../hooks/useFetchCourses";
+// import { useFetchCourses } from "../../hooks/useFetchCourses";
 import { BiSearch } from "react-icons/bi";
+import { useFetchCoursesClient } from "../../hooks/useFetchCoursesClient";
+import { useFetchCourseProgress } from "../../hooks/useFetchCourseProgress";
+import ClientCourseCard from "./ClientCourseCard";
 
 const ClientHome = () => {
   const navigate = useNavigate();
@@ -16,7 +19,8 @@ const ClientHome = () => {
 
   // Fetching categories from backend
   const { categories , loading: catLoading, error: catError , refetch: reloadCategories} = useFetchCategories()
-  const { courses , loading: courseLoading , error: courseError } = useFetchCourses()
+  const { courses , loading: courseLoading , error: courseError } = useFetchCoursesClient()
+  
 
 
 
@@ -132,69 +136,22 @@ const ClientHome = () => {
       :
 
      
-      (<div className="flex flex-wrap gap-5 items-center justify-center sm:justify-start sm:items-start">
+      (
+        <div className="flex flex-wrap gap-5 items-center justify-center sm:justify-start sm:items-start">
         {filteredCourses.map((course) => (
-          <div
-            key={course.id}
-            className="w-[95%] sm:w-[320px] xl:w-[380px] flex flex-col gap-2 p-4 justify-center items-centr md:justify-start"
-            style={{
-              boxShadow: "0px 4px 6.7px 0px rgba(0, 0, 0, 0.04)",
-              border: "1px solid rgba(235, 235, 235, 1)",
-            }}
-          >
-            <div className="relative bg-blue-200 rounded-sm overflow-hidden h-60">
-              <img
-                src={course.imageUrl}
-                alt={course.title}
-                className="absolute inset-0 m-auto h-40 w-40 mix-blend-multiply"
-              />
-              <div
-                className="absolute h-1 bg-red-500 w-10 bottom-0 left-0"
-                style={{ width: `${progress}%` }}
-              ></div>
-              <div className="absolute top-2 right-2 flex items-center text-[#6F6B7D] text-xs 2xl:text-base space-x-3 bg-white px-2.5 py-2 rounded-full">
-                <div className="flex items-center gap-1">
-                  <GoClock />
-                  <span>{course.duration}</span>
-                </div>
-                {/* <div className="flex items-center gap-1">
-                  <img src="Document.svg" alt="" />
-                  <span>{course.questions} Questions</span>
-                </div> */}
-              </div>
-            </div>
-            <h2 className="text-lg font-semibold text-gray-900">
-              {course.title}
-            </h2>
-            <div>
-              <p className="text-gray-600 text-sm pr-2">
-                {showFullDescription
-                  ? course.description
-                  : course.description
-                  ? getTruncatedText(course.description, 20)
-                  : ""}
-              </p>
+          <div key={course.id}>
+            <ClientCourseCard 
+          courseId={course.id}
+          imageUrl={course.imageUrl} 
+          title = {course.title}
+          duration={course.duration}
+          description = {course.description}
 
-              {course.description &&
-                course.description.split(" ").length > 20 && (
-                  <button
-                    className="text-primary text-xs mt-1 underline underline-offset-2 inline cursor-pointer"
-                    onClick={() => setShowFullDescription(!showFullDescription)}
-                  >
-                    {showFullDescription ? "less" : "more"}
-                  </button>
-                )}
-            </div>
-
-            <button
-              className="inline-block mt-2 text-sm sm:text-[16px] px-5 py-1 sm:py-3 bg-primary text-white text-nowrap font-semibold hover:bg-indigo-700 cursor-pointer transition-colors delay-150"
-              onClick={() => handleStartCourse(course.id)}
-            >
-              Start Course
-            </button>
+          />
           </div>
         ))}
-      </div>)
+      </div>
+      )
 
 }
 

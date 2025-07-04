@@ -1,6 +1,7 @@
 const Certificates: React.FC = () => {
   return (
     <div className="flex flex-col gap-10 my-10 overflow-auto">
+      {/* 1 */}
       <div className="w-[1050px] mx-auto m-4 border">
         <div className="flex flex-col bg-white mx-auto">
           <div className="w-full bg-primary p-4 pb-0 h-fit">
@@ -70,6 +71,7 @@ const Certificates: React.FC = () => {
           </div>
         </div>
       </div>
+      {/* 2 */}
       <div className="w-[1050px] h-[820px] mx-auto p-4 border">
         <div className="border border-[#CB5A31] h-full flex gap-10">
           <div className="relative h-[820px] w-auto ml-5">

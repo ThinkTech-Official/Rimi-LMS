@@ -1,57 +1,69 @@
-import { useState } from "react";
-import { sampleCourses } from "../AllCourses";
+import React, { useEffect, useState } from 'react';
+import api from '../../utils/api';
 
-const tabs = ["Completed Courses", "Certificates"];
+interface CertRecord {
+  id: number;
+  certNumber: string;
+  fileName: string;
+  createdAt: string;
+  course: { id: number; name: string };
+}
 
-const ClientCertificates = () => {
-  const [active, setActive] = useState(tabs[0]);
-  return (
-    <div className="p-2 sm:p-8">
-      {/* tabs */}
-      <div className="border-b border-[#E9E9E9] mb-6">
-        <ul className="flex space-x-3 sm:space-x-8 items-center overflow-x-auto custom-scrollbar2 pb-2 sm:pb-0">
-          {tabs.map((tab) => (
-            <li
-              key={tab}
-              onClick={() => setActive(tab)}
-              className={`pb-2 cursor-pointer font-medium text-nowrap text-sm sm:text-base 2xl:text-xl ${
-                active === tab
-                  ? "text-primary border-b-2 border-primary"
-                  : "text-[#6F6B7D]"
-              }`}
-            >
-              {tab}
-            </li>
-          ))}
-        </ul>
+const API_BASE = 'http://localhost:3000';
+
+const ClientCertificates: React.FC = () => {
+  const [certs, setCerts] = useState<CertRecord[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    api
+      .get<CertRecord[]>(`${API_BASE}/certificates`)
+      .then(res => {
+        console.log('from client cetificates ', res.data)
+        setCerts(res.data)
+      })
+      .catch(err => {
+        console.error('Error fetching certificates:', err);
+        setCerts([]);
+      })
+      .finally(() => setLoading(false));
+  }, []);
+
+  if (loading) {
+    return <p className="p-8">Loading certificates…</p>;
+  }
+
+  if (!loading && certs.length === 0) {
+    return (
+      <div className="p-8">
+        <h1 className="text-2xl font-bold mb-4">My Certificates</h1>
+        <p>No certificates issued yet. Please complete a course to get your certificate.</p>
       </div>
+    );
+  }
 
-      {/* content */}
-
-      {/* completed courses */}
-
-      {active === "Completed Courses" && (
-        <div className="grid gap-5 w-fit grid-cols-1 sm:grid-cols-2 md:grid-cols-3 items-center justify-center sm:justify-start sm:items-start">
-          {sampleCourses.map((course) => (
-            <div
-              key={course.id}
-              className="w-full max-w-[400px]  flex flex-col bg-[#F6F6F6] p-3 sm:p-5 gap-2"
-            >
-              <h1 className="text-text-dark text-lg font-semibold">
-                {course.title}
-              </h1>
-              <p className="text-text-light text-sm">{course.description}</p>
-              <div className="w-full flex flex-col">
-                <p className="text-text-dark text-sm text-end">Completed</p>
-                <div className=" w-full bg-primary h-2.5"></div>
-              </div>
-              <button className="text-base font-semibold w-full py-2 px-3 border border-primary text-primary hover:text-white hover:bg-primary mt-3 cursor-pointer transition-all delay-100">
-                Get Certificate
-              </button>
+  return (
+    <div className="p-8">
+      <h1 className="text-2xl font-bold mb-4">My Certificates</h1>
+      <ul className="space-y-4">
+        {certs.map(c => (
+          <li key={c.id} className="border p-4 flex justify-between items-center">
+            <div>
+              <p><strong>{c.course.name}</strong></p>
+              <p>Issued: {new Date(c.createdAt).toLocaleDateString()}</p>
+              <p>Cert #: {c.certNumber}</p>
             </div>
-          ))}
-        </div>
-      )}
+            <a
+              href={`${API_BASE}/uploads/certificates/${c.fileName}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-4 py-2 bg-primary text-white rounded"
+            >
+              Download PDF
+            </a>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };
