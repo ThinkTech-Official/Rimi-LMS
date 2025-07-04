@@ -35,17 +35,19 @@ export const GenerateCertificatePage: React.FC = () => {
       <p>Generating certificate…</p>
 
       {/* Hidden Certificate for html2canvas */}
-      <div
-        ref={certRef}
-        style={{ position: 'absolute', left: -10000, top: 0 }}
-      >
-        <Certificate
-          recipientName={state.recipientName}
-          courseTitle={state.courseTitle}
-          date={new Date(certData!.createdAt).toLocaleDateString()}
-          certNumber={certData!.certNumber}
-        />
-      </div>
+    {certData && (
+  <div
+    ref={certRef}
+    style={{ position: 'absolute', left: -10000, top: 0 }}
+  >
+    <Certificate
+      recipientName={state.recipientName}
+      courseTitle={certData.course.name}
+      date={new Date(certData.createdAt).toLocaleDateString()}  // certData.createdAt is string
+      certNumber={certData.certNumber}                          // certNumber is string
+    />
+  </div>
+)}
     </div>
   )
 }
