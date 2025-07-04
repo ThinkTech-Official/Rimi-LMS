@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { GoClock } from 'react-icons/go';
 import { useNavigate } from 'react-router-dom';
 import { useFetchCourseProgress } from '../../hooks/useFetchCourseProgress';
+import { useAuth } from '../../context/AuthContext';
 
 
 interface ClientCourseCardProps {
@@ -14,7 +15,9 @@ interface ClientCourseCardProps {
 }
 
 const ClientCourseCard = ({courseId, imageUrl , title, duration, description}: ClientCourseCardProps) => {
+
   
+  const { user } = useAuth()
 
     const navigate = useNavigate()
 
@@ -47,7 +50,7 @@ const ClientCourseCard = ({courseId, imageUrl , title, duration, description}: C
 
   const handleGenerate = () => {
   navigate(`/client/certificate/generate/${courseId}`, {
-    state: { courseTitle: title },
+    state: { courseTitle: title, userName: user?.name },
   });
 };
      

@@ -2,13 +2,17 @@ import React, { useRef } from 'react'
 import { useParams, useLocation } from 'react-router-dom'
 import Certificate from '../components/Certificate'
 import { useGenerateCertificate } from '../hooks/useGenerateCertificate'
+import { useAuth } from '../context/AuthContext'
 
 interface LocationState {
   courseTitle:   string
-  recipientName: string
+  userName: string
 }
 
 export const GenerateCertificatePage: React.FC = () => {
+
+  const { user } = useAuth()
+
   const { courseId } = useParams<{ courseId: string }>()
   const location     = useLocation()
   const state        = location.state as LocationState
@@ -17,7 +21,7 @@ export const GenerateCertificatePage: React.FC = () => {
   // Kick off generation on mount
   const { status, certData } = useGenerateCertificate({
     courseId:      courseId!,       
-    recipientName: state.recipientName,
+    recipientName: state.userName,
     courseTitle:   state.courseTitle,
     certRef,
   })
@@ -30,6 +34,8 @@ export const GenerateCertificatePage: React.FC = () => {
     )
   }
 
+  if(!user?.name) return <p>No User Logged in</p>
+
   return (
     <div className="p-8">
       <p>Generating certificate…</p>
@@ -41,7 +47,7 @@ export const GenerateCertificatePage: React.FC = () => {
     style={{ position: 'absolute', left: -10000, top: 0 }}
   >
     <Certificate
-      recipientName={state.recipientName}
+      recipientName={user?.name}
       courseTitle={certData.course.name}
       date={new Date(certData.createdAt).toLocaleDateString()}  // certData.createdAt is string
       certNumber={certData.certNumber}                          // certNumber is string

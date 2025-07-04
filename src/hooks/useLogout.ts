@@ -1,6 +1,9 @@
 import { useState, useCallback } from 'react';
 import api from '../utils/api';
 
+
+const API_BASE = 'http://localhost:3000';
+
 export function useLogout() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -9,8 +12,8 @@ export function useLogout() {
     setLoading(true);
     setError(null);
     try {
-      await api.post('/auth/logout');
-      return;
+      // hit the Nest controller
+      await api.post(`${API_BASE}/client/auth/logout`);
     } catch (err: any) {
       setError(err.response?.data?.message || err.message);
       throw err;

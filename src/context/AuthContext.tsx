@@ -1,82 +1,69 @@
-import {
+import React, {
   createContext,
   useContext,
   useState,
   useEffect,
   type ReactNode,
 } from 'react';
+import api from '../utils/api';
+import { API_BASE } from '../utils/ulrs';
 
-interface User { id: number; email: string; username: string; /*…*/ }
-interface AuthContextValue {
-  user: User | null;
-  loading: boolean;
-  login: (email: string, password: string) => Promise<void>;
-  logout: () => Promise<void>;
+export interface User {
+  userId: number;
+  email: string;
+  name?: string;
+  
 }
 
-const AuthContext = createContext<AuthContextValue | undefined>(undefined);
+interface AuthContextType {
+  user: User | null;
+  loading: boolean;
+  error: string | null;
+  reload: () => Promise<void>;
+}
+
+const AuthContext = createContext<AuthContextType>({
+  user: null,
+  loading: true,
+  error: null,
+  reload: async () => {},
+});
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser]       = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError]     = useState<string | null>(null);
 
-  // Bootstrap ==>  fetch current user on app launch
+  const loadProfile = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await api.post<User>(`${API_BASE}/client/auth/profile`);
+      setUser(res.data);
+    } catch (err: any) {
+      setUser(null);
+      setError(err.response?.data?.message || err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    (async () => {
-      try {
-        const res = await fetch('/api/auth/me', {
-          credentials: 'include',
-        });
-        if (res.ok) {
-          const { user } = await res.json();
-          setUser(user);
-        } else {
-          setUser(null);
-        }
-      } catch {
-        setUser(null);
-      } finally {
-        setLoading(false);
-      }
-    })();
+    loadProfile();
   }, []);
 
-  const login = async (email: string, password: string) => {
-    const res = await fetch('/api/auth/login', {
-      method: 'POST',
-      credentials: 'include',              //  send/receive cookies
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password }),
-    });
-    if (!res.ok) {
-      const err = await res.json();
-      throw new Error(err.message || 'Login failed');
-    }
-    // on success, server has set cookies; now fetch user
-    const profile = await fetch('/api/auth/me', {
-      credentials: 'include',
-    });
-    const { user } = await profile.json();
-    setUser(user);
-  };
-
-  const logout = async () => {
-    await fetch('/api/auth/logout', {
-      method: 'POST',
-      credentials: 'include',
-    });
-    setUser(null);
-  };
-
   return (
-    <AuthContext.Provider value={{ user, loading, login, logout }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        loading,
+        error,
+        reload: loadProfile,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
 };
 
-export const useAuth = () => {
-  const ctx = useContext(AuthContext);
-  if (!ctx) throw new Error('useAuth must be inside AuthProvider');
-  return ctx;
-};
+export const useAuth = () => useContext(AuthContext);

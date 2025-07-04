@@ -25,6 +25,8 @@ import ClientCertificates from "./components/client/ClientCertificates.tsx";
 import EditTest from "./components/EditTest.tsx";
 import ClientProfile from "./components/client/ClientProfile.tsx";
 import { GenerateCertificatePage } from "./pages/GenerateCertificatePage.tsx";
+import { RequireAuth } from "./components/client/RequireAuth.tsx";
+import { AuthProvider } from "./context/AuthContext.tsx";
 // import Quiz from './components/client/Quiz.tsx';
 
 const router = createBrowserRouter(
@@ -52,6 +54,7 @@ const router = createBrowserRouter(
       </Route>
 
       {/* Client routes */}
+      <Route element={<RequireAuth />} >
       <Route path="/client" element={<ClientLayout />}>
         {/* /client */}
         <Route index element={<ClientHome />} />
@@ -62,12 +65,15 @@ const router = createBrowserRouter(
         <Route path="certificate/generate/:courseId" element={<GenerateCertificatePage />} />
         
       </Route>
+      </Route>
     </>
   )
 );
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
+    <AuthProvider >
     <RouterProvider router={router} />
+    </AuthProvider>
   </StrictMode>
 );

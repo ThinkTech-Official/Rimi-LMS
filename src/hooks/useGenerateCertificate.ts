@@ -60,7 +60,7 @@ export function useGenerateCertificate({
     let cancelled = false
     ;(async () => {
       try {
-        // 👉 Wait until the browser has painted your hidden component
+        // Wait until the browser has painted your hidden component
         await new Promise(requestAnimationFrame)
 
         // 1) Snapshot to canvas
