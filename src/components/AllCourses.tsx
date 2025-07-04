@@ -197,8 +197,8 @@ const AllCourses: React.FC<AllCoursesProps> = ({ onCreateCourse }) => {
 
 
   return (
-     <div className="min-h-screen bg-white">
-      <div className="px-2 sm:px-4 py-8">
+     <div className="min-h-screen bg-white px-2">
+      <div className="px-2 sm:px-4 py-4">
         {/* Page Title & Breadcrumb */}
 
         <h1 className="text-lg 2xl:text-2xl font-bold text-[#1B1B1B] mb-3 sm:mb-6">
@@ -243,13 +243,13 @@ const AllCourses: React.FC<AllCoursesProps> = ({ onCreateCourse }) => {
                 {cat.name}
               </li>
             ))}
-            <li
+              </ul>
+             <button
               onClick={() => setShowAddCategoryModal(true)}
               className="cursor-pointer border-2 border-primary px-3 py-1 text-sm sm:text-base text-nowrap text-primary hover:bg-primary hover:text-white transition-colors delay-100"
             >
               {t("add category")}
-            </li>
-          </ul>
+            </button>
         </div>
 
         <div></div>
@@ -303,7 +303,7 @@ const AllCourses: React.FC<AllCoursesProps> = ({ onCreateCourse }) => {
                 type="text"
                 value={newCategory}
                 onChange={(e) => setNewCategory(e.target.value)}
-                placeholder="Category Name"
+                placeholder={` ${t("category")} ${t("name")}`}
                 className="w-full border border-inputBorder px-2 py-1 sm:px-4 sm:py-3 focus:outline-none focus:ring-1 focus:ring-primary"
               />
               <div className="flex justify-end space-x-2 mt-2">

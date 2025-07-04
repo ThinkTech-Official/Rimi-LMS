@@ -12,10 +12,23 @@ const Courses: React.FC = () => {
         className="text-sm text-primary font-medium my-4 px-2 sm:px-8"
         aria-label="breadcrumb"
       >
-        <ol className="flex items-center space-x-2">
-          {breadcrumb !== "courses" && (
+        <ol role="breadcrumbs" className="flex items-center space-x-2">
+          {breadcrumb == "courses" && (
             <>
               <li>
+                <button
+                  onClick={() => setBreadcrumb("courses")}
+                  className=""
+                  title="All Courses"
+                >
+                  Courses
+                </button>
+              </li>
+            </>
+          )}
+
+          {breadcrumb === "create-course" && (
+            <><li>
                 <button
                   onClick={() => setBreadcrumb("courses")}
                   className="underline underline-offset-2 cursor-pointer"
@@ -25,11 +38,7 @@ const Courses: React.FC = () => {
                 </button>
               </li>
               <li>&gt;</li>
-            </>
-          )}
-
-          {breadcrumb === "create-course" && (
-            <li className="text-primary">Create Course</li>
+            <li className="text-primary">Create Course</li></>
           )}
 
           {breadcrumb === "create-test" && (

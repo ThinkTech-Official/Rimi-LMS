@@ -69,7 +69,7 @@
   "select file to upload": "Select file to upload",
   "save course": "Save Course",
   "Recommended Image Size: 800px x 600px, PNG or JPEG file": "Recommended Image Size: 800px x 600px, PNG or JPEG file",
-  "Select multiple videos from your local storage * Max. upto 5Gb per video": " Select multiple videos from your local storage * Max. upto 5Gb per video",
+  "Select single video from your local storage * Max. upto 5Gb per video": "Select single video from your local storage * Max. upto 5Gb per video",
   "profile": "Profile",
   "password": "Password",
   "reset password": "Reset Password",
@@ -85,5 +85,8 @@
   "progress": "Progress",
   "certificateIssued": "Certificate Issued",
   "testTaken": "Test Taken",
-  "enrolledCourses": "Enrolled Courses"
+  "enrolledCourses": "Enrolled Courses",
+  "completed courses": "Cours terminés",
+  "certificates issued": "Certificats émis",
+  "video length": "Video Length"
 }
