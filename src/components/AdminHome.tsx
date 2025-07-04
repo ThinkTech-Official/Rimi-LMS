@@ -13,6 +13,7 @@ import {
 } from "recharts";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 import UserProfile, { type User } from "./UserProfile";
+import { useTranslation } from "react-i18next";
 
 // Dummy stats
 const stats = [
@@ -118,6 +119,8 @@ const AdminHome: React.FC = () => {
   const handleBackHome = useCallback(() => {
     setSelectedUser(null);
   }, []);
+  const {t} = useTranslation();
+  
   if (selectedUser) {
     return (
       <UserProfile
@@ -134,10 +137,11 @@ const AdminHome: React.FC = () => {
           className={`px-2 py-4 sm:p-6 xl:p-8 overflow-auto space-y-8 flex flex-col justify-center items-center `}
         >
           {/* Stats Cards */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 xl:gap-8 w-full">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 xl:gap-8 w-full" role="stats">
             {stats.map((stat) => (
               <div
                 key={stat.label}
+                data-testid="stat-card"
                 className="bg-white p-2 sm:p-6 sm:h-24"
                 style={{
                   boxShadow: "0px 4px 6.7px 0px rgba(0, 0, 0, 0.04)",
@@ -148,17 +152,17 @@ const AdminHome: React.FC = () => {
                   {stat.value}
                 </div>
                 <div className="text-sm 2xl:text-lg leading-[20px] text-[#6F6B7D] mt-1">
-                  {stat.label}
+                  {t(stat.label)}
                 </div>
               </div>
             ))}
           </div>
 
           {/* Charts */}
-          <div className="flex flex-col lg:flex-row gap-8 lg:gap-6 2xl:gap-20 pt-4 w-full">
-            <div className="flex flex-col gap-5 2xl:gap-8 flex-1">
-              <h5 className="text-lg 2xl:text-2xl leading-[20px] 2xl:leading-1.5 font-bold text-[#1B1B1B] text-center lg:text-left">
-                Daily Active Users
+          <div className="flex flex-col lg:flex-row gap-8 lg:gap-6 2xl:gap-20 pt-4 w-full" >
+            <div className="flex flex-col gap-5 2xl:gap-8 flex-1" data-testid="chart">
+              <h5 className="text-lg 2xl:text-2xl capitalize leading-[20px] 2xl:leading-1.5 font-bold text-[#1B1B1B] text-center lg:text-left">
+                {t("Daily Active Users")}
               </h5>
               <div className="bg-white py-4 2xl:px-2 h-96 2xl:h-[400px] w-full border border-[#DDDDDD]">
                 <ResponsiveContainer width="100%" height="100%">
@@ -212,9 +216,9 @@ const AdminHome: React.FC = () => {
               </div>
             </div>
 
-            <div className="flex flex-col gap-5 2xl:gap-8 flex-1">
-              <h5 className="text-lg 2xl:text-2xl leading-[20px] 2xl:leading-1.5 font-bold text-[#1B1B1B] text-center lg:text-left">
-                Monthly Enrollments by Course
+            <div className="flex flex-col gap-5 2xl:gap-8 flex-1" data-testid="chart">
+              <h5 className="text-lg 2xl:text-2xl capitalize leading-[20px] 2xl:leading-1.5 font-bold text-[#1B1B1B] text-center lg:text-left">
+                {t("Monthly Enrollments by Course")}
               </h5>
               <div className="bg-white py-4 2xl:px-2 h-96 2xl:h-[400px] w-full border border-[#DDDDDD]">
                 <ResponsiveContainer width="100%" height="100%">
@@ -292,8 +296,8 @@ const AdminHome: React.FC = () => {
           {/* Recent Users Table */}
           <div className={`bg-white w-full`}>
             <div className="py-5 2xl:py-8">
-              <h2 className="text-lg 2xl:text-2xl leading-[20px] 2xl:leading-1.5 font-bold text-[#1B1B1B] text-center sm:text-left">
-                Recently Signed up Users
+              <h2 className="text-lg 2xl:text-2xl capitalize leading-[20px] 2xl:leading-1.5 font-bold text-[#1B1B1B] text-center sm:text-left">
+                {t("Recently Signed up Users")}
               </h2>
             </div>
             <div className="w-full overflow-x-auto custom-scrollbar pb-2">
@@ -301,19 +305,19 @@ const AdminHome: React.FC = () => {
                 <thead className="bg-primary text-white text-[16px] 2xl:text-xl">
                   <tr>
                     <th className="px-2 sm:px-6 py-1 sm:py-3 text-left font-medium">
-                      Client Name
+                      {t("Client Name")}
                     </th>
                     <th className="px-2 sm:px-6 py-1 sm:py-3 text-left font-medium">
-                      Email
+                      {t("Email")}
                     </th>
                     <th className="px-2 sm:px-6 py-1 sm:py-3 text-left font-medium">
-                      Date
+                      {t("Date")}
                     </th>
                     <th className="px-2 xl:px-0 py-1 sm:py-3 text-center font-medium text-nowrap">
-                      Number of Certificates
+                     {t("Number of Certificates")}
                     </th>
                     <th className="py-1 sm:py-3 text-center font-medium">
-                      Action
+                      {t("Actions")}
                     </th>
                   </tr>
                 </thead>
@@ -378,7 +382,7 @@ const AdminHome: React.FC = () => {
                           className="text-primary hover:underline hover:underline-offset-2 cursor-pointer font-medium px-4"
                           onClick={() => setSelectedUser(user)}
                         >
-                          View Profile
+                         {t("View Profile")}
                         </button>
                       </td>
                     </tr>

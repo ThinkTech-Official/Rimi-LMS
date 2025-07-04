@@ -5,6 +5,7 @@ import { useFetchCategories } from "../hooks/useFetchCategories";
 import { useFetchCourses , type Course } from "../hooks/useFetchCourses";
 import { Navigate, useNavigate } from "react-router-dom";
 import { useCreateCategory } from "../hooks/useCreateCategory";
+import { useTranslation } from "react-i18next";
 
 // interface Course {
 //   id: number;
@@ -112,6 +113,7 @@ interface AllCoursesProps {
 const AllCourses: React.FC<AllCoursesProps> = ({ onCreateCourse }) => {
 
   const navigate = useNavigate()
+  const { t } = useTranslation();
 
   const { categories , loading: catLoading , error: catError , refetch: reloadCategories, } = useFetchCategories()
   const { createCategory , loading: creatingCat , error: catCreateError } = useCreateCategory()
@@ -183,11 +185,11 @@ const AllCourses: React.FC<AllCoursesProps> = ({ onCreateCourse }) => {
 
 
     // Render loading / errors
-   if (catLoading || courseLoading) return <p>Loading…</p>;
-  if (catError)
-    return <p className="text-red-500">Error loading categories: {catError}</p>;
-  if (courseError)
-    return <p className="text-red-500">Error loading courses: {courseError}</p>;
+  //  if (catLoading || courseLoading) return <p>Loading…</p>;
+  // if (catError)
+  //   return <p className="text-red-500">Error loading categories: {catError}</p>;
+  // if (courseError)
+  //   return <p className="text-red-500">Error loading courses: {courseError}</p>;
 
 
 
@@ -195,12 +197,12 @@ const AllCourses: React.FC<AllCoursesProps> = ({ onCreateCourse }) => {
 
 
   return (
-    <div className="min-h-screen bg-white">
+     <div className="min-h-screen bg-white">
       <div className="px-2 sm:px-4 py-8">
         {/* Page Title & Breadcrumb */}
 
         <h1 className="text-lg 2xl:text-2xl font-bold text-[#1B1B1B] mb-3 sm:mb-6">
-          All Courses
+          {t("all Courses")}
         </h1>
 
         {/* Search & Action */}
@@ -208,7 +210,7 @@ const AllCourses: React.FC<AllCoursesProps> = ({ onCreateCourse }) => {
           <div className="flex items-center border border-[#DBDADE] w-[230px] sm:w-[330px]">
             <input
               type="text"
-              placeholder="Search by name"
+              placeholder={t("Search by name")}
               value={searchTerm}
               onChange={handleSearchChange}
               className="px-2 sm:px-4 py-1 sm:py-3 w-[200px] sm:w-[330px] focus:outline-none"
@@ -218,10 +220,10 @@ const AllCourses: React.FC<AllCoursesProps> = ({ onCreateCourse }) => {
             </button>
           </div>
           <button
-            className="inline-block text-sm sm:text-[16px] px-5 py-1 sm:py-3 bg-primary text-white text-nowrap font-semibold hover:bg-indigo-700 cursor-pointer transition-colors delay-150"
+            className="inline-block capitalize text-sm sm:text-[16px] px-5 py-1 sm:py-3 bg-primary text-white text-nowrap font-semibold hover:bg-indigo-700 cursor-pointer transition-colors delay-150"
             onClick={onCreateCourse}
           >
-            Create Course
+            {t("create course")}
           </button>
         </div>
 
@@ -229,17 +231,15 @@ const AllCourses: React.FC<AllCoursesProps> = ({ onCreateCourse }) => {
         <div className="border-b border-[#E9E9E9] mb-6">
           <ul className="flex space-x-3 sm:space-x-8 items-center overflow-x-auto custom-scrollbar2 pb-2 sm:pb-0">
             {categories.map((cat: any) => (
-              
               <li
                 key={cat.id}
                 onClick={() => handleCategoryClick(cat.id)}
                 className={`pb-2 cursor-pointer font-medium text-nowrap text-sm sm:text-base 2xl:text-xl ${
                   selectedCategoryId === cat.id
-                  ? "text-primary border-b-2 border-primary"
-                  : "text-gray-600"
-              }`}
+                    ? "text-primary border-b-2 border-primary"
+                    : "text-gray-600"
+                }`}
               >
-                
                 {cat.name}
               </li>
             ))}
@@ -247,7 +247,7 @@ const AllCourses: React.FC<AllCoursesProps> = ({ onCreateCourse }) => {
               onClick={() => setShowAddCategoryModal(true)}
               className="cursor-pointer border-2 border-primary px-3 py-1 text-sm sm:text-base text-nowrap text-primary hover:bg-primary hover:text-white transition-colors delay-100"
             >
-              Add Category
+              {t("add category")}
             </li>
           </ul>
         </div>
@@ -255,81 +255,75 @@ const AllCourses: React.FC<AllCoursesProps> = ({ onCreateCourse }) => {
         <div></div>
 
         {/* Courses Grid */}
-        {(catLoading || courseLoading) 
-         ? 
-      (
-        <p>Loading...</p>
-      )  
-      :
-
-      
-        <div className="flex items-center justify-center sm:justify-start w-full">
-          <div className="flex flex-wrap gap-6 items-center justify-center sm:justify-start sm:items-start">
-            {filteredCourses.map((course) => (
-              <div
-                key={course.id}
-                className="rounded-[2px] overflow-hidden w-[80vw] max-w-[300px] sm:w-[200px] 2xl:w-[250px] cursor-pointer"
-                onClick={() => handleSelectCourse(course.id)}
-              >
-                <div className="relative">
-                  <img
-                    src={course.imageUrl}
-                    alt={course.title}
-                    className="object-cover rounded-b-[2px] w-full h-40 sm:h-32 2xl:h-40"
-                  />
-                </div>
-                <div className="p-2">
-                  <h2 className="text-base 2xl:text-xl font-semibold text-[#1B1B1B]">
-                    {course.title}
-                  </h2>
-                  <div className="flex items-center text-[#6F6B7D] text-xs 2xl:text-base space-x-4">
-                    <div className="flex items-center gap-1">
-                      <GoClock />
-                      <span>{course.duration}</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <img src="Document.svg" alt="" />
-                      {/* <span>{course.questions} Questions</span> */}
+        {catLoading || courseLoading ? (
+          <p>Loading...</p>
+        ) : (
+          <div className="flex items-center justify-center sm:justify-start w-full">
+            <div className="flex flex-wrap gap-6 items-center justify-center sm:justify-start sm:items-start">
+              {filteredCourses.map((course) => (
+                <div
+                  key={course.id}
+                  className="rounded-[2px] overflow-hidden w-[80vw] max-w-[300px] sm:w-[200px] 2xl:w-[250px] cursor-pointer"
+                  onClick={() => handleSelectCourse(course.id)}
+                >
+                  <div className="relative">
+                    <img
+                      src={course.imageUrl}
+                      alt={course.title}
+                      className="object-cover rounded-b-[2px] w-full h-40 sm:h-32 2xl:h-40"
+                    />
+                  </div>
+                  <div className="p-2">
+                    <h2 className="text-base 2xl:text-xl font-semibold text-[#1B1B1B]">
+                      {course.title}
+                    </h2>
+                    <div className="flex items-center text-[#6F6B7D] text-xs 2xl:text-base space-x-4">
+                      <div className="flex items-center gap-1">
+                        <GoClock />
+                        <span>{course.duration}</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <img src="Document.svg" alt="" />
+                        {/* <span>{course.questions} Questions</span> */}
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
-
-        }
+        )}
 
         {/* Add Category Modal */}
         {showAddCategoryModal && (
-          <div className="fixed inset-0 bg-primary/10 flex items-center justify-center z-50">
-            <div className="bg-white p-6 rounded-lg shadow-lg w-80">
-              <h2 className="text-lg font-semibold mb-4">Add New Category</h2>
+          <div className="fixed inset-0 bg-black/10 flex items-center justify-center z-50">
+            <div className="bg-white p-6 shadow-lg w-[90vw] sm:w-100 space-y-3">
+              <h2 className="text-lg font-semibold">{t("add new category")}</h2>
               <input
                 type="text"
                 value={newCategory}
                 onChange={(e) => setNewCategory(e.target.value)}
                 placeholder="Category Name"
-                className="w-full border border-gray-300 rounded px-3 py-2 mb-4 focus:outline-none"
+                className="w-full border border-inputBorder px-2 py-1 sm:px-4 sm:py-3 focus:outline-none focus:ring-1 focus:ring-primary"
               />
-              <div className="flex justify-end space-x-2">
+              <div className="flex justify-end space-x-2 mt-2">
                 <button
                   onClick={() => setShowAddCategoryModal(false)}
-                  className="px-4 py-2 rounded border"
+                  className="px-4 py-2 border cursor-pointer"
                 >
-                  Cancel
+                  {t("cancel")}
                 </button>
-                 <button
-                className="px-4 py-2 bg-primary text-white rounded disabled:opacity-50"
-                onClick={handleAddCategory}
-                disabled={creatingCat}
-              >
-                {creatingCat ? "Adding…" : "Add"}
-              </button>
+                <button
+                  className="px-4 py-2 bg-primary text-white disabled:opacity-50 cursor-pointer"
+                  onClick={handleAddCategory}
+                  disabled={creatingCat}
+                >
+                  {creatingCat ? "Adding…" : t("add")}
+                </button>
               </div>
               {catCreateError && (
-              <p className="text-red-500 mt-2">{catCreateError}</p>
-            )}
+                <p className="text-red-500 mt-2">{catCreateError}</p>
+              )}
             </div>
           </div>
         )}

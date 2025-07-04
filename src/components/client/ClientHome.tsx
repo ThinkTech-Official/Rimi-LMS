@@ -11,6 +11,7 @@ import ClientCourseCard from "./ClientCourseCard";
 
 const ClientHome = () => {
   const navigate = useNavigate();
+  const {t} = useTranslation()
   // const [categories, setCategories] = useState<string[]>(initialCategories);
   // const [selectedCategory, setSelectedCategory] = useState<string>(
   //   categories[0]
@@ -77,25 +78,25 @@ const ClientHome = () => {
 
 
      // Render loading / errors
-   if (catLoading || courseLoading) return <p>Loading…</p>;
-  if (catError)
-    return <p className="text-red-500">Error loading categories: {catError}</p>;
-  if (courseError)
-    return <p className="text-red-500">Error loading courses: {courseError}</p>;
+  //  if (catLoading || courseLoading) return <p>Loading…</p>;
+  // if (catError)
+  //   return <p className="text-red-500">Error loading categories: {catError}</p>;
+  // if (courseError)
+  //   return <p className="text-red-500">Error loading courses: {courseError}</p>;
 
 
 
   return (
     <main className="flex-1 p-2 sm:p-8 sm:pr-0 overflow-auto space-y-6">
       {/* Header */}
-      <h1 className="text-2xl font-bold text-gray-900">All Courses</h1>
+      <h1 className="text-2xl font-bold text-gray-900 capitalize">{t("all Courses")}</h1>
 
        {/* Search & Action */}
               <div className="flex flex-col sm:flex-row sm:items-center mb-6 gap-4 w-fit">
                 <div className="flex items-center border border-[#DBDADE] w-[230px] sm:w-[330px]">
                   <input
                     type="text"
-                    placeholder="Search by name"
+                    placeholder={t("Search by name")}
                     value={searchTerm}
                     onChange={handleSearchChange}
                     className="px-2 sm:px-4 py-1 sm:py-3 w-[200px] sm:w-[330px] focus:outline-none"
