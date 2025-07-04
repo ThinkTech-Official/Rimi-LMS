@@ -12,7 +12,7 @@ const Header: React.FC = () => {
   const navigate = useNavigate();
   const { i18n } = useTranslation();
   type Language = "en" | "fr";
-  const previousSelectedLanguage = localStorage.getItem("i18nextLng");
+  const previousSelectedLanguage = localStorage.getItem("i18nextLng")?.split("-")[0];
   const [selectedLanguage, setSelectedLanguage] = useState<Language>(
     previousSelectedLanguage as Language
   );

@@ -14,14 +14,6 @@ import Header from "../components/Header";
 import user from "@testing-library/user-event";
 import i18n from "../i18n/i18";
 
-vi.mock("react-router-dom", async () => {
-  const actual = await vi.importActual("react-router-dom");
-  return {
-    ...actual,
-    useNavigate: vi.fn(),
-  };
-});
-
 describe("Admin Header", () => {
   beforeEach(() => {
     mockedNavigate.mockClear(); // Reset before each test
@@ -51,7 +43,7 @@ describe("Admin Header", () => {
     await user.click(langButton);
 
     // Determine which language is currently selected (visible on button)
-    const selectedLang = i18n.language;
+    const selectedLang = i18n.language.split("-")[0];
 
     // Click the same language inside the dropdown
     const selectedOption = screen.getByRole("button", {
@@ -77,10 +69,7 @@ describe("Admin Header", () => {
     await user.click(langButton);
 
     // Determine which language is currently selected (visible on button)
-    const selectedLang = screen
-      .getByRole("language-btn")
-      .textContent?.toLowerCase()
-      .trim();
+    const selectedLang = i18n.language.split("-")[0];
 
     // Click a different language inside the dropdown
     const selectedOption = screen.getByRole("button", {
@@ -119,5 +108,12 @@ describe("Admin Header", () => {
     ).toBeInTheDocument();
     await user.click(screen.getByRole("button", { name: /profile/i }));
     expect(mockedNavigate).toHaveBeenCalledWith("/admin/profile");
+  });
+
+  test("shows logout button on profile menu open", async () => {
+    user.setup();
+    render(<Header />);
+    await user.click(screen.getByText(/username/i));
+    expect(screen.getByText(/logout/i)).toBeInTheDocument();
   });
 });

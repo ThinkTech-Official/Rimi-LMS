@@ -15,6 +15,7 @@ import { useCreateCourse } from "../hooks/useCreateCourse";
 import { useFetchCategories } from "../hooks/useFetchCategories";
 import { useCreateCategory } from "../hooks/useCreateCategory";
 import { useTranslation } from "react-i18next";
+import { set } from "react-hook-form";
 
 interface TestEntry {
   id: number;
@@ -50,12 +51,10 @@ const CreateCourse: React.FC<CreateCourseProps> = ({ onCreateTest }) => {
   const [description, setDescription] = useState("");
   const [video, setVideo] = useState<File | null>(null);
   const [thumbnail, setThumbnail] = useState<File | null>(null);
-  const [documents, setDocuments] = useState<FileList | null>(null)
+  const [documents, setDocuments] = useState<FileList | null>(null);
 
   // Duration
-  const [duration, setDuration] = useState<number | null>(null) 
-
-
+  const [duration, setDuration] = useState<number | null>(null);
 
   // const [testSearch, setTestSearch] = useState("");
   // const [searchTerm, setSearchTerm] = useState<string>("");
@@ -94,25 +93,25 @@ const CreateCourse: React.FC<CreateCourseProps> = ({ onCreateTest }) => {
   };
 
   // handle video change with meta data
- const handleVideoChange = (e: ChangeEvent<HTMLInputElement>) => {
-  // if (e.target.files?.[0]) {
-  //   setVideo(e.target.files[0])
-  // }
-  const file = e.target.files?.[0] ?? null
-  setVideo(file)
-  setDuration(null)
+  const handleVideoChange = (e: ChangeEvent<HTMLInputElement>) => {
+    // if (e.target.files?.[0]) {
+    //   setVideo(e.target.files[0])
+    // }
+    const file = e.target.files?.[0] ?? null;
+    setVideo(file);
+    setDuration(null);
 
-  if(file) {
-    const url = URL.createObjectURL(file);
-    const vid = document.createElement("video")
-    vid.preload = 'metadata'
-    vid.src = url
-    vid.onloadedmetadata = () => {
-      URL.revokeObjectURL(url)
-      setDuration(Math.floor(vid.duration))  // in seconds
+    if (file) {
+      const url = URL.createObjectURL(file);
+      const vid = document.createElement("video");
+      vid.preload = "metadata";
+      vid.src = url;
+      vid.onloadedmetadata = () => {
+        URL.revokeObjectURL(url);
+        setDuration(Math.floor(vid.duration)); // in seconds
+      };
     }
-  }
-}
+  };
 
   const handleThumbnailChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) setThumbnail(e.target.files[0]);
@@ -138,8 +137,8 @@ const CreateCourse: React.FC<CreateCourseProps> = ({ onCreateTest }) => {
       formData.append("thumbnail", thumbnail);
     }
     if (video) {
-    formData.append('video', video)
-    formData.append("duration",String(duration))
+      formData.append("video", video);
+      formData.append("duration", String(duration));
     }
     if (documents) {
       Array.from(documents).forEach((file) =>
@@ -164,7 +163,11 @@ const CreateCourse: React.FC<CreateCourseProps> = ({ onCreateTest }) => {
   return (
     <div className="min-h-screen flex bg-white">
       <main className="flex-1 px-2 sm:px-8 pt-4 pb-10 overflow-auto">
-        <form className="space-y-4" onSubmit={handleSubmit}>
+        <form
+          className="space-y-4"
+          onSubmit={handleSubmit}
+          aria-label="Create Course Form"
+        >
           {/* Basic Course Information */}
           <section className="space-y-5">
             <h2 className="text-lg 2xl:text-2xl capitalize font-bold text-text-dark mb-3 sm:mb-6">
@@ -226,19 +229,57 @@ const CreateCourse: React.FC<CreateCourseProps> = ({ onCreateTest }) => {
                       <option value="" disabled>
                         -- Select category --
                       </option>
+                      <option value="">
+                        <button
+                          type="button"
+                          onClick={() => setAddingCat(!addingCat)}
+                          className="text-primary hover:underline cursor-pointer uppercase"
+                        >
+                          + {t("add category")}
+                        </button>
+                      </option>
                       {categories.map((cat: any) => (
                         <option key={cat.id} value={cat.id}>
                           {cat.name}
                         </option>
                       ))}
                     </select>
-                    <button
-                      type="button"
-                      onClick={() => setAddingCat(!addingCat)}
-                      className="text-primary hover:underline cursor-pointer"
-                    >
-                      + {t("add")}
-                    </button>
+                    {addingCat && (
+                      <div className="fixed inset-0 bg-black/10 flex items-center justify-center z-50">
+                        <div className="bg-white p-6 shadow-lg w-[90vw] sm:w-100 space-y-3">
+                          <h2 className="text-lg font-semibold">
+                            {t("add new category")}
+                          </h2>
+                          <input
+                            type="text"
+                            value={newCategory}
+                            onChange={(e) => setNewCategory(e.target.value)}
+                            placeholder={` ${t("category")} ${t("name")}`}
+                            className="w-full border border-inputBorder px-2 py-1 sm:px-4 sm:py-3 focus:outline-none focus:ring-1 focus:ring-primary"
+                          />
+                          <div className="flex justify-end space-x-2 mt-2">
+                            <button
+                              onClick={() => setAddingCat(false)}
+                              className="px-4 py-2 border cursor-pointer"
+                            >
+                              {t("cancel")}
+                            </button>
+                            <button
+                              className="px-4 py-2 bg-primary text-white disabled:opacity-50 cursor-pointer"
+                              onClick={handleAddCategory}
+                              disabled={creatingCat}
+                            >
+                              {creatingCat ? "Adding…" : t("add")}
+                            </button>
+                          </div>
+                          {catCreateError && (
+                            <p className="text-red-500 mt-2">
+                              {catCreateError}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 )}
                 {addingCat && (
@@ -289,19 +330,19 @@ const CreateCourse: React.FC<CreateCourseProps> = ({ onCreateTest }) => {
                     />
                     <span className="text-[#59BDE2] flex items-center gap-4">
                       <img src="/VideoUpload.svg" alt="" />
-                      {video ? video.name : "Select File to Upload"}
-
+                      {video ? video.name : t("select file to upload")}
                     </span>
                   </label>
                   {duration !== null && (
-              <p className="text-xs text-text-light-2 mt-2">
-                Video length: {Math.floor(duration / 60)}min{" "}
-                {duration % 60}s
-              </p>
-            )}
+                    <p className="text-xs text-text-light-2 mt-2">
+                      Video length: {Math.floor(duration / 60)}min{" "}
+                      {duration % 60}s
+                    </p>
+                  )}
                   <p className="text-xs text-text-light-2 mt-2">
-                    Select single videos from your local storage * Max. upto
-                    5Gb per video
+                    {t(
+                      "Select single video from your local storage * Max. upto 5Gb per video"
+                    )}
                   </p>
                 </div>
                 {/* Add Thumbnail */}
@@ -318,7 +359,7 @@ const CreateCourse: React.FC<CreateCourseProps> = ({ onCreateTest }) => {
                     />
                     <span className="text-[#59BDE2] flex items-center gap-2">
                       <MdUpload className="text-[#59BDE2] w-7 h-7" />
-                      {t("upload thumbnail image")}
+                      {thumbnail ? thumbnail.name : t("select file to upload")}
                     </span>
                   </label>
                   <p className="text-xs text-text-light-2 mt-2">

@@ -69,7 +69,7 @@
   "select file to upload": "Sélectionnez le fichier à télécharger",
   "save course": "Enregistrer le cours",
   "Recommended Image Size: 800px x 600px, PNG or JPEG file": "Taille d'image recommandée : 800px x 600px, fichier PNG ou JPEG",
-  "Select multiple videos from your local storage * Max. upto 5Gb per video": "Sélectionnez plusieurs vidéos à partir de votre stockage local * Max. jusqu'à 5Go par vidéo",
+  "Select single video from your local storage * Max. upto 5Gb per video": "Sélectionnez une seule vidéo à partir de votre stockage local * Max. jusqu'à 5Go par vidéo", "Select multiple videos from your local storage * Max. upto 5Gb per video": "Sélectionnez plusieurs vidéos à partir de votre stockage local * Max. jusqu'à 5Go par vidéo",
   "profile": "Profil",
   "password": "Mot de passe",
   "reset password": "Réinitialiser le mot de passe",
@@ -87,5 +87,6 @@
   "testTaken": "Test pris",
   "enrolledCourses": "Cours inscrits",
   "completed courses": "Cours terminés",
-  "certificates issued": "Certificats émis"
+  "certificates issued": "Certificats émis",
+  "video length": "Durée de la vidéo"
 }
