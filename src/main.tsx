@@ -27,6 +27,11 @@ import ClientProfile from "./components/client/ClientProfile.tsx";
 import { GenerateCertificatePage } from "./pages/GenerateCertificatePage.tsx";
 import { RequireAuth } from "./components/client/RequireAuth.tsx";
 import { AuthProvider } from "./context/AuthContext.tsx";
+
+import { AdminProvider } from "./context/AdminContext.tsx";
+
+import { RequireAdmin }    from "./components/RequireAdmin.tsx";
+
 // import Quiz from './components/client/Quiz.tsx';
 import i18n from "./i18n/i18.ts";
 
@@ -38,7 +43,13 @@ const router = createBrowserRouter(
       <Route path="/adminlogin" element={<LoginAdmin />} />
 
       {/* Admin-only routes */}
-      <Route path="/admin" element={<AdminLayout />}>
+      <Route path="/admin" element={
+        <AdminProvider>
+          <RequireAdmin>
+        <AdminLayout />
+        </RequireAdmin>
+        </AdminProvider>
+        }>
         {/* Admin Routes */}
         {/* <Route index element={<AdminHome />} /> */}
         <Route path="/admin/home" element={<AdminHome />} />

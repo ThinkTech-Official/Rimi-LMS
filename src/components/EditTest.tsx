@@ -203,7 +203,7 @@ const EditTest: React.FC = () => {
                 />
                 <div className="space-y-2">
                   {q.options.map(o => (
-                    <div key={o.id} className="flex items-center bg-[#EBEBEB] px-3 relative">
+                    <div key={o.id} className="flex items-center bg-[#EBEBEB] px-3 py-2 relative">
                       <input
                         type="checkbox"
                         checked={o.isCorrect}

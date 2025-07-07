@@ -1,3 +1,5 @@
+// THIS IS THE HEADER FOR ADMIN 
+
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FaUserCircle } from "react-icons/fa";
@@ -6,7 +8,15 @@ import { IoIosLogOut } from "react-icons/io";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 
+
+// CONTEXT 
+import { useAdminContext } from '../context/AdminContext'
+
+
 const Header: React.FC = () => {
+
+   const { admin, loading } = useAdminContext();
+
   const [isLanguageSelectOpen, setIsLanguageSelectOpen] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const navigate = useNavigate();
@@ -93,7 +103,7 @@ const Header: React.FC = () => {
         >
           <span className="flex gap-2 items-center">
             <FaUserCircle className="h-5 w-5 2xl:w-6 2xl:h-6 text-primary" />
-            Username{" "}
+             {admin ? `Welcome, ${admin.name}` : 'Please log in'}
           </span>
           <MdKeyboardArrowRight
             className={`h-4 w-4 2xl:w-6 2xl:h-6 transform transition ${

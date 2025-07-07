@@ -274,14 +274,14 @@ const CreateTest: React.FC = () => {
                       </div>
                     ))}
                   </div>
-                  <button
+                  {/* <button
                     type="button"
                     onClick={() => handleAddOption(q.id)}
                     className="text-[#0832DE] font-medium flex items-center space-x-1 cursor-pointer"
                   >
                     <span className="text-2xl">+</span>
                     <span>Add new option</span>
-                  </button>
+                  </button> */}
                   <button
                     onClick={() => handleRemoveQuestion(q.id)}
                     className="inline-block text-sm sm:text-[16px]  text-red-500 hover:text-red-600 text-nowrap font-semibold  cursor-pointer transition-colors delay-100"

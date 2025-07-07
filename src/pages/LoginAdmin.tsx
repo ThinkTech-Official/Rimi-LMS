@@ -1,13 +1,19 @@
-import React, { useState } from "react";
-import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
-import { useAdminAuth, type SignInDto } from "../hooks/useAdminAuth";
-import { useForm, type SubmitHandler } from "react-hook-form";
-import useNotification from "../hooks/useNotification";
+import React, { useState } from 'react';
+import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
+import { useAdminAuth, type SignInDto  } from '../hooks/useAdminAuth';
+import { useAdminContext } from '../context/AdminContext';
+import { useNavigate } from 'react-router-dom';
+import { useForm, type SubmitHandler } from 'react-hook-form';
+import useNotification from '../hooks/useNotification';
 
 const LoginAdmin: React.FC = () => {
-  const { login, loading, error } = useAdminAuth();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+
+  const navigate = useNavigate()
+  
+ const { login, loading, error } = useAdminAuth();
+ const { reload: reloadAdmin }   = useAdminContext();
+  const [email, setEmail]         = useState('');
+  const [password, setPassword]   = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const {
     register,
@@ -20,9 +26,15 @@ const LoginAdmin: React.FC = () => {
   //   e.preventDefault();
   //   login({ email, password } as SignInDto);
   // };
+    
   const onSubmit: SubmitHandler<SignInDto> = async (data: SignInDto) => {
+    console.log(data);
     try {
-      await login(data);
+     const ok = await login(data);
+     if(ok){
+      await reloadAdmin();
+      navigate('/admin/home');
+     }
     } catch (error) {
       console.error(error);
       triggerNotification({

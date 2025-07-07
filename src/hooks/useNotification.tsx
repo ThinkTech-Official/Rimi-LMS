@@ -8,7 +8,7 @@ interface NotificationWithId extends NotificationProps {
   id: string;
 }
 
-const useNotification = (position: Position = "bottom-center") => {
+const useNotification = (position: Position = "top-right") => {
   const [notifications, setNotifications] = useState<NotificationWithId[]>([]);
   const timersRef = useRef<Record<string, ReturnType<typeof setTimeout>>>({});
 

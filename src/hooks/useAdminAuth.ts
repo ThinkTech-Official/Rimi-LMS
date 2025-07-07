@@ -20,10 +20,12 @@ export const useAdminAuth = () => {
     setError(null);
     try {
       // POST /api/admin/auth/login
-      await adminApi.post(`${API_BASE}/admin/auth/login`, dto);
+      const response = await adminApi.post(`${API_BASE}/admin/auth/login`, dto);
       // on success, cookies are set httpOnly by the server
       // redirect to admin dashboard (adjust path as needed)
-      navigate('/admin/home');
+    //   navigate('/admin');
+    console.log(response)
+    return true
     } catch (err: any) {
       setError(err.response?.data?.message || err.message || 'Login failed');
       throw err;
