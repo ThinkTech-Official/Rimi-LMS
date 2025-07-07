@@ -6,6 +6,7 @@ import { useFetchCourses , type Course } from "../hooks/useFetchCourses";
 import { Navigate, useNavigate } from "react-router-dom";
 import { useCreateCategory } from "../hooks/useCreateCategory";
 import { useTranslation } from "react-i18next";
+import Spinner from "./Spinner";
 
 // interface Course {
 //   id: number;
@@ -182,6 +183,12 @@ const AllCourses: React.FC<AllCoursesProps> = ({ onCreateCourse }) => {
       .includes(searchTerm.toLowerCase());
     return byCat && bySearch;
   });
+const formatTime = (sec: number) => {
+  const m = Math.floor(sec / 60);
+  const s = sec % 60;
+  return `${m.toString().padStart(2, "0")} : ${s.toString().padStart(2, "0")}`;
+};
+
 
 
     // Render loading / errors
@@ -193,12 +200,12 @@ const AllCourses: React.FC<AllCoursesProps> = ({ onCreateCourse }) => {
 
 
 
-  console.log('from all courses component',courses)
+  // console.log('from all courses component',courses)
 
 
   return (
      <div className="min-h-screen bg-white px-2">
-      <div className="px-2 sm:px-4 py-4">
+      <div className="sm:px-4 py-4">
         {/* Page Title & Breadcrumb */}
 
         <h1 className="text-lg 2xl:text-2xl font-bold text-[#1B1B1B] mb-3 sm:mb-6">
@@ -207,15 +214,15 @@ const AllCourses: React.FC<AllCoursesProps> = ({ onCreateCourse }) => {
 
         {/* Search & Action */}
         <div className="flex flex-col sm:flex-row sm:items-center mb-6 gap-4 w-fit">
-          <div className="flex items-center border border-[#DBDADE] w-[230px] sm:w-[330px]">
+          <div className="flex items-center border border-[#DBDADE] w-[230px] sm:w-[330px] relative">
             <input
               type="text"
               placeholder={t("Search by name")}
               value={searchTerm}
               onChange={handleSearchChange}
-              className="px-2 sm:px-4 py-1 sm:py-3 w-[200px] sm:w-[330px] focus:outline-none"
+              className="relative px-2 sm:px-4 py-1 sm:py-3 w-[200px] sm:w-[330px] focus:outline-none focus:ring-1 focus:ring-primary"
             />
-            <button className="px-1 sm:px-3 cursor-pointer">
+            <button className="px-1 sm:px-3 cursor-pointer absolute right-0">
               <BiSearch className="text-[#6F6B7D]" />
             </button>
           </div>
@@ -234,7 +241,7 @@ const AllCourses: React.FC<AllCoursesProps> = ({ onCreateCourse }) => {
               <li
                 key={cat.id}
                 onClick={() => handleCategoryClick(cat.id)}
-                className={`pb-2 cursor-pointer font-medium text-nowrap text-sm sm:text-base 2xl:text-xl ${
+                className={`pb-2 cursor-pointer font-medium text-nowrap text-sm capitalize sm:text-base 2xl:text-xl ${
                   selectedCategoryId === cat.id
                     ? "text-primary border-b-2 border-primary"
                     : "text-gray-600"
@@ -243,44 +250,45 @@ const AllCourses: React.FC<AllCoursesProps> = ({ onCreateCourse }) => {
                 {cat.name}
               </li>
             ))}
-              </ul>
-             <button
+               {/* <button
               onClick={() => setShowAddCategoryModal(true)}
               className="cursor-pointer border-2 border-primary px-3 py-1 text-sm sm:text-base text-nowrap text-primary hover:bg-primary hover:text-white transition-colors delay-100"
             >
               {t("add category")}
-            </button>
+            </button> */}
+              </ul>
         </div>
 
         <div></div>
 
         {/* Courses Grid */}
         {catLoading || courseLoading ? (
-          <p>Loading...</p>
+          <p className="text-sm text-[#6F6B7D]"><Spinner /></p>
         ) : (
           <div className="flex items-center justify-center sm:justify-start w-full">
             <div className="flex flex-wrap gap-6 items-center justify-center sm:justify-start sm:items-start">
               {filteredCourses.map((course) => (
                 <div
                   key={course.id}
-                  className="rounded-[2px] overflow-hidden w-[80vw] max-w-[300px] sm:w-[200px] 2xl:w-[250px] cursor-pointer"
+                  className="rounded-[2px] overflow-hidden w-[80vw] max-w-[300px] sm:w-[300px] 2xl:w-[350px] h-68 cursor-pointer border border-inputBorder shadow-md"
                   onClick={() => handleSelectCourse(course.id)}
                 >
                   <div className="relative">
                     <img
                       src={course.imageUrl}
                       alt={course.title}
-                      className="object-cover rounded-b-[2px] w-full h-40 sm:h-32 2xl:h-40"
+                      className="object-cover rounded-b-[2px] w-full h-40 sm:h-32 md:h-44"
                     />
                   </div>
-                  <div className="p-2">
+                  <div className=" flex flex-col gap-2 p-2">
                     <h2 className="text-base 2xl:text-xl font-semibold text-[#1B1B1B]">
                       {course.title}
                     </h2>
                     <div className="flex items-center text-[#6F6B7D] text-xs 2xl:text-base space-x-4">
                       <div className="flex items-center gap-1">
                         <GoClock />
-                        <span>{course.duration}</span>
+                     <span>{course.duration}</span>
+
                       </div>
                       <div className="flex items-center gap-1">
                         <img src="Document.svg" alt="" />

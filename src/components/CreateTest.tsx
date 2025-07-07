@@ -1,6 +1,7 @@
 import React, { useState, type FormEvent } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useCreateTest } from "../hooks/useCreateTest";
+import { useTranslation } from "react-i18next";
 
 interface Option {
   id: number;
@@ -18,7 +19,7 @@ const CreateTest: React.FC = () => {
   const { courseId } = useParams<{ courseId: string }>()
   const navigate = useNavigate()
   const { createTest , loading , error } = useCreateTest(courseId!) 
-
+  const {t} = useTranslation();
 
   const [name, setName] = useState("");
   // const [courseId, setCourseId] = useState("");
@@ -141,18 +142,22 @@ const CreateTest: React.FC = () => {
         <form onSubmit={handleSave} className="space-y-8">
           {/* Test Information */}
           <section className="space-y-4">
-            <div className="flex w-full justify-between items-center">
+            <div className="flex w-full justify-between items-center mb-6 sm:mb-3">
               <h2 className="text-lg 2xl:text-2xl font-bold text-[#1B1B1B]">
                 Test Information
               </h2>
               <button
                 onClick={handleSave}
-                className="inline-block text-sm sm:text-[16px] px-5 py-1 sm:py-3 bg-primary text-white text-nowrap font-semibold hover:bg-indigo-700 cursor-pointer transition-colors delay-150"
+                className="inline-block w-[120px] sm:w-[150px] text-sm sm:text-[16px] px-5 py-2 sm:py-3 bg-primary text-white text-nowrap font-semibold hover:bg-indigo-700 cursor-pointer transition-colors delay-150"
               >
                 Save Test
               </button>
             </div>
             <div className="space-y-4">
+              <div className="flex flex-col">
+                <label className="text-sm text-text-light-2 mb-1 capitalize">
+                  {t("name")}
+                </label>
               <input
                 type="text"
                 value={name}
@@ -161,6 +166,7 @@ const CreateTest: React.FC = () => {
                 className="w-full border border-inputBorder p-2 sm:px-4 sm:py-3 focus:outline-none focus:ring-1 focus:ring-primary"
                 required
               />
+              </div>
               {/* <input
                 type="text"
                 value={courseId}
@@ -170,13 +176,19 @@ const CreateTest: React.FC = () => {
                 required
               /> */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="flex flex-col"><label className="text-sm text-text-light-2 mb-1 capitalize">
+                  {t("duration")}
+                </label>
                 <input
                   type="text"
                   value={duration}
                   onChange={(e) => setDuration(e.target.value)}
                   placeholder="Select Test Duration in Seconds"
                   className="w-full border border-inputBorder p-2 sm:px-4 sm:py-3 focus:outline-none focus:ring-1 focus:ring-primary"
-                />
+                /></div>
+                 <div className="flex flex-col"><label className="text-sm text-text-light-2 mb-1 capitalize">
+                  {t("Start Time")}
+                </label>
                 <input
                   type="text"
                   value={startTime}
@@ -185,9 +197,13 @@ const CreateTest: React.FC = () => {
                   className="w-full border border-inputBorder p-2 sm:px-4 sm:py-3 focus:outline-none focus:ring-1 focus:ring-primary"
                 />
               </div>
+              </div>
 
                 {/* Passing Marks and Quiz Questions  */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                 <div className="flex flex-col"><label className="text-sm text-text-light-2 mb-1 capitalize">
+                  {t("passing percentage")}
+                </label>
                 <input
                   type="text"
                   value={passingMarks}
@@ -195,6 +211,10 @@ const CreateTest: React.FC = () => {
                   placeholder="Passing Percentage"
                   className="w-full border border-inputBorder p-2 sm:px-4 sm:py-3 focus:outline-none focus:ring-1 focus:ring-primary"
                 />
+                </div>
+                 <div className="flex flex-col"><label className="text-sm text-text-light-2 mb-1 capitalize">
+                  {t("number of questions")}
+                </label>
                 <input
                   type="text"
                   value={quizQuestionNumber}
@@ -202,6 +222,7 @@ const CreateTest: React.FC = () => {
                   placeholder="Number of Question In Quiz , if Not filled sets all the questions in test for quiz"
                   className="w-full border border-inputBorder p-2 sm:px-4 sm:py-3 focus:outline-none focus:ring-1 focus:ring-primary"
                 />
+              </div>
               </div>
             </div>
           </section>
@@ -283,7 +304,7 @@ const CreateTest: React.FC = () => {
             </button>
             <button
               type="submit"
-              className="inline-block text-sm sm:text-[16px] px-5 py-1 sm:py-3 bg-primary text-white text-nowrap font-semibold hover:bg-indigo-700 cursor-pointer transition-colors delay-150"
+              className="inline-block w-[120px] sm:w-[150px] text-sm sm:text-[16px] px-5 py-2 sm:py-3 bg-primary text-white text-nowrap font-semibold hover:bg-indigo-700 cursor-pointer transition-colors delay-150"
             >
               Save Test
             </button>

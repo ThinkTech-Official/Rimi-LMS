@@ -32,6 +32,12 @@ export const useFetchCourses = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
+  const formatTime = (time: number) => {
+    const hours = Math.floor(time / 60);
+    const minutes = time % 60;
+    return `${hours}hr ${minutes}min`;
+  };
+
   useEffect(() => {
     setLoading(true);
     axios
@@ -40,7 +46,7 @@ export const useFetchCourses = () => {
         const normalized = res.data.map(c => ({
           id: c.id,
           title: c.name,
-          duration: String(c.duration) + ' Seconds',  // `${Math.floor(c.duration/60)}hr ${c.duration%60}min`,
+          duration: formatTime(c.duration),  // `${Math.floor(c.duration/60)}hr ${c.duration%60}min`,
         //   questions: c.questionCount,
           imageUrl: `${API_BASE}/uploads/courses/${c.thumbnail}`,
           categoryId: c.categoryId ? c.categoryId : 0,

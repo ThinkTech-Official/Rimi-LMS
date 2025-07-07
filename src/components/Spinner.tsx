@@ -1,6 +1,9 @@
-const Spinner:React.FC = () => {
+interface Props {
+    className?:string
+}
+const Spinner:React.FC<Props> = ({className = ''}) => {
     return (
-        <div className="spinner"></div>
+        <div className={`spinner ${className}`}></div>
     )
 }
 

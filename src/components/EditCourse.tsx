@@ -8,14 +8,19 @@ import { TbEdit } from 'react-icons/tb';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 import { useFetchTests, type TestEntry } from '../hooks/useFetchTests';
 import { useDeleteTest } from '../hooks/useDeleteTest';
+import { useTranslation } from 'react-i18next';
+import Spinner from './Spinner';
+import useNotification from '../hooks/useNotification';
+import { set } from 'react-hook-form';
 
 const EditCourse: React.FC = () => {
   const navigate = useNavigate();
   const { courseId } = useParams<{ courseId: string }>();
-
+  const {t} = useTranslation();
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [currentPage, setCurrentPage] = useState<number>(1);
   const testsPerPage = 5;
+  const {NotificationComponent, triggerNotification} = useNotification();
 
   const {
     tests = [],
@@ -68,8 +73,13 @@ const EditCourse: React.FC = () => {
       await deleteTest(modalTestId);
       setLocalTests((prev) => prev.filter((t) => t.id !== modalTestId));
       setModalTestId(null);
+      triggerNotification({type: 'success', message: 'Test deleted', duration: 3000});
     } catch {
       // error shown in modal
+      triggerNotification({type: 'error', message: 'Failed to delete test', duration: 3000});
+    }
+    finally{
+      setModalTestId(null);
     }
   };
 
@@ -82,25 +92,25 @@ const EditCourse: React.FC = () => {
   }
 
   return (
-    <section className="space-y-6">
+    <section className="space-y-6 p-2 md:p-4 lg:p-8">
       {/* Header & Search */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between">
         <h2 className="text-lg font-bold text-gray-900 mb-2">
           Attached Tests
         </h2>
-        <div className="flex flex-col sm:flex-row sm:items-center gap-4">
-          <div className="flex items-center border border-[#DBDADE] w-[230px] sm:w-[330px]">
-            <input
-              type="text"
-              placeholder="Search by name"
-              value={searchTerm}
-              onChange={handleSearchChange}
-              className="px-2 sm:px-4 py-1 sm:py-3 w-[200px] sm:w-[330px] focus:outline-none"
-            />
-            <button className="px-1 sm:px-3 cursor-pointer">
-              <BiSearch className="text-[#6F6B7D]" />
-            </button>
-          </div>
+        <div className="flex flex-col lg:flex-row lg:items-center gap-4">
+       <div className="flex items-center border border-[#DBDADE] w-[230px] sm:w-[330px] relative">
+                   <input
+                     type="text"
+                     placeholder={t("Search by name")}
+                     value={searchTerm}
+                     onChange={handleSearchChange}
+                     className="relative px-2 sm:px-4 py-1 sm:py-3 w-[200px] sm:w-[330px] focus:outline-none focus:ring-1 focus:ring-primary"
+                   />
+                   <button className="px-1 sm:px-3 cursor-pointer absolute right-0">
+                     <BiSearch className="text-[#6F6B7D]" />
+                   </button>
+                 </div>
           <button
             onClick={handleCreateTest}
             className="inline-block text-sm sm:text-[16px] px-5 py-1 sm:py-3 bg-primary text-white font-semibold hover:bg-indigo-700 cursor-pointer transition-colors delay-150 w-fit"
@@ -112,7 +122,7 @@ const EditCourse: React.FC = () => {
 
       {/* Loading / Error */}
       {loading ? (
-        <p>Loading tests...</p>
+        <p className='fixed top-1/2 left-1/2'><Spinner /></p>
       ) : error ? (
         <p className="text-red-500">{error}</p>
       ) : paginatedTests.length > 0 ? (
@@ -177,7 +187,7 @@ const EditCourse: React.FC = () => {
           {/* table */}
           <div className="w-full overflow-x-auto custom-scrollbar pb-2">
             <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-primary text-white text-[16px] 2xl:text-xl text-center">
+              <thead className="bg-primary text-white text-[16px] 2xl:text-xl text-center text-nowrap">
                 <tr>
                   <th className="px-2 py-3 font-medium">Test Name</th>
                   <th className="px-2 py-3 font-medium">Questions</th>
@@ -241,10 +251,10 @@ const EditCourse: React.FC = () => {
                       }}
                     >
                       <div className="flex gap-1.5 justify-center">
-                        <button onClick={() => handleDeleteClick(test.id)} className="text-primary hover:underline font-medium">
+                        <button onClick={() => handleDeleteClick(test.id)} className="text-primary hover:underline font-medium cursor-pointer">
                           <RiDeleteBinLine className="w-5 h-5 cursor-pointer text-red-400" />
                         </button>
-                        <button onClick={() => handleTestEdit(test.id)} className="text-primary hover:underline font-medium">
+                        <button onClick={() => handleTestEdit(test.id)} className="text-primary hover:underline font-medium cursor-pointer">
                           <TbEdit className="w-5 h-5" />
                         </button>
                       </div>
@@ -256,7 +266,7 @@ const EditCourse: React.FC = () => {
           </div>
 
           {/* Pagination */}
-          <div className="flex items-center justify-center p-4 space-x-2">
+          {/* <div className="flex items-center justify-center p-4 space-x-2">
             <button
               disabled={currentPage === 1}
               onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
@@ -282,7 +292,7 @@ const EditCourse: React.FC = () => {
             >
               <ChevronRightIcon className="h-5 w-5" />
             </button>
-          </div>
+          </div> */}
         </>
       ) : (
         <p>No tests attached to this course yet.</p>
@@ -290,22 +300,22 @@ const EditCourse: React.FC = () => {
 
       {/* Delete Confirmation Modal */}
       {modalTestId !== null && (
-        <div className="fixed inset-0 bg-primary/10  flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg shadow-lg p-6 w-[90%] max-w-md">
+        <div className="fixed inset-0 bg-black/10  flex items-center justify-center z-50">
+          <div className="bg-white shadow-lg p-6 w-[90%] max-w-md">
             <h3 className="text-lg font-semibold">Confirm Delete</h3>
             <p className="mt-4">Are you sure you want to delete this test?</p>
             {deleteError && <p className="text-red-500 mt-2">{deleteError}</p>}
             <div className="mt-6 flex justify-end space-x-4">
               <button
                 onClick={handleCancelDelete}
-                className="px-4 py-2 border rounded"
+                className="px-4 py-2 border cursor-pointer"
               >
                 Cancel
               </button>
               <button
                 onClick={handleConfirmDelete}
                 disabled={deleting}
-                className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 disabled:opacity-50"
+                className="px-4 py-2 bg-red-600 text-white hover:bg-red-700 disabled:opacity-50 cursor-pointer"
               >
                 {deleting ? 'Deleting...' : 'Delete'}
               </button>
@@ -313,6 +323,7 @@ const EditCourse: React.FC = () => {
           </div>
         </div>
       )}
+      {NotificationComponent}
     </section>
   );
 };

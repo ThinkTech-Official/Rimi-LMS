@@ -2,13 +2,13 @@ import { useState, useCallback, useRef } from "react";
 import { v4 as uuidv4 } from "uuid";
 import Notification, { type NotificationProps } from "../components/Notification";
 
-type Position = "top-right" | "top-left" | "bottom-right" | "bottom-left";
+type Position = "top-right" | "top-left" | "bottom-right" | "bottom-left" | "top-center" | "bottom-center";
 
 interface NotificationWithId extends NotificationProps {
   id: string;
 }
 
-const useNotification = (position: Position = "top-right") => {
+const useNotification = (position: Position = "bottom-center") => {
   const [notifications, setNotifications] = useState<NotificationWithId[]>([]);
   const timersRef = useRef<Record<string, ReturnType<typeof setTimeout>>>({});
 

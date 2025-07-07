@@ -17,6 +17,7 @@ import { useTranslation } from "react-i18next";
 import { useDashboardStats } from "../hooks/useDashboardStats";
 import { useRecentSignups } from "../hooks/useRecentSignups";
 import { useLiveTotals } from "../hooks/useLiveTotals";
+import Spinner from "./Spinner";
 
 // Dummy stats
 // const stats = [
@@ -150,10 +151,10 @@ const AdminHome: React.FC = () => {
 
 
     if (statsLoading || recentLoading) {
-    return <div>{t('Loading...')}</div>;
+    return <div className="flex flex-col justify-center items-center gap-3 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"><Spinner /><p>Loading...</p></div>;
   }
   if (statsError || recentError) {
-    return <div>{t('Error loading dashboard')}</div>;
+    return <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-red-500">{t('Error loading dashboard')} !</div>;
   }
 
     // Build an array for live totals

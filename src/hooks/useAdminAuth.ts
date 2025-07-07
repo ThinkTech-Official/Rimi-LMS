@@ -23,9 +23,10 @@ export const useAdminAuth = () => {
       await adminApi.post(`${API_BASE}/admin/auth/login`, dto);
       // on success, cookies are set httpOnly by the server
       // redirect to admin dashboard (adjust path as needed)
-      navigate('/admin');
+      navigate('/admin/home');
     } catch (err: any) {
       setError(err.response?.data?.message || err.message || 'Login failed');
+      throw err;
     } finally {
       setLoading(false);
     }
