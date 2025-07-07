@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { API_BASE } from '../utils/ulrs';
 
 export interface RawCourseEntry {
   id: number;
@@ -21,7 +22,7 @@ export interface Course {
   description?: string;
 }
 
-const API_BASE = 'http://localhost:3000';
+
 
 /**
  * Fetches all courses from backend

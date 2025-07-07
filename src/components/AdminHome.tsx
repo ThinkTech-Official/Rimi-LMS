@@ -433,14 +433,14 @@ const AdminHome: React.FC = () => {
 
             {/* Pagination NO Need For Pagination Here As Just Showing Result of Last 10 SIgined up User  */}
             <div className="flex items-center justify-center p-4 space-x-2">
-              <button
+              {/* <button
                 disabled={currentPage === 1}
                 className="px-3 py-[10px] bg-[#CCCCCC] text-[#6F6B7D] cursor-pointer"
                 title="Previous"
                 onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
               >
                 <ChevronLeftIcon className="h-5 w-5" />
-              </button>
+              </button> */}
                {Array.from({ length: totalPages }, (_, i) => i + 1).map((num) => (
                 <button
                   key={num}
@@ -454,14 +454,14 @@ const AdminHome: React.FC = () => {
                   {num}
                 </button>
               ))}
-              <button
+              {/* <button
               disabled={currentPage === totalPages}
               onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
                 className="px-3 py-[10px] bg-[#CCCCCC] text-[#6F6B7D] cursor-pointer"
                 title="Next"
               >
                 <ChevronRightIcon className="h-5 w-5" />
-              </button>
+              </button> */}
             </div>
           </div>
         </main>

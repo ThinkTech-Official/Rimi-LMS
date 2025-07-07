@@ -49,6 +49,7 @@
 
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { API_BASE } from '../utils/ulrs';
 
 export interface RawTestEntry {
   id: number;
@@ -70,7 +71,6 @@ export interface TestEntry {
   // courseId: string;
 }
 
-const API_BASE = 'http://localhost:3000';
 
 export const useFetchTests = (
   courseId: string,

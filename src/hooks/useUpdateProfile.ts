@@ -1,11 +1,11 @@
 import { useState, useCallback } from 'react';
 import api from '../utils/api';
 import type { UserProfile } from './useProfile';
+import { API_BASE } from '../utils/ulrs';
 
 
 
 
-const API_BASE = 'http://localhost:3000';
 
 export function useUpdateProfile() {
   const [loading, setLoading] = useState(false);

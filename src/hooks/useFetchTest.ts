@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { API_BASE } from '../utils/ulrs';
 
 export interface OptionDto {
   id: number;
@@ -21,7 +22,7 @@ export interface TestDetail {
   questions: QuestionDto[];
 }
 
-const API_BASE = 'http://localhost:3000';
+
 
 /**
  * Fetches a single test's details (including questions and options).

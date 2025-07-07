@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import api from '../utils/api'
 import html2canvas from 'html2canvas'
 import jsPDF from 'jspdf'
+import { API_BASE } from '../utils/ulrs'
 
 export interface CertRecord {
   id:         number
@@ -14,7 +15,6 @@ export interface CertRecord {
   }
 }
 
-const API_BASE = 'http://localhost:3000';
 
 export type GenerateStatus = 'generating' | 'error' | 'done'
 

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import axios from 'axios';
+import { API_BASE } from '../utils/ulrs';
 
 interface OptionDto {
   text: string;
@@ -18,7 +19,6 @@ interface CreateTestDto {
   questions: QuestionDto[];
 }
 
-const baseUrl = 'http://localhost:3000'
 
 /**
  * Hook to create a new test for a given course.
@@ -33,7 +33,7 @@ export const useCreateTest = (courseId: string) => {
     setError(null);
     try {
       const response = await axios.post(
-        `${baseUrl}/courses/${courseId}/tests`,
+        `${API_BASE}/courses/${courseId}/tests`,
         dto
       );
       return response.data;

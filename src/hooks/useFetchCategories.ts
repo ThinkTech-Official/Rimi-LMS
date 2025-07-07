@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
+import { API_BASE } from '../utils/ulrs';
 
-const API_BASE = 'http://localhost:3000';
 
 
 export interface Category {

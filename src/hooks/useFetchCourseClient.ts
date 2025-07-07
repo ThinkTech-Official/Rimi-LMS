@@ -10,6 +10,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import axios, { type CancelTokenSource } from 'axios';
+import { API_BASE } from '../utils/ulrs';
 
 /**
  * Represents a single course test with user clearance info
@@ -67,7 +68,7 @@ export function useFetchCourseClient(
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  const API_BASE = 'http://localhost:3000';
+ 
 
   // useCallback to ensure stable reference
   const fetchCourse = useCallback(async () => {

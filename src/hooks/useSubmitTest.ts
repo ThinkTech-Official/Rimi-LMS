@@ -1,12 +1,12 @@
 
 import { useState } from 'react';
+import { API_BASE } from '../utils/ulrs';
 
 export interface SubmitPayload {
   score: number;    // 0–100
   passed: boolean;
 }
 
-const API_BASE = 'http://localhost:3000';
 
 export function useSubmitTest() {
   const [loading, setLoading] = useState(false);

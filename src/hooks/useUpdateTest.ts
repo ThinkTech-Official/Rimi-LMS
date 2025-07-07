@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import axios from 'axios';
+import { API_BASE } from '../utils/ulrs';
 
-const API_BASE = 'http://localhost:3000';
 
 export interface CreateOptionDto { text: string; isCorrect: boolean; }
 export interface CreateQuestionDto { text: string; options: CreateOptionDto[]; }

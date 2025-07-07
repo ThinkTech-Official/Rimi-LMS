@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import api from '../utils/api';
+import { API_BASE } from '../utils/ulrs';
 
 interface User {
   id: number;
@@ -7,7 +8,6 @@ interface User {
   username: string;
 }
 
-const API_BASE = 'http://localhost:3000';
 
 export function useUser() {
   const [user, setUser] = useState<User | null>(null);

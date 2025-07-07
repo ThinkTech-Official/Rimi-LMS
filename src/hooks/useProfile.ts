@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import api from '../utils/api';
+import { API_BASE } from '../utils/ulrs';
 
 export interface UserProfile {
   id: number;
@@ -8,7 +9,6 @@ export interface UserProfile {
   
 }
 
-const API_BASE = 'http://localhost:3000';
 
 export function useProfile() {
   const [profile, setProfile] = useState<UserProfile | null>(null);

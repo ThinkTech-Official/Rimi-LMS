@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import type { Question } from '../components/client/Quiz';
+import { API_BASE } from '../utils/ulrs';
 
 // --- Raw DTO from backend ---
 export interface CourseDTO {
@@ -74,7 +75,7 @@ export function useFetchCourse(courseId?: string) {
     setError(null);
 
     axios
-      .get<CourseDTO>(`http://localhost:3000/courses/${courseId}`)
+      .get<CourseDTO>(`${API_BASE}/courses/${courseId}`)
       .then((res: any) => {
         const raw = res.data;
 
@@ -100,7 +101,7 @@ export function useFetchCourse(courseId?: string) {
           id: d.id.toString(),
           title: d.fileName,
           description: '',           // no description field yet
-          url: `http://localhost:3000/uploads/courses/${d.fileName}`,
+          url: `${API_BASE}/uploads/courses/${d.fileName}`,
         }));
 
         // Set the mapped course
@@ -109,8 +110,8 @@ export function useFetchCourse(courseId?: string) {
           title: raw.name,
           description: raw.description,
           duration: raw.duration,
-          imageUrl: `http://localhost:3000/uploads/courses/${raw.thumbnail}`,
-          videoUrl: `http://localhost:3000/uploads/courses/${raw.videoUrl}`,
+          imageUrl: `${API_BASE}/uploads/courses/${raw.thumbnail}`,
+          videoUrl: `${API_BASE}/uploads/courses/${raw.videoUrl}`,
           tests: mappedTests,
           studyMaterials: mappedMaterials,
         });

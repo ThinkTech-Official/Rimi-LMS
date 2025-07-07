@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import type { Question } from '../components/client/Quiz';
+import { API_BASE } from '../utils/ulrs';
 
 //  Raw DTO from backend 
 interface RawTestDTO {
@@ -59,7 +60,7 @@ export function useFetchTestClient(
 
     axios
       .get<RawTestDTO>(
-        `http://localhost:3000/courses/${courseId}/tests/${testId}`
+        `${API_BASE}/courses/${courseId}/tests/${testId}`
       )
       .then((res: any) => {
         const raw = res.data;

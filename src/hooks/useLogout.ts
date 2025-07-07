@@ -1,8 +1,8 @@
 import { useState, useCallback } from 'react';
 import api from '../utils/api';
+import { API_BASE } from '../utils/ulrs';
 
 
-const API_BASE = 'http://localhost:3000';
 
 export function useLogout() {
   const [loading, setLoading] = useState(false);

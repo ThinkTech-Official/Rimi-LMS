@@ -1,6 +1,7 @@
 // src/hooks/useFetchCourseProgress.ts
 import { useState, useEffect } from 'react'
 import api from '../utils/api'    
+import { API_BASE } from '../utils/ulrs'
 
 export interface CourseProgress {
   totalTests:      number
@@ -15,7 +16,7 @@ export interface CourseProgress {
   }[]
 }
 
-const API_BASE = 'http://localhost:3000';
+
 
 export const useFetchCourseProgress = (courseId: number) => {
   const [progress, setProgress] = useState<CourseProgress | null>(null)
