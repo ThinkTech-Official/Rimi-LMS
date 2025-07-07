@@ -201,7 +201,7 @@ const EditTest: React.FC = () => {
                   className="w-full text-text-light border border-inputBorder px-4 py-3 focus:outline-none focus:ring-1 focus:ring-primary"
                   required
                 />
-                <div className="space-y-2">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-[800px] mt-2">
                   {q.options.map(o => (
                     <div key={o.id} className="flex items-center bg-[#EBEBEB] px-3 py-2 relative">
                       <input
@@ -218,23 +218,23 @@ const EditTest: React.FC = () => {
                         className="flex-1 focus:outline-none focus:ring-primary text-text-light-2"
                         required
                       />
-                      <button
+                      {/* <button
                         type="button"
                         onClick={() => removeOption(q.id, o.id)}
                         title='Delete option'
                         className="ml-2 text-text-light hover:text-red-600 hover:underline cursor-pointer"
                       >
                         <RiDeleteBinLine className='w-4 h-4'/>
-                      </button>
+                      </button> */}
                     </div>
                   ))}
-                  <button
+                  {/* <button
                     type="button"
                     onClick={() => addOption(q.id)}
                     className="text-[#0832DE] font-medium flex items-center cursor-pointer"
                   >
                     + Add Option
-                  </button>
+                  </button> */}
                 </div>
               </div>
             ))}
