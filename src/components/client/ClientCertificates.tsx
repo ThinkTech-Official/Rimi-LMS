@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import api from '../../utils/api';
+import { API_BASE } from '../../utils/ulrs';
 
 interface CertRecord {
   id: number;
@@ -9,7 +10,7 @@ interface CertRecord {
   course: { id: number; name: string };
 }
 
-const API_BASE = 'http://localhost:3000';
+
 
 const ClientCertificates: React.FC = () => {
   const [certs, setCerts] = useState<CertRecord[]>([]);

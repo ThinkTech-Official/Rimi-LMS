@@ -229,7 +229,16 @@ const CreateCourse: React.FC<CreateCourseProps> = ({ onCreateTest }) => {
                       <option value="" disabled>
                         -- Select category --
                       </option>
-                      <option value="">
+                      
+                      {categories.map((cat: any) => (
+                        <option key={cat.id} value={cat.id}>
+                          {cat.name}
+                        </option>
+                      ))}
+                    
+                    </select>
+
+                    
                         <button
                           type="button"
                           onClick={() => setAddingCat(!addingCat)}
@@ -237,13 +246,9 @@ const CreateCourse: React.FC<CreateCourseProps> = ({ onCreateTest }) => {
                         >
                           + {t("add category")}
                         </button>
-                      </option>
-                      {categories.map((cat: any) => (
-                        <option key={cat.id} value={cat.id}>
-                          {cat.name}
-                        </option>
-                      ))}
-                    </select>
+                      
+
+
                     {addingCat && (
                       <div className="fixed inset-0 bg-black/10 flex items-center justify-center z-50">
                         <div className="bg-white p-6 shadow-lg w-[90vw] sm:w-100 space-y-3">
@@ -282,7 +287,7 @@ const CreateCourse: React.FC<CreateCourseProps> = ({ onCreateTest }) => {
                     )}
                   </div>
                 )}
-                {addingCat && (
+                {/* {addingCat && (
                   <div className="mt-2 flex space-x-2">
                     <input
                       value={newCategory}
@@ -299,7 +304,7 @@ const CreateCourse: React.FC<CreateCourseProps> = ({ onCreateTest }) => {
                       {creatingCat ? "Adding…" : t("add")}
                     </button>
                   </div>
-                )}
+                )} */}
                 {catCreateError && (
                   <p className="text-red-500">{catCreateError}</p>
                 )}

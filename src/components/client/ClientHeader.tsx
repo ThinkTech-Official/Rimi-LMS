@@ -5,6 +5,8 @@ import { FaUser } from "react-icons/fa6";
 import { IoIosLogOut } from "react-icons/io";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
+import { useLogout } from "../../hooks/useLogout";
+import { useAuth } from "../../context/AuthContext";
 
 const ClientHeader: React.FC = () => {
   const [isLanguageSelectOpen, setIsLanguageSelectOpen] = useState(false);
@@ -16,6 +18,12 @@ const ClientHeader: React.FC = () => {
     previousSelectedLanguage as Language
   );
   const navigate = useNavigate();
+
+    const { user } = useAuth()
+
+    console.log('from client head user value',user)
+
+   const { logout, loading: logOutLoading, error: logOutError } = useLogout();
 
   const handleLanguageSelect = (lang: Language) => {
     if (lang === selectedLanguage) {
@@ -39,6 +47,19 @@ const ClientHeader: React.FC = () => {
   const toggleProfileMenu = () => {
     setIsProfileMenuOpen(!isProfileMenuOpen);
   };
+
+
+    const handleLogoutClick = async () => {
+    try {
+      await logout();
+      navigate('/');        
+    } catch {
+      
+      console.error('Logout failed:', logOutError);
+    }
+  };
+
+
   return (
     <header className=" bg-white border-b border-[#E9EEF1] flex items-center justify-end px-6 space-x-4 py-4 gap-3">
       <div className="relative">
@@ -91,7 +112,7 @@ const ClientHeader: React.FC = () => {
         >
           <span className="flex gap-2 items-center">
             <FaUserCircle className="h-5 w-5 2xl:w-6 2xl:h-6 text-primary" />
-            Username{" "}
+            {user?.name}
           </span>
           <MdKeyboardArrowRight
             className={`h-4 w-4 2xl:w-6 2xl:h-6 transform transition ${
@@ -111,7 +132,10 @@ const ClientHeader: React.FC = () => {
                 </button>
               </li>
               <li>
-                <button className="w-full text-left px-4 py-2 hover:bg-primary hover:text-white cursor-pointer flex gap-2 items-center">
+                <button
+                 onClick={handleLogoutClick}
+                 disabled={logOutLoading}
+                className="w-full text-left px-4 py-2 hover:bg-primary hover:text-white cursor-pointer flex gap-2 items-center">
                   <IoIosLogOut className="h-4 w-4 2xl:w-5 2xl:h-5" /> Logout
                 </button>
               </li>
