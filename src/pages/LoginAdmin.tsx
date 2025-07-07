@@ -1,17 +1,31 @@
 import React, { useState } from 'react';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
 import { useAdminAuth, type SignInDto  } from '../hooks/useAdminAuth';
+import { useAdminContext } from '../context/AdminContext';
+import { useNavigate } from 'react-router-dom';
 
 const LoginAdmin: React.FC = () => {
+
+  const navigate = useNavigate()
   
  const { login, loading, error } = useAdminAuth();
+ const { reload: reloadAdmin }   = useAdminContext();
   const [email, setEmail]         = useState('');
   const [password, setPassword]   = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    login({ email, password } as SignInDto);
+    try {
+      const ok = await login({ email, password } as SignInDto);
+    if(ok) {
+      await reloadAdmin();
+      navigate('/admin/home');
+    }
+    } catch (error) {
+      console.log('login failed from Login Admin')
+    }
+    
   };
 
   return (
