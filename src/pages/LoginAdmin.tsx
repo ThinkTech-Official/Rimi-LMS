@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
+import { useAdminAuth, type SignInDto  } from '../hooks/useAdminAuth';
 
 const LoginAdmin: React.FC = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  
+ const { login, loading, error } = useAdminAuth();
+  const [email, setEmail]         = useState('');
+  const [password, setPassword]   = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    //  integrate login API
-    console.log({ email, password });
+    login({ email, password } as SignInDto);
   };
 
   return (
@@ -80,7 +82,7 @@ const LoginAdmin: React.FC = () => {
             type="submit"
             className="w-full py-3 bg-indigo-800 text-white font-semibold rounded shadow hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
           >
-            Sign in
+            {loading ? 'Signing in…' : 'Sign in'}
           </button>
         </form>
       </div>

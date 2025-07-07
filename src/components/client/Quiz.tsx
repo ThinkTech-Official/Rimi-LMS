@@ -96,7 +96,7 @@ const Quiz: FC<QuizProps> = ({ test, onBack, onResume, course , setCourse , acti
     // Optimistically mark this test as cleared in our local copy:
       setCourse((c: any) => c && {
         ...c,
-        tests: c.tests.map((t) =>
+        tests: c.tests.map((t: any) =>
           t.id === activeTestBasic?.id ? { ...t, isCleared: true } : t
         ),
       });
@@ -117,7 +117,7 @@ const Quiz: FC<QuizProps> = ({ test, onBack, onResume, course , setCourse , acti
 
   if (finished) {
     const correctCount = questions.filter(
-      (q) => answers[q.id] === q.correctIndex
+      (q: any) => answers[q.id] === q.correctIndex
     ).length;
     return (
       <div className="w-full h-full bg-[#F3F3F3] flex flex-col items-center justify-center overflow-auto relative">
@@ -247,7 +247,7 @@ const Quiz: FC<QuizProps> = ({ test, onBack, onResume, course , setCourse , acti
 
         {/* Options */}
         <ul className="space-y-4 mt-7">
-          {q.options.map((opt, i) => (
+          {q.options.map((opt : any, i: any) => (
             <li key={i}>
               <label className="flex items-center justify-between space-x-3 py-2 px-5 bg-white cursor-pointer">
                 <span>{opt}</span>

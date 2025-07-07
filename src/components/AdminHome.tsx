@@ -14,112 +14,129 @@ import {
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 import UserProfile, { type User } from "./UserProfile";
 import { useTranslation } from "react-i18next";
+import { useDashboardStats } from "../hooks/useDashboardStats";
+import { useRecentSignups } from "../hooks/useRecentSignups";
+import { useLiveTotals } from "../hooks/useLiveTotals";
 
 // Dummy stats
-const stats = [
-  { label: "Total Users", value: "15,672" },
-  { label: "Created Courses", value: "25" },
-  { label: "Tests Taken", value: "315" },
-  { label: "Issued Certificates", value: "100" },
-];
+// const stats = [
+//   { label: "Total Users", value: "15,672" },
+//   { label: "Created Courses", value: "25" },
+//   { label: "Tests Created", value: "315" },
+//   { label: "Issued Certificates", value: "100" },
+// ];
 
 // Sample chart data
-const lineChartData = [
-  { name: "Jan", users: 400 },
-  { name: "Feb", users: 600 },
-  { name: "Mar", users: 800 },
-  { name: "Apr", users: 500 },
-  { name: "May", users: 950 },
-  { name: "Jun", users: 800 },
-  { name: "Jul", users: 1050 },
-];
+// const lineChartData = [
+//   { name: "Jan", users: 400 },
+//   { name: "Feb", users: 600 },
+//   { name: "Mar", users: 800 },
+//   { name: "Apr", users: 500 },
+//   { name: "May", users: 950 },
+//   { name: "Jun", users: 800 },
+//   { name: "Jul", users: 1050 },
+// ];
 
-const barChartData = [
-  { name: "Jan", certificates: 50 },
-  { name: "Feb", certificates: 80 },
-  { name: "Mar", certificates: 65 },
-  { name: "Apr", certificates: 90 },
-  { name: "May", certificates: 75 },
-];
+// const barChartData = [
+//   { name: "Jan", certificates: 50 },
+//   { name: "Feb", certificates: 80 },
+//   { name: "Mar", certificates: 65 },
+//   { name: "Apr", certificates: 90 },
+//   { name: "May", certificates: 75 },
+// ];
 
 // Recent users
-const recentUsers = [
-  {
-    name: "Liam Carter",
-    email: "liam.carter@email.com",
-    date: "Jan 10, 2023",
-    certs: 1,
-    password: "password123",
-  },
-  {
-    name: "Emma Johnson",
-    email: "emma.56@email.com",
-    date: "Feb 15, 2023",
-    certs: 2,
-  },
-  {
-    name: "Noah Williams",
-    email: "noah.78@email.com",
-    date: "Mar 20, 2023",
-    certs: 4,
-  },
-  {
-    name: "Olivia Brown",
-    email: "olivia.98@email.com",
-    date: "Apr 25, 2023",
-    certs: 1,
-  },
-  {
-    name: "Ethan Davis",
-    email: "ethan.davis@email.com",
-    date: "May 30, 2023",
-    certs: 3,
-  },
-  {
-    name: "Ava Wilson",
-    email: "ava.wilson@email.com",
-    date: "Jun 05, 2023",
-    certs: 5,
-  },
-  {
-    name: "Lucas Taylor",
-    email: "lucas.taylor@email.com",
-    date: "Jul 12, 2023",
-    certs: 2,
-  },
-  {
-    name: "Mason Clark",
-    email: "mason.@email.com",
-    date: "Aug 18, 2023",
-    certs: 6,
-  },
-  {
-    name: "Isabella Lewis",
-    email: "isabella.@email.com",
-    date: "Sep 22, 2023",
-    certs: 1,
-  },
-  {
-    name: "Sophia Walker",
-    email: "sophia.@email.com",
-    date: "Oct 28, 2023",
-    certs: 3,
-  },
-  {
-    name: "Mia Hall",
-    email: "mia.hall@email.com",
-    date: "Nov 03, 2023",
-    certs: 4,
-  },
-];
+// const recentUsers = [
+//   {
+//     name: "Liam Carter",
+//     email: "liam.carter@email.com",
+//     date: "Jan 10, 2023",
+//     certs: 1,
+//     password: "password123",
+//   },
+//   {
+//     name: "Emma Johnson",
+//     email: "emma.56@email.com",
+//     date: "Feb 15, 2023",
+//     certs: 2,
+//   },
+//   {
+//     name: "Noah Williams",
+//     email: "noah.78@email.com",
+//     date: "Mar 20, 2023",
+//     certs: 4,
+//   },
+//   {
+//     name: "Olivia Brown",
+//     email: "olivia.98@email.com",
+//     date: "Apr 25, 2023",
+//     certs: 1,
+//   },
+//   {
+//     name: "Ethan Davis",
+//     email: "ethan.davis@email.com",
+//     date: "May 30, 2023",
+//     certs: 3,
+//   },
+//   {
+//     name: "Ava Wilson",
+//     email: "ava.wilson@email.com",
+//     date: "Jun 05, 2023",
+//     certs: 5,
+//   },
+//   {
+//     name: "Lucas Taylor",
+//     email: "lucas.taylor@email.com",
+//     date: "Jul 12, 2023",
+//     certs: 2,
+//   },
+//   {
+//     name: "Mason Clark",
+//     email: "mason.@email.com",
+//     date: "Aug 18, 2023",
+//     certs: 6,
+//   },
+//   {
+//     name: "Isabella Lewis",
+//     email: "isabella.@email.com",
+//     date: "Sep 22, 2023",
+//     certs: 1,
+//   },
+//   {
+//     name: "Sophia Walker",
+//     email: "sophia.@email.com",
+//     date: "Oct 28, 2023",
+//     certs: 3,
+//   },
+//   {
+//     name: "Mia Hall",
+//     email: "mia.hall@email.com",
+//     date: "Nov 03, 2023",
+//     certs: 4,
+//   },
+// ];
 
 const AdminHome: React.FC = () => {
+
+
+  const { t } = useTranslation();
+
+    const pageSize = 10;
   const [currentPage, setCurrentPage] = useState(1);
+
+  const { data: stats, loading: statsLoading, error: statsError } = useDashboardStats();
+  const { users: recentUsers, totalCount, loading: recentLoading, error: recentError } = useRecentSignups(currentPage, pageSize);
+  const { totals, loading: totalsLoading, error: totalsError } = useLiveTotals()
+  
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  
+
+
+  
   const handleBackHome = useCallback(() => {
     setSelectedUser(null);
   }, []);
-  const {t} = useTranslation();
+  // const {t} = useTranslation();
   
   if (selectedUser) {
     return (
@@ -130,6 +147,29 @@ const AdminHome: React.FC = () => {
       />
     );
   }
+
+
+    if (statsLoading || recentLoading) {
+    return <div>{t('Loading...')}</div>;
+  }
+  if (statsError || recentError) {
+    return <div>{t('Error loading dashboard')}</div>;
+  }
+
+    // Build an array for live totals
+  const liveStats = totals
+    ? [
+        { label: t('Total Users'), value: totals.totalUsers },
+        { label: t('Created Courses'), value: totals.createdCourses },
+        { label: t('Tests Created'), value: totals.testsCreated },
+        { label: t('Issued Certificates'), value: totals.issuedCertificates },
+      ]
+    : [];
+
+
+    const totalPages = Math.ceil(totalCount / pageSize)
+
+
   return (
       <div className="flex-1 flex flex-col">
         {/* Dashboard */}
@@ -138,7 +178,7 @@ const AdminHome: React.FC = () => {
         >
           {/* Stats Cards */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 xl:gap-8 w-full" role="stats">
-            {stats.map((stat) => (
+            {liveStats?.map((stat) => (
               <div
                 key={stat.label}
                 data-testid="stat-card"
@@ -152,17 +192,17 @@ const AdminHome: React.FC = () => {
                   {stat.value}
                 </div>
                 <div className="text-sm 2xl:text-lg leading-[20px] text-[#6F6B7D] mt-1">
-                  {t(stat.label)}
+                  {stat.label}
                 </div>
               </div>
-            ))}
+             ))} 
           </div>
 
           {/* Charts */}
-          <div className="flex flex-col lg:flex-row gap-8 lg:gap-6 2xl:gap-20 pt-4 w-full" >
+          {/* <div className="flex flex-col lg:flex-row gap-8 lg:gap-6 2xl:gap-20 pt-4 w-full" >
             <div className="flex flex-col gap-5 2xl:gap-8 flex-1" data-testid="chart">
               <h5 className="text-lg 2xl:text-2xl capitalize leading-[20px] 2xl:leading-1.5 font-bold text-[#1B1B1B] text-center lg:text-left">
-                {t("Daily Active Users")}
+                {t("Monthly New Users")}
               </h5>
               <div className="bg-white py-4 2xl:px-2 h-96 2xl:h-[400px] w-full border border-[#DDDDDD]">
                 <ResponsiveContainer width="100%" height="100%">
@@ -218,7 +258,7 @@ const AdminHome: React.FC = () => {
 
             <div className="flex flex-col gap-5 2xl:gap-8 flex-1" data-testid="chart">
               <h5 className="text-lg 2xl:text-2xl capitalize leading-[20px] 2xl:leading-1.5 font-bold text-[#1B1B1B] text-center lg:text-left">
-                {t("Monthly Enrollments by Course")}
+                {t("Monthly Certificates Issued")}
               </h5>
               <div className="bg-white py-4 2xl:px-2 h-96 2xl:h-[400px] w-full border border-[#DDDDDD]">
                 <ResponsiveContainer width="100%" height="100%">
@@ -291,9 +331,9 @@ const AdminHome: React.FC = () => {
                 </ResponsiveContainer>
               </div>
             </div>
-          </div>
+          </div> */}
 
-          {/* Recent Users Table */}
+          {/* Recent Signups Table */}
           <div className={`bg-white w-full`}>
             <div className="py-5 2xl:py-8">
               <h2 className="text-lg 2xl:text-2xl capitalize leading-[20px] 2xl:leading-1.5 font-bold text-[#1B1B1B] text-center sm:text-left">
@@ -313,9 +353,9 @@ const AdminHome: React.FC = () => {
                     <th className="px-2 sm:px-6 py-1 sm:py-3 text-left font-medium">
                       {t("Date")}
                     </th>
-                    <th className="px-2 xl:px-0 py-1 sm:py-3 text-center font-medium text-nowrap">
+                    {/* <th className="px-2 xl:px-0 py-1 sm:py-3 text-center font-medium text-nowrap">
                      {t("Number of Certificates")}
-                    </th>
+                    </th> */}
                     <th className="py-1 sm:py-3 text-center font-medium">
                       {t("Actions")}
                     </th>
@@ -358,9 +398,9 @@ const AdminHome: React.FC = () => {
                           borderColor: "#AAA9A9",
                         }}
                       >
-                        {user.date}
+                        {new Date(user.createdAt).toLocaleDateString()}
                       </td>
-                      <td
+                      {/* <td
                         className="px-2 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-center"
                         style={{
                           borderWidth: "0px 1px 1px 0px",
@@ -369,7 +409,7 @@ const AdminHome: React.FC = () => {
                         }}
                       >
                         {user.certs}
-                      </td>
+                      </td> */}
                       <td
                         className="py-2 sm:py-4 whitespace-nowrap text-center"
                         style={{
@@ -391,16 +431,17 @@ const AdminHome: React.FC = () => {
               </table>
             </div>
 
-            {/* Pagination */}
+            {/* Pagination NO Need For Pagination Here As Just Showing Result of Last 10 SIgined up User  */}
             <div className="flex items-center justify-center p-4 space-x-2">
               <button
-                disabled
+                disabled={currentPage === 1}
                 className="px-3 py-[10px] bg-[#CCCCCC] text-[#6F6B7D] cursor-pointer"
                 title="Previous"
+                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
               >
                 <ChevronLeftIcon className="h-5 w-5" />
               </button>
-              {[1, 2, 3, 4, 5].map((num) => (
+               {Array.from({ length: totalPages }, (_, i) => i + 1).map((num) => (
                 <button
                   key={num}
                   onClick={() => setCurrentPage(num)}
@@ -414,6 +455,8 @@ const AdminHome: React.FC = () => {
                 </button>
               ))}
               <button
+              disabled={currentPage === totalPages}
+              onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
                 className="px-3 py-[10px] bg-[#CCCCCC] text-[#6F6B7D] cursor-pointer"
                 title="Next"
               >
