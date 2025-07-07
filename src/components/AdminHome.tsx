@@ -317,7 +317,7 @@ const AdminHome: React.FC = () => {
                      {t("Number of Certificates")}
                     </th>
                     <th className="py-1 sm:py-3 text-center font-medium">
-                      {t("Actions")}
+                      {t("Action")}
                     </th>
                   </tr>
                 </thead>

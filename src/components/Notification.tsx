@@ -34,9 +34,8 @@ const Notification: React.FC<NotificationProps> = ({
       {icons[type]}
       <span>{message}</span>
       <AiOutlineClose
-        color="white"
         onClick={onClose}
-        className="ml-2 cursor-pointer"
+        className="ml-4 cursor-pointer"
       />
     </div>
   );

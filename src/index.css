@@ -60,7 +60,7 @@ video::-webkit-media-controls-fullscreen-button {
 }
 
 .notification {
-  padding: 15px;
+  padding: 10px 15px 10px 15px;
   margin: 10px;
   color: white;
   display: flex;
@@ -70,16 +70,16 @@ video::-webkit-media-controls-fullscreen-button {
 }
 
 .success{
-  background-color: green;
+  color: green;
 }
 .info{
-  background-color: blue;
+  color: blue;
 }
 .error{
-  background-color: red;
+  color: red;
 }
 .warning{
-  background-color: orange;
+  color: orange;
 }
 
 .top-right {
@@ -119,3 +119,71 @@ video::-webkit-media-controls-fullscreen-button {
     opacity: 1;
   }
 }
+
+.loader {
+  width: 51px;
+  height: 35px;
+  position: relative;
+  border: 4px solid #2b00b7;
+  border-radius: 6px;
+}
+.loader::before {
+  content: '';
+  position: absolute;
+  border: 4px solid #2b00b7;
+  width: 26px;
+  height: 22px;
+  border-radius: 50% 50% 0 0;
+  left: 50%;
+  top: -.5px;
+  transform: translate(-50%, -100%);
+}
+.loader::after {
+  content: '';
+  position: absolute;
+  transform: translate(-50%, -50%);
+  left: 50%;
+  top: 50%;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background-color: #2b00b7;
+  box-shadow: 13px 0 #2b00b7, -13px 0 #2b00b7;
+  animation: flash 0.5s ease-out infinite alternate;
+}
+
+@keyframes flash {
+  0% {
+    background-color: rgba(43, 0, 183, 0.25);
+    box-shadow: 13px 0 rgba(43, 0, 183, 0.25), -13px 0 rgba(43, 0, 183, 1);
+  }
+  50% {
+    background-color: rgba(43, 0, 183, 1);
+    box-shadow: 13px 0 rgba(43, 0, 183, 0.25), -13px 0 rgba(43, 0, 183, 0.25);
+  }
+  100% {
+    background-color: rgba(43, 0, 183, 0.25);
+    box-shadow: 13px 0 rgba(43, 0, 183, 1), -13px 0 rgba(43, 0, 183, 0.25);
+  }
+}
+
+
+.spinner {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: inline-block;
+  border-top: 3px solid #2b00b7;
+  border-right: 3px solid transparent;
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+} 

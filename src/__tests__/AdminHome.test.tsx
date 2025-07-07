@@ -40,7 +40,7 @@ describe("AdminHome", () => {
       /Email/i,
       /Date/i,
       /Number of Certificates/i,
-      /Actions/i,
+      /Action/i,
     ];
 
     headers.forEach((header, index) => {

@@ -72,7 +72,7 @@ export const UserManagement: React.FC = () => {
   return (
      <div className="relative bg-white overflow-hidden min-h-screen">
       <div className="px-2 sm:px-6 py-4">
-        <h2 className="text-primary text-sm font-medium mb-3">
+        <h2 className="text-primary text-sm font-medium mb-3" role="breadcrumbs">
           &gt; {t("users Management")}{" "}
         </h2>
         <h1 className="text-lg 2xl:text-2xl font-bold text-text-dark mb-3 sm:mb-6 capitalize">
@@ -138,10 +138,10 @@ export const UserManagement: React.FC = () => {
                   {t("progress")}
                 </th>
                 <th className="px-2 sm:px-6 py-1 sm:py-3 text-center font-medium text-nowrap">
-                  {t("certificateIssued")}
+                  {t("certificate issued")}
                 </th>
                 <th className="px-2 sm:px-6 py-1 sm:py-3 text-center font-medium">
-                  Action
+                  {t("Action")}
                 </th>
               </tr>
             </thead>
@@ -228,7 +228,7 @@ export const UserManagement: React.FC = () => {
           </table>
         </div>
         {/* Pagination */}
-        <div className="flex items-center justify-center p-4 space-x-2">
+        <div className="flex items-center justify-center p-4 space-x-2" role="pagination">
           <button
             disabled
             className="px-3 py-[10px] bg-[#CCCCCC] text-[#6F6B7D] cursor-pointer"
