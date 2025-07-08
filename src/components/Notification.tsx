@@ -10,7 +10,7 @@ export type NotificationType = "success" | "info" | "error" | "warning";
 
 export interface NotificationProps {
   type?: NotificationType;
-  message: string;
+  message: any;
   duration?: number; // in ms
   onClose: () => void;
   animation?: keyof typeof Animation;

@@ -12,7 +12,7 @@ import {
   LabelList,
 } from "recharts";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
-import UserProfile, { type User } from "./UserProfile";
+// import UserProfile, { type User } from "./UserProfile";
 import { useTranslation } from "react-i18next";
 import { useDashboardStats } from "../hooks/useDashboardStats";
 import { useRecentSignups } from "../hooks/useRecentSignups";
@@ -129,25 +129,25 @@ const AdminHome: React.FC = () => {
   const { users: recentUsers, totalCount, loading: recentLoading, error: recentError } = useRecentSignups(currentPage, pageSize);
   const { totals, loading: totalsLoading, error: totalsError } = useLiveTotals()
   
-  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  // const [selectedUser, setSelectedUser] = useState<User | null>(null);
   
 
 
   
-  const handleBackHome = useCallback(() => {
-    setSelectedUser(null);
-  }, []);
+  // const handleBackHome = useCallback(() => {
+  //   setSelectedUser(null);
+  // }, []);
   // const {t} = useTranslation();
   
-  if (selectedUser) {
-    return (
-      <UserProfile
-        user={selectedUser}
-        onBack={handleBackHome}
-        breadcrumbTrail={["Home", "View Profile"]}
-      />
-    );
-  }
+  // if (selectedUser) {
+    // return (
+    //   <UserProfile
+    //     user={selectedUser}
+    //     onBack={handleBackHome}
+    //     breadcrumbTrail={["Home", "View Profile"]}
+    //   />
+    // );
+  // }
 
 
     if (statsLoading || recentLoading) {
@@ -421,7 +421,7 @@ const AdminHome: React.FC = () => {
                       >
                         <button
                           className="text-primary hover:underline hover:underline-offset-2 cursor-pointer font-medium px-4"
-                          onClick={() => setSelectedUser(user)}
+                          // onClick={() => setSelectedUser(user)}
                         >
                          {t("View Profile")}
                         </button>

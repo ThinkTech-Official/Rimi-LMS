@@ -42,22 +42,28 @@ export const AdminLayout: React.FC = () => {
       url: "/admin/all-courses",
     },
     {
-      label: "certificates",
+      label: "certificates Template",
       icon: PiCertificateLight,
       key: "certificates",
       url: "/admin/certificates",
     },
     {
-      label: "allTests",
+      label: "All Categories",
       icon: ClipboardDocumentListIcon,
-      key: "tests",
-      url: "/admin/tests",
+      key: "categoty",
+      url: "/admin/category",
     },
     {
       label: "users Management",
       icon: UserGroupIcon,
       key: "users",
       url: "/admin/users",
+    },
+    {
+      label: "Add User",
+      icon: UserGroupIcon,
+      key: "create-user",
+      url: "/admin/create-user",
     },
   ] as const;
 
