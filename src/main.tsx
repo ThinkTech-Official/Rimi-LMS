@@ -34,6 +34,10 @@ import { RequireAdmin }    from "./components/RequireAdmin.tsx";
 
 // import Quiz from './components/client/Quiz.tsx';
 import i18n from "./i18n/i18.ts";
+// import AdminCategory from "./components/Admin/AdminCategoryManager.tsx";
+import AdminCreateUser from "./components/Admin/AdminCreateUser.tsx";
+import AdminCategoryManager from "./components/Admin/AdminCategoryManager.tsx";
+import UserProfile from "./components/UserProfile.tsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -53,14 +57,19 @@ const router = createBrowserRouter(
         {/* Admin Routes */}
         {/* <Route index element={<AdminHome />} /> */}
         <Route path="/admin/home" element={<AdminHome />} />
+        <Route path="/admin/category" element={<AdminCategoryManager />} />
+        <Route path="/admin/create-user" element={<AdminCreateUser />} />
         <Route path="/admin/profile" element={<AdminProfile />} />
         <Route path="/admin/all-courses" element={<Courses />} />
         <Route path="/admin/certificates" element={<Certificates />} />
         <Route path="/admin/tests" element={<AllTests />} />
-        <Route path="/admin/users" element={<UserManagement />} />
+        <Route path="/admin/users" element={<UserManagement />} />  
+        <Route path="/admin/users/:id" element={<UserProfile />} />
         <Route path="/admin/edit-course/:courseId" element={<EditCourse />} />
         <Route path="/admin/edit-course/:courseId/create-test" element={<CreateTest />} />
         <Route path="/admin/edit-course/:courseId/edit-test/:testId" element={<EditTest />} />
+
+
 
         {/* <Route path="users" element={<UserList />} /> */}
       </Route>

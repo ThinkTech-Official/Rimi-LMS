@@ -292,9 +292,12 @@ import UserProfile from "./UserProfile";
 import { useTranslation } from "react-i18next";
 // import { useUsers, User } from "../hooks/useUser";
 import { useAdminUsers, type User } from "../hooks/useAdminUsers";
+import { useNavigate } from "react-router-dom";
 
 
 export const UserManagement: React.FC = () => {
+
+  const navigate = useNavigate()
 
   
   const [filter, setFilter] = useState<"all" | "certified">("all");
@@ -330,17 +333,22 @@ export const UserManagement: React.FC = () => {
     setSelectedUser(null);
   }, []);
 
+  const handleClientProfile = (id: any) => {
+    console.log(id)
+    navigate(`/admin/users/${id}`)
+  }
+
   if (loading) return <div className="p-4">{t("Loading...")}</div>;
   if (error)   return <div className="p-4 text-red-600">{t("Error")}: {error}</div>;
 
   if (selectedUser) {
-    return (
-      <UserProfile
-        user={selectedUser}
-        onBack={handleBackToUsers}
-        breadcrumbTrail={[t("User Management"), t("View Profile")]}
-      />
-    );
+    // return (
+    //   <UserProfile
+    //     user={selectedUser}
+    //     onBack={handleBackToUsers}
+    //     breadcrumbTrail={[t("User Management"), t("View Profile")]}
+    //   />
+    // );
   }
 
   return (
@@ -491,7 +499,7 @@ export const UserManagement: React.FC = () => {
                     {" "}
                     <button
                       className="text-primary hover:underline hover:underline-offset-2 cursor-pointer font-medium px-4 text-center w-full"
-                      onClick={() => setSelectedUser(user)}
+                      onClick={()=> handleClientProfile(user.id)}
                     >
                       {t("View Profile")}
                     </button>
