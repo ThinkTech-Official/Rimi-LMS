@@ -151,7 +151,7 @@ const AdminHome: React.FC = () => {
 
 
     if (statsLoading || recentLoading) {
-    return <div className="flex flex-col justify-center items-center gap-3 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"><Spinner /><p>Loading...</p></div>;
+    return <div className="flex flex-col justify-center items-center gap-3 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"><Spinner className="w-10 h-10" /><p>Loading...</p></div>;
   }
   if (statsError || recentError) {
     return <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-red-500">{t('Error loading dashboard')} !</div>;

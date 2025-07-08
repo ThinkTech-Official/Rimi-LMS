@@ -1,7 +1,8 @@
-import React, { useState, type FormEvent } from "react";
+import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useCreateTest } from "../hooks/useCreateTest";
 import { useTranslation } from "react-i18next";
+import { useForm, type SubmitHandler } from "react-hook-form";
 
 interface Option {
   id: number;
@@ -14,17 +15,22 @@ interface Question {
   options: Option[];
 }
 
+interface NewTest {
+  name: string;
+  duration: number;
+  startTime: number;
+  passingMarks: number;
+  quizQuestionNumber: number;
+  questions: Question[];
+}
+
 const CreateTest: React.FC = () => {
+  const { courseId } = useParams<{ courseId: string }>();
+  const navigate = useNavigate();
+  const { createTest, loading, error } = useCreateTest(courseId!);
+  const { t } = useTranslation();
+  const [questionErrors, setQuestionErrors] = useState<Record<number, string[]>>({});
 
-  const { courseId } = useParams<{ courseId: string }>()
-  const navigate = useNavigate()
-  const { createTest , loading , error } = useCreateTest(courseId!) 
-  const {t} = useTranslation();
-
-  const [name, setName] = useState("");
-  // const [courseId, setCourseId] = useState("");
-  const [duration, setDuration] = useState("");
-  const [startTime, setStartTime] = useState("");
   const [questions, setQuestions] = useState<Question[]>([
     {
       id: 1,
@@ -38,8 +44,21 @@ const CreateTest: React.FC = () => {
     },
   ]);
 
-  const [passingMarks, setPassingMarks] = useState<string>('')
-  const [quizQuestionNumber, setQuizQuestionNumber] = useState<string>('')
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<NewTest>();
+
+  const validateQuestion = (q: Question): string[] => {
+  const errors: string[] = [];
+  if (!q.text.trim()) errors.push("Question text is required.");
+  if (q.options.length < 2) errors.push("At least 2 options required.");
+  if (q.options.some((o) => !o.text.trim())) errors.push("All options must have text.");
+  if (!q.options.some((o) => o.isCorrect)) errors.push("One option must be marked correct.");
+  return errors;
+};
+
 
   const handleAddQuestion = () => {
     setQuestions((prev) => [
@@ -57,35 +76,87 @@ const CreateTest: React.FC = () => {
     ]);
   };
 
-  const handleQuestionChange = (qid: number, text: string) => {
-    setQuestions((qs) => qs.map((q) => (q.id === qid ? { ...q, text } : q)));
-  };
+ const handleQuestionChange = (qid: number, text: string) => {
+  const updatedQuestions = questions.map((q) =>
+    q.id === qid ? { ...q, text } : q
+  );
+  setQuestions(updatedQuestions);
 
-  const handleOptionChange = (qid: number, oid: number, text: string) => {
-    setQuestions((qs) =>
-      qs.map((q) => {
-        if (q.id !== qid) return q;
-        return {
+  const current = updatedQuestions.find((q) => q.id === qid)!;
+  const errors = validateQuestion(current);
+
+  setQuestionErrors((prev) => {
+    const updated = { ...prev };
+    if (errors.length > 0) {
+      updated[qid] = errors;
+    } else {
+      delete updated[qid];
+    }
+    return updated;
+  });
+};
+
+
+
+ const handleOptionChange = (qid: number, oid: number, text: string) => {
+  const updatedQuestions = questions.map((q) =>
+    q.id === qid
+      ? {
           ...q,
-          options: q.options.map((o) => (o.id === oid ? { ...o, text } : o)),
-        };
-      })
-    );
-  };
+          options: q.options.map((o) =>
+            o.id === oid ? { ...o, text } : o
+          ),
+        }
+      : q
+  );
+  setQuestions(updatedQuestions);
 
-  const toggleCorrect = (qid: number, oid: number) => {
-    setQuestions((qs) =>
-      qs.map((q) => {
-        if (q.id !== qid) return q;
-        return {
+  const current = updatedQuestions.find((q) => q.id === qid)!;
+  const errors = validateQuestion(current);
+
+  setQuestionErrors((prev) => {
+    const updated = { ...prev };
+    if (errors.length > 0) {
+      updated[qid] = errors;
+    } else {
+      delete updated[qid];
+    }
+    return updated;
+  });
+};
+
+
+
+
+const toggleCorrect = (qid: number, oid: number) => {
+  const updatedQuestions = questions.map((q) =>
+    q.id === qid
+      ? {
           ...q,
           options: q.options.map((o) =>
             o.id === oid ? { ...o, isCorrect: !o.isCorrect } : o
           ),
-        };
-      })
-    );
-  };
+        }
+      : q
+  );
+  setQuestions(updatedQuestions);
+
+  const current = updatedQuestions.find((q) => q.id === qid)!;
+  const errors = validateQuestion(current);
+
+  setQuestionErrors((prev) => {
+    const updated = { ...prev };
+    if (errors.length > 0) {
+      updated[qid] = errors;
+    } else {
+      delete updated[qid];
+    }
+    return updated;
+  });
+};
+
+
+
 
   const handleAddOption = (qid: number) => {
     setQuestions((qs) =>
@@ -110,23 +181,45 @@ const CreateTest: React.FC = () => {
   //   console.log({ name, courseId, duration, startTime, questions });
   // };
 
-    const handleSave = async (e: FormEvent) => {
-    e.preventDefault();
+  const onSubmit: SubmitHandler<NewTest> = async (data: NewTest) => {
     if (!courseId) return;
+   const questionLevelErrors: Record<number, string[]> = {};
+
+questions.forEach((q, i) => {
+  const errors: string[] = [];
+  if (!q.text.trim()) errors.push("Question text is required.");
+  if (q.options.length < 2) errors.push("At least 2 options required.");
+  const emptyOptions = q.options.filter((o) => !o.text.trim());
+  if (emptyOptions.length > 0) errors.push("All options must have text.");
+  if (!q.options.some((o) => o.isCorrect)) errors.push("One option must be marked correct.");
+  if (errors.length > 0) {
+    questionLevelErrors[q.id] = errors;
+  }
+});
+
+if (Object.keys(questionLevelErrors).length > 0) {
+  setQuestionErrors(questionLevelErrors);
+  return;
+} else {
+  setQuestionErrors({});
+}
 
     const dto = {
-      name,
-      duration: Number(duration),
-      startTime: Number(startTime),
-      passingMarks: Number(passingMarks),
-      quizQuestionNumber: Number(quizQuestionNumber),
+      name: data.name.trim(),
+      duration: Number(data.duration),
+      startTime: Number(data.startTime),
+      passingMarks: Number(data.passingMarks),
+      quizQuestionNumber: Number(data.quizQuestionNumber),
       questions: questions.map((q) => ({
-        text: q.text,
-        options: q.options.map((o) => ({ text: o.text, isCorrect: o.isCorrect })),
+        text: q.text.trim(),
+        options: q.options.map((o) => ({
+          text: o.text.trim(),
+          isCorrect: o.isCorrect,
+        })),
       })),
     };
 
-    console.log('from create test submit', dto)
+    console.log("from create test submit", dto);
 
     try {
       await createTest(dto);
@@ -139,7 +232,7 @@ const CreateTest: React.FC = () => {
   return (
     <div className="min-h-screen flex bg-white">
       <main className="flex-1 p-2 sm:p-8">
-        <form onSubmit={handleSave} className="space-y-8">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
           {/* Test Information */}
           <section className="space-y-4">
             <div className="flex w-full justify-between items-center mb-6 sm:mb-3">
@@ -147,7 +240,7 @@ const CreateTest: React.FC = () => {
                 Test Information
               </h2>
               <button
-                onClick={handleSave}
+                type="submit"
                 className="inline-block w-[120px] sm:w-[150px] text-sm sm:text-[16px] px-5 py-2 sm:py-3 bg-primary text-white text-nowrap font-semibold hover:bg-indigo-700 cursor-pointer transition-colors delay-150"
               >
                 Save Test
@@ -158,71 +251,121 @@ const CreateTest: React.FC = () => {
                 <label className="text-sm text-text-light-2 mb-1 capitalize">
                   {t("name")}
                 </label>
-              <input
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="Enter Test Name"
-                className="w-full border border-inputBorder p-2 sm:px-4 sm:py-3 focus:outline-none focus:ring-1 focus:ring-primary"
-                required
-              />
-              </div>
-              {/* <input
-                type="text"
-                value={courseId}
-                onChange={(e) => setCourseId(e.target.value)}
-                placeholder="Enter Course ID"
-                className="w-full border border-inputBorder p-2 sm:px-4 sm:py-3 focus:outline-none focus:ring-1 focus:ring-primary"
-                required
-              /> */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="flex flex-col"><label className="text-sm text-text-light-2 mb-1 capitalize">
-                  {t("duration")}
-                </label>
                 <input
                   type="text"
-                  value={duration}
-                  onChange={(e) => setDuration(e.target.value)}
-                  placeholder="Select Test Duration in Seconds"
-                  className="w-full border border-inputBorder p-2 sm:px-4 sm:py-3 focus:outline-none focus:ring-1 focus:ring-primary"
-                /></div>
-                 <div className="flex flex-col"><label className="text-sm text-text-light-2 mb-1 capitalize">
-                  {t("Start Time")}
-                </label>
-                <input
-                  type="text"
-                  value={startTime}
-                  onChange={(e) => setStartTime(e.target.value)}
-                  placeholder="Enter the starting time for the test in seconds during the video."
+                  {...register("name", {
+                    required: "Name is required",
+                    minLength: {
+                      value: 4,
+                      message: "Name must be at least 4 characters",
+                    },
+                  })}
+                  placeholder="Enter Test Name"
                   className="w-full border border-inputBorder p-2 sm:px-4 sm:py-3 focus:outline-none focus:ring-1 focus:ring-primary"
                 />
+                {errors.name && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {errors.name.message}
+                  </p>
+                )}
               </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="flex flex-col">
+                  <label className="text-sm text-text-light-2 mb-1 capitalize">
+                    {t("duration")}
+                  </label>
+                  <input
+                    type="number"
+                    {...register("duration", {
+                      required: "Duration is required",
+                      min: {
+                        value: 1,
+                        message: "Duration must be at least 1 second",
+                      },
+                    })}
+                    placeholder="Select Test Duration in Seconds"
+                    className="w-full border border-inputBorder p-2 sm:px-4 sm:py-3 focus:outline-none focus:ring-1 focus:ring-primary"
+                  />
+                  {errors.duration && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.duration.message}
+                    </p>
+                  )}
+                </div>
+                <div className="flex flex-col">
+                  <label className="text-sm text-text-light-2 mb-1 capitalize">
+                    {t("Start Time")}
+                  </label>
+                  <input
+                    type="number"
+                    {...register("startTime", {
+                      valueAsNumber : true,
+                      required: "Start Time is required",
+                      min: {
+                        value: 1,
+                        message: "Start Time must be at least 1 second",
+                      },
+                    })}
+                    placeholder="Enter the starting time for the test in seconds during the video."
+                    className="w-full border border-inputBorder p-2 sm:px-4 sm:py-3 focus:outline-none focus:ring-1 focus:ring-primary"
+                  />
+                  {errors.startTime && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.startTime.message}
+                    </p>
+                  )}
+                </div>
               </div>
 
-                {/* Passing Marks and Quiz Questions  */}
+              {/* Passing Marks and Quiz Questions  */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                 <div className="flex flex-col"><label className="text-sm text-text-light-2 mb-1 capitalize">
-                  {t("passing percentage")}
-                </label>
-                <input
-                  type="text"
-                  value={passingMarks}
-                  onChange={(e) => setPassingMarks(e.target.value)}
-                  placeholder="Passing Percentage"
-                  className="w-full border border-inputBorder p-2 sm:px-4 sm:py-3 focus:outline-none focus:ring-1 focus:ring-primary"
-                />
+                <div className="flex flex-col">
+                  <label className="text-sm text-text-light-2 mb-1 capitalize">
+                    {t("passing percentage")}
+                  </label>
+                  <input
+                    type="number"
+                    {...register("passingMarks", {
+                      valueAsNumber : true,
+                      required: "Passing Marks is required",
+                      min: {
+                        value: 1,
+                        message: "Passing Marks must be at least 1 second",
+                      },
+                    })}
+                    placeholder="Passing Percentage"
+                    className="w-full border border-inputBorder p-2 sm:px-4 sm:py-3 focus:outline-none focus:ring-1 focus:ring-primary"
+                  />
+                  {errors.passingMarks && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.passingMarks.message}
+                    </p>
+                  )}
                 </div>
-                 <div className="flex flex-col"><label className="text-sm text-text-light-2 mb-1 capitalize">
-                  {t("number of questions")}
-                </label>
-                <input
-                  type="text"
-                  value={quizQuestionNumber}
-                  onChange={(e) => setQuizQuestionNumber(e.target.value)}
-                  placeholder="Number of Question In Quiz , if Not filled sets all the questions in test for quiz"
-                  className="w-full border border-inputBorder p-2 sm:px-4 sm:py-3 focus:outline-none focus:ring-1 focus:ring-primary"
-                />
-              </div>
+                <div className="flex flex-col">
+                  <label className="text-sm text-text-light-2 mb-1 capitalize">
+                    {t("number of questions")}
+                  </label>
+                  <input
+                    type="number"
+                    {...register("quizQuestionNumber", {
+                      valueAsNumber : true,
+                      required: "Number of Questions is required",
+                      min: {
+                        value: 1,
+                        message:
+                          "Number of Questions must be at least 1 second",
+                      },
+                    })}
+                    placeholder="Number of Question In Quiz , if Not filled sets all the questions in test for quiz"
+                    className="w-full border border-inputBorder p-2 sm:px-4 sm:py-3 focus:outline-none focus:ring-1 focus:ring-primary"
+                  />
+                  {errors.quizQuestionNumber && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.quizQuestionNumber.message}
+                    </p>
+                  )}
+                </div>
               </div>
             </div>
           </section>
@@ -242,12 +385,19 @@ const CreateTest: React.FC = () => {
                   placeholder="Type Your Question Here"
                   className="w-full border border-inputBorder p-2 sm:px-4 sm:py-3 focus:outline-none focus:ring-1 focus:ring-primary"
                   rows={2}
-                  required
                 />
                 <div className="space-y-2">
                   <label className="text-sm 2xl:text-base font-medium">
                     Options
                   </label>
+                  {questionErrors[q.id]?.length > 0 && (
+  <ul className="text-sm text-red-500 list-disc pl-5 space-y-1">
+    {questionErrors[q.id].map((err, i) => (
+      <li key={i}>{err}</li>
+    ))}
+  </ul>
+)}
+
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-[800px] mt-2">
                     {" "}
                     {q.options.map((o) => (
@@ -269,7 +419,6 @@ const CreateTest: React.FC = () => {
                           }
                           placeholder={`Option ${o.id}`}
                           className="flex-1 px-4 py-2 focus:ring-primary focus:outline-none"
-                          required
                         />
                       </div>
                     ))}

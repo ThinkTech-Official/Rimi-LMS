@@ -4,6 +4,7 @@ import { RiDeleteBinLine } from 'react-icons/ri';
 import { useFetchTest, type TestDetail, type QuestionDto, type OptionDto } from '../hooks/useFetchTest';
 import { useUpdateTest, type UpdateTestDto } from '../hooks/useUpdateTest';
 import useNotification from '../hooks/useNotification';
+import Spinner from './Spinner';
 
 const EditTest: React.FC = () => {
   const navigate = useNavigate();
@@ -133,7 +134,7 @@ const EditTest: React.FC = () => {
     }
   };
 
-  if (loadingFetch) return <p></p>;
+  if (loadingFetch) return <p className='fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2'><Spinner className='w-10 h-10'/></p>;
   if (fetchError) return <p className="text-red-500">{fetchError}</p>;
 
   return (
@@ -153,7 +154,9 @@ const EditTest: React.FC = () => {
 
           {/* Basic fields */}
           <div className="space-y-4 text-text-light">
-            <input
+           <div className="flex flex-col">
+            <label htmlFor="" className='text-sm text-text-light-2 mb-1 capitalize'>Test Name</label>
+             <input
               type="text"
               value={name}
               onChange={e => setName(e.target.value)}
@@ -161,8 +164,11 @@ const EditTest: React.FC = () => {
               className="w-full border border-inputBorder px-4 py-3 focus:outline-none focus:ring-1 focus:ring-primary"
               required
             />
+           </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <input
+             <div className="flex flex-col">
+               <label htmlFor="" className='text-sm text-text-light-2 mb-1 capitalize'>Test Duration</label>
+               <input
                 type="number"
                 value={duration}
                 onChange={e => setDuration(e.target.value)}
@@ -170,7 +176,10 @@ const EditTest: React.FC = () => {
                 className="w-full border border-inputBorder px-4 py-3 focus:outline-none focus:ring-1 focus:ring-primary"
                 required
               />
-              <input
+             </div>
+             <div className="flex flex-col">
+               <label htmlFor="" className='text-sm text-text-light-2 mb-1 capitalize'>Start Time</label>
+               <input
                 type="number"
                 value={startTime}
                 onChange={e => setStartTime(e.target.value)}
@@ -178,12 +187,13 @@ const EditTest: React.FC = () => {
                 className="w-full border border-inputBorder px-4 py-3 focus:outline-none focus:ring-1 focus:ring-primary"
               />
             </div>
+             </div>
           </div>
 
           {/* Questions */}
           <section className="space-y-6">
             {questions.map((q, idx) => (
-              <div key={q.id} className="space-y-4 pb-4" style={{ borderBottom: "1px solid #AAA9A9" }}>
+              <div key={q.id} className="space-y-1 pb-4" style={{ borderBottom: "1px solid #AAA9A9" }}>
                 <div className="flex justify-between items-center">
                   <label className="font-medium text-text-light-2">Q{idx + 1}</label>
                   <button
