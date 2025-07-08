@@ -145,9 +145,30 @@ const AllCourses: React.FC<AllCoursesProps> = ({ onCreateCourse }) => {
     const handleCategoryClick = (id: number) => {
     setSelectedCategoryId(id);
   };
-
-  const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => setSearchTerm(e.target.value);
   
+
+const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const value = e.target.value;
+  setSearchTerm(value);
+
+  if (value.trim() === "") {
+    // Reset category to default if search is cleared
+    if (categories.length > 0) {
+      setSelectedCategoryId(categories[0].id);
+    }
+    return;
+  }
+
+  // Search in all courses regardless of category
+  const match = courses.find((c) =>
+    c.title.toLowerCase().includes(value.toLowerCase())
+  );
+
+  if (match) {
+    setSelectedCategoryId(match.categoryId); // auto-select category
+  }
+};
+
 
   const handleAddCategory = async () => {
     const name = newCategory.trim();
@@ -175,14 +196,28 @@ const AllCourses: React.FC<AllCoursesProps> = ({ onCreateCourse }) => {
   // );
 
     // Safe filtering if courses empty or selectedCategory unset, result is empty array
-    const filteredCourses = (courses || []).filter((c) => {
-    const byCat =
-      selectedCategoryId !== null ? c.categoryId === selectedCategoryId : true;
-    const bySearch = c.title
-      .toLowerCase()
-      .includes(searchTerm.toLowerCase());
-    return byCat && bySearch;
-  });
+  //   const filteredCourses = (courses || []).filter((c) => {
+  //   const byCat =
+  //     selectedCategoryId !== null ? c.categoryId === selectedCategoryId : true;
+  //   const bySearch = c.title
+  //     .toLowerCase()
+  //     .includes(searchTerm.toLowerCase());
+  //   return byCat && bySearch;
+  // });
+  const filteredCourses = (() => {
+  if (!searchTerm.trim()) {
+    // Normal filtering by selected category
+    return (courses || []).filter(
+      (c) => c.categoryId === selectedCategoryId
+    );
+  }
+
+  // Search across all courses
+  const match = courses.find((c) =>
+    c.title.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+  return match ? [match] : [];
+})();
 const formatTime = (sec: number) => {
   const m = Math.floor(sec / 60);
   const s = sec % 60;
