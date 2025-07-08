@@ -132,13 +132,14 @@ const AllCourses: React.FC<AllCoursesProps> = ({ onCreateCourse }) => {
   const [showAddCategoryModal, setShowAddCategoryModal] = useState<boolean>(false);
   const [newCategory, setNewCategory] = useState<string>("");
   //
-
+const allCategory = { id: 0, name: "All" };
+const allCategories = [allCategory, ...categories];
   
 
  // when categories first load, default to the first one
   useEffect(() => {
     if (categories.length > 0 && selectedCategoryId === null) {
-      setSelectedCategoryId(categories[0].id);
+      setSelectedCategoryId(0);
     }
   }, [categories, selectedCategoryId]);
 
@@ -154,7 +155,7 @@ const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
   if (value.trim() === "") {
     // Reset category to default if search is cleared
     if (categories.length > 0) {
-      setSelectedCategoryId(categories[0].id);
+      setSelectedCategoryId(0);
     }
     return;
   }
@@ -165,7 +166,7 @@ const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
   );
 
   if (match) {
-    setSelectedCategoryId(match.categoryId); // auto-select category
+    setSelectedCategoryId(0); // auto-select category
   }
 };
 
@@ -204,20 +205,31 @@ const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
   //     .includes(searchTerm.toLowerCase());
   //   return byCat && bySearch;
   // });
-  const filteredCourses = (() => {
-  if (!searchTerm.trim()) {
-    // Normal filtering by selected category
+const filteredCourses = (() => {
+  const normalizedSearch = searchTerm.toLowerCase().trim();
+
+  if (selectedCategoryId === 0) {
+    // "All" tab
+    return (courses || []).filter((c) =>
+      c.title.toLowerCase().includes(normalizedSearch)
+    );
+  }
+
+  if (!normalizedSearch) {
+    // Normal category filtering
     return (courses || []).filter(
       (c) => c.categoryId === selectedCategoryId
     );
   }
 
-  // Search across all courses
-  const match = courses.find((c) =>
-    c.title.toLowerCase().includes(searchTerm.toLowerCase())
+  // Search term exists in specific category
+  return (courses || []).filter(
+    (c) =>
+      c.categoryId === selectedCategoryId &&
+      c.title.toLowerCase().includes(normalizedSearch)
   );
-  return match ? [match] : [];
 })();
+
 const formatTime = (sec: number) => {
   const m = Math.floor(sec / 60);
   const s = sec % 60;
@@ -272,7 +284,7 @@ const formatTime = (sec: number) => {
         {/* Category Tabs */}
         <div className="border-b border-[#E9E9E9] mb-6">
           <ul className="flex space-x-3 sm:space-x-8 items-center overflow-x-auto custom-scrollbar2 pb-2 sm:pb-0">
-            {categories.map((cat: any) => (
+            {allCategories.map((cat: any) => (
               <li
                 key={cat.id}
                 onClick={() => handleCategoryClick(cat.id)}
@@ -302,7 +314,8 @@ const formatTime = (sec: number) => {
         ) : (
           <div className="flex items-center justify-center sm:justify-start w-full">
             <div className="flex flex-wrap gap-6 items-center justify-center sm:justify-start sm:items-start">
-              {filteredCourses.map((course) => (
+              {filteredCourses.length > 0 ? (
+                filteredCourses.map((course) => (
                 <div
                   key={course.id}
                   className="rounded-[2px] overflow-hidden w-[80vw] max-w-[300px] sm:w-[300px] 2xl:w-[350px] h-68 cursor-pointer border border-inputBorder shadow-md"
@@ -332,7 +345,13 @@ const formatTime = (sec: number) => {
                     </div>
                   </div>
                 </div>
-              ))}
+              ))
+              ) : selectedCategoryId === 0 && searchTerm.trim() ? (
+  <p className="text-center text-gray-500 italic">
+    Course with the name "{searchTerm}" not found.
+  </p>
+) : null}
+              
             </div>
           </div>
         )}

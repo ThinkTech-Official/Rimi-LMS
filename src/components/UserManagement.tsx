@@ -293,6 +293,7 @@ import { useTranslation } from "react-i18next";
 // import { useUsers, User } from "../hooks/useUser";
 import { useAdminUsers, type User } from "../hooks/useAdminUsers";
 import { useNavigate } from "react-router-dom";
+import Spinner from "./Spinner";
 
 
 export const UserManagement: React.FC = () => {
@@ -338,7 +339,7 @@ export const UserManagement: React.FC = () => {
     navigate(`/admin/users/${id}`)
   }
 
-  if (loading) return <div className="p-4">{t("Loading...")}</div>;
+  if (loading) return <div className="fixed top-1/2 left-1/2 flex flex-col items-center gap-2"><Spinner  className="w-10 h-10"/> <p className="text-text-light">Loading...</p></div>;
   if (error)   return <div className="p-4 text-red-600">{t("Error")}: {error}</div>;
 
   if (selectedUser) {
@@ -456,7 +457,7 @@ export const UserManagement: React.FC = () => {
                     {user.email}
                   </td>
                   <td
-                    className="px-2 sm:px-6 py-2 sm:py-4 whitespace-nowrap"
+                    className="px-2 sm:px-6 py-2 sm:py-4 min-w-[200px] max-w-[250px] text-wrap"
                     style={{
                       borderWidth: "0px 1px 1px 0px",
                       borderStyle: "solid",
@@ -514,7 +515,7 @@ export const UserManagement: React.FC = () => {
           <button
             disabled={currentPage===1}
             onClick={()=>setCurrentPage(p=>p-1)}
-            className="px-3 py-[10px] bg-[#CCCCCC] text-[#6F6B7D] cursor-pointer"
+            className="px-2 py-[10px] bg-[#CCCCCC] text-[#6F6B7D] cursor-pointer"
             title="Previous"
           >
             <ChevronLeftIcon className="h-5 w-5" />
@@ -535,7 +536,7 @@ export const UserManagement: React.FC = () => {
           <button
           disabled={currentPage===totalPages}
           onClick={()=>setCurrentPage(p=>p+1)}
-            className="px-3 py-[10px] bg-[#CCCCCC] text-[#6F6B7D] cursor-pointer"
+            className="px-2 py-[10px] bg-[#CCCCCC] text-[#6F6B7D] cursor-pointer"
             title="Next"
           >
             <ChevronRightIcon className="h-5 w-5" />
