@@ -103,7 +103,7 @@ const Header: React.FC = () => {
         >
           <span className="flex gap-2 items-center">
             <FaUserCircle className="h-5 w-5 2xl:w-6 2xl:h-6 text-primary" />
-             {admin ? `Welcome, ${admin.name}` : 'Please log in'}
+             {admin ? `${admin.name}` : 'Please log in'}
           </span>
           <MdKeyboardArrowRight
             className={`h-4 w-4 2xl:w-6 2xl:h-6 transform transition ${

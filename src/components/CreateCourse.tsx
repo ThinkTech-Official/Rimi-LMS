@@ -16,6 +16,8 @@ import { useFetchCategories } from "../hooks/useFetchCategories";
 import { useCreateCategory } from "../hooks/useCreateCategory";
 import { useTranslation } from "react-i18next";
 import { set } from "react-hook-form";
+import Spinner from "./Spinner";
+import { FaAngleDown } from "react-icons/fa6";
 
 interface TestEntry {
   id: number;
@@ -65,6 +67,7 @@ const CreateCourse: React.FC<CreateCourseProps> = ({ onCreateTest }) => {
   const [addingCat, setAddingCat] = useState<boolean>(false);
   const [newCategory, setNewCategory] = useState<string>("");
   const [selectedCategoryId, setSelectedCategoryId] = useState<number>();
+  const [isCategoryOpen, setIsCategoryOpen] = useState<boolean>(false);
 
   // useEffect(() => {
   //   if(categories.length && !selectedCategory) {
@@ -205,7 +208,7 @@ const CreateCourse: React.FC<CreateCourseProps> = ({ onCreateTest }) => {
               <div className="flex flex-col">
                 <label>{t("category")}</label>
                 {catLoading ? (
-                  <p>Loading categories...</p>
+                  <p className="w-[200px] text-center"><Spinner className="w-5 h-5"/></p>
                 ) : catError ? (
                   <p className="text-red-500">Load error: {catError}</p>
                 ) : (
@@ -218,12 +221,12 @@ const CreateCourse: React.FC<CreateCourseProps> = ({ onCreateTest }) => {
                   //     className="text-primary hover:underline">+ Add</button>
                   // </div>
                   <div className="flex space-x-2 items-center">
-                    <select
+                    {/* <select
                       value={selectedCategoryId ?? ""}
                       onChange={(e) =>
                         setSelectedCategoryId(Number(e.target.value))
                       }
-                      className="border px-3 py-2 focus:ring-primary cursor-pointer"
+                      className="border border-inputBorder px-3 py-2 focus:border-0 focus:ring-1 focus:ring-primary cursor-pointer capitalize category-select"
                       required
                     >
                       <option value="" disabled>
@@ -236,7 +239,36 @@ const CreateCourse: React.FC<CreateCourseProps> = ({ onCreateTest }) => {
                         </option>
                       ))}
                     
-                    </select>
+                    </select> */}
+                    <div className="relative w-[220px]">
+      <button
+        type="button"
+        className="w-full border border-inputBorder px-3 py-2 focus:border-0 focus:ring-1 focus:ring-primary capitalize flex items-center justify-between text-left text-text-light cursor-pointer"
+        onClick={() => setIsCategoryOpen((prev) => !prev)}
+      >
+        <span className="capitalize">
+          {selectedCategoryId ? categories.find((cat) => cat.id === selectedCategoryId)?.name : "Select Category"}
+        </span>
+        <FaAngleDown className={`ml-2 cusor-pointer transition-transform ${isCategoryOpen ? "rotate-180" : ""}`} />
+      </button>
+
+      {isCategoryOpen && (
+        <div className="absolute mt-[2px] top-full left-0 w-full bg-white border border-inputBorder shadow-md z-10 max-h-60 overflow-y-auto">
+          {categories.map((cat) => (
+            <div
+              key={cat.id}
+              className={`px-4 py-2 hover:bg-gray-200 text-text-light cursor-pointer capitalize ${selectedCategoryId === cat.id ? "bg-primary text-white hover:bg-gray-200 hover:text-text-light" : ""}`}
+              onClick={() => {
+                setSelectedCategoryId(cat.id);
+                setIsCategoryOpen(false);
+              }}
+            >
+              {cat.name}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
 
                     
                         <button

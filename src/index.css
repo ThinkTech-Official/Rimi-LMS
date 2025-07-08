@@ -176,8 +176,6 @@ video::-webkit-media-controls-fullscreen-button {
 
 
 .spinner {
-  width: 48px;
-  height: 48px;
   border-radius: 50%;
   display: inline-block;
   border-top: 3px solid #2b00b7;
