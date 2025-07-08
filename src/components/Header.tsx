@@ -11,11 +11,14 @@ import { useNavigate } from "react-router-dom";
 
 // CONTEXT 
 import { useAdminContext } from '../context/AdminContext'
+import { useAdminLogout } from "../hooks/useAdminLogout";
 
 
 const Header: React.FC = () => {
 
    const { admin, loading } = useAdminContext();
+
+   const logout = useAdminLogout()
 
   const [isLanguageSelectOpen, setIsLanguageSelectOpen] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
@@ -123,7 +126,9 @@ const Header: React.FC = () => {
                 </button>
               </li>
               <li>
-                <button className="w-full text-left px-4 py-2 hover:bg-primary hover:text-white cursor-pointer flex gap-2 items-center">
+                <button
+                onClick={logout}
+                 className="w-full text-left px-4 py-2 hover:bg-primary hover:text-white cursor-pointer flex gap-2 items-center">
                   <IoIosLogOut className="h-4 w-4 2xl:w-5 2xl:h-5" /> Logout
                 </button>
               </li>
