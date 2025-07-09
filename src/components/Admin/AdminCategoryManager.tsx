@@ -3,6 +3,9 @@
 
 import React, { useState } from 'react';
 import { useCategoriesAdmin, type Category } from '../../hooks/useCategoriesAdmin';
+import { MdClose } from 'react-icons/md';
+import { set } from 'react-hook-form';
+import Spinner from '../Spinner';
 
 
 const AdminCategoryManager: React.FC = () => {
@@ -10,6 +13,7 @@ const AdminCategoryManager: React.FC = () => {
     categories,
     loading: fetching,
     error,
+    setError,
     createCategory,
     updateCategory,
     deleteCategory,
@@ -24,11 +28,13 @@ const AdminCategoryManager: React.FC = () => {
   const [editName, setEditName]     = useState('');
   const [updating, setUpdating]     = useState(false);
   const [deletingId, setDeletingId] = useState<number | null>(null);
+  const [deleting, setDeleting]     = useState(false);
 
     //  while fetching the initial list, show a placeholder
   if (fetching && categories.length === 0) {
     return (
-      <div className="p-4 max-w-2xl mx-auto text-center">
+      <div className="fixed flex flex-col gap-2 justify-center items-center top-1/2 left-1/2">
+        <Spinner className='w-10 h-10'/>
         <p>Loading categories…</p>
       </div>
     );
@@ -75,32 +81,62 @@ const AdminCategoryManager: React.FC = () => {
     setEditName('');
   };
 
+ const handleDeleteConfirm = (id: number) => {
+    setDeletingId(id);
+    setDeleting(true);
+  };
+
   // Delete
   const handleDelete = async (id: number) => {
-    if (!confirm('Delete this category?')) return;
     setDeletingId(id);
     try {
       await deleteCategory(id);
-    } finally {
+    }
+     finally {
       setDeletingId(null);
+      setDeleting(false);
     }
   };
 
 
   return (
     <div className="p-4 max-w-2xl mx-auto">
-      <h2 className="text-2xl font-semibold mb-4">Manage Categories</h2>
+      <h2 className="text-2xl font-semibold mb-4 text-text-dark">Manage Categories</h2>
+
+      {deleting && (
+        <div className="text-text-light-2 mb-2 fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white max-w-md p-10 shadow-lg border border-inputBorder flex flex-col gap-3 z-50">
+          <p className='mb-2 text-center'>Are you sure you want to delete this category?</p>
+          <div className="flex gap-2 justify-end">
+            <button
+              type="button"
+              onClick={() => setDeleting(false)}
+              className="px-4 py-2 border cursor-pointer border-inputBorder"
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              onClick={() => handleDelete(deletingId || 0)}
+              className="px-4 py-2 bg-primary text-white disabled:opacity-50 cursor-pointer"
+            >
+              Delete
+            </button>
+          </div>
+        </div>
+      )}
 
       {error && (
-        <div className="text-red-600 mb-2">
+        <div className="text-text-light-2 mb-2 fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white max-w-md p-10 shadow-lg border border-inputBorder z-50">
+          <p className='text-red-500 mb-2 text-center'>Error deleting category:</p>
           {error}
+          <MdClose onClick={() => setError('')} className="absolute top-2 right-2 cursor-pointer text-xl" />
         </div>
       )}
 
       {/* Create */}
       <form onSubmit={handleCreate} className="flex mb-6">
         <input
-          className="border rounded-l px-3 py-2 flex-1"
+          className="border border-inputBorder px-3 py-2 flex-1 focus:border-0 focus:outline-none focus:ring-1 focus:ring-primary"
           placeholder="New category name"
           value={newName}
           onChange={e => setNewName(e.target.value)}
@@ -108,27 +144,43 @@ const AdminCategoryManager: React.FC = () => {
         <button
           type="submit"
            disabled={creating}
-          className="bg-primary text-white px-4 py-2 rounded-r cursor-pointer disabled:opacity-50"
+          className="px-4 py-2 sm:py-3 bg-primary text-white font-semibold cursor-pointer transition-all delay-100 shadow hover:bg-indigo-700"
         >
           {creating ? 'Processing…' : 'Add'}
         </button>
       </form>
 
       {/* List */}
-      <table className="w-full table-auto bg-white shadow">
-        <thead>
-          <tr className="bg-gray-100">
-            <th className="px-4 py-2 text-left">ID</th>
-            <th className="px-4 py-2 text-left">Name</th>
-            <th className="px-4 py-2 text-left">Actions</th>
+      <table className="min-w-full divide-y divide-gray-200">
+        <thead className='bg-primary text-white text-[16px] 2xl:text-xl'>
+          <tr>
+            <th className="px-2 sm:px-6 py-1 sm:py-3 text-left font-medium">ID</th>
+            <th className="px-2 sm:px-6 py-1 sm:py-3 text-left font-medium">Name</th>
+            <th className="px-2 sm:px-6 py-1 sm:py-3 text-left font-medium">Actions</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody  className="bg-white"
+                  style={{ border: "1px solid #AAA9A9" }}>
           {categories.map(cat => (
-            <tr key={cat.id} className="border-t">
-              <td className="px-4 py-2">{cat.id}</td>
-              <td className="px-4 py-2">{cat.name}</td>
-              <td className="px-4 py-2 space-x-2">
+            <tr key={cat.id}   className="text-[#808080] text-sm 2xl:text-xl">
+              <td   className="px-2 sm:px-6 py-2 sm:py-4 whitespace-nowrap"
+                        style={{
+                          borderWidth: "0px 1px 1px 0px",
+                          borderStyle: "solid",
+                          borderColor: "#AAA9A9",
+                        }}>{cat.id}</td>
+              <td   className="px-2 sm:px-6 py-2 sm:py-4 whitespace-nowrap"
+                        style={{
+                          borderWidth: "0px 1px 1px 0px",
+                          borderStyle: "solid",
+                          borderColor: "#AAA9A9",
+                        }}>{cat.name}</td>
+              <td   className="px-2 sm:px-6 py-2 sm:py-4 whitespace-nowrap space-x-2"
+                        style={{
+                          borderWidth: "0px 1px 1px 0px",
+                          borderStyle: "solid",
+                          borderColor: "#AAA9A9",
+                        }}>
                 <button
                   onClick={() => openEdit(cat)}
                   className="text-primary hover:underline cursor-pointer"
@@ -136,7 +188,7 @@ const AdminCategoryManager: React.FC = () => {
                   Edit
                 </button>
                 <button
-                  onClick={() => handleDelete(cat.id)}
+                  onClick={() => handleDeleteConfirm(cat.id)}
                   className="text-red-700 hover:underline cursor-pointer"
                 >
                   Delete
@@ -149,12 +201,12 @@ const AdminCategoryManager: React.FC = () => {
 
       {/* Edit Modal */}
       {editing && (
-        <div className="fixed inset-0 bg-black/10 bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white p-6 shadow-lg w-80">
-            <h3 className="text-lg font-medium mb-4">Edit Category</h3>
-            <form onSubmit={handleUpdate} className="space-y-4">
+        <div className="fixed inset-0 bg-black/10 flex items-center justify-center z-50">
+          <div className="bg-white p-6 shadow-lg min-w-[300px] sm:min-w-[400px]">
+            <h3 className="text-lg font-medium mb-4 text-text-dark">Edit Category</h3>
+            <form onSubmit={handleUpdate} className="space-y-4 w-full">
               <input
-                className="w-full border px-3 py-2"
+                className="w-full border border-inputBorder px-3 py-2 flex-1 focus:border-0 focus:outline-none focus:ring-1 focus:ring-primary"
                 value={editName}
                 onChange={e => setEditName(e.target.value)}
               />
@@ -162,14 +214,14 @@ const AdminCategoryManager: React.FC = () => {
                 <button
                   type="button"
                   onClick={closeModal}
-                  className="px-4 py-2 border hover:bg-gray-100"
+                  className="px-4 py-2 border cursor-pointer border-inputBorder"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={updating}
-                  className="px-4 py-2 bg-primary text-white disabled:opacity-50"
+                  className="px-4 py-2 bg-primary text-white font-semibold cursor-pointer transition-all delay-100 shadow hover:bg-indigo-700"
                 >
                   {updating ? 'Saving…' : 'Save'}
                 </button>

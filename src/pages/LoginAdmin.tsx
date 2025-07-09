@@ -129,7 +129,7 @@ const LoginAdmin: React.FC = () => {
 
           <button
             type="submit"
-            className="w-full py-3 bg-primary text-white font-semibold cursor-pointer transition-all delay-100 shadow hover:bg-indigo-700"
+            className="w-full py-2 sm:py-3 bg-primary text-white font-semibold cursor-pointer transition-all delay-100 shadow hover:bg-indigo-700"
           >
             {loading ? "Signing in…" : "Sign in"}
           </button>

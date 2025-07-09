@@ -80,6 +80,7 @@ export function useCategoriesAdmin() {
     categories,
     loading,
     error,
+    setError,
     createCategory,
     updateCategory,
     deleteCategory,
