@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import adminApi from '../utils/adminApi'
 import { API_BASE } from '../utils/ulrs'
 
@@ -22,27 +22,34 @@ export function useAdminFetchCourse(courseId: string | null) {
   const [basicCourse, setBasicCourse] = useState<BasicCourse | null>(null)
   const [loading, setLoading] = useState<boolean>(false)
   const [error, setError] = useState<string | null>(null)
+  const [reloadTrigger, setReload]  = useState(0)
 
-  useEffect(() => {
+ const fetchBasic = useCallback(() => {
     if (courseId === null) return
     setLoading(true)
     setError(null)
 
     adminApi
       .get<BasicCourse>(`${API_BASE}/courses/${courseId}/basic`)
-      .then(res => {
-        console.log('from basic course details...',res.data)
-        setBasicCourse(res.data)
-      })
-      .catch(err => {
+      .then(r => setBasicCourse(r.data))
+      .catch(err =>
         setError(
-          err.response?.data?.message ?? err.message ?? 'Failed to fetch course basic details'
+          err.response?.data?.message ??
+          err.message ??
+          'Failed to fetch basic course details'
         )
-      })
-      .finally(() => {
-        setLoading(false)
-      })
+      )
+      .finally(() => setLoading(false))
   }, [courseId])
 
-  return { basicCourse, loading, error }
+  // run on mount, on courseId change, or when reloadTrigger bumps
+  useEffect(() => {
+    fetchBasic()
+  }, [fetchBasic, reloadTrigger])
+
+
+    // caller can invoke this to force a refetch
+  const refetch = () => setReload(x => x + 1)
+
+  return { basicCourse, loading, error , refetch }
 }

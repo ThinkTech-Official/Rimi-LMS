@@ -14,6 +14,8 @@ import useNotification from '../hooks/useNotification';
 import { set } from 'react-hook-form';
 import { useAdminFetchCourse } from '../hooks/useAdminFetchCourse';
 import { API_BASE } from '../utils/ulrs';
+import { useAdminUpdateCourseBasic } from '../hooks/useAdminUpdateCourseBasic';
+import { useAdminDeleteCourse } from '../hooks/useAdminDeleteCourse';
 
 const EditCourse: React.FC = () => {
   const navigate = useNavigate();
@@ -37,7 +39,14 @@ const EditCourse: React.FC = () => {
     error: deleteError,
   } = useDeleteTest(courseId!);
 
-  const { basicCourse, loading: basicInfoLoad , error: basicInfoError } = useAdminFetchCourse(courseId!)
+  const { basicCourse, loading: basicInfoLoad , error: basicInfoError, refetch: refetchBasic, } = useAdminFetchCourse(courseId!)
+
+  const { updateBasic, loading: updating, error: updateError } = useAdminUpdateCourseBasic(Number(courseId!))
+
+  const { deleteCourse, loading: deletingCourse, error: deleteCourseError } = useAdminDeleteCourse(Number(courseId!))
+
+
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
 
 
 
@@ -87,10 +96,18 @@ const handleBasicChange = (e: ChangeEvent<HTMLInputElement|HTMLTextAreaElement>)
   setBasicForm(f => ({ ...f, [name]: value }))
 }
 
-const handleBasicSubmit = (e: React.FormEvent) => {
+const handleBasicSubmit = async (e: React.FormEvent) => {
   e.preventDefault()
-  // TODO: call your adminApi.patch('/courses/:id/basic', basicForm) here
-  setIsBasicModalOpen(false)
+  try {
+    await updateBasic(basicForm, thumbnailFile, videoFile)
+    // re-fetch 
+    refetchBasic()
+
+    setIsBasicModalOpen(false)
+    triggerNotification({ type: 'success', message: 'Course updated', duration: 3000 })
+  } catch {
+    triggerNotification({ type: 'error', message: updateError ?? 'Update failed', duration: 3000 })
+  }
 }
 
   const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -363,7 +380,16 @@ const handleVideoFileChange = (e: ChangeEvent<HTMLInputElement>) => {
         <p>No tests attached to this course yet.</p>
       )}
 
-      {/* Delete Confirmation Modal */}
+      {/* Delete course button  */}
+      <button
+  onClick={() => setIsDeleteModalOpen(true)}
+  disabled={deletingCourse}
+  className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 disabled:opacity-50 cursor-pointer"
+>
+  {deletingCourse ? 'Deleting…' : 'Delete Course'}
+</button>
+
+      {/* Delete Confirmation Modal FOR TEST */}
       {modalTestId !== null && (
         <div className="fixed inset-0 bg-black/10  flex items-center justify-center z-50">
           <div className="bg-white shadow-lg p-6 w-[90%] max-w-md">
@@ -481,6 +507,64 @@ const handleVideoFileChange = (e: ChangeEvent<HTMLInputElement>) => {
           </button>
         </div>
       </form>
+    </div>
+  </div>
+)}
+
+
+
+{/* course Deletion moodal  */}
+
+{isDeleteModalOpen && (
+  <div className="fixed inset-0 bg-black/10 bg-opacity-50 flex items-center justify-center z-50">
+    <div className="bg-white rounded-lg p-6 w-full max-w-md">
+      <h3 className="text-lg font-semibold mb-4 text-red-600">
+         Warning
+      </h3>
+      <p className="mb-4 text-gray-800">
+        Deleting this course will permanently remove:
+      </p>
+      <ul className="list-disc list-inside mb-4 text-gray-700">
+        <li>All course materials (documents & thumbnail)</li>
+        <li>The course video file</li>
+        <li>All tests and their questions</li>
+        <li>All certificates and test results</li>
+      </ul>
+      {deleteCourseError && (
+        <p className="text-red-500 mb-2">{deleteCourseError}</p>
+      )}
+      <div className="flex justify-end space-x-2">
+        <button
+          onClick={() => setIsDeleteModalOpen(false)}
+          className="px-4 py-2 border rounded"
+        >
+          Cancel
+        </button>
+        <button
+          onClick={async () => {
+            try {
+              await deleteCourse()
+              setIsDeleteModalOpen(false)
+              triggerNotification({
+                type: 'success',
+                message: 'Course deleted',
+                duration: 3000,
+              })
+              navigate('/admin/all-courses')
+            } catch {
+              triggerNotification({
+                type: 'error',
+                message: deleteCourseError ?? 'Delete failed',
+                duration: 3000,
+              })
+            }
+          }}
+          disabled={deletingCourse}
+          className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 disabled:opacity-50"
+        >
+          {deletingCourse ? 'Deleting…' : 'Yes, delete course'}
+        </button>
+      </div>
     </div>
   </div>
 )}
