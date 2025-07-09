@@ -213,7 +213,7 @@ const toggleCorrect = (qid: number, oid: number) => {
     }
   };
 
-  if (loadingFetch) return <p className='fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2'><Spinner className='w-10 h-10'/></p>;
+  if (loadingFetch) return <div className='fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2'><Spinner className='w-10 h-10'/></div>;
   if (fetchError) return <p className="text-red-500">{fetchError}</p>;
 
   return (

@@ -269,7 +269,7 @@ const handleVideoFileChange = (e: ChangeEvent<HTMLInputElement>) => {
 
       {/* Loading / Error */}
       {loading ? (
-        <p className='fixed top-1/2 left-1/2'><Spinner className='w-10 h-10'/></p>
+        <div className='fixed top-1/2 left-1/2'><Spinner className='w-10 h-10'/></div>
       ) : error ? (
         <p className="text-red-500">{error}</p>
       ) : paginatedTests.length > 0 ? (

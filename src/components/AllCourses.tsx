@@ -310,7 +310,7 @@ const formatTime = (sec: number) => {
 
         {/* Courses Grid */}
         {catLoading || courseLoading ? (
-          <p className="text-sm text-[#6F6B7D]"><Spinner className="w-6 h-6"/></p>
+          <div className="text-sm text-[#6F6B7D]"><Spinner className="w-6 h-6"/></div>
         ) : (
           <div className="flex items-center justify-center sm:justify-start w-full">
             <div className="flex flex-wrap gap-6 items-center justify-center sm:justify-start sm:items-start">

@@ -13,6 +13,7 @@ import {
   useFetchTestClient,
   type TestWithQuestions,
 } from "../../hooks/useFetchTestClient";
+import Spinner from "../Spinner";
 
 const CoursePlay = () => {
   const { id: courseId } = useParams<{ id: string }>();
@@ -183,7 +184,7 @@ useEffect(() => {
 
 
 
-  if (loadingCourse || !course) return <p>Loading...</p>;
+  if (loadingCourse || !course) return <div className="fixed top-1/2 left-1/2 flex flex-col items-center gap-2"><Spinner className="w-10 h-10"/><p>Loading Course...</p></div>;
   if (errorCourse) return <p>Error: {errorCourse}</p>;
   
   return (

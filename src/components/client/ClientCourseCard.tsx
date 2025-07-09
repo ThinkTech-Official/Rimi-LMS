@@ -3,6 +3,7 @@ import { GoClock } from 'react-icons/go';
 import { useNavigate } from 'react-router-dom';
 import { useFetchCourseProgress } from '../../hooks/useFetchCourseProgress';
 import { useAuth } from '../../context/AuthContext';
+import { RiProgress3Line } from 'react-icons/ri';
 
 
 interface ClientCourseCardProps {
@@ -80,7 +81,7 @@ const ClientCourseCard = ({courseId, imageUrl , title, duration, description}: C
         />
 
               
-              <div className=" absolute top-2 right-2 flex items-center text-[#6F6B7D] text-xs 2xl:text-base space-x-3 bg-white px-2.5 py-2 rounded-full">
+              <div className=" absolute top-2 right-2 flex items-center gap-1 text-[#6F6B7D] text-xs 2xl:text-base bg-white px-2.5 py-2 rounded-full">
                 <div className="flex items-center gap-1">
                   <GoClock />
                   <span>{duration}</span>
@@ -88,10 +89,10 @@ const ClientCourseCard = ({courseId, imageUrl , title, duration, description}: C
                 </div>
 
                 {/* percentage badge */}
-        <div className="absolute top-2 right-2 flex items-center space-x-1 bg-white px-2 py-1 rounded-full text-xs">
+        <div className=" flex items-center space-x-1 bg-white rounded-full text-xs">
           {loading
             ? <span>Loading…</span>
-            : <><GoClock /> <span>{percent}%</span></>
+            : <><RiProgress3Line className="text-text-light" /> <span>{percent}%</span></>
           }
         </div>
                 {/* <div className="flex items-center gap-1">
@@ -103,25 +104,25 @@ const ClientCourseCard = ({courseId, imageUrl , title, duration, description}: C
             <h2 className="text-lg font-semibold text-gray-900">
               {title}
             </h2>
-            <div>
-              <p className="text-gray-600 text-sm pr-2">
-                {showFullDescription
-                  ? description
-                  : description
-                  ? getTruncatedText(description, 20)
-                  : ""}
-              </p>
+           <div className="text-gray-600 text-sm pr-2">
+  <span>
+    {showFullDescription
+      ? description
+      : description
+      ? getTruncatedText(description, 15)
+      : ""}
+  </span>
 
-              {description &&
-                description.split(" ").length > 20 && (
-                  <button
-                    className="text-primary text-xs mt-1 underline underline-offset-2 inline cursor-pointer"
-                    onClick={() => setShowFullDescription(!showFullDescription)}
-                  >
-                    {showFullDescription ? "less" : "more"}
-                  </button>
-                )}
-            </div>
+  {description && description.split(" ").length > 15 && (
+    <button
+      className="text-primary text-xs underline underline-offset-2 ml-1 inline cursor-pointer"
+      onClick={() => setShowFullDescription(!showFullDescription)}
+    >
+      {showFullDescription ? "less" : "more"}
+    </button>
+  )}
+</div>
+
 
             { percent === 0 ? 
             ( 

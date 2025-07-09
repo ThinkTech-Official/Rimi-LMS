@@ -2,12 +2,16 @@
 
 
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { ImUser } from "react-icons/im";
 import { TbEdit, TbX } from "react-icons/tb";
 import { useProfile } from "../../hooks/useProfile";
 import { useUpdateProfile } from "../../hooks/useUpdateProfile";
 import { useResetPassword } from "../../hooks/useResetPassword";
+import Spinner from "../Spinner";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+import { IoMdClose } from "react-icons/io";
+import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 
 const ClientProfile: React.FC = () => {
   const { profile, loading: loadingProfile, error: profileError, refetch } = useProfile();
@@ -18,6 +22,14 @@ const ClientProfile: React.FC = () => {
   const [tempName, setTempName]               = useState("");
   const [showPasswordReset, setShowPasswordReset] = useState(false);
   const [newPassword, setNewPassword]         = useState("");
+  const [showResetPasswordModal, setShowResetPasswordModal] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+   const [showPassword, setShowPassword] = useState(false);
+     const [newPwd, setNewPwd]           = useState('');
+  const [confirmPwd, setConfirmPwd]   = useState('');
+  const [localError, setLocalError]   = useState<string | null>(null);
+  const modalRef = useRef<HTMLDivElement>(null);
 
   // when profile loads, initialize tempName
   useEffect(() => {
@@ -25,6 +37,16 @@ const ClientProfile: React.FC = () => {
       setTempName(profile.name ?? "");
     }
   }, [profile]);
+
+    useEffect(() => {
+      const handleClickOutside = (e: MouseEvent) => {
+        if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
+          setShowResetPasswordModal(false);
+        }
+      };
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
 
   // handlers
   const handleNameSave = async () => {
@@ -47,8 +69,20 @@ const ClientProfile: React.FC = () => {
       // error 
     }
   };
-
-  if (loadingProfile) return <div>Loading profile…</div>;
+  const handleResetSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  setLocalError(null);
+  if (newPwd !== confirmPwd) {
+    setLocalError("Passwords don't match");
+    return;
+  }
+  try
+  {await resetPassword(newPwd);}
+  catch {}
+  finally
+  {setShowResetPasswordModal(false);}
+};
+  if (loadingProfile) return <div className="fixed top-1/2 left-1/2 flex flex-col items-center gap-2"><Spinner className="w-10 h-10"/> <p>Loading profile…</p></div>;
   if (profileError)
     return (
       <div className="p-4 text-red-600">
@@ -67,22 +101,22 @@ const ClientProfile: React.FC = () => {
         &gt; Back To Courses
       </button>
 
-      <div className="flex flex-col items-center mt-8">
+      <div className="flex flex-col mt-8">
         <ImUser className="w-24 h-24 bg-gray-200 text-gray-400 rounded-md p-2" />
 
         <div className="mt-8 w-full max-w-md">
           <h2 className="text-2xl font-bold mb-6">User Information</h2>
 
           {/* Name */}
-          <div className="flex items-center mb-4">
-            <span className="font-semibold w-24">Name:</span>
+          <div className="flex items-center mb-4 gap-2">
+            <span className="font-semibold ">Name:</span>
             {!editMode ? (
               <>
                 <span className="flex-1 text-gray-700">{profile?.name}</span>
                 <button
                   onClick={() => setEditMode(true)}
                   title="Edit Name"
-                  className="text-primary"
+                  className="text-primary cursor-pointer"
                 >
                   <TbEdit className="w-5 h-5" />
                 </button>
@@ -92,18 +126,19 @@ const ClientProfile: React.FC = () => {
                 <input
                   value={tempName}
                   onChange={(e) => setTempName(e.target.value)}
-                  className="flex-1 border border-gray-300 p-1"
+                  className="w-full border border-inputBorder px-2 py-1 sm:px-4 focus:outline-none focus:ring-1 focus:ring-primary"
                   autoFocus
                 />
-                <button onClick={() => setEditMode(false)} title="Cancel">
-                  <TbX className="w-5 h-5 text-gray-500" />
-                </button>
                 <button
                   onClick={handleNameSave}
                   disabled={savingName}
-                  className="bg-primary text-white px-3 py-1 rounded"
+                  title="Save Name"
+                  className="bg-primary text-white px-3 py-1 cursor-pointer"
                 >
                   {savingName ? "Saving…" : "Save"}
+                </button>
+                <button onClick={() => setEditMode(false)} title="Cancel">
+                  <TbX className="w-5 h-5 text-text-light cursor-pointer" />
                 </button>
               </div>
             )}
@@ -111,45 +146,109 @@ const ClientProfile: React.FC = () => {
           {nameError && <p className="text-red-600 mb-2">{nameError}</p>}
 
           {/* Email */}
-          <div className="flex items-center mb-4">
-            <span className="font-semibold w-24">Email:</span>
+          <div className="flex items-center mb-4 gap-2">
+            <span className="font-semibold">Email:</span>
             <span className="text-gray-700">{profile?.email}</span>
           </div>
 
-          {/* Password Reset */}
-          {!showPasswordReset ? (
+           
             <button
-              onClick={() => setShowPasswordReset(true)}
-              className="text-primary underline text-sm"
+              onClick={() => setShowResetPasswordModal(true)}
+              className="text-primary underline text-sm cursor-pointer"
             >
               Reset password?
             </button>
-          ) : (
-            <div className="flex flex-col gap-2 mt-2">
-              <input
-                type="password"
-                placeholder="New password"
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-                className="w-full border border-gray-300 p-1"
-              />
-              <div className="flex items-center gap-2">
-                <button onClick={() => { setShowPasswordReset(false); setNewPassword(""); }}>
-                  <TbX className="w-5 h-5 text-gray-500" />
-                </button>
-                <button
-                  onClick={handlePwdSave}
-                  disabled={savingPwd || !newPassword.trim()}
-                  className="bg-primary text-white px-3 py-1 rounded"
-                >
-                  {savingPwd ? "Saving…" : "Save"}
-                </button>
-              </div>
-              {pwdError && <p className="text-red-600">{pwdError}</p>}
-            </div>
-          )}
+          
         </div>
       </div>
+      
+            {showResetPasswordModal && (
+        <div className="fixed inset-0 bg-black/10 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded shadow-lg w-[90%] sm:w-md" ref={modalRef}>
+            <IoMdClose
+              onClick={() => setShowResetPasswordModal(false)}
+              className="absolute top-2 right-2 cursor-pointer text-xl text-primary"
+            />
+            <h2 className="text-lg font-bold mb-4">Reset Password</h2>
+      
+           
+            {/* {resetError && (
+              <div className="mb-2 text-red-600">{resetError}</div>
+            )}
+            {resetSuccess && (
+              <div className="mb-2 text-green-600">Password updated!</div>
+            )} */}
+      
+            <form onSubmit={handleResetSubmit} className="space-y-4">
+              <div className="relative">
+                <label className="block text-text-light-2">New Password</label>
+                <div className="relative">
+                <input
+                  type={showNewPassword ? 'text' : 'password'}
+                  value={newPwd}
+                  onChange={e => setNewPwd(e.target.value)}
+                  className="w-full border border-inputBorder px-4 py-2 sm:py-3 focus:outline-none focus:ring-1 focus:ring-primary"
+                  required
+                />
+                    <button
+              type="button"
+              onClick={() => setShowNewPassword((prev) => !prev)}
+              className="absolute inset-y-0 right-0 pr-3 flex items-center text-zinc-500"
+            >
+              {showNewPassword ? (
+                <EyeSlashIcon className="h-5 w-5 cursor-pointer" aria-hidden="true" />
+              ) : (
+                <EyeIcon className="h-5 w-5 cursor-pointer" aria-hidden="true" />
+              )}
+            </button>
+              </div>
+              </div>
+              <div className="relative">
+                <label className="block text-text-light-2">Confirm Password</label>
+                <div className="relative">
+                <input
+                  type={showConfirmPassword ? 'text' : 'password'}
+                  value={confirmPwd}
+                  onChange={e => setConfirmPwd(e.target.value)}
+                 className="w-full border border-inputBorder px-4 py-2 sm:py-3 focus:outline-none focus:ring-1 focus:ring-primary"
+                  required
+                />
+                 <button
+              type="button"
+              onClick={() => setShowConfirmPassword((prev) => !prev)}
+              className="absolute inset-y-3 right-0 pr-3 flex items-center text-zinc-500"
+            >
+              {showConfirmPassword ? (
+                <EyeSlashIcon className="h-5 w-5 cursor-pointer" aria-hidden="true" />
+              ) : (
+                <EyeIcon className="h-5 w-5 cursor-pointer" aria-hidden="true" />
+              )}
+            </button>
+                </div>
+              </div>
+       {localError && (
+              <div className="mb-2 text-red-600">{localError}</div>
+            )}
+              <div className="flex gap-4">
+                <button
+                  type="button"
+                  onClick={() => setShowResetPasswordModal(false)}
+                  className="flex-1 border border-inputBorder cursor-pointer text-text-light-2"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  // disabled={resetting}
+                  className="flex-1 px-4 py-2 sm:py-3 bg-primary text-white font-semibold cursor-pointer transition-all delay-100 shadow hover:bg-indigo-700"
+                >
+                  { savingPwd? 'Updating…' : 'Update Password'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

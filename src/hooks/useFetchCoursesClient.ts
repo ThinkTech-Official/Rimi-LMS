@@ -40,7 +40,7 @@ export const useFetchCoursesClient = () => {
         const normalized = res.data.map(c => ({
           id: c.id,
           title: c.name,
-          duration: String(Math.ceil(c.duration/60)) + ' Minutes',  // `${Math.floor(c.duration/60)}hr ${c.duration%60}min`,
+          duration: String(Math.ceil(c.duration/60)) + ' Min',  // `${Math.floor(c.duration/60)}hr ${c.duration%60}min`,
         //   questions: c.questionCount,
           imageUrl: `${API_BASE}/uploads/courses/${c.thumbnail}`,
           categoryId: c.categoryId ? c.categoryId : 0,
