@@ -8,6 +8,7 @@ import { BiSearch } from "react-icons/bi";
 import { useFetchCoursesClient } from "../../hooks/useFetchCoursesClient";
 import { useFetchCourseProgress } from "../../hooks/useFetchCourseProgress";
 import ClientCourseCard from "./ClientCourseCard";
+import Spinner from "../Spinner";
 
 const ClientHome = () => {
   const navigate = useNavigate();
@@ -30,19 +31,42 @@ const ClientHome = () => {
   const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null)
 
   const [searchTerm, setSearchTerm] = useState<string>("")
+
+  const allCategory = { id: 0, name: "All" };
+const allCategories = [allCategory, ...categories];
   
   // First time category loading leads to default first one
-  useEffect(() => {
-    if(categories.length > 0 &&  selectedCategoryId === null) {
-      setSelectedCategoryId(categories[0].id)
+ useEffect(() => {
+    if (categories.length > 0 && selectedCategoryId === null) {
+      setSelectedCategoryId(0);
     }
-  }, [categories, selectedCategoryId])
+  }, [categories, selectedCategoryId]);
 
   const handleCategoryClick = (id: number) => {
     setSelectedCategoryId(id)
   }
 
-  const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => setSearchTerm(e.target.value)
+  const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setSearchTerm(value);
+  
+    if (value.trim() === "") {
+      // Reset category to default if search is cleared
+      if (categories.length > 0) {
+        setSelectedCategoryId(0);
+      }
+      return;
+    }
+  
+    // Search in all courses regardless of category
+    const match = courses.find((c) =>
+      c.title.toLowerCase().includes(value.toLowerCase())
+    );
+  
+    if (match) {
+      setSelectedCategoryId(0); // auto-select category
+    }
+  };
 
   const [showFullDescription, setShowFullDescription] = useState(false);
   const progress = 40;
@@ -61,14 +85,30 @@ const ClientHome = () => {
   // );
 
      // Safe filtering if courses empty or selectedCategory unset, result is empty array
-    const filteredCourses = (courses || []).filter((c) => {
-    const byCat =
-      selectedCategoryId !== null ? c.categoryId === selectedCategoryId : true;
-    const bySearch = c.title
-      .toLowerCase()
-      .includes(searchTerm.toLowerCase());
-    return byCat && bySearch;
-  });
+const filteredCourses = (() => {
+  const normalizedSearch = searchTerm.toLowerCase().trim();
+
+  if (selectedCategoryId === 0) {
+    // "All" tab
+    return (courses || []).filter((c) =>
+      c.title.toLowerCase().includes(normalizedSearch)
+    );
+  }
+
+  if (!normalizedSearch) {
+    // Normal category filtering
+    return (courses || []).filter(
+      (c) => c.categoryId === selectedCategoryId
+    );
+  }
+
+  // Search term exists in specific category
+  return (courses || []).filter(
+    (c) =>
+      c.categoryId === selectedCategoryId &&
+      c.title.toLowerCase().includes(normalizedSearch)
+  );
+})();
 
 
   const handleStartCourse = (id: number) => {
@@ -111,7 +151,7 @@ const ClientHome = () => {
       {/* Category Tabs */}
       <div className="border-b border-[#E9E9E9] mb-6">
         <ul className="flex space-x-3 sm:space-x-8 items-center overflow-x-auto custom-scrollbar2 pb-2 sm:pb-0">
-          {categories.map((cat) => (
+          {allCategories.map((cat) => (
             <li
                 key={cat.id}
                 onClick={() => handleCategoryClick(cat.id)}
@@ -129,17 +169,13 @@ const ClientHome = () => {
       </div>
 
   {/* Courses Grid */}
-        {(catLoading || courseLoading) 
-         ? 
-      (
-        <p>Loading...</p>
-      )  
-      :
-
-     
-      (
-        <div className="flex flex-wrap gap-5 items-center justify-center sm:justify-start sm:items-start">
-        {filteredCourses.map((course) => (
+        {catLoading || courseLoading ? (
+          <div className="text-sm text-[#6F6B7D]"><Spinner className="w-6 h-6"/></div>
+        ) : (
+          <div className="flex items-center justify-center sm:justify-start w-full">
+            <div className="flex flex-wrap gap-6 items-center justify-center sm:justify-start sm:items-start">
+              {filteredCourses.length > 0 ? (
+        filteredCourses.map((course) => (
           <div key={course.id}>
             <ClientCourseCard 
           courseId={course.id}
@@ -150,11 +186,17 @@ const ClientHome = () => {
 
           />
           </div>
-        ))}
-      </div>
-      )
+        ))
+        ) : selectedCategoryId === 0 && searchTerm.trim() ? (
+  <p className="text-center text-gray-500 italic">
+    Course with the name "{searchTerm}" not found.
+  </p>
+) : null}
+            </div>
+          </div>
+        )}
 
-}
+
 
     </main>
   );

@@ -257,7 +257,7 @@ const handleRemoveDoc = (index: number) => {
               <div className="flex flex-col">
                 <label>{t("category")}</label>
                 {catLoading ? (
-                  <p className="w-[200px] text-center"><Spinner className="w-5 h-5"/></p>
+                  <div className="w-[200px] text-center"><Spinner className="w-5 h-5"/></div>
                 ) : catError ? (
                   <p className="text-red-500">Load error: {catError}</p>
                 ) : (
