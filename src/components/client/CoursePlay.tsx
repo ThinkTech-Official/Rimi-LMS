@@ -249,6 +249,9 @@ useEffect(() => {
             )}
 
             {/* // DONE 3  */}
+            {loadingTest && (
+              <div className="absolute z-50 inset-0 bg-white/90 flex flex-col justify-center items-center gap-2"><Spinner className="w-6 h-6"/><p className="text-text-dark">Loading Test...</p></div>
+            )}
 
             {showTest && (
               <div className="absolute z-20 top-0 left-0 w-full h-full">

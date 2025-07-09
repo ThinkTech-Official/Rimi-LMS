@@ -83,7 +83,7 @@ const LoginClient: React.FC = () => {
                   message: "Invalid email address",
                 },
               })}
-              placeholder="email"
+              placeholder="Email"
               className="w-full px-4 py-3 border border-zinc-300 focus:outline-none focus:ring-1 focus:ring-primary"
             />
           </div>
