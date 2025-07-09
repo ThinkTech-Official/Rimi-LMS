@@ -39,6 +39,7 @@ import AdminCreateUser from "./components/Admin/AdminCreateUser.tsx";
 import AdminCategoryManager from "./components/Admin/AdminCategoryManager.tsx";
 import UserProfile from "./components/UserProfile.tsx";
 import AdminTrackCertificate from "./components/Admin/AdminTrackCertificate.tsx";
+import NotFound from "./components/NotFound.tsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -89,6 +90,7 @@ const router = createBrowserRouter(
         
       </Route>
       </Route>
+      <Route path="*" element={<NotFound/>} />
     </>
   )
 );
