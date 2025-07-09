@@ -133,17 +133,17 @@ const filteredCourses = (() => {
 
        {/* Search & Action */}
               <div className="flex flex-col sm:flex-row sm:items-center mb-6 gap-4 w-fit">
-                <div className="flex items-center border border-[#DBDADE] w-[230px] sm:w-[330px]">
+                <div className="flex items-center border border-[#DBDADE] w-[230px] sm:w-[330px] relative">
                   <input
                     type="text"
                     placeholder="Search by name"
                     value={searchTerm}
                     onChange={handleSearchChange}
-                    className="px-2 sm:px-4 py-1 sm:py-3 w-[200px] sm:w-[330px] focus:outline-none"
+                    className="relative px-2 sm:px-4 py-1 sm:py-3 w-[200px] sm:w-[330px] focus:outline-none focus:ring-1 focus:ring-primary"
                   />
-                  <button className="px-1 sm:px-3 cursor-pointer">
-                    <BiSearch className="text-[#6F6B7D]" />
-                  </button>
+                  <button className="px-1 sm:px-3 cursor-pointer absolute right-0">
+                                <BiSearch className="text-[#6F6B7D]" />
+                              </button>
                 </div>
                 
               </div>

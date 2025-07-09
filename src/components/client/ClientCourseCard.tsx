@@ -71,7 +71,7 @@ const ClientCourseCard = ({courseId, imageUrl , title, duration, description}: C
               <img
                 src={imageUrl}
                 alt={title}
-                className="absolute inset-0 m-auto h-40 w-40 mix-blend-multiply"
+                className="w-full h-full object-cover"
               />
 
               {/* Progress Bar  */}
