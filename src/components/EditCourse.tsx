@@ -12,6 +12,8 @@ import { useTranslation } from 'react-i18next';
 import Spinner from './Spinner';
 import useNotification from '../hooks/useNotification';
 import { set } from 'react-hook-form';
+import { useAdminFetchCourse } from '../hooks/useAdminFetchCourse';
+import { API_BASE } from '../utils/ulrs';
 
 const EditCourse: React.FC = () => {
   const navigate = useNavigate();
@@ -35,6 +37,17 @@ const EditCourse: React.FC = () => {
     error: deleteError,
   } = useDeleteTest(courseId!);
 
+  const { basicCourse, loading: basicInfoLoad , error: basicInfoError } = useAdminFetchCourse(courseId!)
+
+
+
+  const [thumbnailFile, setThumbnailFile] = useState<File | null>(null)
+const [videoFile, setVideoFile]         = useState<File | null>(null)
+
+
+
+
+
   // local copy to sync front-end after delete
   const [localTests, setLocalTests] = useState<TestEntry[]>([]);
   useEffect(() => {
@@ -42,6 +55,43 @@ const EditCourse: React.FC = () => {
   }, [tests]);
 
   const [modalTestId, setModalTestId] = useState<number | null>(null);
+
+
+
+    const [isBasicModalOpen, setIsBasicModalOpen] = useState(false)
+const [basicForm, setBasicForm] = useState({
+  name: '',
+  description: '',
+  duration: '',
+  thumbnail: '',
+  videoUrl: '',
+})
+
+
+
+
+  useEffect(() => {
+  if (!basicCourse) return
+  setBasicForm({
+    name: basicCourse.name,
+    description: basicCourse.description,
+    duration: basicCourse.duration?.toString() ?? '',
+    thumbnail: basicCourse.thumbnail ?? '',
+    videoUrl: basicCourse.videoUrl ?? '',
+  })
+}, [basicCourse])
+
+
+const handleBasicChange = (e: ChangeEvent<HTMLInputElement|HTMLTextAreaElement>) => {
+  const { name, value } = e.target
+  setBasicForm(f => ({ ...f, [name]: value }))
+}
+
+const handleBasicSubmit = (e: React.FormEvent) => {
+  e.preventDefault()
+  // TODO: call your adminApi.patch('/courses/:id/basic', basicForm) here
+  setIsBasicModalOpen(false)
+}
 
   const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
@@ -91,8 +141,105 @@ const EditCourse: React.FC = () => {
     navigate(`/admin/edit-course/${courseId}/edit-test/${testId}`)
   }
 
+
+
+
+
+  // When user picks a new thumbnail
+const handleThumbnailFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const file = e.target.files?.[0]
+  if (file) setThumbnailFile(file)
+}
+
+// When user picks a new video, load metadata to get duration
+const handleVideoFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const file = e.target.files?.[0]
+  if (!file) return
+  setVideoFile(file)
+
+  // create a temporary video element to get its duration
+  const url = URL.createObjectURL(file)
+  const vid = document.createElement('video')
+  vid.preload = 'metadata'
+  vid.src = url
+  vid.onloadedmetadata = () => {
+    URL.revokeObjectURL(url)
+    const secs = Math.floor(vid.duration)
+    // write back into your form state
+    setBasicForm(f => ({ ...f, duration: secs.toString() }))
+  }
+}
+
+
+
   return (
     <section className="space-y-6 p-2 md:p-4 lg:p-8">
+
+
+
+
+{basicInfoLoad ? (
+  <Spinner className="mx-auto" />
+) : basicInfoError ? (
+  <p className="text-red-500">{basicInfoError}</p>
+) : basicCourse && (
+  <div className="bg-white shadow rounded p-6 relative mb-6">
+    <h3 className="text-xl font-semibold mb-4">Course Details</h3>
+    <button
+      onClick={() => setIsBasicModalOpen(true)}
+      className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
+    >
+      <TbEdit className="w-6 h-6" />
+    </button>
+
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {/* Thumbnail */}
+      <img
+        src={`${API_BASE}/uploads/courses/${basicCourse.thumbnail}`}
+        alt="Thumbnail"
+        className="w-full h-48 object-cover rounded"
+      />
+
+      {/* Details */}
+      <div className="space-y-2 text-gray-800">
+        <p>
+          <span className="font-medium">Name:</span> {basicCourse.name}
+        </p>
+        <p>
+          <span className="font-medium">Description:</span><br/>
+          {basicCourse.description}
+        </p>
+        <p>
+          <span className="font-medium">Duration:</span>{' '}
+          {basicCourse.duration != null
+            ? `${basicCourse.duration} Sec`
+            : '—'}
+        </p>
+        <p>
+          <span className="font-medium">Video:</span>{' '}
+          {basicCourse.videoUrl
+            ? (
+              <a
+                href={`${API_BASE}/uploads/courses/${basicCourse.videoUrl}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary hover:underline"
+              >
+                View Video
+              </a>
+            )
+            : '—'}
+        </p>
+      </div>
+    </div>
+  </div>
+)}
+
+
+
+
+
+
       {/* Header & Search */}
       <div className="flex flex-col lg:flex-row lg:items-center justify-between">
         <h2 className="text-lg font-bold text-gray-900 mb-2">
@@ -127,62 +274,7 @@ const EditCourse: React.FC = () => {
         <p className="text-red-500">{error}</p>
       ) : paginatedTests.length > 0 ? (
         <>
-          {/* Table */}
-          {/* <div className="w-full overflow-x-auto custom-scrollbar pb-2">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-primary text-white text-[16px] 2xl:text-xl text-center">
-                <tr>
-                  <th className="px-2 py-3 font-medium">Test Name</th>
-                  <th className="px-2 py-3 font-medium"># Questions</th>
-                  <th className="px-2 py-3 font-medium">Duration</th>
-                  <th className="px-2 py-3 text-center font-medium">Action</th>
-                </tr>
-              </thead>
-              <tbody
-                className="bg-white text-[#808080] text-sm 2xl:text-xl text-center"
-                style={{ border: '1px solid #AAA9A9' }}
-              >
-                {paginatedTests.map((test) => (
-                  <tr key={test.id}>
-                    <td
-                      className="px-2 py-4 whitespace-nowrap"
-                      style={{ border: '0 1px 1px 0 solid #AAA9A9' }}
-                    >
-                      {test.name}
-                    </td>
-                    <td
-                      className="px-2 py-4 whitespace-nowrap"
-                      style={{ border: '0 1px 1px 0 solid #AAA9A9' }}
-                    >
-                      {test.questionCount}
-                    </td>
-                    <td
-                      className="px-2 py-4 whitespace-nowrap"
-                      style={{ border: '0 1px 1px 0 solid #AAA9A9' }}
-                    >
-                      {test.duration}
-                    </td>
-                    <td
-                      className="px-2 py-4 whitespace-nowrap text-center"
-                      style={{ border: '0 1px 1px 0 solid #AAA9A9' }}
-                    >
-                      <div className="flex gap-1.5 justify-center">
-                        <button
-                          onClick={() => handleDeleteClick(test.id)}
-                          className="text-primary hover:underline font-medium"
-                        >
-                          <RiDeleteBinLine className="w-5 h-5" />
-                        </button>
-                        <button className="text-primary hover:underline font-medium">
-                          <TbEdit className="w-5 h-5" />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div> */}
+
 
           {/* table */}
           <div className="w-full overflow-x-auto custom-scrollbar pb-2">
@@ -265,34 +357,7 @@ const EditCourse: React.FC = () => {
             </table>
           </div>
 
-          {/* Pagination */}
-          {/* <div className="flex items-center justify-center p-4 space-x-2">
-            <button
-              disabled={currentPage === 1}
-              onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-              className="px-3 py-[10px] bg-[#CCCCCC] text-[#6F6B7D] cursor-pointer"
-            >
-              <ChevronLeftIcon className="h-5 w-5" />
-            </button>
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map((num) => (
-              <button
-                key={num}
-                onClick={() => setCurrentPage(num)}
-                className={`px-3 py-2 cursor-pointer ${
-                  num === currentPage ? 'bg-primary text-white' : 'bg-[#F1F0F2] text-[#808080]'
-                }`}
-              >
-                {num}
-              </button>
-            ))}
-            <button
-              disabled={currentPage === totalPages}
-              onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-              className="px-3 py-[10px] bg-[#CCCCCC] text-[#6F6B7D] cursor-pointer"
-            >
-              <ChevronRightIcon className="h-5 w-5" />
-            </button>
-          </div> */}
+         
         </>
       ) : (
         <p>No tests attached to this course yet.</p>
@@ -323,6 +388,106 @@ const EditCourse: React.FC = () => {
           </div>
         </div>
       )}
+
+
+
+      {/* Basic COurse Info Editing MOdal  */}
+
+      {isBasicModalOpen && (
+  <div className="fixed inset-0 bg-black/10 bg-opacity-50 flex items-center justify-center z-50">
+    <div className="bg-white rounded-lg p-6 w-full max-w-lg">
+      <h3 className="text-lg font-semibold mb-4">Edit Course Details</h3>
+      <form onSubmit={handleBasicSubmit} className="space-y-4">
+        {/* Name */}
+        <div>
+          <label className="block text-sm font-medium mb-1">Name</label>
+          <input
+            name="name"
+            value={basicForm.name}
+            onChange={handleBasicChange}
+            className="w-full border p-2 rounded"
+          />
+        </div>
+        {/* Description */}
+        <div>
+          <label className="block text-sm font-medium mb-1">Description</label>
+          <textarea
+            name="description"
+            value={basicForm.description}
+            onChange={handleBasicChange}
+            rows={3}
+            className="w-full border p-2 rounded"
+          />
+        </div>
+      {/* Thumbnail */}
+<div>
+  <label className="block text-sm font-medium mb-1">Thumbnail</label>
+  <input
+    type="file"
+    accept="image/*"
+    onChange={handleThumbnailFileChange}
+    className="w-full border p-2 rounded"
+  />
+  {thumbnailFile && (
+    <p className="mt-1 text-sm text-gray-600">
+      Selected: {thumbnailFile.name}
+    </p>
+  )}
+</div>
+
+{/* Video */}
+<div>
+  <label className="block text-sm font-medium mb-1">Video</label>
+  <input
+    type="file"
+    accept="video/*"
+    onChange={handleVideoFileChange}
+    className="w-full border p-2 rounded"
+  />
+  {videoFile && (
+    <p className="mt-1 text-sm text-gray-600">
+      Selected: {videoFile.name}
+    </p>
+  )}
+</div>
+
+{/* Duration (auto) */}
+<div>
+  <label className="block text-sm font-medium mb-1">
+    Duration (sec)
+  </label>
+  <input
+    type="number"
+    name="duration"
+    value={basicForm.duration}
+    readOnly
+    className="w-full border p-2 rounded bg-gray-100 cursor-not-allowed"
+  />
+</div>
+        {/* Buttons */}
+        <div className="flex justify-end space-x-2">
+          <button
+            type="button"
+            onClick={() => setIsBasicModalOpen(false)}
+            className="px-4 py-2 border rounded"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            className="px-4 py-2 bg-primary text-white rounded hover:bg-primary-dark"
+          >
+            Save
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+)}
+
+
+
+
       {NotificationComponent}
     </section>
   );
@@ -333,3 +498,100 @@ export default EditCourse;
 
 
 
+
+// Rough code section 
+
+          {/* Table */}
+          {/* <div className="w-full overflow-x-auto custom-scrollbar pb-2">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-primary text-white text-[16px] 2xl:text-xl text-center">
+                <tr>
+                  <th className="px-2 py-3 font-medium">Test Name</th>
+                  <th className="px-2 py-3 font-medium"># Questions</th>
+                  <th className="px-2 py-3 font-medium">Duration</th>
+                  <th className="px-2 py-3 text-center font-medium">Action</th>
+                </tr>
+              </thead>
+              <tbody
+                className="bg-white text-[#808080] text-sm 2xl:text-xl text-center"
+                style={{ border: '1px solid #AAA9A9' }}
+              >
+                {paginatedTests.map((test) => (
+                  <tr key={test.id}>
+                    <td
+                      className="px-2 py-4 whitespace-nowrap"
+                      style={{ border: '0 1px 1px 0 solid #AAA9A9' }}
+                    >
+                      {test.name}
+                    </td>
+                    <td
+                      className="px-2 py-4 whitespace-nowrap"
+                      style={{ border: '0 1px 1px 0 solid #AAA9A9' }}
+                    >
+                      {test.questionCount}
+                    </td>
+                    <td
+                      className="px-2 py-4 whitespace-nowrap"
+                      style={{ border: '0 1px 1px 0 solid #AAA9A9' }}
+                    >
+                      {test.duration}
+                    </td>
+                    <td
+                      className="px-2 py-4 whitespace-nowrap text-center"
+                      style={{ border: '0 1px 1px 0 solid #AAA9A9' }}
+                    >
+                      <div className="flex gap-1.5 justify-center">
+                        <button
+                          onClick={() => handleDeleteClick(test.id)}
+                          className="text-primary hover:underline font-medium"
+                        >
+                          <RiDeleteBinLine className="w-5 h-5" />
+                        </button>
+                        <button className="text-primary hover:underline font-medium">
+                          <TbEdit className="w-5 h-5" />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div> */}
+
+
+
+
+
+
+
+
+
+
+           {/* Pagination */}
+          {/* <div className="flex items-center justify-center p-4 space-x-2">
+            <button
+              disabled={currentPage === 1}
+              onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+              className="px-3 py-[10px] bg-[#CCCCCC] text-[#6F6B7D] cursor-pointer"
+            >
+              <ChevronLeftIcon className="h-5 w-5" />
+            </button>
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((num) => (
+              <button
+                key={num}
+                onClick={() => setCurrentPage(num)}
+                className={`px-3 py-2 cursor-pointer ${
+                  num === currentPage ? 'bg-primary text-white' : 'bg-[#F1F0F2] text-[#808080]'
+                }`}
+              >
+                {num}
+              </button>
+            ))}
+            <button
+              disabled={currentPage === totalPages}
+              onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+              className="px-3 py-[10px] bg-[#CCCCCC] text-[#6F6B7D] cursor-pointer"
+            >
+              <ChevronRightIcon className="h-5 w-5" />
+            </button>
+          </div> */}
