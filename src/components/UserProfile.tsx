@@ -336,7 +336,7 @@ export const UserProfile: React.FC = () => {
   
   const { data, loading, error } = useAdminClientProfile();
   const { resetPassword, loading: resetting, error: resetError, success: resetSuccess } = useAdminResetPasswordOfClient(Number(id))
-  const [activeTab, setActiveTab] = useState<'Enrolled Courses' | 'Certificates'>('Enrolled Courses');
+  const [activeTab, setActiveTab] = useState<'In Progress Courses' | 'Certificates'>('In Progress Courses');
   const [showResetPasswordModal, setShowResetPasswordModal] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
@@ -380,7 +380,7 @@ const [localError, setLocalError]   = useState<string | null>(null);
   if (!data)  return null;
 
   const { user, enrolledCourses, certificates } = data;
-  const tabs = ['Enrolled Courses', 'Certificates'] as const;
+  const tabs = ['In Progress Courses', 'Certificates'] as const;
 
   return (
     <div className="flex min-h-screen bg-white">
@@ -417,12 +417,12 @@ const [localError, setLocalError]   = useState<string | null>(null);
                 <span className="opacity-50">{user.email}</span>
               </div>
 
-                <button
+                {/* <button
                   className="text-primary underline text-sm underline-offset-2 cursor-pointer"
                   onClick={() => setShowResetPasswordModal(true)}
                 >
                   Reset password
-                </button>
+                </button> */}
 
               
             </div>
@@ -442,8 +442,11 @@ const [localError, setLocalError]   = useState<string | null>(null);
           </div>
 
           {/* Content */}
-          {activeTab === 'Enrolled Courses' && (
+          {activeTab === 'In Progress Courses' && (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {enrolledCourses.length > 0 
+              ?
+              <>
               {enrolledCourses.map(course => (
                 <div key={course.id} className="border rounded p-2">
                   <img src={`${API_BASE}/uploads/courses/${course.imageUrl}`} alt={course.title} className="w-full h-32 object-cover rounded" />
@@ -455,6 +458,12 @@ const [localError, setLocalError]   = useState<string | null>(null);
                   <div className="mt-1 text-sm font-medium text-primary">Progress: {course.progress}%</div>
                 </div>
               ))}
+              </>
+              :
+              <>
+              <p>No Progres To Show</p>
+              </>
+            }
             </div>
           )}
 

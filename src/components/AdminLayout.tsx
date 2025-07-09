@@ -65,6 +65,12 @@ export const AdminLayout: React.FC = () => {
       key: "create-user",
       url: "/admin/create-user",
     },
+    {
+      label: "Certificate Tracking",
+      icon: UserGroupIcon,
+      key: "certificate-track",
+      url: "/admin/track-certificate",
+    },
   ] as const;
 
   const handleLinkClick = (key: any) => {
