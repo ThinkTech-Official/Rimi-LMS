@@ -6,6 +6,7 @@ import { API_BASE } from '../utils/ulrs';
 
 
 export interface RecentUser {
+  id: number;
   name: string;
   email: string;
   createdAt: string;

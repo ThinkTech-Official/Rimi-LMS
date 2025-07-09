@@ -38,6 +38,7 @@ import i18n from "./i18n/i18.ts";
 import AdminCreateUser from "./components/Admin/AdminCreateUser.tsx";
 import AdminCategoryManager from "./components/Admin/AdminCategoryManager.tsx";
 import UserProfile from "./components/UserProfile.tsx";
+import AdminTrackCertificate from "./components/Admin/AdminTrackCertificate.tsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -62,6 +63,7 @@ const router = createBrowserRouter(
         <Route path="/admin/profile" element={<AdminProfile />} />
         <Route path="/admin/all-courses" element={<Courses />} />
         <Route path="/admin/certificates" element={<Certificates />} />
+        <Route path="/admin/track-certificate" element={<AdminTrackCertificate />} />
         <Route path="/admin/tests" element={<AllTests />} />
         <Route path="/admin/users" element={<UserManagement />} />  
         <Route path="/admin/users/:id" element={<UserProfile />} />

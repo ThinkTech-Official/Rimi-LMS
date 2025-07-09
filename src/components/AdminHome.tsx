@@ -18,6 +18,7 @@ import { useDashboardStats } from "../hooks/useDashboardStats";
 import { useRecentSignups } from "../hooks/useRecentSignups";
 import { useLiveTotals } from "../hooks/useLiveTotals";
 import Spinner from "./Spinner";
+import { useNavigate } from "react-router-dom";
 
 // Dummy stats
 // const stats = [
@@ -122,6 +123,8 @@ const AdminHome: React.FC = () => {
 
   const { t } = useTranslation();
 
+  const navigate = useNavigate()
+
     const pageSize = 10;
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -169,6 +172,12 @@ const AdminHome: React.FC = () => {
 
 
     const totalPages = Math.ceil(totalCount / pageSize)
+
+
+    const handleClientProfile = (id: any) => {
+    console.log(id)
+    navigate(`/admin/users/${id}`)
+  }
 
 
   return (
@@ -421,7 +430,7 @@ const AdminHome: React.FC = () => {
                       >
                         <button
                           className="text-primary hover:underline hover:underline-offset-2 cursor-pointer font-medium px-4"
-                          // onClick={() => setSelectedUser(user)}
+                          onClick={()=> handleClientProfile(user.id)}
                         >
                          {t("View Profile")}
                         </button>
