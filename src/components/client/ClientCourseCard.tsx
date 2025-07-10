@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useFetchCourseProgress } from '../../hooks/useFetchCourseProgress';
 import { useAuth } from '../../context/AuthContext';
 import { RiProgress3Line } from 'react-icons/ri';
+import Spinner from '../Spinner';
 
 
 interface ClientCourseCardProps {
@@ -123,8 +124,28 @@ const ClientCourseCard = ({courseId, imageUrl , title, duration, description}: C
   )}
 </div>
 
+{
+loading 
 
-            { percent === 0 ? 
+? 
+
+<>
+<div className=' w-full flex justify-center'>
+<Spinner />
+</div>
+              
+              {/* <button
+              className="inline-block mt-2 text-sm sm:text-[16px] px-5 py-1 sm:py-3 bg-blue-300 text-white text-nowrap font-semibold hover:bg-indigo-700 cursor-pointer transition-colors delay-150">
+              Processing...
+            </button> */}
+
+</> 
+
+: 
+
+<>
+
+{ percent === 0 ? 
             ( 
                 // Zero Percent Show Start course 
                 <button
@@ -157,6 +178,11 @@ const ClientCourseCard = ({courseId, imageUrl , title, duration, description}: C
             </button>
                 )
             )}
+
+</>
+
+}
+            
           </div>
 
     </>
