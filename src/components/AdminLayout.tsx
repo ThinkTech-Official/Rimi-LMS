@@ -11,6 +11,8 @@ import {
 import Header from "./Header";
 import { PiCertificateLight } from "react-icons/pi";
 import { useTranslation } from "react-i18next";
+import { RiUserAddLine } from "react-icons/ri";
+import { MdOutlineFactCheck } from "react-icons/md";
 
 export const AdminLayout: React.FC = () => {
   const [active, setActive] = useState<
@@ -33,7 +35,7 @@ export const AdminLayout: React.FC = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-    const menuItems = [
+  const menuItems = [
     { label: "home", icon: HomeIcon, key: "home", url: "/admin/home" },
     {
       label: "all Courses",
@@ -42,16 +44,10 @@ export const AdminLayout: React.FC = () => {
       url: "/admin/all-courses",
     },
     {
-      label: "certificates Template",
-      icon: PiCertificateLight,
-      key: "certificates",
-      url: "/admin/certificates",
-    },
-    {
-      label: "All Categories",
-      icon: ClipboardDocumentListIcon,
-      key: "categoty",
-      url: "/admin/category",
+      label: "Add User",
+      icon: RiUserAddLine,
+      key: "create-user",
+      url: "/admin/create-user",
     },
     {
       label: "users Management",
@@ -60,16 +56,23 @@ export const AdminLayout: React.FC = () => {
       url: "/admin/users",
     },
     {
-      label: "Add User",
-      icon: UserGroupIcon,
-      key: "create-user",
-      url: "/admin/create-user",
+      label: "All Categories",
+      icon: ClipboardDocumentListIcon,
+      key: "categoty",
+      url: "/admin/category",
     },
+
     {
       label: "Certificate Tracking",
-      icon: UserGroupIcon,
+      icon: MdOutlineFactCheck,
       key: "certificate-track",
       url: "/admin/track-certificate",
+    },
+    {
+      label: "certificates Template",
+      icon: PiCertificateLight,
+      key: "certificates",
+      url: "/admin/certificates",
     },
   ] as const;
 
@@ -79,7 +82,7 @@ export const AdminLayout: React.FC = () => {
   };
 
   return (
-     <div className="flex">
+    <div className="flex">
       {/* Sidebar  */}
       <aside
         className={`bg-[#F6F6F6] min-h-screen transition-all duration-300 ${
@@ -129,7 +132,9 @@ export const AdminLayout: React.FC = () => {
                   }`}
                 >
                   <Icon className="h-5 w-5 2xl:h-6 2xl:w-6" />
-                  {isSidebarOpen && <span className="capitalize">{t(item.label)}</span>}
+                  {isSidebarOpen && (
+                    <span className="capitalize">{t(item.label)}</span>
+                  )}
                   {!isSidebarOpen && (
                     <span className="absolute left-full top-1/2 -translate-y-1/2 ml-1 z-50 bg-[#393939] text-white text-xs px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
                       {item.label}

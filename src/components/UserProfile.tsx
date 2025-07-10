@@ -326,6 +326,7 @@ import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 import { useNavigate, useParams } from 'react-router-dom';
 import { API_BASE } from '../utils/ulrs';
 import { useAdminResetPasswordOfClient } from '../hooks/useAdminResetPasswordOfClient';
+import Spinner from './Spinner';
 
 // const breadcrumbTrail = ['Users', 'Profile'];
 
@@ -375,7 +376,7 @@ const [localError, setLocalError]   = useState<string | null>(null);
 
 
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <div className="flex flex-col justify-center items-center gap-3 fixed top-1/2 left-1/2"><Spinner className="w-10 h-10" /><p>Loading...</p></div>;
   if (error)   return <div className="text-red-600">{error}</div>;
   if (!data)  return null;
 
