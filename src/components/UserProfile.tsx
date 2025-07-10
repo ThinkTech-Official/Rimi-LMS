@@ -336,7 +336,7 @@ export const UserProfile: React.FC = () => {
   
   const { data, loading, error } = useAdminClientProfile();
   const { resetPassword, loading: resetting, error: resetError, success: resetSuccess } = useAdminResetPasswordOfClient(Number(id))
-  const [activeTab, setActiveTab] = useState<'In Progress Courses' | 'Certificates'>('In Progress Courses');
+  const [activeTab, setActiveTab] = useState<'Courses' | 'Certificates'>('Courses');
   const [showResetPasswordModal, setShowResetPasswordModal] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
@@ -380,7 +380,7 @@ const [localError, setLocalError]   = useState<string | null>(null);
   if (!data)  return null;
 
   const { user, enrolledCourses, certificates } = data;
-  const tabs = ['In Progress Courses', 'Certificates'] as const;
+  const tabs = ['Courses', 'Certificates'] as const;
 
   return (
     <div className="flex min-h-screen bg-white">
@@ -442,7 +442,7 @@ const [localError, setLocalError]   = useState<string | null>(null);
           </div>
 
           {/* Content */}
-          {activeTab === 'In Progress Courses' && (
+          {activeTab === 'Courses' && (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {enrolledCourses.length > 0 
               ?

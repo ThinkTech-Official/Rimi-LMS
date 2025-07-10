@@ -1,3 +1,5 @@
+import { GiTempleGate } from "react-icons/gi";
+
 const Certificates: React.FC = () => {
   return (
     <div className="flex flex-col gap-10 my-10 overflow-auto">
@@ -71,8 +73,23 @@ const Certificates: React.FC = () => {
           </div>
         </div>
       </div>
-      {/* 2 */}
-      <div className="w-[1050px] h-[820px] mx-auto p-4 border">
+      
+    </div>
+  );
+};
+
+export default Certificates;
+
+
+
+
+
+
+
+// design 2 of certificate GiTempleGate
+
+{/* 2 */}
+      {/* <div className="w-[1050px] h-[820px] mx-auto p-4 border">
         <div className="border border-[#CB5A31] h-full flex gap-10">
           <div className="relative h-[820px] w-auto ml-5">
             <img
@@ -142,9 +159,4 @@ const Certificates: React.FC = () => {
             </div>
           </div>
         </div>
-      </div>
-    </div>
-  );
-};
-
-export default Certificates;
+      </div> */}
