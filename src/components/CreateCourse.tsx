@@ -19,6 +19,7 @@ import { set, useForm } from "react-hook-form";
 import Spinner from "./Spinner";
 import { FaAngleDown } from "react-icons/fa6";
 import { CiFileOn } from "react-icons/ci";
+import useNotification from "../hooks/useNotification";
 
 interface TestEntry {
   id: number;
@@ -89,6 +90,7 @@ const CreateCourse: React.FC<CreateCourseProps> = ({ onCreateTest }) => {
   const [videoError, setVideoError] = useState<string | null>(null);
   const [thumbnailError, setThumbnailError] = useState<string | null>(null);
   const [categoryError, setCategoryError] = useState<string | null>(null);
+  const { NotificationComponent, triggerNotification } = useNotification();
 
   // useEffect(() => {
   //   if(categories.length && !selectedCategory) {
@@ -204,6 +206,12 @@ const handleRemoveDoc = (index: number) => {
   try {
     const savedCourse = await createCourse(formData);
     navigate(`/admin/edit-course/${savedCourse.id}`);
+      triggerNotification({
+        type: "success",
+        message: "Course created successfully",
+        duration: 3000,
+      });
+    
   } catch {
     // Handle error gracefully
   }
@@ -446,7 +454,7 @@ const handleRemoveDoc = (index: number) => {
                       className="hidden"
                       onChange={handleVideoChange}
                     />
-                    <span className="text-[#59BDE2] flex items-center gap-4">
+                    <span className="text-[#59BDE2] flex items-center gap-4 p-4">
                       <img src="/VideoUpload.svg" alt="" />
                       {video ? video.name : t("select file to upload")}
                     </span>
@@ -510,8 +518,14 @@ const handleRemoveDoc = (index: number) => {
           {/* Upload progress and Errors  */}
 
           {loading && (
-            <progress className=" w-full h-2 mt-2 " value={progress} max={100} />
-          )}
+  <div className="w-full h-2 mt-2 bg-gray-200 rounded overflow-hidden">
+    <div
+      className="h-full bg-primary transition-all duration-300"
+      style={{ width: `${progress}%` }}
+    ></div>
+  </div>
+)}
+
           {error && <p className=" text-red-500 mt-2"> {error}</p>}
         </form>
       </main>
