@@ -410,12 +410,12 @@ const [localError, setLocalError]   = useState<string | null>(null);
             
             <div className="space-y-2">
               <div className="flex items-center space-x-2 text-base">
-                <span className="font-semibold">Name:</span>
-                <span className="opacity-50">{user.name}</span>
+                <span className="font-semibold text-text-dark">Name:</span>
+                <span className="text-text-light">{user.name}</span>
               </div>
               <div className="flex items-center space-x-2 text-base">
-                <span className="font-semibold">Email:</span>
-                <span className="opacity-50">{user.email}</span>
+                <span className="font-semibold text-text-dark">Email:</span>
+                <span className="text-text-light">{user.email}</span>
               </div>
 
                 {/* <button
@@ -430,7 +430,7 @@ const [localError, setLocalError]   = useState<string | null>(null);
           </div>
 
           {/* Tabs */}
-          <div className="border-b mb-6">
+          <div className="border-b border-inputBorder mb-6">
             <ul className="flex space-x-4">
               {tabs.map(tab => (
                 <li key={tab}
@@ -449,13 +449,13 @@ const [localError, setLocalError]   = useState<string | null>(null);
               ?
               <>
               {enrolledCourses.map(course => (
-                <div key={course.id} className="border rounded p-2">
-                  <img src={`${API_BASE}/uploads/courses/${course.imageUrl}`} alt={course.title} className="w-full h-32 object-cover rounded" />
+                <div key={course.id} className="border border-inputBorder p-2">
+                  <img src={`${API_BASE}/uploads/courses/${course.imageUrl}`} alt={course.title} className="w-full aspect-video object-cover" />
                   <h3 className="font-semibold mt-2">{course.title}</h3>
-                  <div className="flex items-center text-sm text-gray-500 my-1">
-                    <GoClock className="mr-1" />{course.duration}
+                 <div className="flex justify-between gap-2"> <div className="flex items-center text-sm text-gray-500 my-1">
+                    <GoClock className="mr-1 text-text-dark" />{course.duration}
                   </div>
-                  <div className="text-sm">Questions: {course.questions}</div>
+                  <div className="text-sm text-text-dark">Questions: <span className='text-text-light'>{course.questions}</span></div></div>
                   <div className="mt-1 text-sm font-medium text-primary">Progress: {course.progress}%</div>
                 </div>
               ))}
@@ -474,14 +474,14 @@ const [localError, setLocalError]   = useState<string | null>(null);
               ? 
               <>
               {certificates.map(cert => (
-                <div key={cert.id} className="border rounded p-2">
+                <div key={cert.id} className="border border-inputBorder p-4">
                   {/* <img src={`${API_BASE}${cert.imageUrl}`} alt={cert.courseName} className="w-full h-32 object-cover rounded" /> */}
                   <a href={`${API_BASE}${cert.imageUrl}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   >
-                  <h3 className="font-semibold mt-2">{cert.courseName}</h3>
-                  <div className="text-sm text-gray-500">Issued: {cert.issueDate}</div>
+                  <h3 className="font-semibold text-text-dark">{cert.courseName}</h3>
+                  <div className="text-sm text-text-dark font-semibold">Issued: <span className='text-text-light font-normal'>{cert.issueDate}</span></div>
                   </a>
                 </div>
               ))}

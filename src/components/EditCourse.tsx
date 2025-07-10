@@ -378,13 +378,13 @@ const EditCourse: React.FC = () => {
       )}
 
       {/* Delete course button  */}
-      <button
+      <div className="flex justify-end"><button
         onClick={() => setIsDeleteModalOpen(true)}
         disabled={deletingCourse}
-        className="px-4 py-2 sm:py-3 bg-primary text-white hover:bg-indigo-700 cursor-pointer"
+        className="px-4 py-2 sm:py-3 bg-red-600 text-white hover:bg-red-500 transition delay-100 cursor-pointer"
       >
         Delete Course
-      </button>
+      </button></div>
 
       {/* Delete Confirmation Modal FOR TEST */}
       {modalTestId !== null && (
@@ -570,7 +570,7 @@ const EditCourse: React.FC = () => {
                   } catch {
                     triggerNotification({
                       type: "error",
-                      message: deleteCourseError ?? "Delete failed",
+                      message: deleteCourseError ?? "Delete failed!",
                       duration: 3000,
                     });
                   }
@@ -584,8 +584,6 @@ const EditCourse: React.FC = () => {
           </div>
         </div>
       )}
-
-      {NotificationComponent}
     </section>
   );
 };
