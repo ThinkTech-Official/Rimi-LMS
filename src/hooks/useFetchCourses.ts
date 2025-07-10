@@ -22,7 +22,11 @@ export interface Course {
   description?: string;
 }
 
-
+ export const formatTime = (time: number) => {
+    const minutes = Math.floor(time / 60);
+    const seconds = time % 60;
+    return `${minutes}min ${seconds}sec`;
+  };
 
 /**
  * Fetches all courses from backend
@@ -31,12 +35,6 @@ export const useFetchCourses = () => {
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-
-  const formatTime = (time: number) => {
-    const hours = Math.floor(time / 60);
-    const minutes = time % 60;
-    return `${hours}hr ${minutes}min`;
-  };
 
   useEffect(() => {
     setLoading(true);

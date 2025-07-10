@@ -82,16 +82,16 @@ video::-webkit-media-controls-fullscreen-button {
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-.success{
+.success {
   background-color: green;
 }
-.info{
+.info {
   background-color: blue;
 }
-.error{
+.error {
   background-color: red;
 }
-.warning{
+.warning {
   background-color: orange;
 }
 
@@ -148,18 +148,18 @@ video::-webkit-media-controls-fullscreen-button {
   border-radius: 6px;
 }
 .loader::before {
-  content: '';
+  content: "";
   position: absolute;
   border: 4px solid #2b00b7;
   width: 26px;
   height: 22px;
   border-radius: 50% 50% 0 0;
   left: 50%;
-  top: -.5px;
+  top: -0.5px;
   transform: translate(-50%, -100%);
 }
 .loader::after {
-  content: '';
+  content: "";
   position: absolute;
   transform: translate(-50%, -50%);
   left: 50%;
@@ -187,7 +187,6 @@ video::-webkit-media-controls-fullscreen-button {
   }
 }
 
-
 .spinner {
   border-radius: 50%;
   display: inline-block;
@@ -197,8 +196,6 @@ video::-webkit-media-controls-fullscreen-button {
   animation: rotation 1s linear infinite;
 }
 
-
-
 @keyframes rotation {
   0% {
     transform: rotate(0deg);
@@ -206,4 +203,4 @@ video::-webkit-media-controls-fullscreen-button {
   100% {
     transform: rotate(360deg);
   }
-} 
+}

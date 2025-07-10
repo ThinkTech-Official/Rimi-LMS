@@ -230,14 +230,6 @@ const filteredCourses = (() => {
   );
 })();
 
-const formatTime = (sec: number) => {
-  const m = Math.floor(sec / 60);
-  const s = sec % 60;
-  return `${m.toString().padStart(2, "0")} : ${s.toString().padStart(2, "0")}`;
-};
-
-
-
     // Render loading / errors
   //  if (catLoading || courseLoading) return <p>Loading…</p>;
   // if (catError)
@@ -318,7 +310,7 @@ const formatTime = (sec: number) => {
                 filteredCourses.map((course) => (
                 <div
                   key={course.id}
-                  className="rounded-[2px] overflow-hidden w-[80vw] max-w-[300px] sm:w-[300px] 2xl:w-[350px] h-68 cursor-pointer border border-inputBorder shadow-md"
+                  className="rounded-[2px] overflow-hidden w-[80vw] max-w-[300px] sm:w-[300px] 2xl:w-[350px] h-68 hover:transform hover:scale-105 transition-transform delay-75 cursor-pointer border border-inputBorder shadow-md"
                   onClick={() => handleSelectCourse(course.id)}
                 >
                   <div className="relative">
