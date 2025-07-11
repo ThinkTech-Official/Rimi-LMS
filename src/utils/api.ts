@@ -2,7 +2,7 @@ import axios from 'axios';
 import { API_BASE } from './ulrs';
 
 const api = axios.create({
-  baseURL: '/api',
+  baseURL: '/',
   withCredentials: true,
 });
 

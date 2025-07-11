@@ -3,7 +3,7 @@ import { API_BASE } from './ulrs';
 
 // this instance will hit /api/admin/* and send your admin cookies
 const adminApi = axios.create({
-  baseURL: '/admin',
+  baseURL: '/',
   withCredentials: true,
 });
 
