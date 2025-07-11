@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { API_BASE } from './ulrs';
 
 const api = axios.create({
   baseURL: '/api',
@@ -36,7 +37,7 @@ api.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        await api.post('/auth/refresh');
+        await api.post(`${API_BASE}/client/auth/refresh`);
         processQueue(null, true);
         return api(originalReq);
       } catch (err) {

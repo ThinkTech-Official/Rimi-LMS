@@ -231,11 +231,11 @@ const filteredCourses = (() => {
 })();
 
     // Render loading / errors
-  //  if (catLoading || courseLoading) return <p>Loading…</p>;
-  // if (catError)
-  //   return <p className="text-red-500">Error loading categories: {catError}</p>;
-  // if (courseError)
-  //   return <p className="text-red-500">Error loading courses: {courseError}</p>;
+   if (catLoading || courseLoading) return <p>Loading…</p>;
+  if (catError)
+    return <p className="text-red-500">Error loading categories: {catError}</p>;
+  if (courseError)
+    return <p className="text-red-500">Error loading courses: {courseError}</p>;
 
 
 

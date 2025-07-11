@@ -10,7 +10,7 @@ interface RequireAdminProps {
 }
 
 export const RequireAdmin: React.FC<RequireAdminProps> = ({ children }) => {
-  const { admin, loading } = useAdminContext();
+  const { admin, loading, error } = useAdminContext();
   const location = useLocation();
 
   //  can show a spinner or nothing
@@ -19,7 +19,7 @@ export const RequireAdmin: React.FC<RequireAdminProps> = ({ children }) => {
   }
 
   // If theres no admin, kick them back to the login page
-  if (!admin) {
+  if (error || !admin) {
     return <Navigate to="/adminlogin" state={{ from: location }} replace />;
   }
 
