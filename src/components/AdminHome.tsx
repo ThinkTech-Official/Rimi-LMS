@@ -5,7 +5,7 @@ import { useDashboardStats } from "../hooks/useDashboardStats";
 import { useRecentSignups } from "../hooks/useRecentSignups";
 import { useLiveTotals } from "../hooks/useLiveTotals";
 import Spinner from "./Spinner";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import useNotification from "../hooks/useNotification";
 
 // Dummy stats
@@ -119,20 +119,6 @@ const AdminHome: React.FC = () => {
   const { data: stats, loading: statsLoading, error: statsError } = useDashboardStats();
   const { users: recentUsers, totalCount, loading: recentLoading, error: recentError } = useRecentSignups(currentPage, pageSize);
   const { totals, loading: totalsLoading, error: totalsError } = useLiveTotals()
-  const {triggerNotification, NotificationComponent} = useNotification();
-  const location = useLocation();
-  const state = location.state;
- useEffect(() => {
-    if (state?.type && state?.message) {
-      triggerNotification({
-        type: state.type,
-        message: state.message,
-        duration: 3000,
-      });
-
-      navigate(location.pathname, { replace: true });
-    }
-  }, [state, triggerNotification, navigate, location.pathname]);
   
   // const [selectedUser, setSelectedUser] = useState<User | null>(null);
   
@@ -477,7 +463,6 @@ const AdminHome: React.FC = () => {
             </div>
           </div>
         </main>
-        {NotificationComponent}
       </div>
   );
 };

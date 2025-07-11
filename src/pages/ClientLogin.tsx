@@ -188,7 +188,6 @@ const LoginClient: React.FC = () => {
       await login(data);
       // await refreshUser();
       await reload();
-      triggerNotification({ type: 'success', message: 'Logged in!', duration: 3000 });
       navigate('/client');
     } catch {
       triggerNotification({ type: 'error', message: error || 'Login failed', duration: 3000 });

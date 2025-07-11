@@ -92,7 +92,7 @@ const ClientCourseCard = ({courseId, imageUrl , title, duration, description}: C
                 {/* percentage badge */}
         <div className=" flex items-center space-x-1 bg-white rounded-full text-xs">
           {loading
-            ? <span>Loading…</span>
+            ? <span className='w-8 flex items-center justify-center'><Spinner className='w-3 h-3'/></span>
             : <><RiProgress3Line className="text-text-light" /> <span>{percent}%</span></>
           }
         </div>

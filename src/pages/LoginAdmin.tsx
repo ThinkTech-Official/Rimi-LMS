@@ -46,12 +46,7 @@ const LoginAdmin: React.FC = () => {
      const ok = await login(data);
      if(ok){
       await reloadAdmin();
-      navigate('/admin/home',{
-       state: {
-          type: "success",
-          message: "Login successful!"
-        }
-      });
+      navigate('/admin/home');
      }
     } catch (error) {
       console.error(error);
