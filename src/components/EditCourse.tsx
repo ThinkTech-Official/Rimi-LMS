@@ -26,6 +26,7 @@ const EditCourse: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const testsPerPage = 5;
   const { NotificationComponent, triggerNotification } = useNotification();
+  const [isCoursePublished, setIsCoursePublished] = useState(false);
 
   const {
     tests = [],
@@ -198,8 +199,46 @@ const EditCourse: React.FC = () => {
     };
   };
 
+  const handleCoursePublish = async () => {
+    try {
+      // await publishCourse(!isCoursePublished);
+      setIsCoursePublished(!isCoursePublished);
+      triggerNotification({
+        type: "success",
+        message: `Course ${isCoursePublished ? "unpublished" : "published"}`,
+      });
+    } catch (error) {
+      console.error(error);
+      triggerNotification({
+        type: "error",
+        message: `Failed to ${
+          isCoursePublished ? "unpublish" : "publish"
+        } course`,
+      });
+    }
+  };
+
   return (
     <section className="space-y-6 p-2 md:p-4 lg:p-8">
+      <div className="w-full flex justify-end gap-2 items-center">
+        <span className="text-text-light-2">
+          {isCoursePublished ? "Published" : "Unpublished"}
+        </span>
+
+        <div
+          className="w-14 h-6 bg-gray-200 rounded-full relative cursor-pointer"
+          onClick={handleCoursePublish}
+        >
+          <span
+            className={`absolute top-0 left-0 w-6 h-6 rounded-full transition-transform duration-300 ${
+              isCoursePublished
+                ? "bg-primary translate-x-8"
+                : "bg-gray-500 translate-x-0"
+            }`}
+          ></span>
+        </div>
+      </div>
+
       {basicInfoLoad ? (
         <Spinner className="mx-auto" />
       ) : basicInfoError ? (
@@ -207,12 +246,14 @@ const EditCourse: React.FC = () => {
       ) : (
         basicCourse && (
           <div className="bg-white shadow-md p-6 relative mb-6 flex flex-col gap-5">
-            <h3 className="text-xl font-semibold mb-4 text-text-dark">Course Details</h3>
+            <h3 className="text-xl font-semibold mb-4 text-text-dark">
+              Course Details
+            </h3>
             <button
               onClick={() => setIsBasicModalOpen(true)}
               className="absolute top-4 right-4 text-text-light-2 hover:text-text-dark  transition delay-100 cursor-pointer"
             >
-              <TbEdit className="w-6 h-6" title="Edit Course"/>
+              <TbEdit className="w-6 h-6" title="Edit Course" />
             </button>
 
             <div className="flex flex-col md:flex-row gap-5">
@@ -223,13 +264,18 @@ const EditCourse: React.FC = () => {
               />
               <div className="flex flex-col justify-center gap-2">
                 <p className="flex flex-col">
-                  <span className="font-medium text-lg">Name:</span> <span className="text-text-light-2 max-w-lg">{basicCourse.name}</span>
+                  <span className="font-medium text-lg">Name:</span>{" "}
+                  <span className="text-text-light-2 max-w-lg">
+                    {basicCourse.name}
+                  </span>
                 </p>
                 <p className="flex flex-col">
                   <span className="font-medium text-lg">Duration:</span>{" "}
-                  <span className="text-text-light-2">{basicCourse.duration != null
-                    ? `${formatTime(basicCourse.duration)}`
-                    : "—"}</span>
+                  <span className="text-text-light-2">
+                    {basicCourse.duration != null
+                      ? `${formatTime(basicCourse.duration)}`
+                      : "—"}
+                  </span>
                 </p>
                 <p>
                   {basicCourse.videoUrl ? (
@@ -296,6 +342,9 @@ const EditCourse: React.FC = () => {
                   <th className="px-2 py-3 font-medium">Start Point</th>
                   <th className="px-2 py-3 font-medium">Duration</th>
                   <th className="px-2 py-3 text-center font-medium">Action</th>
+                  <th className="px-2 py-3 text-center font-medium">
+                    Publish Test
+                  </th>
                 </tr>
               </thead>
               <tbody
@@ -367,6 +416,24 @@ const EditCourse: React.FC = () => {
                         </button>
                       </div>
                     </td>
+                    <td className="px-2 py-4 text-center whitespace-nowrap flex justify-center"
+                      style={{
+                        borderWidth: "0px 1px 1px 0px",
+                        borderStyle: "solid",
+                        borderColor: "#AAA9A9",
+                      }}>
+                      <div
+                        className="w-12 h-5 bg-gray-200 rounded-full relative cursor-pointer"
+                      >
+                        <span
+                          className={`absolute top-0 left-0 w-5 h-5 rounded-full transition-transform duration-300 ${
+                            isCoursePublished
+                              ? "bg-primary translate-x-7"
+                              : "bg-gray-500 translate-x-0"
+                          }`}
+                        ></span>
+                      </div>
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -378,13 +445,15 @@ const EditCourse: React.FC = () => {
       )}
 
       {/* Delete course button  */}
-      <div className="flex justify-end"><button
-        onClick={() => setIsDeleteModalOpen(true)}
-        disabled={deletingCourse}
-        className="px-4 py-2 sm:py-3 bg-red-600 text-white hover:bg-red-500 transition delay-100 cursor-pointer"
-      >
-        Delete Course
-      </button></div>
+      <div className="flex justify-end">
+        <button
+          onClick={() => setIsDeleteModalOpen(true)}
+          disabled={deletingCourse}
+          className="px-4 py-2 sm:py-3 bg-red-600 text-white hover:bg-red-500 transition delay-100 cursor-pointer"
+        >
+          Delete Course
+        </button>
+      </div>
 
       {/* Delete Confirmation Modal FOR TEST */}
       {modalTestId !== null && (
@@ -417,7 +486,9 @@ const EditCourse: React.FC = () => {
       {isBasicModalOpen && (
         <div className="fixed inset-0 h-screen bg-black/10 bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white m-3 shadow-md p-3 sm:p-6 w-full max-w-lg">
-            <h3 className="text-lg font-semibold mb-4 text-text-dark">Edit Course Details</h3>
+            <h3 className="text-lg font-semibold mb-4 text-text-dark">
+              Edit Course Details
+            </h3>
             <form onSubmit={handleBasicSubmit} className="space-y-4">
               {/* Name */}
               <div>
@@ -443,59 +514,64 @@ const EditCourse: React.FC = () => {
                 />
               </div>
               {/* Thumbnail */}
-           <div className="flex flex-col md:col-span-2">
-            <label className="block text-sm font-medium mb-1">
-             Thumbnail
-            </label>
-          
-            {!thumbnailFile ? (
-              <div className="flex flex-col items-start space-y-2">
-                <label className="inline-block capitalize px-4 py-2 bg-primary text-white cursor-pointer hover:bg-indigo-700 text-sm">
-                  Choose Thumbnail
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleThumbnailFileChange}
-                    className="hidden"
-                  />
+              <div className="flex flex-col md:col-span-2">
+                <label className="block text-sm font-medium mb-1">
+                  Thumbnail
                 </label>
+
+                {!thumbnailFile ? (
+                  <div className="flex flex-col items-start space-y-2">
+                    <label className="inline-block capitalize px-4 py-2 bg-primary text-white cursor-pointer hover:bg-indigo-700 text-sm">
+                      Choose Thumbnail
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleThumbnailFileChange}
+                        className="hidden"
+                      />
+                    </label>
+                  </div>
+                ) : (
+                  <div className="flex space-x-1 items-center">
+                    <CiFileOn className="w-5 h-5" />
+                    <span> {thumbnailFile.name}</span>
+                    <MdCancel
+                      title="Remove File"
+                      className="cursor-pointer"
+                      onClick={() => setThumbnailFile(null)}
+                    />
+                  </div>
+                )}
               </div>
-            ) : (
-              <div className="flex space-x-1 items-center">
-               <CiFileOn className="w-5 h-5" />
-              <span> {thumbnailFile.name}</span>
-              <MdCancel title="Remove File" className="cursor-pointer" onClick={() => setThumbnailFile(null)} />
-              </div>
-            )}
-          </div>
 
               {/* Video */}
               <div className="flex flex-col md:col-span-2">
-            <label className="block text-sm font-medium mb-1">
-             Video
-            </label>
-          
-            {!videoFile ? (
-              <div className="flex flex-col items-start space-y-2">
-                <label className="inline-block capitalize px-4 py-2 bg-primary text-white cursor-pointer hover:bg-indigo-700 text-sm">
-                  Choose Video
-                  <input
-                    type="file"
-                    accept="video/*"
-                    onChange={handleVideoFileChange}
-                    className="hidden"
-                  />
-                </label>
-              </div>
-            ) : (
-              <div className="flex space-x-1 items-center">
-               <CiFileOn className="w-5 h-5" />
-              <span className="max-w-[350px]"> {videoFile.name}</span>
-              <MdCancel title="Remove Video" className="cursor-pointer" onClick={() => setVideoFile(null)} />
-              </div>
-            )}
-          </div>
+                <label className="block text-sm font-medium mb-1">Video</label>
 
+                {!videoFile ? (
+                  <div className="flex flex-col items-start space-y-2">
+                    <label className="inline-block capitalize px-4 py-2 bg-primary text-white cursor-pointer hover:bg-indigo-700 text-sm">
+                      Choose Video
+                      <input
+                        type="file"
+                        accept="video/*"
+                        onChange={handleVideoFileChange}
+                        className="hidden"
+                      />
+                    </label>
+                  </div>
+                ) : (
+                  <div className="flex space-x-1 items-center">
+                    <CiFileOn className="w-5 h-5" />
+                    <span className="max-w-[350px]"> {videoFile.name}</span>
+                    <MdCancel
+                      title="Remove Video"
+                      className="cursor-pointer"
+                      onClick={() => setVideoFile(null)}
+                    />
+                  </div>
+                )}
+              </div>
 
               {/* Duration (auto) */}
               <div>
@@ -536,7 +612,9 @@ const EditCourse: React.FC = () => {
       {isDeleteModalOpen && (
         <div className="fixed h-screen inset-0 bg-black/10 bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white shadow-lg m-4 p-4 sm:p-6 w-full max-w-md">
-            <h3 className="text-lg font-semibold mb-4 text-red-600">Warning!</h3>
+            <h3 className="text-lg font-semibold mb-4 text-red-600">
+              Warning!
+            </h3>
             <p className="mb-4 text-gray-800">
               Deleting this course will permanently remove:
             </p>
@@ -584,6 +662,7 @@ const EditCourse: React.FC = () => {
           </div>
         </div>
       )}
+      {NotificationComponent}
     </section>
   );
 };
