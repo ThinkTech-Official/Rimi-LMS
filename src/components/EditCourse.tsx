@@ -1,5 +1,5 @@
 import React, { useState, useEffect, type ChangeEvent } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { BiSearch } from "react-icons/bi";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { TbEdit } from "react-icons/tb";
@@ -28,6 +28,20 @@ const EditCourse: React.FC = () => {
   const { NotificationComponent, triggerNotification } = useNotification();
   const [isCoursePublished, setIsCoursePublished] = useState(false);
   const [isTestPublished, setIsTestPublished] = useState(false);
+  const location = useLocation();
+  const state = location.state;
+  useEffect(() => {
+    if (state?.type && state?.message) {
+      triggerNotification({
+        type: state.type,
+        message: state.message,
+        duration: 3000,
+      });
+
+      // 🔥 Clear the navigation state after showing notification
+      navigate(location.pathname, { replace: true });
+    }
+  }, [state, triggerNotification, navigate, location.pathname]);
 
   const {
     tests = [],
@@ -215,6 +229,25 @@ const EditCourse: React.FC = () => {
         message: `Failed to ${
           isCoursePublished ? "unpublish" : "publish"
         } course`,
+      });
+    }
+  };
+
+  const handleDeleteCourse = async () => {
+    try {
+      await deleteCourse();
+      setIsDeleteModalOpen(false);
+      navigate("/admin/all-courses", {
+        state: {
+          type: "success",
+          message: "Course deleted",
+        },
+      });
+    } catch {
+      triggerNotification({
+        type: "error",
+        message: deleteCourseError ?? "Delete failed!",
+        duration: 3000,
       });
     }
   };
@@ -638,24 +671,7 @@ const EditCourse: React.FC = () => {
                 Cancel
               </button>
               <button
-                onClick={async () => {
-                  try {
-                    await deleteCourse();
-                    setIsDeleteModalOpen(false);
-                    triggerNotification({
-                      type: "success",
-                      message: "Course deleted",
-                      duration: 3000,
-                    });
-                    navigate("/admin/all-courses");
-                  } catch {
-                    triggerNotification({
-                      type: "error",
-                      message: deleteCourseError ?? "Delete failed!",
-                      duration: 3000,
-                    });
-                  }
-                }}
+                onClick={handleDeleteCourse}
                 disabled={deletingCourse}
                 className="px-4 py-2 bg-red-600 text-white cursor-pointer hover:bg-red-700 transition duration-100 disabled:opacity-50"
               >

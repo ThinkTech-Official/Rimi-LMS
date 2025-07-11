@@ -90,7 +90,7 @@ const CreateCourse: React.FC<CreateCourseProps> = ({ onCreateTest }) => {
   const [videoError, setVideoError] = useState<string | null>(null);
   const [thumbnailError, setThumbnailError] = useState<string | null>(null);
   const [categoryError, setCategoryError] = useState<string | null>(null);
-  const { NotificationComponent, triggerNotification } = useNotification();
+  const {triggerNotification , NotificationComponent} = useNotification();
 
   // useEffect(() => {
   //   if(categories.length && !selectedCategory) {
@@ -205,17 +205,21 @@ const handleRemoveDoc = (index: number) => {
 
   try {
     const savedCourse = await createCourse(formData);
-    navigate(`/admin/edit-course/${savedCourse.id}`);
-      triggerNotification({
+    navigate(`/admin/edit-course/${savedCourse.id}`,{
+      state:{
         type: "success",
-        message: "Course created successfully",
-        duration: 3000,
-      });
-    
+        message: "Course created successfully"
+      }
+    });
   } catch {
     // Handle error gracefully
   }
 };
+
+useEffect(() => {
+  {error && triggerNotification({ type: "error", message: "Failed to create course" })}
+},[error])
+
 
 
   // const handleNavigate = (id: string) => {
@@ -526,9 +530,9 @@ const handleRemoveDoc = (index: number) => {
   </div>
 )}
 
-          {error && <p className=" text-red-500 mt-2"> {error}</p>}
         </form>
       </main>
+      {NotificationComponent}
     </div>
   );
 };

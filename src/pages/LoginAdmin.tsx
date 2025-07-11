@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
 import { useAdminAuth, type SignInDto  } from '../hooks/useAdminAuth';
 import { useAdminContext } from '../context/AdminContext';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import useNotification from '../hooks/useNotification';
 
@@ -21,6 +21,19 @@ const LoginAdmin: React.FC = () => {
     formState: { errors },
   } = useForm<SignInDto>();
   const { NotificationComponent, triggerNotification } = useNotification();
+  const location = useLocation();
+    const state = location.state;
+   useEffect(() => {
+      if (state?.type && state?.message) {
+        triggerNotification({
+          type: state.type,
+          message: state.message,
+          duration: 3000,
+        });
+  
+        navigate(location.pathname, { replace: true });
+      }
+    }, [state, triggerNotification, navigate, location.pathname]);
 
   // const handleSubmit = (e: React.FormEvent) => {
   //   e.preventDefault();
@@ -33,7 +46,12 @@ const LoginAdmin: React.FC = () => {
      const ok = await login(data);
      if(ok){
       await reloadAdmin();
-      navigate('/admin/home');
+      navigate('/admin/home',{
+       state: {
+          type: "success",
+          message: "Login successful!"
+        }
+      });
      }
     } catch (error) {
       console.error(error);
