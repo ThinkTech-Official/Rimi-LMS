@@ -27,6 +27,7 @@ const EditCourse: React.FC = () => {
   const testsPerPage = 5;
   const { NotificationComponent, triggerNotification } = useNotification();
   const [isCoursePublished, setIsCoursePublished] = useState(false);
+  const [isTestPublished, setIsTestPublished] = useState(false);
 
   const {
     tests = [],
@@ -416,22 +417,24 @@ const EditCourse: React.FC = () => {
                         </button>
                       </div>
                     </td>
-                    <td className="px-2 py-4 text-center whitespace-nowrap flex justify-center"
+                    <td
+                      className="px-2 py-4 whitespace-nowrap"
                       style={{
                         borderWidth: "0px 1px 1px 0px",
                         borderStyle: "solid",
                         borderColor: "#AAA9A9",
-                      }}>
-                      <div
-                        className="w-12 h-5 bg-gray-200 rounded-full relative cursor-pointer"
-                      >
-                        <span
-                          className={`absolute top-0 left-0 w-5 h-5 rounded-full transition-transform duration-300 ${
-                            isCoursePublished
-                              ? "bg-primary translate-x-7"
-                              : "bg-gray-500 translate-x-0"
-                          }`}
-                        ></span>
+                      }}
+                    >
+                      <div className="flex justify-center">
+                        <div className="w-12 h-5 bg-gray-200 rounded-full relative cursor-pointer">
+                          <span
+                            className={`absolute top-0 left-0 w-5 h-5 rounded-full transition-transform duration-300 ${
+                              isTestPublished
+                                ? "bg-primary translate-x-7"
+                                : "bg-gray-500 translate-x-0"
+                            }`}
+                          ></span>
+                        </div>
                       </div>
                     </td>
                   </tr>
