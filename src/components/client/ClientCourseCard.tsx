@@ -130,14 +130,14 @@ loading
 ? 
 
 <>
-<div className=' w-full flex justify-center'>
+{/* <div className=' w-full flex justify-center'>
 <Spinner />
 </div>
-              
-              {/* <button
-              className="inline-block mt-2 text-sm sm:text-[16px] px-5 py-1 sm:py-3 bg-blue-300 text-white text-nowrap font-semibold hover:bg-indigo-700 cursor-pointer transition-colors delay-150">
-              Processing...
-            </button> */}
+               */}
+              <button
+              className="disabled border border-inputBorder px-5 py-1 sm:py-3 bg-white">
+              <Spinner className='w-4 h-4'/>
+            </button>
 
 </> 
 

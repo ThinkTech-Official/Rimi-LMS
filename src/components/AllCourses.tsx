@@ -8,6 +8,7 @@ import { useCreateCategory } from "../hooks/useCreateCategory";
 import { useTranslation } from "react-i18next";
 import Spinner from "./Spinner";
 import useNotification from "../hooks/useNotification";
+import FetchingError from "./FetchingError";
 
 // interface Course {
 //   id: number;
@@ -246,11 +247,12 @@ const filteredCourses = (() => {
 })();
 
     // Render loading / errors
-   if (catLoading || courseLoading) return <p>Loading…</p>;
-  if (catError)
-    return <p className="text-red-500">Error loading categories: {catError}</p>;
-  if (courseError)
-    return <p className="text-red-500">Error loading courses: {courseError}</p>;
+   if (catLoading || courseLoading) return <div className="flex flex-col justify-center items-center gap-3 fixed top-1/2 left-1/2"><Spinner className="w-10 h-10" /><p>Loading...</p></div>;;
+  if(catError || courseError) return <FetchingError/>
+  // if (catError)
+  //   return <p className="text-red-500">Error loading categories: {catError}</p>;
+  // if (courseError)
+  //   return <p className="text-red-500">Error loading courses: {courseError}</p>;
 
 
 

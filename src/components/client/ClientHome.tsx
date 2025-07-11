@@ -9,6 +9,7 @@ import { useFetchCoursesClient } from "../../hooks/useFetchCoursesClient";
 import { useFetchCourseProgress } from "../../hooks/useFetchCourseProgress";
 import ClientCourseCard from "./ClientCourseCard";
 import Spinner from "../Spinner";
+import FetchingError from "../FetchingError";
 
 const ClientHome = () => {
   const navigate = useNavigate();
@@ -118,11 +119,8 @@ const filteredCourses = (() => {
 
 
      // Render loading / errors
-  //  if (catLoading || courseLoading) return <p>Loading…</p>;
-  // if (catError)
-  //   return <p className="text-red-500">Error loading categories: {catError}</p>;
-  // if (courseError)
-  //   return <p className="text-red-500">Error loading courses: {courseError}</p>;
+   if (catLoading || courseLoading) return <div className="flex flex-col justify-center items-center gap-3 fixed top-1/2 left-1/2"><Spinner className="w-10 h-10" /><p>Loading...</p></div>;;
+  if(catError || courseError) return <FetchingError/>
 
 
 
