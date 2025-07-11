@@ -1,24 +1,12 @@
-import React, { useCallback, useState } from "react";
-import {
-  ResponsiveContainer,
-  LineChart,
-  Line,
-  CartesianGrid,
-  XAxis,
-  YAxis,
-  Tooltip,
-  BarChart,
-  Bar,
-  LabelList,
-} from "recharts";
-import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
+import React, { useCallback, useEffect, useState } from "react";
 // import UserProfile, { type User } from "./UserProfile";
 import { useTranslation } from "react-i18next";
 import { useDashboardStats } from "../hooks/useDashboardStats";
 import { useRecentSignups } from "../hooks/useRecentSignups";
 import { useLiveTotals } from "../hooks/useLiveTotals";
 import Spinner from "./Spinner";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import useNotification from "../hooks/useNotification";
 
 // Dummy stats
 // const stats = [
@@ -131,6 +119,20 @@ const AdminHome: React.FC = () => {
   const { data: stats, loading: statsLoading, error: statsError } = useDashboardStats();
   const { users: recentUsers, totalCount, loading: recentLoading, error: recentError } = useRecentSignups(currentPage, pageSize);
   const { totals, loading: totalsLoading, error: totalsError } = useLiveTotals()
+  const {triggerNotification, NotificationComponent} = useNotification();
+  const location = useLocation();
+  const state = location.state;
+ useEffect(() => {
+    if (state?.type && state?.message) {
+      triggerNotification({
+        type: state.type,
+        message: state.message,
+        duration: 3000,
+      });
+
+      navigate(location.pathname, { replace: true });
+    }
+  }, [state, triggerNotification, navigate, location.pathname]);
   
   // const [selectedUser, setSelectedUser] = useState<User | null>(null);
   
@@ -475,6 +477,7 @@ const AdminHome: React.FC = () => {
             </div>
           </div>
         </main>
+        {NotificationComponent}
       </div>
   );
 };

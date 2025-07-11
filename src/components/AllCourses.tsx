@@ -3,10 +3,11 @@ import { BiSearch } from "react-icons/bi";
 import { GoClock } from "react-icons/go";
 import { useFetchCategories } from "../hooks/useFetchCategories";
 import { useFetchCourses , type Course } from "../hooks/useFetchCourses";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import { useCreateCategory } from "../hooks/useCreateCategory";
 import { useTranslation } from "react-i18next";
 import Spinner from "./Spinner";
+import useNotification from "../hooks/useNotification";
 
 // interface Course {
 //   id: number;
@@ -131,7 +132,21 @@ const AllCourses: React.FC<AllCoursesProps> = ({ onCreateCourse }) => {
 
   const [showAddCategoryModal, setShowAddCategoryModal] = useState<boolean>(false);
   const [newCategory, setNewCategory] = useState<string>("");
-  //
+  const { NotificationComponent, triggerNotification } = useNotification();
+const location = useLocation();
+const state = location.state;
+ useEffect(() => {
+    if (state?.type && state?.message) {
+      triggerNotification({
+        type: state.type,
+        message: state.message,
+        duration: 3000,
+      });
+
+      // 🔥 Clear the navigation state after showing notification
+      navigate(location.pathname, { replace: true });
+    }
+  }, [state, triggerNotification, navigate, location.pathname]);
 const allCategory = { id: 0, name: "All" };
 const allCategories = [allCategory, ...categories];
   
@@ -382,6 +397,7 @@ const filteredCourses = (() => {
           </div>
         )}
       </div>
+      {NotificationComponent}
     </div>
   );
 };

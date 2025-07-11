@@ -18,6 +18,11 @@ export const useAdminLogout = () => {
     }
     await reload();
     // navigate to login
-    navigate('/adminlogin', { replace: true });
+    navigate('/adminlogin', {
+      state:{
+        type: "success",
+        message: "Logged out!"
+      }
+    });
   }, [reload, navigate]);
 };
