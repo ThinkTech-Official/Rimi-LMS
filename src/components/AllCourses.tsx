@@ -143,8 +143,6 @@ const state = location.state;
         message: state.message,
         duration: 3000,
       });
-
-      // 🔥 Clear the navigation state after showing notification
       navigate(location.pathname, { replace: true });
     }
   }, [state, triggerNotification, navigate, location.pathname]);
@@ -327,7 +325,8 @@ const filteredCourses = (() => {
                 filteredCourses.map((course) => (
                 <div
                   key={course.id}
-                  className="rounded-[2px] overflow-hidden w-[80vw] max-w-[300px] sm:w-[300px] 2xl:w-[350px] h-68 hover:transform hover:scale-105 transition-transform delay-75 cursor-pointer border border-inputBorder shadow-md"
+                  title={course.title}
+                  className="rounded-[2px] overflow-hidden w-[80vw] max-w-[300px] sm:w-[300px] 2xl:w-[380px] hover:transform hover:scale-105 transition-transform delay-75 cursor-pointer border border-inputBorder shadow-md"
                   onClick={() => handleSelectCourse(course.id)}
                 >
                   <div className="relative">
@@ -338,7 +337,7 @@ const filteredCourses = (() => {
                     />
                   </div>
                   <div className=" flex flex-col gap-2 p-2">
-                    <h2 className="text-base 2xl:text-xl font-semibold text-[#1B1B1B]">
+                    <h2 className="text-base 2xl:text-xl font-semibold text-[#1B1B1B] line-clamp-1">
                       {course.title}
                     </h2>
                     <div className="flex items-center text-[#6F6B7D] text-xs 2xl:text-base space-x-4">

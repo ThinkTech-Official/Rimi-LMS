@@ -1,11 +1,11 @@
 
 
 
-import React, { useState } from 'react';
+import React, { use, useState } from 'react';
 import { useCategoriesAdmin, type Category } from '../../hooks/useCategoriesAdmin';
 import { MdClose } from 'react-icons/md';
-import { set } from 'react-hook-form';
 import Spinner from '../Spinner';
+import useNotification from '../../hooks/useNotification';
 
 
 const AdminCategoryManager: React.FC = () => {
@@ -29,6 +29,7 @@ const AdminCategoryManager: React.FC = () => {
   const [updating, setUpdating]     = useState(false);
   const [deletingId, setDeletingId] = useState<number | null>(null);
   const [deleting, setDeleting]     = useState(false);
+  const { triggerNotification, NotificationComponent }     = useNotification();
 
     //  while fetching the initial list, show a placeholder
   if (fetching && categories.length === 0) {
@@ -48,6 +49,7 @@ const AdminCategoryManager: React.FC = () => {
     setCreating(true);
     try {
       await createCategory(newName.trim());
+      triggerNotification({ type: 'success', message: 'Category created successfully', duration: 3000 });
       setNewName('');
     } finally {
       setCreating(false);
@@ -69,6 +71,7 @@ const AdminCategoryManager: React.FC = () => {
     setUpdating(true);
     try {
       await updateCategory(editing.id, editName.trim());
+      triggerNotification({ type: 'success', message: 'Category updated successfully', duration: 3000 });
       setEditing(null);
     } finally {
       setUpdating(false);
@@ -91,6 +94,7 @@ const AdminCategoryManager: React.FC = () => {
     setDeletingId(id);
     try {
       await deleteCategory(id);
+      triggerNotification({ type: 'success', message: 'Category deleted successfully', duration: 3000 });
     }
      finally {
       setDeletingId(null);
@@ -104,25 +108,28 @@ const AdminCategoryManager: React.FC = () => {
       <h2 className="text-2xl font-semibold mb-4 text-text-dark">Manage Categories</h2>
 
       {deleting && (
-        <div className="text-text-light-2 mb-2 fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white max-w-md p-10 shadow-lg border border-inputBorder flex flex-col gap-3 z-50">
-          <p className='mb-2 text-center'>Are you sure you want to delete this category?</p>
-          <div className="flex gap-2 justify-end">
-            <button
-              type="button"
-              onClick={() => setDeleting(false)}
-              className="px-4 py-2 border cursor-pointer border-inputBorder"
-            >
-              Cancel
-            </button>
-            <button
-              type="button"
-              onClick={() => handleDelete(deletingId || 0)}
-              className="px-4 py-2 bg-primary text-white disabled:opacity-50 cursor-pointer"
-            >
-              Delete
-            </button>
-          </div>
-        </div>
+       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/10">
+  <div className="bg-white text-text-light-2 w-full max-w-md p-6 rounded shadow-lg flex flex-col gap-6">
+    <p>Are you sure you want to delete this category?</p>
+    <div className="flex gap-2 justify-end">
+      <button
+        type="button"
+        onClick={() => setDeleting(false)}
+        className="px-4 py-2 border border-inputBorder text-gray-700 hover:bg-gray-100 transition cursor-pointer"
+      >
+        Cancel
+      </button>
+      <button
+        type="button"
+        onClick={() => handleDelete(deletingId || 0)}
+        className="px-4 py-2 bg-red-500 text-white disabled:opacity-50 hover:bg-red-600 transition cursor-pointer"
+      >
+        {fetching ? 'Deleting…' : 'Delete'}
+      </button>
+    </div>
+  </div>
+</div>
+
       )}
 
       {error && (
@@ -214,14 +221,14 @@ const AdminCategoryManager: React.FC = () => {
                 <button
                   type="button"
                   onClick={closeModal}
-                  className="px-4 py-2 border cursor-pointer border-inputBorder"
+                  className="px-4 py-2 w-[110px] border cursor-pointer border-inputBorder"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={updating}
-                  className="px-4 py-2 bg-primary text-white font-semibold cursor-pointer transition-all delay-100 shadow hover:bg-indigo-700"
+                  className="px-4 py-2 w-[110px] bg-primary text-white font-semibold cursor-pointer transition-all delay-100 shadow hover:bg-indigo-700"
                 >
                   {updating ? 'Saving…' : 'Save'}
                 </button>
@@ -230,6 +237,7 @@ const AdminCategoryManager: React.FC = () => {
           </div>
         </div>
       )}
+      {NotificationComponent}
     </div>
   );
 };

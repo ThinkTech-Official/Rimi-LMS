@@ -62,6 +62,7 @@ const ClientCourseCard = ({courseId, imageUrl , title, duration, description}: C
     
     <div
             key={courseId}
+            title={title}
             className="w-[95%] sm:w-[320px] xl:w-[380px] flex flex-col gap-2 p-4 justify-center items-centr md:justify-start"
             style={{
               boxShadow: "0px 4px 6.7px 0px rgba(0, 0, 0, 0.04)",
@@ -90,7 +91,7 @@ const ClientCourseCard = ({courseId, imageUrl , title, duration, description}: C
                 </div>
 
                 {/* percentage badge */}
-        <div className=" flex items-center space-x-1 bg-white rounded-full text-xs">
+        <div className=" flex items-center space-x-1 bg-white rounded-full text-xs 2xl:text-base">
           {loading
             ? <span className='w-8 flex items-center justify-center'><Spinner className='w-3 h-3'/></span>
             : <><RiProgress3Line className="text-text-light" /> <span>{percent}%</span></>
@@ -102,26 +103,13 @@ const ClientCourseCard = ({courseId, imageUrl , title, duration, description}: C
                 </div> */}
               </div>
             </div>
-            <h2 className="text-lg font-semibold text-gray-900">
+            <h2 className="text-lg font-semibold text-gray-900 line-clamp-1">
               {title}
             </h2>
            <div className="text-gray-600 text-sm pr-2">
-  <span>
-    {showFullDescription
-      ? description
-      : description
-      ? getTruncatedText(description, 15)
-      : ""}
+  <span className='line-clamp-1'>
+    {description}
   </span>
-
-  {description && description.split(" ").length > 15 && (
-    <button
-      className="text-primary text-xs underline underline-offset-2 ml-1 inline cursor-pointer"
-      onClick={() => setShowFullDescription(!showFullDescription)}
-    >
-      {showFullDescription ? "less" : "more"}
-    </button>
-  )}
 </div>
 
 {

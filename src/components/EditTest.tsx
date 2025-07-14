@@ -206,8 +206,12 @@ const toggleCorrect = (qid: number, oid: number) => {
   };
     try {
       await updateTest(dto);
-      triggerNotification({type: 'success', message: 'Test updated', duration: 3000});
-      navigate(`/admin/edit-course/${courseId}`);
+      navigate(`/admin/edit-course/${courseId}`,{
+        state: {
+          type: "success",
+          message: "Test updated",
+        }
+      });
     } catch {
       // saveError will display below
     }
@@ -217,8 +221,16 @@ const toggleCorrect = (qid: number, oid: number) => {
   if (fetchError) return <p className="text-red-500">{fetchError}</p>;
 
   return (
-    <div className="min-h-screen flex bg-white">
-      <main className="flex-1 p-4 sm:p-8">
+    <div className="space-y-6 p-2 md:p-4 lg:p-8">
+       {/* Breadcrumbs */}
+      <button
+        onClick={() => navigate("/admin/edit-course/" + courseId)}
+        className="underline underline-offset-2 cursor-pointer text-sm text-primary font-medium"
+        title="Back to Course"
+      >
+       &lt; Back to Course
+      </button>
+      <main>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <div className="flex justify-between items-center">
             <h2 className="text-lg 2xl:text-2xl font-bold text-[#1B1B1B]">Edit Test</h2>

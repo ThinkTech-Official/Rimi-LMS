@@ -37,8 +37,6 @@ const EditCourse: React.FC = () => {
         message: state.message,
         duration: 3000,
       });
-
-      // 🔥 Clear the navigation state after showing notification
       navigate(location.pathname, { replace: true });
     }
   }, [state, triggerNotification, navigate, location.pathname]);
@@ -254,6 +252,14 @@ const EditCourse: React.FC = () => {
 
   return (
     <section className="space-y-6 p-2 md:p-4 lg:p-8">
+      {/* Breadcrumbs */}
+      <button
+        onClick={() => navigate("/admin/all-courses")}
+        className="underline underline-offset-2 cursor-pointer text-sm text-primary font-medium"
+        title="All Courses"
+      >
+       &lt; All Courses
+      </button>
       <div className="w-full flex justify-end gap-2 items-center">
         <span className="text-text-light-2">
           {isCoursePublished ? "Published" : "Unpublished"}
@@ -327,7 +333,9 @@ const EditCourse: React.FC = () => {
                 </p>
               </div>
             </div>
-            <div className="text-text-light">{basicCourse.description}</div>
+            <div className="text-text-light first-letter:uppercase">
+              {basicCourse.description}
+            </div>
           </div>
         )
       )}
@@ -357,35 +365,48 @@ const EditCourse: React.FC = () => {
         </div>
       </div>
 
-      {/* Loading / Error */}
       {loading ? (
-        <div className="fixed top-1/2 left-1/2">
-          <Spinner className="w-10 h-10" />
+        <div className="flex flex-col justify-center items-center w-full">
+          <Spinner className="w-6 h-6" /> <p>Loading...</p>
         </div>
       ) : error ? (
         <p className="text-red-500">{error}</p>
-      ) : paginatedTests.length > 0 ? (
-        <>
-          {/* table */}
-          <div className="w-full overflow-x-auto custom-scrollbar pb-2">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-primary text-white text-[16px] 2xl:text-xl text-center text-nowrap">
+      ) : (
+        <div className="w-full overflow-x-auto custom-scrollbar pb-2">
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead className="bg-primary text-white text-[16px] 2xl:text-xl text-center text-nowrap">
+              <tr>
+                <th className="px-2 py-3 font-medium">Test Name</th>
+                <th className="px-2 py-3 font-medium">Questions</th>
+                <th className="px-2 py-3 font-medium">Start Point</th>
+                <th className="px-2 py-3 font-medium">Duration</th>
+                <th className="px-2 py-3 text-center font-medium">Action</th>
+                <th className="px-2 py-3 text-center font-medium">
+                  Publish Test
+                </th>
+              </tr>
+            </thead>
+            <tbody
+              className="bg-white text-[#808080] text-sm 2xl:text-xl text-center"
+              style={{ border: "1px solid #AAA9A9" }}
+            >
+              {tests.length === 0 ? (
                 <tr>
-                  <th className="px-2 py-3 font-medium">Test Name</th>
-                  <th className="px-2 py-3 font-medium">Questions</th>
-                  <th className="px-2 py-3 font-medium">Start Point</th>
-                  <th className="px-2 py-3 font-medium">Duration</th>
-                  <th className="px-2 py-3 text-center font-medium">Action</th>
-                  <th className="px-2 py-3 text-center font-medium">
-                    Publish Test
-                  </th>
+                  <td colSpan={6} className="py-4 text-center">
+                    No tests created yet.
+                  </td>
                 </tr>
-              </thead>
-              <tbody
-                className="bg-white text-[#808080] text-sm 2xl:text-xl text-center"
-                style={{ border: "1px solid #AAA9A9" }}
-              >
-                {filtered.map((test: TestEntry) => (
+              ) : filtered.length === 0 ? (
+                <tr>
+                  <td
+                    colSpan={6}
+                    className="py-4 italic text-text-light text-center"
+                  >
+                    Test with the name "{searchTerm}" not found.
+                  </td>
+                </tr>
+              ) : (
+                paginatedTests.map((test: TestEntry) => (
                   <tr key={test.id}>
                     <td
                       className="px-2 py-4 whitespace-nowrap"
@@ -471,13 +492,11 @@ const EditCourse: React.FC = () => {
                       </div>
                     </td>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </>
-      ) : (
-        <p>No tests attached to this course yet.</p>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
       )}
 
       {/* Delete course button  */}
@@ -501,7 +520,7 @@ const EditCourse: React.FC = () => {
             <div className="mt-6 flex justify-end space-x-4">
               <button
                 onClick={handleCancelDelete}
-                className="px-4 py-2 border cursor-pointer"
+                className="px-4 py-2 border border-inputBorder cursor-pointer"
               >
                 Cancel
               </button>
@@ -635,7 +654,7 @@ const EditCourse: React.FC = () => {
                   type="submit"
                   className="px-4 py-2 sm:py-3 bg-primary text-white hover:bg-indigo-700 transition delay-100 cursor-pointer"
                 >
-                  Save
+                  {updating ? "Updating..." : "Update"}
                 </button>
               </div>
             </form>

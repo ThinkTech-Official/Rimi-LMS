@@ -373,7 +373,7 @@ export const UserManagement: React.FC = () => {
                   value="all"
                   checked={filter === "all"}
                   onChange={() => setFilter("all")}
-                  className="form-radio text-indigo-800 cursor-pointer"
+                  className="form-radio cursor-pointer"
                 />
                 <span className="ml-2 capitalize">{t("all users")}</span>
               </label>
@@ -384,7 +384,7 @@ export const UserManagement: React.FC = () => {
                   value="certified"
                   checked={filter === "certified"}
                   onChange={() => setFilter("certified")}
-                  className="form-radio text-indigo-800 cursor-pointer"
+                  className="form-radio cursor-pointer"
                 />
                 <span className="ml-2">{t("certified users")}</span>
               </label>

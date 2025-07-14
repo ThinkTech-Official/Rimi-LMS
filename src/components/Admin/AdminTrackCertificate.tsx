@@ -101,7 +101,8 @@ const AdminTrackCertificate: React.FC = () => {
           )}
         </div>
       ) : (
-        searchFailed && (
+        searchFailed &&
+        watchedCertNum && (
           <p className="text-base text-red-500 mb-2">
             Certificate with this number not found
           </p>

@@ -3,43 +3,28 @@
 import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useAdminCreateClient, type CreateClientUserDto } from '../../hooks/useAdminCreateClient';
+import useNotification from '../../hooks/useNotification';
 
 export const AdminCreateUser: React.FC = () => {
   const { register, handleSubmit, watch, formState: { errors } } =
     useForm<CreateClientUserDto & { confirmPassword: string }>();
   const { createClient, loading, error, success } = useAdminCreateClient();
+  const { triggerNotification, NotificationComponent } = useNotification();
 
   const onSubmit = async (data: CreateClientUserDto & { confirmPassword: string }) => {
     const { name, email, password } = data;
     try {
       await createClient({ name, email, password });
+      triggerNotification({ type: 'success', message: 'Client created successfully', duration: 3000 });
     } catch(error) {
       console.log('error in creting client', error)
+      triggerNotification({ type: 'error', message: 'Failed to create client', duration: 3000 });
     }
   };
-
-  
-  useEffect(() => {
-    if (success) {
-      // later put the notification here
-    }
-  }, [success]);
 
   return (
     <div className="w-[90%] sm:w-md mx-auto p-3 sm:p-6 bg-white shadow-lg mt-[10%] sm:mt-[5%]">
       <h2 className="text-xl text-center font-semibold mb-4 text-text-dark">Create Client</h2>
-
-      {success && (
-        <div className="mb-4 p-2 bg-green-100 text-green-800 rounded">
-          Client created successfully!
-        </div>
-      )}
-
-      {error && (
-        <div className="mb-4 p-2 bg-red-100 text-red-800 rounded">
-          {error}
-        </div>
-      )}
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         {/* Name */}
@@ -108,6 +93,7 @@ export const AdminCreateUser: React.FC = () => {
           {loading ? 'Creating…' : 'Create User'}
         </button>
       </form>
+      {NotificationComponent}
     </div>
   );
 };

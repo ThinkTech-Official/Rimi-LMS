@@ -153,7 +153,7 @@ const filteredCourses = (() => {
             <li
                 key={cat.id}
                 onClick={() => handleCategoryClick(cat.id)}
-                className={`pb-2 cursor-pointer font-medium text-nowrap text-sm sm:text-base 2xl:text-xl ${
+                className={`pb-2 cursor-pointer capitalize font-medium text-nowrap text-sm sm:text-base 2xl:text-xl ${
                   selectedCategoryId === cat.id
                   ? "text-primary border-b-2 border-primary"
                   : "text-gray-600"

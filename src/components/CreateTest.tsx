@@ -30,6 +30,7 @@ const CreateTest: React.FC = () => {
   const { createTest, loading, error } = useCreateTest(courseId!);
   const { t } = useTranslation();
   const [questionErrors, setQuestionErrors] = useState<Record<number, string[]>>({});
+  const [hasSubmitted, setHasSubmitted] = useState(false);
 
   const [questions, setQuestions] = useState<Question[]>([
     {
@@ -76,25 +77,29 @@ const CreateTest: React.FC = () => {
     ]);
   };
 
- const handleQuestionChange = (qid: number, text: string) => {
+const handleQuestionChange = (qid: number, text: string) => {
   const updatedQuestions = questions.map((q) =>
     q.id === qid ? { ...q, text } : q
   );
   setQuestions(updatedQuestions);
 
-  const current = updatedQuestions.find((q) => q.id === qid)!;
-  const errors = validateQuestion(current);
+  // Only validate if submission has been attempted
+  if (hasSubmitted) {
+    const current = updatedQuestions.find((q) => q.id === qid)!;
+    const errors = validateQuestion(current);
 
-  setQuestionErrors((prev) => {
-    const updated = { ...prev };
-    if (errors.length > 0) {
-      updated[qid] = errors;
-    } else {
-      delete updated[qid];
-    }
-    return updated;
-  });
+    setQuestionErrors((prev) => {
+      const updated = { ...prev };
+      if (errors.length > 0) {
+        updated[qid] = errors;
+      } else {
+        delete updated[qid];
+      }
+      return updated;
+    });
+  }
 };
+
 
 
 
@@ -111,7 +116,8 @@ const CreateTest: React.FC = () => {
   );
   setQuestions(updatedQuestions);
 
-  const current = updatedQuestions.find((q) => q.id === qid)!;
+if (hasSubmitted) {
+    const current = updatedQuestions.find((q) => q.id === qid)!;
   const errors = validateQuestion(current);
 
   setQuestionErrors((prev) => {
@@ -123,8 +129,7 @@ const CreateTest: React.FC = () => {
     }
     return updated;
   });
-};
-
+};}
 
 
 
@@ -183,6 +188,7 @@ const toggleCorrect = (qid: number, oid: number) => {
 
   const onSubmit: SubmitHandler<NewTest> = async (data: NewTest) => {
     if (!courseId) return;
+    setHasSubmitted(true);
    const questionLevelErrors: Record<number, string[]> = {};
 
 questions.forEach((q, i) => {
@@ -223,15 +229,28 @@ if (Object.keys(questionLevelErrors).length > 0) {
 
     try {
       await createTest(dto);
-      navigate(`/admin/edit-course/${courseId}`);
+      navigate(`/admin/edit-course/${courseId}`,{
+        state: {
+          type: "success",
+          message: "Test created successfully",
+        }
+      });
     } catch {
       // error displayed by hook
     }
   };
 
   return (
-    <div className="min-h-screen flex bg-white">
-      <main className="flex-1 p-2 sm:p-8">
+    <div className="space-y-6 p-2 md:p-4 lg:p-8">
+      {/* Breadcrumbs */}
+      <button
+        onClick={() => navigate("/admin/edit-course/" + courseId)}
+        className="underline underline-offset-2 cursor-pointer text-sm text-primary font-medium"
+        title="Back to Course"
+      >
+       &lt; Back to Course
+      </button>
+      <main className="flex-1">
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
           {/* Test Information */}
           <section className="space-y-4">
@@ -243,7 +262,7 @@ if (Object.keys(questionLevelErrors).length > 0) {
                 type="submit"
                 className="inline-block w-[120px] sm:w-[150px] text-sm sm:text-[16px] px-5 py-2 sm:py-3 bg-primary text-white text-nowrap font-semibold hover:bg-indigo-700 cursor-pointer transition-colors delay-150"
               >
-                Save Test
+                {loading ? "Saving..." : "Save Test"}
               </button>
             </div>
             <div className="space-y-4">
@@ -332,6 +351,10 @@ if (Object.keys(questionLevelErrors).length > 0) {
                         value: 1,
                         message: "Passing Marks must be at least 1 second",
                       },
+                      max: {
+                        value: 100,
+                        message: "Passing Marks must be at most 100",
+                      }
                     })}
                     placeholder="Passing Percentage"
                     className="w-full border border-inputBorder p-2 sm:px-4 sm:py-3 focus:outline-none focus:ring-1 focus:ring-primary"
@@ -455,7 +478,7 @@ if (Object.keys(questionLevelErrors).length > 0) {
               type="submit"
               className="inline-block w-[120px] sm:w-[150px] text-sm sm:text-[16px] px-5 py-2 sm:py-3 bg-primary text-white text-nowrap font-semibold hover:bg-indigo-700 cursor-pointer transition-colors delay-150"
             >
-              Save Test
+              {loading ? "Saving..." : "Save Test"}
             </button>
           </div>
         </form>
