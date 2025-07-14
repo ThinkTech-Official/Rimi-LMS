@@ -1,4 +1,4 @@
-import {  useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { FaFilePdf } from "react-icons/fa";
 import Quiz from "./Quiz";
@@ -14,19 +14,27 @@ import {
   type TestWithQuestions,
 } from "../../hooks/useFetchTestClient";
 import Spinner from "../Spinner";
+import { BiExitFullscreen } from "react-icons/bi";
 
 const CoursePlay = () => {
   const { id: courseId } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
   // Fetch course with isCleared flags
-  const { course: fetchedCourse, loading: loadingCourse, error: errorCourse , refetch  } = useFetchCourseClient(courseId!);
+  const {
+    course: fetchedCourse,
+    loading: loadingCourse,
+    error: errorCourse,
+    refetch,
+  } = useFetchCourseClient(courseId!);
 
-   // Mirror the hook’s course into local state so we can mutate it
+  // Mirror the hook’s course into local state so we can mutate it
   const [course, setCourse] = useState<CourseClient | null>(null);
 
   // current basic test (metadata)
-  const [activeTestBasic, setActiveTestBasic] = useState<TestClient | null>(null);
+  const [activeTestBasic, setActiveTestBasic] = useState<TestClient | null>(
+    null
+  );
   // fetch full test when a basic test is active
   const {
     test: fetchedTest,
@@ -35,31 +43,73 @@ const CoursePlay = () => {
   } = useFetchTestClient(courseId, activeTestBasic?.id);
 
   const videoRef = useRef<HTMLVideoElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const [lastPassedTime, setLastPassedTime] = useState<number>(0);
   const [showMarkers, setShowMarkers] = useState(true);
   const [showTest, setShowTest] = useState<TestWithQuestions | null>(null);
-
+  const [isFullscreen, setIsFullscreen] = useState(false);
   const [showFull, setShowFull] = useState(false);
+  const hideMarkersTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
+    null
+  );
+  const [isVideoPaused, setIsVideoPaused] = useState(false);
 
   // keep track to avoid re-trigger
   const triggeredTests = useRef<Set<number>>(new Set());
 
-
-
-   useEffect(() => {
+  useEffect(() => {
     setCourse(fetchedCourse);
   }, [fetchedCourse]);
 
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      containerRef.current?.requestFullscreen();
+    } else {
+      document.exitFullscreen();
+    }
+  };
+  const handleMouseActivity = () => {
+    if (isVideoPaused) return; // Don't hide markers if video is paused
+    setShowMarkers(true);
+
+    // Clear existing timeout
+    if (hideMarkersTimeoutRef.current) {
+      clearTimeout(hideMarkersTimeoutRef.current);
+    }
+
+    // Start 3-second timer to hide markers
+    hideMarkersTimeoutRef.current = setTimeout(() => {
+      setShowMarkers(false);
+    }, 3000);
+  };
+  const handleMouseLeave = () => {
+    if (!videoRef.current?.paused) {
+      setShowMarkers(false);
+    }
+    if (hideMarkersTimeoutRef.current) {
+      clearTimeout(hideMarkersTimeoutRef.current);
+    }
+  };
+  // Handle fullscreen toggle state
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement);
+    };
+    document.addEventListener("fullscreenchange", handleFullscreenChange);
+    return () =>
+      document.removeEventListener("fullscreenchange", handleFullscreenChange);
+  }, []);
   // On mount or when course loads: seek to first un-passed test and pre-mark triggers
   // on mount or course change: seek to beginning or 1s past last passed test
   useEffect(() => {
     if (!course || !videoRef.current) return;
     // find all passed tests
-    const passedTests = course.tests.filter(t => t.isCleared);
+    const passedTests = course.tests.filter((t) => t.isCleared);
     // last passed test startTime (or 0 if none)
-    const lastStart = passedTests.length > 0
-      ? Math.max(...passedTests.map(t => t.startTime))
-      : 0;
+    const lastStart =
+      passedTests.length > 0
+        ? Math.max(...passedTests.map((t) => t.startTime))
+        : 0;
     // resume at 1 second after last passed test, or 0
     const resumeAt = lastStart > 0 ? lastStart + 1 : 0;
     setLastPassedTime(lastStart);
@@ -69,9 +119,7 @@ const CoursePlay = () => {
 
     // pre-mark tests up to resumeAt as triggered
     triggeredTests.current = new Set(
-      course.tests
-        .filter(t => t.startTime <= resumeAt)
-        .map(t => t.id)
+      course.tests.filter((t) => t.startTime <= resumeAt).map((t) => t.id)
     );
   }, [course]);
 
@@ -105,41 +153,38 @@ const CoursePlay = () => {
     if (fetchedTest) setShowTest(fetchedTest);
   }, [fetchedTest]);
 
-
   // Prevent scrubbing past the next un-cleared test
-useEffect(() => {
-  const video = videoRef.current;
-  if (!video || !course) return;
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video || !course) return;
 
-  const onSeeking = () => {
-    // find the next test the user hasn't cleared
-    const nextTest = course.tests
-      .filter(t => !t.isCleared)
-      .sort((a, b) => a.startTime - b.startTime)[0];
+    const onSeeking = () => {
+      // find the next test the user hasn't cleared
+      const nextTest = course.tests
+        .filter((t) => !t.isCleared)
+        .sort((a, b) => a.startTime - b.startTime)[0];
 
-    // allowed limit is either the next test start, or full duration
-    const limit = nextTest
-      ? nextTest.startTime
-      : (course.duration ?? video.duration);
+      // allowed limit is either the next test start, or full duration
+      const limit = nextTest
+        ? nextTest.startTime
+        : course.duration ?? video.duration;
 
-    // if they tried to jump ahead, snap back to the limit
-    if (video.currentTime > limit) {
-      video.currentTime = limit;
-    }
-  };
+      // if they tried to jump ahead, snap back to the limit
+      if (video.currentTime > limit) {
+        video.currentTime = limit;
+      }
+    };
 
-  video.addEventListener("seeking", onSeeking);
-  return () => {
-    video.removeEventListener("seeking", onSeeking);
-  };
-}, [course]);
-
+    video.addEventListener("seeking", onSeeking);
+    return () => {
+      video.removeEventListener("seeking", onSeeking);
+    };
+  }, [course]);
 
   // if user passed update checkpoint and resume
   const handleResume = async () => {
-    if (activeTestBasic){
-      
-       setLastPassedTime(activeTestBasic.startTime);
+    if (activeTestBasic) {
+      setLastPassedTime(activeTestBasic.startTime);
       //  await refetch()
     }
     setShowTest(null);
@@ -156,10 +201,8 @@ useEffect(() => {
   //   }
   // };
 
-
-
-    // user failed allow re-trigger and seek back
-    const handleBack = () => {
+  // user failed allow re-trigger and seek back
+  const handleBack = () => {
     // Hide the quiz UI
     setShowTest(null);
 
@@ -177,18 +220,19 @@ useEffect(() => {
     }
   };
 
-
   // Show/hide long description
   const toggleDescription = () => setShowFull((f) => !f);
 
-
-
-
-  if (loadingCourse || !course) return <div className="fixed top-1/2 left-1/2 flex flex-col items-center gap-2"><Spinner className="w-10 h-10"/><p>Loading Course...</p></div>;
+  if (loadingCourse || !course)
+    return (
+      <div className="fixed top-1/2 left-1/2 flex flex-col items-center gap-2">
+        <Spinner className="w-10 h-10" />
+        <p>Loading Course...</p>
+      </div>
+    );
   if (errorCourse) return <p>Error: {errorCourse}</p>;
-  
-  return (
 
+  return (
     <div className="flex min-h-screen bg-white">
       <main className="flex-1 px-2 py-6 sm:p-8 overflow-auto">
         <button
@@ -198,12 +242,12 @@ useEffect(() => {
           &lt; Back To Courses
         </button>
 
-        <div className="mt-6 bg-black rounded overflow-hidden relative max-w-[1100px] 2xl:max-w-[1200px]">
+        <div className="mt-6 bg-black overflow-hidden relative max-w-[1100px] 2xl:max-w-[1200px]">
           <div
-            className="relative w-full aspect-video  rounded overflow-hidden"
-            // ref={containerRef}
-            // onMouseMove={handleMouseActivity}
-            // onMouseLeave={handleMouseLeave}
+            className="relative w-full aspect-video overflow-hidden"
+            ref={containerRef}
+            onMouseMove={handleMouseActivity}
+            onMouseLeave={handleMouseLeave}
           >
             <video
               ref={videoRef}
@@ -215,20 +259,27 @@ useEffect(() => {
               className="w-full h-full"
             />
 
-            
-
-            {/* <button
+            <button
               onClick={toggleFullscreen}
               className="absolute top-2 right-2 bg-white/80 z-30 p-1.5 rounded-full cursor-pointer"
               title="Toggle Fullscreen"
             >
-              <MdFullscreen
-                className={`w-5 h-5 text-black ${
-                  isFullscreen ? "w-8 h-8" : ""
-                }`}
-              />
-            </button> */}
-
+              {isFullscreen ? (
+                <BiExitFullscreen
+                title="Exit Fullscreen"
+                  className={`w-5 h-5 text-black ${
+                    isFullscreen ? "w-6 h-6" : ""
+                  }`}
+                />
+              ) : (
+                <MdFullscreen
+                  title="Enter Fullscreen"
+                  className={`w-5 h-5 text-black ${
+                    isFullscreen ? "w-6 h-6" : ""
+                  }`}
+                />
+              )}
+            </button>
 
             {/* DONE 3  */}
 
@@ -238,8 +289,14 @@ useEffect(() => {
                   {course?.tests.map((test) => (
                     <div
                       key={test.id}
-                      className={`absolute bottom-3.5 h-full w-4 flex items-center justify-center rounded-full ${test.isCleared ? 'bg-red-200' : 'bg-[#D9D9D9]'}`}
-                      style={{ left: `${(test.startTime / (course.duration||1)) * 100}%` }}
+                      className={`absolute bottom-3.5 h-full w-4 flex items-center justify-center rounded-full ${
+                        test.isCleared ? "bg-red-200" : "bg-[#D9D9D9]"
+                      }`}
+                      style={{
+                        left: `${
+                          (test.startTime / (course.duration || 1)) * 100
+                        }%`,
+                      }}
                     >
                       <img src="/Document.svg" alt="" className="h-2.5" />
                     </div>
@@ -250,7 +307,10 @@ useEffect(() => {
 
             {/* // DONE 3  */}
             {loadingTest && (
-              <div className="absolute z-50 inset-0 bg-white/90 flex flex-col justify-center items-center gap-2"><Spinner className="w-6 h-6"/><p className="text-text-dark">Loading Test...</p></div>
+              <div className="absolute z-50 inset-0 bg-white/90 flex flex-col justify-center items-center gap-2">
+                <Spinner className="w-6 h-6" />
+                <p className="text-text-dark">Loading Test...</p>
+              </div>
             )}
 
             {showTest && (
@@ -262,7 +322,6 @@ useEffect(() => {
                   course={course}
                   setCourse={setCourse}
                   activeTestBasic={activeTestBasic}
-                  
                 />
               </div>
             )}
@@ -275,7 +334,9 @@ useEffect(() => {
           {course?.name}
         </h1>
         <p className="mt-2 text-text-light">
-          {showFull ? course?.description : course?.description.slice(0, 120) + "…"}
+          {showFull
+            ? course?.description
+            : course?.description.slice(0, 120) + "…"}
           <button
             onClick={toggleDescription}
             className="ml-2 text-primary font-medium hover:underline cursor-pointer"
@@ -320,48 +381,10 @@ useEffect(() => {
           ))}
         </ul>
 
-         {/* // DONE 2  */}
-
-
+        {/* // DONE 2  */}
       </main>
     </div>
-
-
-    
   );
 };
 
-
 export default CoursePlay;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
