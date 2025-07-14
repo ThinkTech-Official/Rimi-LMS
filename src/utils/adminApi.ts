@@ -23,6 +23,7 @@ adminApi.interceptors.response.use(
   res => res,
   (error: AxiosError & { config: AxiosRequestConfig & { _retry?: boolean } }) => {
     const originalReq = error.config;
+    const status= error.response?.status
     if (error.response?.status === 401 && !originalReq._retry && !originalReq.url?.includes('admin/auth/refresh')) {
       originalReq._retry = true;
 
@@ -61,14 +62,20 @@ adminApi.interceptors.response.use(
     // if (error.response?.status === 401 && originalReq._retry) {
     //   window.location.href = '/adminlogin';
      // if we get here, either it was a /auth/refresh or a second 401  
-    window.location.href = '/adminlogin';
-    return Promise.reject(error);
+    // window.location.href = '/adminlogin';
+    // return Promise.reject(error);
+
+        if (status === 401 && originalReq._retry) {
+      window.location.href = '/adminlogin';
+      return Promise.reject(error);
+    }
+
 
       // we still reject so the original caller can see the error if needed
     // }
 
 
-    // return Promise.reject(error);
+    return Promise.reject(error);
   },
 );
 

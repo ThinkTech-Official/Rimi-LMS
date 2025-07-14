@@ -28,12 +28,14 @@ api.interceptors.response.use(
   resp => resp,
   (error: AxiosError & { config?: AxiosRequestConfig & { _retry?: boolean } }) => {
     const originalReq = error.config!;
+    // const url  = originalReq.url || '';
     const status = error.response?.status;
 
     //  On first 401 of any request except /client/auth/refresh, try to renew
     if (
       status === 401 &&
       !originalReq._retry &&
+      // url.startsWith('/client/') &&
       !originalReq.url?.endsWith('/client/auth/refresh')
     ) {
       originalReq._retry = true;
