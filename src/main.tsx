@@ -30,7 +30,7 @@ import { AuthProvider } from "./context/AuthContext.tsx";
 
 import { AdminProvider } from "./context/AdminContext.tsx";
 
-import { RequireAdmin }    from "./components/RequireAdmin.tsx";
+import { RequireAdmin } from "./components/RequireAdmin.tsx";
 
 // import Quiz from './components/client/Quiz.tsx';
 import i18n from "./i18n/i18.ts";
@@ -49,13 +49,16 @@ const router = createBrowserRouter(
       <Route path="/adminlogin" element={<LoginAdmin />} />
 
       {/* Admin-only routes */}
-      <Route path="/admin" element={
-        <AdminProvider>
-          <RequireAdmin>
-        <AdminLayout />
-        </RequireAdmin>
-        </AdminProvider>
-        }>
+      <Route
+        path="/admin"
+        element={
+          <AdminProvider>
+            <RequireAdmin>
+              <AdminLayout />
+            </RequireAdmin>
+          </AdminProvider>
+        }
+      >
         {/* Admin Routes */}
         {/* <Route index element={<AdminHome />} /> */}
         <Route path="/admin/home" element={<AdminHome />} />
@@ -64,41 +67,54 @@ const router = createBrowserRouter(
         <Route path="/admin/profile" element={<AdminProfile />} />
         <Route path="/admin/all-courses" element={<Courses />} />
         <Route path="/admin/certificates" element={<Certificates />} />
-        <Route path="/admin/track-certificate" element={<AdminTrackCertificate />} />
+        <Route
+          path="/admin/track-certificate"
+          element={<AdminTrackCertificate />}
+        />
         <Route path="/admin/tests" element={<AllTests />} />
-        <Route path="/admin/users" element={<UserManagement />} />  
+        <Route path="/admin/users" element={<UserManagement />} />
         <Route path="/admin/users/:id" element={<UserProfile />} />
         <Route path="/admin/edit-course/:courseId" element={<EditCourse />} />
-        <Route path="/admin/edit-course/:courseId/create-test" element={<CreateTest />} />
-        <Route path="/admin/edit-course/:courseId/edit-test/:testId" element={<EditTest />} />
-
-
+        <Route
+          path="/admin/edit-course/:courseId/create-test"
+          element={<CreateTest />}
+        />
+        <Route
+          path="/admin/edit-course/:courseId/edit-test/:testId"
+          element={<EditTest />}
+        />
 
         {/* <Route path="users" element={<UserList />} /> */}
       </Route>
 
       {/* Client routes */}
-      <Route element={<RequireAuth />} >
-      <Route path="/client" element={<ClientLayout />}>
-        {/* /client */}
-        <Route index element={<ClientHome />} />
-        <Route path="certificates" element={<ClientCertificates />} />
-        {/* /client/play/:id */}
-        <Route path="play/:id" element={<CoursePlay />} />
-        <Route path="profile" element={< ClientProfile/>} />
-        <Route path="certificate/generate/:courseId" element={<GenerateCertificatePage />} />
-        
+      <Route element={
+        <AuthProvider>
+        <RequireAuth />
+        </AuthProvider>
+        }>
+        <Route path="/client" element={<ClientLayout />}>
+          {/* /client */}
+          <Route index element={<ClientHome />} />
+          <Route path="certificates" element={<ClientCertificates />} />
+          {/* /client/play/:id */}
+          <Route path="play/:id" element={<CoursePlay />} />
+          <Route path="profile" element={<ClientProfile />} />
+          <Route
+            path="certificate/generate/:courseId"
+            element={<GenerateCertificatePage />}
+          />
+        </Route>
       </Route>
-      </Route>
-      <Route path="*" element={<NotFound/>} />
+      <Route path="*" element={<NotFound />} />
     </>
   )
 );
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <AuthProvider >
-    <RouterProvider router={router} />
-    </AuthProvider>
+    {/* <AuthProvider> */}
+      <RouterProvider router={router} />
+    {/* </AuthProvider> */}
   </StrictMode>
 );
