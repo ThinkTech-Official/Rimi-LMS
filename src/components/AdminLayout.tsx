@@ -99,7 +99,8 @@ export const AdminLayout: React.FC = () => {
               <img
                 src="/rimilogo.png"
                 alt="RIMI"
-                className="h-11 w-[100px] ml-4 mt-[10px]"
+                className="h-11 w-[100px] ml-4 mt-[10px] cursor-pointer"
+                onClick={() => navigate("/admin/home")}
               />
               <ChevronLeftIcon
                 className="h-8 mr-2 text-primary cursor-pointer"

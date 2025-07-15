@@ -94,7 +94,7 @@ const AdminCategoryManager: React.FC = () => {
     setDeletingId(id);
     try {
       await deleteCategory(id);
-      triggerNotification({ type: 'success', message: 'Category deleted successfully', duration: 3000 });
+      // triggerNotification({ type: 'success', message: 'Category deleted successfully', duration: 3000 });
     }
      finally {
       setDeletingId(null);

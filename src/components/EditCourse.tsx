@@ -17,6 +17,7 @@ import { useAdminDeleteCourse } from "../hooks/useAdminDeleteCourse";
 import { formatTime } from "../hooks/useFetchCourses";
 import { CiFileOn } from "react-icons/ci";
 import { MdCancel } from "react-icons/md";
+import FetchingError from "./FetchingError";
 
 const EditCourse: React.FC = () => {
   const navigate = useNavigate();
@@ -249,6 +250,10 @@ const EditCourse: React.FC = () => {
       });
     }
   };
+
+  if(error || basicInfoError){
+    return <FetchingError />
+  }
 
   return (
     <section className="space-y-6 p-2 md:p-4 lg:p-8">
