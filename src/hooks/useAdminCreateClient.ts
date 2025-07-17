@@ -20,6 +20,7 @@ export function useAdminCreateClient() {
     try {
       // POST /admin/clients
       await adminApi.post<CreateClientUserDto>(`${API_BASE}/admin/auth/create-client`, dto);
+      console.log('user Created ')
       setSuccess(true);
     } catch (err: any) {
       setError(

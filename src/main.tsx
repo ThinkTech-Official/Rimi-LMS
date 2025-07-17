@@ -40,6 +40,7 @@ import AdminCategoryManager from "./components/Admin/AdminCategoryManager.tsx";
 import UserProfile from "./components/UserProfile.tsx";
 import AdminTrackCertificate from "./components/Admin/AdminTrackCertificate.tsx";
 import NotFound from "./components/PageNotFound.tsx";
+import TestCertificate from "./pages/TestCertificate.tsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -83,6 +84,10 @@ const router = createBrowserRouter(
           path="/admin/edit-course/:courseId/edit-test/:testId"
           element={<EditTest />}
         />
+        {/* This is Test Route for Testig Certificate gen  */}
+        <Route path="/admin/test-cert" element={<TestCertificate />} />
+
+        {/*  */}
 
         {/* <Route path="users" element={<UserList />} /> */}
       </Route>

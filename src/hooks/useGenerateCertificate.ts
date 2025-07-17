@@ -64,7 +64,11 @@ export function useGenerateCertificate({
         await new Promise(requestAnimationFrame)
 
         // 1) Snapshot to canvas
-        const canvas = await html2canvas(certRef.current!)
+        const canvas = await html2canvas(certRef.current!, {
+  scale: 2,             // higher resolution  
+  useCORS: true,        // for remote asset
+  backgroundColor: '#fff'
+})
         const img    = canvas.toDataURL('image/png')
         const pdf    = new jsPDF({
           orientation: 'landscape',
