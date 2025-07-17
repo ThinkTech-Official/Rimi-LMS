@@ -1,32 +1,324 @@
-import React from 'react';
-
-
-
+import React from "react";
 
 interface CertificateProps {
   recipientName: string;
-  courseTitle:   string;
-  date:          string;
-  certNumber:    string;
+  courseTitle: string;
+  date: string;
+  certNumber: string;
 }
 
-
-
-
-
-const Certificate: React.FC<CertificateProps> = (
-    {
+const Certificate: React.FC<CertificateProps> = ({
   recipientName,
   courseTitle,
   date,
   certNumber,
-}
-) => {
+}) => {
   return (
-    <>
-    
+    // <>
+    //   <div className="w-[1050px] mx-auto m-4 border">
+    //     <div className="flex flex-col bg-white mx-auto">
+    //       <div className="w-full bg-primary p-4 pb-0 h-fit">
+    //         <div className="w-full flex flex-col items-center justify-center gap-1 font-rufina text-white border border-b-0 border-[#CB5A31]">
+    //           <div className="">
+    //             <img src="/RIMI.svg" alt="" className="w-[110px] h-[50px] my-2 " />
+    //           </div>
+    //           {/* <div className=" border-2 flex justify-center items-center text-4xl h-[60px]">
+    //             <h1 className="  uppercase my-auto"></h1>
+    //           </div> */}
+    //           <div className=" w-full flex justify-center items-center ">
+    //             {/* <div
+    //               className="w-[250px] h-[1px] rounded-s-2xl bg-white"
+    //             ></div> */}
+    //             <div className=" border-2 text-xl flex justify-center items-center h-[40px]">
+    //               <h2 className="  uppercase bg-primary  ">
+    //              Certificate of Completion
+    //             </h2>
+    //             </div>
+    //             {/* <div
+    //               className="w-[250px] h-[1px] rounded-e-2xl bg-white"
+    //             ></div> */}
+    //           </div>
+    //           {/* <img src="certCurve.svg" alt="" className="mt-4" /> */}
+    //         </div>
+    //       </div>
+    //       <div className="bg-white m-4 mt-0">
+    //         <div className="border border-[#CB5A31] border-t-0 flex flex-col  justify-center items-center pt-3  w-full">
+    //           <p className="text-[2rem] text-[#4D4D4D] font-[200]">
+    //             This is to certify that
+    //           </p>
+    //          <div className=" w-full flex justify-center items-center py-6">
+    //            <p
+    //             className=" text-8xl text-[#4D4D4D]"
+    //             style={{ fontFamily: '"MonteCarlo", cursive' }}
+    //           >
+    //             {recipientName}
+    //           </p>
+    //          </div>
+    //           <p className="max-w-[750px] text-center text-[#4D4D4D] font-extralight">
+    //             has successfully completed the RIMI Insurance Training Program
+    //             This achievement reflects the dedication, knowledge, and skills
+    //             demonstrated in understanding insurance principles, policies,
+    //             client servicing, and compliance standards as set by RIMI
+    //             Insurance Training Program
+    //           </p>
+    //           <div className="flex items-center gap-[30%] w-full justify-center text-[#4D4D4D] mt-2">
+    //             <div className="flex gap-2">
+    //               <span className="text-black">Date of Achievement:</span>
+    //               <span className="font-extralight">{date}</span>
+    //             </div>
+    //             <div className="flex gap-2">
+    //               <span className="text-black">Certificate Number:</span>
+    //               <span className="font-extralight">{certNumber}</span>
+    //             </div>
+    //           </div>
+    //           <span className="text-[#4D4D4D] font-extralight my-4 text-[22px]">
+    //             CERTIFICATE WAS AWARDED BY
+    //           </span>
+    //           <div className="flex items-center gap-[10%] w-full justify-center text-[#4D4D4D] font-extralight mt-3">
+    //             <div className="flex flex-col w-[300px] text-center justify-center items-center">
+    //               <span>
+    //                 <img src="/signature.png" alt="director" className="h-24" />
+    //               </span>
+    //               <span
+    //                 style={{ borderTop: "1px solid #000000" }}
+    //                 className="w-full pt-3"
+    //               >
+    //                 Director RIMI
+    //               </span>
+    //             </div>
+    //             <div className="flex flex-col w-[300px] text-center justify-center items-center">
+    //               <span>
+    //                 <img src="/signature.png" alt="director" className="h-24" />
+    //               </span>
+    //               <span
+    //                 style={{ borderTop: "1px solid #000000" }}
+    //                 className="w-full pt-3"
+    //               >
+    //                 Head of Training & Development RIMI
+    //               </span>
+    //             </div>
+    //           </div>
+    //         </div>
+    //       </div>
+    //     </div>
+    //   </div>
+    // </>
 
-    {/* <div className="w-[1050px] mx-auto m-4 border">
+     <div
+        style={{
+          width: "1050px",
+          margin: "0 auto",
+          border: "1px solid #000",
+          backgroundColor: "white",
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            margin: "0 auto",
+            backgroundColor: "white",
+          }}
+        >
+          <div
+            style={{
+              width: "100%",
+              backgroundColor: "#2b00b7",
+              padding: "16px",
+              paddingBottom: "0",
+              height: "fit-content",
+            }}
+          >
+            <div
+              style={{
+                width: "100%",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "0.25rem",
+                fontFamily: "'Rufina', serif",
+                color: "white",
+                border: "1px solid #CB5A31",
+                borderBottom: "none",
+              }}
+            >
+              <img
+                src="/RIMI.svg"
+                alt=""
+                style={{
+                  width: "110px",
+                  marginTop: "2.5rem",
+                }}
+              />
+              <h1
+                style={{
+                  fontSize: "4rem",
+                  textTransform: "uppercase",
+                  marginTop: "0.5rem",
+                }}
+              >
+                Certificate
+              </h1>
+              <div
+                style={{
+                  position: "relative",
+                  width: "100%",
+                  display: "flex",
+                  justifyContent: "center",
+                }}
+              >
+                <h2
+                  style={{
+                    fontSize: "2rem",
+                    marginTop: "-1.25rem",
+                    textTransform: "uppercase",
+                    paddingLeft: "0.25rem",
+                    paddingRight: "0.25rem",
+                    zIndex: 5,
+                    position: "relative",
+                  }}
+                >
+                  of Completion
+                </h2>
+              </div>
+              <img src="certCurve.svg" alt="" style={{ marginTop: "1rem" }} />
+            </div>
+          </div>
+          <div
+            style={{
+              backgroundColor: "#ffffff",
+              margin: "1rem",
+              marginTop: 0,
+            }}
+          >
+            <div
+              style={{
+                border: "1px solid #CB5A31",
+                borderTop: 0,
+                display: "flex",
+                flexDirection: "column",
+                gap: "1rem",
+                justifyContent: "center",
+                alignItems: "center",
+                paddingTop: "0.75rem",
+                paddingBottom: "1.25rem",
+                width: "100%",
+              }}
+            >
+              <p
+                style={{
+                  fontSize: "2rem",
+                  color: "#4D4D4D",
+                  fontWeight: 200,
+                }}
+              >
+                This is to certify that
+              </p>
+              <p
+                style={{
+                  fontSize: "6.5rem",
+                  color: "#4D4D4D",
+                  marginTop: "-4rem",
+                  fontFamily: '"MonteCarlo", cursive',
+                  paddingBottom: "20px"
+                }}
+              >
+                {recipientName}
+              </p>
+              <p
+                style={{
+                  maxWidth: "750px",
+                  textAlign: "center",
+                  color: "#4D4D4D",
+                  fontWeight: 200,
+                }}
+              >
+                has successfully completed the RIMI  Insurance Training Program
+                This achievement reflects the dedication, knowledge, and skills
+                demonstrated in understanding insurance principles, policies,
+                client servicing, and compliance standards as set by RIMI
+                Insurance Training Program
+              </p>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "30%",
+                  width: "100%",
+                  justifyContent: "center",
+                  color: "#4D4D4D",
+                  marginTop: "0.5rem",
+                }}
+              >
+                <div style={{ display: "flex", gap: "0.5rem" }}>
+                  <span style={{ color: "#000000" }}>Date of Achievement:</span>
+                  <span style={{ fontWeight: 200 }}>{date}</span>
+                </div>
+                <div style={{ display: "flex", gap: "0.5rem" }}>
+                  <span style={{ color: "#000000" }}>Certificate Number:</span>
+                  <span style={{ fontWeight: 200 }}>{certNumber}</span>
+                </div>
+              </div>
+              <span
+                style={{
+                  color: "#4D4D4D",
+                  fontWeight: 200,
+                  marginTop: "1rem",
+                  marginBottom: "1rem",
+                  fontSize: "22px",
+                }}
+              >
+                CERTIFICATE WAS AWARDED BY
+              </span>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "10%",
+                  width: "100%",
+                  justifyContent: "center",
+                  color: "#4D4D4D",
+                  fontWeight: 200,
+                  marginTop: "1.5rem",
+                }}
+              >
+                <div className="flex flex-col w-[300px] text-center justify-center items-center">
+                  <span><img src="/signature.png" alt="director" className="h-24" /></span>
+                  <span 
+                   style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "0.75rem",
+                    width: "300px",
+                    textAlign: "center",
+                    borderTop: "1px solid #000000",
+                  }}>DIrector RIMI</span>
+                </div>
+                <div className="flex flex-col w-[300px] text-center justify-center items-center">
+                  <span><img src="/signature.png" alt="director" className="h-24" /></span>
+                  <span 
+                   style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "0.75rem",
+                    width: "300px",
+                    textAlign: "center",
+                    borderTop: "1px solid #000000",
+                  }}>Head of Training & Development RIMI</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  );
+};
+
+export default Certificate;
+
+{
+  /* <div className="w-[1050px] mx-auto m-4 border">
         <div className="flex flex-col bg-white mx-auto">
           <div className="w-full bg-primary p-4 pb-0 h-fit">
             <div className="w-full flex flex-col items-center justify-center gap-1 font-rufina text-white border border-b-0 border-[#CB5A31]">
@@ -94,85 +386,5 @@ const Certificate: React.FC<CertificateProps> = (
             </div>
           </div>
         </div>
-      </div> */}
-
-       <div className="w-[1050px] mx-auto m-4 border">
-        <div className="flex flex-col bg-white mx-auto">
-          <div className="w-full bg-primary p-4 pb-0 h-fit">
-            <div className="w-full flex flex-col items-center justify-center gap-1 font-rufina text-white border border-b-0 border-[#CB5A31]">
-              <img src="/RIMI.svg" alt="" className="w-[110px] mt-10" />
-              <h1 className=" text-[4rem] uppercase mt-2">Certificate</h1>
-              <div className="relative w-full flex justify-center items-center -mt-3">
-                <div
-                  className="w-[250px] h-[1px] rounded-s-2xl bg-white"
-                ></div>
-                <h2 className=" text-[2rem] uppercase bg-primary px-1">
-                  of Completion
-                </h2>
-                <div
-                  className="w-[250px] h-[1px] rounded-e-2xl bg-white"
-                ></div>
-              </div>
-              {/* <img src="certCurve.svg" alt="" className="mt-4" /> */}
-            </div>
-          </div>
-          <div className="bg-white m-4 mt-0">
-            <div className="border border-[#CB5A31] border-t-0 flex flex-col gap-4 justify-center items-center pt-3 pb-5 w-full">
-              <p className="text-[2rem] text-[#4D4D4D] font-[200]">
-                This is to certify that
-              </p>
-              <p
-                className="text-[6.5rem] text-[#4D4D4D] -mt-8"
-                style={{ fontFamily: '"MonteCarlo", cursive' }}
-              >
-                {recipientName}
-              </p>
-              <p className="max-w-[750px] text-center text-[#4D4D4D] font-extralight">
-                has successfully completed the RIMI  Insurance Training Program
-                This achievement reflects the dedication, knowledge, and skills
-                demonstrated in understanding insurance principles, policies,
-                client servicing, and compliance standards as set by RIMI
-                Insurance Training Program
-              </p>
-              <div className="flex items-center gap-[30%] w-full justify-center text-[#4D4D4D] mt-2">
-                <div className="flex gap-2">
-                  <span className="text-black">Date of Achievement:</span>
-                  <span className="font-extralight">{date}</span>
-                </div>
-                <div className="flex gap-2">
-                  <span className="text-black">Certificate Number:</span>
-                  <span className="font-extralight">{certNumber}</span>
-                </div>
-              </div>
-              <span className="text-[#4D4D4D] font-extralight my-4 text-[22px]">
-                CERTIFICATE WAS AWARDED BY
-              </span>
-              <div className="flex items-center gap-[10%] w-full justify-center text-[#4D4D4D] font-extralight mt-3">
-                <div
-                  className="flex flex-col w-[300px] text-center justify-center items-center"
-                 
-                >
-                <span><img src="/signature.png" alt="director" className="h-24"/></span>
-                  <span style={{ borderTop: "1px solid #000000" }} className="w-full pt-3">Director RIMI</span>
-                </div>
-                <div
-                  className="flex flex-col w-[300px] text-center justify-center items-center"
-                >
-                  <span><img src="/signature.png" alt="director" className="h-24"/></span>
-                  <span style={{ borderTop: "1px solid #000000" }} className="w-full pt-3">Head of Training & Development RIMI</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    
-    </>
-  )
+      </div> */
 }
-
-export default Certificate
-
-
-
-

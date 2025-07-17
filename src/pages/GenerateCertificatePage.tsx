@@ -38,7 +38,8 @@ export const GenerateCertificatePage: React.FC = () => {
 
   return (
     <div className="p-8">
-      <p>Generating certificate…</p>
+      
+      <p>Processing certificate…</p>
 
       {/* Hidden Certificate for html2canvas */}
     {certData && (
