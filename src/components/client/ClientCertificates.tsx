@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import api from "../../utils/api";
 import { API_BASE } from "../../utils/ulrs";
-import Spinner from "../Spinner";
+import Spinner from "../loaders/Spinner";
 
 interface CertRecord {
   id: number;

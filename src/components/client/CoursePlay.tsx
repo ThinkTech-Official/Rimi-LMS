@@ -13,7 +13,7 @@ import {
   useFetchTestClient,
   type TestWithQuestions,
 } from "../../hooks/useFetchTestClient";
-import Spinner from "../Spinner";
+import Spinner from "../loaders/Spinner";
 import { BiExitFullscreen } from "react-icons/bi";
 
 const CoursePlay = () => {

@@ -293,7 +293,7 @@ import { useTranslation } from "react-i18next";
 // import { useUsers, User } from "../hooks/useUser";
 import { useAdminUsers, type User } from "../hooks/useAdminUsers";
 import { useNavigate } from "react-router-dom";
-import Spinner from "./Spinner";
+import Spinner from "./loaders/Spinner";
 
 
 export const UserManagement: React.FC = () => {

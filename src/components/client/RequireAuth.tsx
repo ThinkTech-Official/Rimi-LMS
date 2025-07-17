@@ -1,7 +1,7 @@
 import React from 'react';
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import { useProfile } from '../../hooks/useProfile';
-import AuthLoader from '../AuthLoader';
+import AuthLoader from '../loaders/AuthLoader';
 
 export const RequireAuth: React.FC = () => {
   const { profile, loading, error } = useProfile();

@@ -1,7 +1,7 @@
 import React, { type ReactNode } from 'react';
 import { Navigate, useLocation, Outlet } from 'react-router-dom';
 import { useAdminContext } from '../context/AdminContext';
-import Spinner from './Spinner';
+import Spinner from './loaders/Spinner';
 
 
 

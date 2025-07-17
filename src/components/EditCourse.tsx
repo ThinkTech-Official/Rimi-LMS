@@ -7,7 +7,7 @@ import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 import { useFetchTests, type TestEntry } from "../hooks/useFetchTests";
 import { useDeleteTest } from "../hooks/useDeleteTest";
 import { useTranslation } from "react-i18next";
-import Spinner from "./Spinner";
+import Spinner from "./loaders/Spinner";
 import useNotification from "../hooks/useNotification";
 import { set } from "react-hook-form";
 import { useAdminFetchCourse } from "../hooks/useAdminFetchCourse";
@@ -441,7 +441,7 @@ const EditCourse: React.FC = () => {
                         borderColor: "#AAA9A9",
                       }}
                     >
-                      {test.startTime}
+                      {test.startTime} sec
                     </td>
                     <td
                       className="px-2 py-4 whitespace-nowrap"
@@ -451,7 +451,7 @@ const EditCourse: React.FC = () => {
                         borderColor: "#AAA9A9",
                       }}
                     >
-                      {test.duration}
+                      {test.duration} sec
                     </td>
                     <td
                       className="px-2 py-4 text-center whitespace-nowrap"

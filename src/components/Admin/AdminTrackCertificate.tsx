@@ -84,7 +84,7 @@ const AdminTrackCertificate: React.FC = () => {
             {new Date(certificate.createdAt).toLocaleString()}
           </p>
           <p className="text-text-light">
-            <span className="font-medium text-text-dark">Certificate #:</span>{" "}
+            <span className="font-medium text-text-dark">Certificate ID:</span>{" "}
             {certificate.certNumber}
           </p>
           {certificate.fileName && (

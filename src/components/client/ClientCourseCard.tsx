@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useFetchCourseProgress } from '../../hooks/useFetchCourseProgress';
 import { useAuth } from '../../context/AuthContext';
 import { RiProgress3Line } from 'react-icons/ri';
-import Spinner from '../Spinner';
+import Spinner from '../loaders/Spinner';
 
 
 interface ClientCourseCardProps {

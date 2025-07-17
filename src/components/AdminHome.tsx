@@ -4,9 +4,10 @@ import { useTranslation } from "react-i18next";
 import { useDashboardStats } from "../hooks/useDashboardStats";
 import { useRecentSignups } from "../hooks/useRecentSignups";
 import { useLiveTotals } from "../hooks/useLiveTotals";
-import Spinner from "./Spinner";
+import Spinner from "./loaders/Spinner";
 import { useNavigate } from "react-router-dom";
 import useNotification from "../hooks/useNotification";
+import SquareLoader from "./loaders/SquareLoader";
 
 // Dummy stats
 // const stats = [
