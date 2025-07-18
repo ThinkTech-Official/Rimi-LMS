@@ -452,6 +452,7 @@ const Certificate: React.FC<CertificateProps> = ({
                 color: "#4D4D4D",
                 marginTop: "-2.5rem",
                 fontFamily: '"MonteCarlo", cursive',
+                textTransform: "capitalize",
               }}
             >
               {recipientName}
