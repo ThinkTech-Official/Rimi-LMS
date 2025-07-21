@@ -19,7 +19,7 @@ import { CiFileOn } from "react-icons/ci";
 import { MdCancel } from "react-icons/md";
 import FetchingError from "./FetchingError";
 import { useToggleCoursePublish } from "../hooks/useToggleCoursePublish";
-import { ToggleSwitch } from "./Admin/ToggleTest";
+// import { ToggleSwitch } from "./Admin/ToggleTest";
 
 const EditCourse: React.FC = () => {
   const navigate = useNavigate();
