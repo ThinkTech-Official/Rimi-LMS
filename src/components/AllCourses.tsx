@@ -6,7 +6,7 @@ import { useFetchCourses , type Course } from "../hooks/useFetchCourses";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import { useCreateCategory } from "../hooks/useCreateCategory";
 import { useTranslation } from "react-i18next";
-import Spinner from "./Spinner";
+import Spinner from "./loaders/Spinner";
 import useNotification from "../hooks/useNotification";
 import FetchingError from "./FetchingError";
 

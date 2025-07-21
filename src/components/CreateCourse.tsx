@@ -16,7 +16,7 @@ import { useFetchCategories } from "../hooks/useFetchCategories";
 import { useCreateCategory } from "../hooks/useCreateCategory";
 import { useTranslation } from "react-i18next";
 import { set, useForm } from "react-hook-form";
-import Spinner from "./Spinner";
+import Spinner from "./loaders/Spinner";
 import { FaAngleDown } from "react-icons/fa6";
 import { CiFileOn } from "react-icons/ci";
 import useNotification from "../hooks/useNotification";

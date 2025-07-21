@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useFetchCourseProgress } from '../../hooks/useFetchCourseProgress';
 import { useAuth } from '../../context/AuthContext';
 import { RiProgress3Line } from 'react-icons/ri';
-import Spinner from '../Spinner';
+import Spinner from '../loaders/Spinner';
 
 
 interface ClientCourseCardProps {
@@ -137,7 +137,7 @@ loading
             ( 
                 // Zero Percent Show Start course 
                 <button
-              className="inline-block mt-2 text-sm sm:text-[16px] px-5 py-1 sm:py-3 bg-primary text-white text-nowrap font-semibold hover:bg-indigo-700 cursor-pointer transition-colors delay-150"
+              className="inline-block mt-2 text-sm sm:text-[16px] px-5 py-2 sm:py-3 bg-primary text-white text-nowrap font-semibold hover:bg-indigo-700 cursor-pointer transition-colors delay-150"
               onClick={() => handleStartCourse(courseId)}
             >
               Start Course
@@ -149,7 +149,7 @@ loading
                 (
                     // 100 percent show get certificates 
                     <button
-              className="inline-block mt-2 text-sm sm:text-[16px] px-5 py-1 sm:py-3 bg-primary text-white text-nowrap font-semibold hover:bg-indigo-700 cursor-pointer transition-colors delay-150"
+              className="inline-block mt-2 text-sm sm:text-[16px] px-5 py-2 sm:py-3 bg-primary text-white text-nowrap font-semibold hover:bg-indigo-700 cursor-pointer transition-colors delay-150"
               onClick={() => handleGenerate()}
             >
               Get Certificate
@@ -159,7 +159,7 @@ loading
                 (
                     // Some where between 0 and 100 
                     <button
-              className="inline-block mt-2 text-sm sm:text-[16px] px-5 py-1 sm:py-3 bg-primary text-white text-nowrap font-semibold hover:bg-indigo-700 cursor-pointer transition-colors delay-150"
+              className="inline-block mt-2 text-sm sm:text-[16px] px-5 py-2 sm:py-3 bg-primary text-white text-nowrap font-semibold hover:bg-indigo-700 cursor-pointer transition-colors delay-150"
               onClick={() => handleStartCourse(courseId)}
             >
               Continue Course

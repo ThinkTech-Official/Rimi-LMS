@@ -1,60 +1,60 @@
-import React, { useRef } from 'react'
-import { useParams, useLocation } from 'react-router-dom'
-import Certificate from '../components/Certificate'
-import { useGenerateCertificate } from '../hooks/useGenerateCertificate'
-import { useAuth } from '../context/AuthContext'
+import React, { useRef } from "react";
+import { useParams, useLocation } from "react-router-dom";
+import Certificate from "../components/Certificate";
+import { useGenerateCertificate } from "../hooks/useGenerateCertificate";
+import { useAuth } from "../context/AuthContext";
+import SquareLoader from "../components/loaders/SquareLoader";
 
 interface LocationState {
-  courseTitle:   string
-  userName: string
+  courseTitle: string;
+  userName: string;
 }
 
 export const GenerateCertificatePage: React.FC = () => {
+  const { user } = useAuth();
 
-  const { user } = useAuth()
-
-  const { courseId } = useParams<{ courseId: string }>()
-  const location     = useLocation()
-  const state        = location.state as LocationState
-  const certRef      = useRef<HTMLDivElement>(null)
+  const { courseId } = useParams<{ courseId: string }>();
+  const location = useLocation();
+  const state = location.state as LocationState;
+  const certRef = useRef<HTMLDivElement>(null);
 
   // Kick off generation on mount
   const { status, certData } = useGenerateCertificate({
-    courseId:      courseId!,       
+    courseId: courseId!,
     recipientName: state.userName,
-    courseTitle:   state.courseTitle,
+    courseTitle: state.courseTitle,
     certRef,
-  })
+  });
 
-  if (status === 'error') {
+  if (status === "error") {
     return (
-      <div className="p-8 text-red-500">
-        Failed to generate certificate.
-      </div>
-    )
+      <div className="p-8 text-red-500">Failed to generate certificate.</div>
+    );
   }
 
-  if(!user?.name) return <p>No User Logged in</p>
+  if (!user?.name) return <p>No User Logged in</p>;
 
   return (
     <div className="p-8">
-      
-      <p>Processing certificate…</p>
+      <div className="flex flex-col justify-center items-center gap-3 fixed top-1/2 left-1/2">
+        <SquareLoader />
+        <p>Processing Certificate...</p>
+      </div>
 
       {/* Hidden Certificate for html2canvas */}
-    {certData && (
-  <div
-    ref={certRef}
-    style={{ position: 'absolute', left: -10000, top: 0 }}
-  >
-    <Certificate
-      recipientName={user?.name}
-      courseTitle={certData.course.name}
-      date={new Date(certData.createdAt).toLocaleDateString()}  // certData.createdAt is string
-      certNumber={certData.certNumber}                          // certNumber is string
-    />
-  </div>
-)}
+      {certData && (
+        <div
+          ref={certRef}
+          style={{ position: "absolute", left: -10000, top: 0 }}
+        >
+          <Certificate
+            recipientName={user?.name}
+            courseTitle={certData.course.name}
+            date={new Date(certData.createdAt).toLocaleDateString()} // certData.createdAt is string
+            certNumber={certData.certNumber} // certNumber is string
+          />
+        </div>
+      )}
     </div>
-  )
-}
+  );
+};

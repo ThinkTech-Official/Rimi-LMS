@@ -327,7 +327,7 @@ import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { useNavigate, useParams } from "react-router-dom";
 import { API_BASE } from "../utils/ulrs";
 import { useAdminResetPasswordOfClient } from "../hooks/useAdminResetPasswordOfClient";
-import Spinner from "./Spinner";
+import Spinner from "./loaders/Spinner";
 
 // const breadcrumbTrail = ['Users', 'Profile'];
 

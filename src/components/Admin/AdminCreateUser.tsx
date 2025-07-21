@@ -6,7 +6,7 @@ import { useAdminCreateClient, type CreateClientUserDto } from '../../hooks/useA
 import useNotification from '../../hooks/useNotification';
 
 export const AdminCreateUser: React.FC = () => {
-  const { register, handleSubmit, watch, formState: { errors } } =
+  const { register, handleSubmit, reset, watch, formState: { errors } } =
     useForm<CreateClientUserDto & { confirmPassword: string }>();
   const { createClient, loading, error, success } = useAdminCreateClient();
   const { triggerNotification, NotificationComponent } = useNotification();
@@ -16,6 +16,7 @@ export const AdminCreateUser: React.FC = () => {
     try {
       await createClient({ name, email, password });
       triggerNotification({ type: 'success', message: 'Client created successfully', duration: 3000 });
+      reset();
     } catch(error) {
       console.log('error in creting client', error)
       triggerNotification({ type: 'error', message: 'Failed to create client', duration: 3000 });

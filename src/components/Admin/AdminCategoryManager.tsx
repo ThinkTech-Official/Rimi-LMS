@@ -4,7 +4,7 @@
 import React, { use, useState } from 'react';
 import { useCategoriesAdmin, type Category } from '../../hooks/useCategoriesAdmin';
 import { MdClose } from 'react-icons/md';
-import Spinner from '../Spinner';
+import Spinner from '../loaders/Spinner';
 import useNotification from '../../hooks/useNotification';
 
 

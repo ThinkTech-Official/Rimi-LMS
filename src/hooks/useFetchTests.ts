@@ -94,8 +94,8 @@ export const useFetchTests = (
         const normalized = res.data.data.map((t) => ({
           id: t.id,
           name: t.name,
-          startTime: `${t.startTime} min`,
-          duration: `${t.duration} min`,          
+          startTime: `${t.startTime}`,
+          duration: `${t.duration}`,          
           questionCount: Array.isArray(t.questions) ? t.questions.length : 0,
         }));
         console.log('from useFetchTests ', res)

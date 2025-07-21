@@ -8,7 +8,7 @@ interface NotificationWithId extends NotificationProps {
   id: string;
 }
 
-const useNotification = (position: Position = "top-right") => {
+const useNotification = (position: Position = "top-center") => {
   const [notifications, setNotifications] = useState<NotificationWithId[]>([]);
   const timersRef = useRef<Record<string, ReturnType<typeof setTimeout>>>({});
 
@@ -31,7 +31,7 @@ const useNotification = (position: Position = "top-right") => {
         onClose: () => removeNotification(id),
       };
 
-      setNotifications((prev) => [...prev, newNotification]);
+      setNotifications((prev) => [newNotification, ...prev]);
 
       timersRef.current[id] = setTimeout(() => {
         removeNotification(id);
@@ -41,7 +41,7 @@ const useNotification = (position: Position = "top-right") => {
   );
 
   const NotificationComponent = (
-    <div className={`fixed z-50 space-y-2 ${position}`}>
+    <div className={`fixed z-50 space-y-3 ${position}`}>
       {notifications.map((n) => (
         <Notification key={n.id} {...n} />
       ))}

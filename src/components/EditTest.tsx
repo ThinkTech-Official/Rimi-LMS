@@ -4,7 +4,7 @@ import { RiDeleteBinLine } from 'react-icons/ri';
 import { useFetchTest, type TestDetail, type QuestionDto, type OptionDto } from '../hooks/useFetchTest';
 import { useUpdateTest, type UpdateTestDto } from '../hooks/useUpdateTest';
 import useNotification from '../hooks/useNotification';
-import Spinner from './Spinner';
+import Spinner from './loaders/Spinner';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import type { Question } from './client/Quiz';
 

@@ -8,7 +8,7 @@ import { TbEdit, TbX } from "react-icons/tb";
 import { useProfile } from "../../hooks/useProfile";
 import { useUpdateProfile } from "../../hooks/useUpdateProfile";
 import { useResetPassword } from "../../hooks/useResetPassword";
-import Spinner from "../Spinner";
+import Spinner from "../loaders/Spinner";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { IoMdClose } from "react-icons/io";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";

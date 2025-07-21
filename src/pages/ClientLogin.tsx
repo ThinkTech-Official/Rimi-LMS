@@ -160,7 +160,7 @@ interface LoginFormInput {
 const LoginClient: React.FC = () => {
   const navigate = useNavigate()
   const [showPassword, setShowPassword] = useState(false);
-  const { register, handleSubmit } = useForm<LoginFormInput>();
+  const { register, handleSubmit, formState: {errors} } = useForm<LoginFormInput>();
   const {NotificationComponent, triggerNotification } = useNotification();
 
    const { login, loading, error } = useLogin();
@@ -222,9 +222,8 @@ const LoginClient: React.FC = () => {
               id="email"
               type="email"
               autoComplete="email"
-              required
               {...register("email", {
-                required: true,
+                required: "Email is required",
                 pattern: {
                   value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
                   message: "Invalid email address",
@@ -233,18 +232,27 @@ const LoginClient: React.FC = () => {
               placeholder="Email"
               className="w-full px-4 py-3 border border-zinc-300 focus:outline-none focus:ring-1 focus:ring-primary"
             />
+            {errors.email && (
+              <p className="text-red-600 text-sm mt-1">{errors.email.message}</p>
+            )}
           </div>
 
           <div className="relative">
             <label htmlFor="password" className="sr-only">
               Password
             </label>
-            <input
+          <div className="relative">
+              <input
               id="password"
-              {...register("password", { required: true, minLength: 4 })}
+             {...register("password", {
+                  required: "Password is required",
+                  minLength: {
+                    value: 6,
+                    message: "Password must be at least 6 characters",
+                  },
+                })}
               type={showPassword ? "text" : "password"}
               autoComplete="current-password"
-              required
               placeholder="Password"
               className="w-full px-4 py-3 border border-zinc-300 focus:outline-none focus:ring-1 focus:ring-primary"
             />
@@ -259,6 +267,12 @@ const LoginClient: React.FC = () => {
                 <EyeIcon className="h-5 w-5" aria-hidden="true" />
               )}
             </button>
+          </div>
+            {errors.password && (
+              <p className="text-red-600 text-sm mt-1">
+                {errors.password.message}
+              </p>
+            )}
           </div>
 
           <button

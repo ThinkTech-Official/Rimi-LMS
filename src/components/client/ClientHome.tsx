@@ -8,7 +8,7 @@ import { BiSearch } from "react-icons/bi";
 import { useFetchCoursesClient } from "../../hooks/useFetchCoursesClient";
 import { useFetchCourseProgress } from "../../hooks/useFetchCourseProgress";
 import ClientCourseCard from "./ClientCourseCard";
-import Spinner from "../Spinner";
+import Spinner from "../loaders/Spinner";
 import FetchingError from "../FetchingError";
 
 const ClientHome = () => {

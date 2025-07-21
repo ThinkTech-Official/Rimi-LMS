@@ -15,11 +15,11 @@ const Certificates: React.FC = () => {
                   of Completion
                 </h2>
                 <div
-                  className="w-[500px] absolute top-1/3 z-0"
+                  className="w-[500px] absolute top-1/6 z-0"
                   style={{ border: "0.57px solid #FFFFFF" }}
                 ></div>
               </div>
-              <img src="certCurve.svg" alt="" className="mt-4" />
+              <img src="/certCurve.svg" alt="" className="mt-4" />
             </div>
           </div>
           <div className="bg-white m-4 mt-0">
@@ -73,23 +73,213 @@ const Certificates: React.FC = () => {
           </div>
         </div>
       </div>
-      
+      {/* 2 */}
+      <div
+        style={{
+          width: "1050px",
+          height: "820px",
+          margin: "0 auto",
+          border: "1px solid #2b00b7",
+          padding: "16px",
+        }}
+      >
+        <div
+          style={{
+            border: "1px solid #CB5A31",
+            height: "100%",
+            display: "flex",
+            gap: "2.5rem",
+          }}
+        >
+          <div
+            style={{
+              position: "relative",
+              height: "820px",
+              width: "auto",
+              marginLeft: "1.25rem",
+            }}
+          >
+            <img
+              src="/certFrame.png"
+              alt="Frame"
+              style={{
+                height: "100%",
+                width: "100%",
+                objectFit: "cover",
+                marginTop: "-17.5px",
+              }}
+            />
+            <img
+              src="/RIMI.svg"
+              alt="RIMI Logo"
+              style={{
+                width: "120px",
+                position: "absolute",
+                top: "10%",
+                left: "50%",
+                transform: "translateX(-50%)",
+              }}
+            />
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                gap: "0.75rem",
+                width: "100%",
+                justifyContent: "center",
+                color: "white",
+                position: "absolute",
+                bottom: "10%",
+                left: "50%",
+                transform: "translateX(-50%)",
+                fontSize: "0.875rem",
+              }}
+            >
+              <div style={{ display: "flex", gap: "0.5rem" }}>
+                <span>Date of Achievement:</span>
+                <span>20-06-2025</span>
+              </div>
+              <div style={{ display: "flex", gap: "0.5rem" }}>
+                <span>Certificate Number:</span>
+                <span>1232354664</span>
+              </div>
+            </div>
+          </div>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              paddingTop: "1rem",
+              paddingBottom: "1rem",
+            }}
+          >
+            <h1
+              style={{
+                fontSize: "4rem",
+                textTransform: "uppercase",
+                marginTop: "0.5rem",
+                fontFamily: "'Rufina', serif",
+                color: "#4D4D4D",
+                fontWeight: "bold",
+              }}
+            >
+              Certificate
+            </h1>
+            <h2
+              style={{
+                fontSize: "2rem",
+                color: "#B57E10",
+                textTransform: "uppercase",
+                paddingLeft: "0.25rem",
+                paddingRight: "0.25rem",
+                zIndex: 5,
+              }}
+            >
+              of Completion
+            </h2>
+            <div style={{ marginTop: "1.5rem" }}>
+              <p style={{ fontSize: "2rem", color: "#4D4D4D" }}>
+                This is to certify that
+              </p>
+              <p
+                style={{
+                  fontSize: "6.5rem",
+                  color: "#4D4D4D",
+                  marginTop: "-0.75rem",
+                  fontFamily: '"MonteCarlo", cursive',
+                }}
+              >
+                Reciepient Name
+              </p>
+              <p
+                style={{
+                  maxWidth: "570px",
+                  color: "#4D4D4D",
+                  fontWeight: "200",
+                  marginTop: "0.75rem",
+                }}
+              >
+                has successfully completed the RIMI  Insurance Training Program
+                This achievement reflects the dedication, knowledge, and skills
+                demonstrated in understanding insurance principles, policies,
+                client servicing, and compliance standards as set by RIMI
+                Insurance Training Program
+              </p>
+            </div>
+            <span
+              style={{
+                color: "#4D4D4D",
+                fontSize: "2rem",
+                fontWeight: "500",
+                marginTop: "2rem",
+              }}
+            >
+              CERTIFICATE WAS AWARDED BY
+            </span>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "1.5rem",
+                width: "100%",
+                justifyContent: "center",
+                color: "#4D4D4D",
+                fontWeight: "200",
+                marginTop: "2rem",
+              }}
+            >
+               <div className="flex flex-col w-[300px] text-center justify-center items-center">
+                <span>
+                  <img src="/signature.png" alt="director" className="h-24" />
+                </span>
+                <span
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "0.75rem",
+                    width: "300px",
+                    textAlign: "center",
+                    borderTop: "1px solid #000000",
+                  }}
+                >
+                  Director RIMI
+                </span>
+              </div>
+               <div className="flex flex-col w-[300px] text-center justify-center items-center">
+                <span>
+                  <img src="/signature.png" alt="director" className="h-24" />
+                </span>
+                <span
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "0.75rem",
+                    width: "300px",
+                    textAlign: "center",
+                    borderTop: "1px solid #000000",
+                  }}
+                >
+                  Head of Training & Development RIMI
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
 
 export default Certificates;
 
-
-
-
-
-
-
 // design 2 of certificate GiTempleGate
 
-{/* 2 */}
-      {/* <div className="w-[1050px] h-[820px] mx-auto p-4 border">
+{
+  /* 2 */
+}
+{
+  /* <div className="w-[1050px] h-[820px] mx-auto p-4 border">
         <div className="border border-[#CB5A31] h-full flex gap-10">
           <div className="relative h-[820px] w-auto ml-5">
             <img
@@ -159,4 +349,5 @@ export default Certificates;
             </div>
           </div>
         </div>
-      </div> */}
+      </div> */
+}
