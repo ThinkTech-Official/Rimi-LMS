@@ -18,6 +18,8 @@ import { formatTime } from "../hooks/useFetchCourses";
 import { CiFileOn } from "react-icons/ci";
 import { MdCancel } from "react-icons/md";
 import FetchingError from "./FetchingError";
+import { useToggleCoursePublish } from "../hooks/useToggleCoursePublish";
+import { ToggleSwitch } from "./Admin/ToggleTest";
 
 const EditCourse: React.FC = () => {
   const navigate = useNavigate();
@@ -48,6 +50,8 @@ const EditCourse: React.FC = () => {
     loading,
     error,
   } = useFetchTests(courseId!, currentPage, testsPerPage);
+
+  const { togglePublish } = useToggleCoursePublish(Number(courseId!))
 
   const {
     deleteTest,
@@ -105,6 +109,7 @@ const EditCourse: React.FC = () => {
       thumbnail: basicCourse.thumbnail ?? "",
       videoUrl: basicCourse.videoUrl ?? "",
     });
+    setIsCoursePublished(basicCourse.liveStatus ?? false)
   }, [basicCourse]);
 
   const handleBasicChange = (
@@ -208,29 +213,58 @@ const EditCourse: React.FC = () => {
     vid.onloadedmetadata = () => {
       URL.revokeObjectURL(url);
       const secs = Math.floor(vid.duration);
-      // write back into your form state
+      
       setBasicForm((f) => ({ ...f, duration: secs.toString() }));
     };
   };
 
-  const handleCoursePublish = async () => {
-    try {
-      // await publishCourse(!isCoursePublished);
-      setIsCoursePublished(!isCoursePublished);
-      triggerNotification({
-        type: "success",
-        message: `Course ${isCoursePublished ? "unpublished" : "published"}`,
-      });
-    } catch (error) {
-      console.error(error);
-      triggerNotification({
-        type: "error",
-        message: `Failed to ${
-          isCoursePublished ? "unpublish" : "publish"
-        } course`,
-      });
-    }
-  };
+
+
+//  const handleCoursePublish = async () => {
+//   try {
+//     const newStatus = !isCoursePublished;
+//     const updated = await togglePublish(newStatus);
+
+//     setIsCoursePublished(updated.live);
+//     triggerNotification({
+//       type: 'success',
+//       message: `Course ${updated.live ? 'published' : 'unpublished'}`,
+//     });
+//   } catch {
+//     triggerNotification({
+//       type: 'error',
+//       message: `Failed to ${isCoursePublished ? 'unpublish' : 'publish'} course`,
+//     });
+//   }
+// };
+
+
+const handleCoursePublish = async () => {
+  const desired = !isCoursePublished;
+
+  // 1) Optimistically flip it in the UI
+  // setIsCoursePublished(desired);
+
+  try {
+    // 2) Push it to the server
+    const updated = await togglePublish(desired);
+
+    // 3) **Confirm** with whatever the server actually saved
+    setIsCoursePublished(updated.liveStatus);
+
+    triggerNotification({
+      type: 'success',
+      message: `Course ${updated.liveStatus ? 'published' : 'unpublished'}`,
+    });
+  } catch {
+    // 4) On error, revert the toggle
+    setIsCoursePublished(prev => !prev);
+    triggerNotification({
+      type: 'error',
+      message: `Failed to ${desired ? 'publish' : 'unpublish'} course`,
+    });
+  }
+};
 
   const handleDeleteCourse = async () => {
     try {
@@ -266,23 +300,38 @@ const EditCourse: React.FC = () => {
        &lt; All Courses
       </button>
       <div className="w-full flex justify-end gap-2 items-center">
-        <span className="text-text-light-2">
+        <span className="text-primary">
           {isCoursePublished ? "Published" : "Unpublished"}
         </span>
 
         <div
-          className="w-14 h-6 bg-gray-200 rounded-full relative cursor-pointer"
+          className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full transition-colors duration-200 ${
+              isCoursePublished
+                ? "bg-green-800"
+                : "bg-red-500"
+            }  rounded-full relative cursor-pointer`}
           onClick={handleCoursePublish}
         >
           <span
-            className={`absolute top-0 left-0 w-6 h-6 rounded-full transition-transform duration-300 ${
-              isCoursePublished
-                ? "bg-primary translate-x-8"
-                : "bg-gray-500 translate-x-0"
-            }`}
+            // className={`absolute top-0 left-0 w-6 h-6 rounded-full transition-transform duration-300 bg-slate-100`}
+             className={`
+          inline-block h-5 w-5 transform rounded-full bg-white shadow transition-transform duration-200
+          ${isCoursePublished ? 'translate-x-5' : 'translate-x-0'}
+        `}
+
           ></span>
         </div>
+
+        
       </div>
+
+      {/* <div>
+        <ToggleSwitch
+        enabled={true} 
+        onChange={()=> console.log("checking the toggle switch")}
+        label={'Publich toggle'}
+        />
+      </div> */}
 
       {basicInfoLoad ? (
         <Spinner className="mx-auto" />
@@ -386,9 +435,9 @@ const EditCourse: React.FC = () => {
                 <th className="px-2 py-3 font-medium">Start Point</th>
                 <th className="px-2 py-3 font-medium">Duration</th>
                 <th className="px-2 py-3 text-center font-medium">Action</th>
-                <th className="px-2 py-3 text-center font-medium">
+                {/* <th className="px-2 py-3 text-center font-medium">
                   Publish Test
-                </th>
+                </th> */}
               </tr>
             </thead>
             <tbody
@@ -476,7 +525,7 @@ const EditCourse: React.FC = () => {
                         </button>
                       </div>
                     </td>
-                    <td
+                    {/* <td
                       className="px-2 py-4 whitespace-nowrap"
                       style={{
                         borderWidth: "0px 1px 1px 0px",
@@ -495,7 +544,7 @@ const EditCourse: React.FC = () => {
                           ></span>
                         </div>
                       </div>
-                    </td>
+                    </td> */}
                   </tr>
                 ))
               )}

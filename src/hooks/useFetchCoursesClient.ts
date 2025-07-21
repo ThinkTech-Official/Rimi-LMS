@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { API_BASE } from '../utils/ulrs';
+import api from '../utils/api';
 
 export interface RawCourseEntry {
   id: number;
@@ -34,8 +35,8 @@ export const useFetchCoursesClient = () => {
 
   useEffect(() => {
     setLoading(true);
-    axios
-      .get<RawCourseEntry[]>(`${API_BASE}/courses`)
+    api
+      .get<RawCourseEntry[]>(`${API_BASE}/courses/live`)
       .then(res => {
         const normalized = res.data.map(c => ({
           id: c.id,

@@ -12,6 +12,7 @@ export interface BasicCourse {
   thumbnail: string | null
   videoUrl: string | null
   duration: number | null
+  liveStatus: boolean | null
 }
 
 /**
@@ -31,7 +32,9 @@ export function useAdminFetchCourse(courseId: string | null) {
 
     adminApi
       .get<BasicCourse>(`${API_BASE}/courses/${courseId}/basic`)
-      .then(r => setBasicCourse(r.data))
+      .then(r => {
+        console.log(r.data)
+        setBasicCourse(r.data)})
       .catch(err =>
         setError(
           err.response?.data?.message ??
