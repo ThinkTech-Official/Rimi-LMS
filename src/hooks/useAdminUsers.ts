@@ -1,4 +1,8 @@
 
+
+
+
+
 // import { useState, useEffect } from 'react';
 // import adminApi from '../utils/adminApi';
 // import { API_BASE } from '../utils/ulrs';
@@ -14,24 +18,43 @@
 
 
 
-
-// export const useAdminUsers = () => {
-//   const [users, setUsers]     = useState<User[]>([]);
-//   const [loading, setLoading] = useState(true);
-//   const [error, setError]     = useState<string>('');
+// export const useAdminUsers = (
+//   page: number,
+//   limit: number,
+// ) => {
+//   const [data, setData]     = useState<User[]>([]);
+//   const [total, setTotal]   = useState(0);
+//   const [loading, setLoading]= useState(true);
+//   const [error, setError]   = useState<string>('');
 
 //   useEffect(() => {
-//     adminApi.get<User[]>(`${API_BASE}/admin/users`)
+//     setLoading(true);
+//     adminApi.get<{
+//       data: User[];
+//       total: number;
+//       page: number;
+//       limit: number;
+//     }>(`${API_BASE}/admin/users`, { params: { page, limit } })
 //       .then(res => {
-//         console.log('from use admin hook ', res.data)
-//         setUsers(res.data)}
-//     )
-//       .catch(err => setError(err.response?.data?.message || err.message))
+//         setData(res.data.data);
+//         setTotal(res.data.total);
+//       })
+//       .catch(err => setError(err.message))
 //       .finally(() => setLoading(false));
-//   }, []);
+//   }, [page, limit]);
 
-//   return { users, loading, error };
+//   return { users: data, total, loading, error };
 // };
+
+
+// ===================================================
+
+
+
+
+
+
+
 
 
 
@@ -53,27 +76,46 @@ export interface User {
 export const useAdminUsers = (
   page: number,
   limit: number,
+  filter: 'all' | 'certified',
+  search: string,
 ) => {
-  const [data, setData]     = useState<User[]>([]);
-  const [total, setTotal]   = useState(0);
-  const [loading, setLoading]= useState(true);
-  const [error, setError]   = useState<string>('');
+  const [users, setUsers] = useState<User[]>([]);
+  const [total, setTotal] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string>('');
 
   useEffect(() => {
+    let isMounted = true;
     setLoading(true);
-    adminApi.get<{
-      data: User[];
-      total: number;
-      page: number;
-      limit: number;
-    }>(`${API_BASE}/admin/users`, { params: { page, limit } })
+    setError('');
+
+    adminApi
+      .get<{
+        data: User[];
+        total: number;
+        page: number;
+        limit: number;
+      }>(`${API_BASE}/admin/users`, {
+        params: { page, limit, filter, search },
+      })
       .then(res => {
-        setData(res.data.data);
+        if (!isMounted) return;
+        setUsers(res.data.data);
         setTotal(res.data.total);
       })
-      .catch(err => setError(err.message))
-      .finally(() => setLoading(false));
-  }, [page, limit]);
+      .catch(err => {
+        if (!isMounted) return;
+        setError(err.message ?? 'Unknown error');
+      })
+      .finally(() => {
+        if (!isMounted) return;
+        setLoading(false);
+      });
 
-  return { users: data, total, loading, error };
+    return () => {
+      isMounted = false;
+    };
+  }, [page, limit, filter, search]);
+
+  return { users, total, loading, error };
 };

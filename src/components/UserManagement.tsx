@@ -302,6 +302,7 @@ export const UserManagement: React.FC = () => {
 
   
   const [filter, setFilter] = useState<"all" | "certified">("all");
+  const [searchInput, setSearchInput] = useState<string>("");
   const [search, setSearch] = useState("");
   
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
@@ -313,19 +314,33 @@ export const UserManagement: React.FC = () => {
 
 
 
-  const { users, total , loading, error } = useAdminUsers(currentPage, limit);
+  const { users, total , loading, error } = useAdminUsers(currentPage, limit,filter,search);
 
-
-  const filteredUsers = users?.filter((u) => {
-    const matchesFilter =
-      filter === "all" || (filter === "certified" && u.certificateIssued);
-    const matchesSearch = u.name?.toLowerCase().includes(search.toLowerCase());
-    return matchesFilter && matchesSearch;
-  });
-
-
+  
 
   const totalPages = Math.ceil(total / limit);
+  // const filteredUsers = users?.filter((u) => {
+  //   const matchesFilter =
+  //     filter === "all" || (filter === "certified" && u.certificateIssued);
+  //   const matchesSearch = u.name?.toLowerCase().includes(search.toLowerCase());
+  //   return matchesFilter && matchesSearch;
+  // });
+
+    const handleFilterChange = (value: "all" | "certified") => {
+    setFilter(value);
+    setCurrentPage(1);
+  };
+
+    const handleSearch = () => {
+    setCurrentPage(1);
+    setSearch(searchInput.trim());
+  };
+
+
+
+
+
+
   const handleBack = useCallback(()=>setSelected(null), []);
   const [selected, setSelected ] = useState<User|null>(null);
 
@@ -361,6 +376,9 @@ export const UserManagement: React.FC = () => {
         <h1 className="text-lg 2xl:text-2xl font-bold text-text-dark mb-3 sm:mb-6 capitalize">
           {t("Users")}
         </h1>
+
+
+        {/* Filters and Search */}
         <div className="flex flex-col md:flex-row gap-2 md:items-center justify-start md:justify-between space-x-4 mb-6">
           <div className="flex gap-2 items-center">
             {" "}
@@ -372,7 +390,7 @@ export const UserManagement: React.FC = () => {
                   name="filter"
                   value="all"
                   checked={filter === "all"}
-                  onChange={() => setFilter("all")}
+                  onChange={() => handleFilterChange("all")}
                   className="form-radio cursor-pointer"
                 />
                 <span className="ml-2 capitalize">{t("all users")}</span>
@@ -383,7 +401,7 @@ export const UserManagement: React.FC = () => {
                   name="filter"
                   value="certified"
                   checked={filter === "certified"}
-                  onChange={() => setFilter("certified")}
+                  onChange={() => handleFilterChange("certified")}
                   className="form-radio cursor-pointer"
                 />
                 <span className="ml-2">{t("certified users")}</span>
@@ -394,18 +412,38 @@ export const UserManagement: React.FC = () => {
             <input
               type="text"
               placeholder={t("Search by name")}
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
               className="px-2 sm:px-4 py-1 sm:py-3 w-[200px] sm:w-[330px] focus:outline-none"
             />
-            <button className="px-1 sm:px-3 cursor-pointer">
+            <button
+            onClick={handleSearch}
+             className="px-1 sm:px-3 cursor-pointer">
               <BiSearch className="text-[#6F6B7D]" />
             </button>
           </div>
+        
         </div>
+
+           {/* Error */}
+        {error && (
+          <div className="text-red-600 mb-4">
+            {t("Error")}: {error}
+          </div>
+        )}
+
+
+
+
         {/* Users Table */}
         <div className="w-full overflow-x-auto custom-scrollbar pb-2">
-          <table className="min-w-full divide-y divide-gray-200">
+          { loading ? (
+            <div className="flex justify-center py-20">
+              <Spinner className="w-12 h-12" />
+            </div>
+
+          ) : (
+            <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-primary text-white text-base 2xl:text-xl capitalize">
               <tr>
                 <th className="px-2 sm:px-6 py-1 sm:py-3 text-left font-medium">
@@ -429,7 +467,7 @@ export const UserManagement: React.FC = () => {
               </tr>
             </thead>
             <tbody className="bg-white" style={{ border: "1px solid #AAA9A9" }}>
-              {filteredUsers.map((user:any) => (
+              {users.map((user:any) => (
                 <tr
                   key={user.email}
                   className="text-[#808080] text-sm 2xl:text-xl"
@@ -509,6 +547,7 @@ export const UserManagement: React.FC = () => {
               ))}
             </tbody>
           </table>
+          )}
         </div>
         {/* Pagination */}
         <div className="flex items-center justify-center p-4 space-x-2" role="pagination">

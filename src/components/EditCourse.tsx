@@ -250,12 +250,16 @@ const handleCoursePublish = async () => {
     const updated = await togglePublish(desired);
 
     // 3) **Confirm** with whatever the server actually saved
-    setIsCoursePublished(updated.liveStatus);
-
-    triggerNotification({
+    console.log(updated)
+    if(updated.id){
+      setIsCoursePublished(updated.liveStatus);
+      triggerNotification({
       type: 'success',
       message: `Course ${updated.liveStatus ? 'published' : 'unpublished'}`,
     });
+    }
+
+    
   } catch {
     // 4) On error, revert the toggle
     setIsCoursePublished(prev => !prev);

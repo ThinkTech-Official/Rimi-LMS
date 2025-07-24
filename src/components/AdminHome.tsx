@@ -8,33 +8,10 @@ import Spinner from "./loaders/Spinner";
 import { useNavigate } from "react-router-dom";
 import useNotification from "../hooks/useNotification";
 import SquareLoader from "./loaders/SquareLoader";
+import AdminCharts from "./Admin/AdminCharts";
 
-// Dummy stats
-// const stats = [
-//   { label: "Total Users", value: "15,672" },
-//   { label: "Created Courses", value: "25" },
-//   { label: "Tests Created", value: "315" },
-//   { label: "Issued Certificates", value: "100" },
-// ];
 
-// Sample chart data
-// const lineChartData = [
-//   { name: "Jan", users: 400 },
-//   { name: "Feb", users: 600 },
-//   { name: "Mar", users: 800 },
-//   { name: "Apr", users: 500 },
-//   { name: "May", users: 950 },
-//   { name: "Jun", users: 800 },
-//   { name: "Jul", users: 1050 },
-// ];
 
-// const barChartData = [
-//   { name: "Jan", certificates: 50 },
-//   { name: "Feb", certificates: 80 },
-//   { name: "Mar", certificates: 65 },
-//   { name: "Apr", certificates: 90 },
-//   { name: "May", certificates: 75 },
-// ];
 
 // Recent users
 // const recentUsers = [
@@ -197,140 +174,13 @@ const AdminHome: React.FC = () => {
              ))} 
           </div>
 
-          {/* Charts */}
-          {/* <div className="flex flex-col lg:flex-row gap-8 lg:gap-6 2xl:gap-20 pt-4 w-full" >
-            <div className="flex flex-col gap-5 2xl:gap-8 flex-1" data-testid="chart">
-              <h5 className="text-lg 2xl:text-2xl capitalize leading-[20px] 2xl:leading-1.5 font-bold text-[#1B1B1B] text-center lg:text-left">
-                {t("Monthly New Users")}
-              </h5>
-              <div className="bg-white py-4 2xl:px-2 h-96 2xl:h-[400px] w-full border border-[#DDDDDD]">
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart
-                    data={lineChartData}
-                    margin={{ top: 20, right: 20, left: 0, bottom: 0 }}
-                  >
-                    <CartesianGrid
-                      strokeDasharray="0"
-                      vertical={false}
-                      stroke="#DBEAFE"
-                    />
-                    <XAxis
-                      dataKey="name"
-                      axisLine={false}
-                      tickLine={false}
-                      tickMargin={8}
-                      tick={{
-                        fill: "#94A3B8",
-                        fontSize:
-                          window.innerWidth < 640
-                            ? 14
-                            : window.innerWidth < 1600
-                            ? 16
-                            : 20,
-                      }}
-                    />
-                    <YAxis
-                      axisLine={false}
-                      tickLine={false}
-                      tickMargin={10}
-                      tick={{
-                        fill: "#94A3B8",
-                        fontSize:
-                          window.innerWidth < 640
-                            ? 14
-                            : window.innerWidth < 1600
-                            ? 16
-                            : 20,
-                      }}
-                    />
-                    <Tooltip labelClassName="text-[#1B1B1B] text-[16px]" />
-                    <Line
-                      type="linear"
-                      dataKey="users"
-                      stroke="#2B00B7"
-                      strokeWidth={2}
-                    />
-                  </LineChart>
-                </ResponsiveContainer>
-              </div>
-            </div>
 
-            <div className="flex flex-col gap-5 2xl:gap-8 flex-1" data-testid="chart">
-              <h5 className="text-lg 2xl:text-2xl capitalize leading-[20px] 2xl:leading-1.5 font-bold text-[#1B1B1B] text-center lg:text-left">
-                {t("Monthly Certificates Issued")}
-              </h5>
-              <div className="bg-white py-4 2xl:px-2 h-96 2xl:h-[400px] w-full border border-[#DDDDDD]">
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart
-                    data={barChartData}
-                    margin={{ top: 20, right: 20, left: 0, bottom: 0 }}
-                  >
-                    <XAxis
-                      dataKey="name"
-                      tickLine={false}
-                      stroke="#94A3B8"
-                      tick={{
-                        fill: "#94A3B8",
-                        fontSize:
-                          window.innerWidth < 640
-                            ? 14
-                            : window.innerWidth < 1600
-                            ? 16
-                            : 20,
-                      }}
-                      tickMargin={8}
-                    />
-                    <YAxis
-                      tickMargin={10}
-                      tickLine={false}
-                      axisLine={false}
-                      tick={{
-                        fill: "#94A3B8",
-                        fontSize:
-                          window.innerWidth < 640
-                            ? 14
-                            : window.innerWidth < 1600
-                            ? 16
-                            : 20,
-                      }}
-                    />
-                    <Bar
-                      dataKey="certificates"
-                      fill="#7367F029"
-                      radius={[6, 6, 0, 0]}
-                      barSize={28}
-                      activeBar={false}
-                      onMouseOver={(_, index, e) => {
-                        const target = e.target as SVGElement;
-                        target.setAttribute("fill", "#2B00B7");
-                      }}
-                      onMouseOut={(_, index, e) => {
-                        const target = e.target as SVGElement;
-                        target.setAttribute("fill", "#7367F029");
-                      }}
-                      style={{ transition: "fill 0.1s ease 0.1s" }}
-                    >
-                      <LabelList
-                        dataKey="certificates"
-                        position="top"
-                        offset={10}
-                        style={{
-                          fill: "#4B465C",
-                          fontSize:
-                            window.innerWidth < 640
-                              ? 14
-                              : window.innerWidth < 1024
-                              ? 16
-                              : 20,
-                          fontWeight: 500,
-                        }}
-                      />
-                    </Bar>
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-            </div>
-          </div> */}
+          {/* CHARTS  */}
+          <AdminCharts />
+
+          
+
+
 
           {/* Recent Signups Table */}
           <div className={`bg-white w-full`}>
