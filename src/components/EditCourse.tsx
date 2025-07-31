@@ -319,7 +319,7 @@ const handleCoursePublish = async () => {
           <span
             // className={`absolute top-0 left-0 w-6 h-6 rounded-full transition-transform duration-300 bg-slate-100`}
              className={`
-          inline-block h-5 w-5 transform rounded-full bg-white shadow transition-transform duration-200
+          inline-block h-6 w-6 transform rounded-full bg-white shadow transition-transform duration-200
           ${isCoursePublished ? 'translate-x-5' : 'translate-x-0'}
         `}
 

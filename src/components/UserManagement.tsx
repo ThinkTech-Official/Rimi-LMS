@@ -380,10 +380,10 @@ export const UserManagement: React.FC = () => {
 
         {/* Filters and Search */}
         <div className="flex flex-col md:flex-row gap-2 md:items-center justify-start md:justify-between space-x-4 mb-6">
-          <div className="flex gap-2 items-center">
+          <div className="flex gap-2 sm:items-center flex-col sm:flex-row">
             {" "}
             <span className="text-[#4B465C] opacity-80">{t("show")}</span>
-            <div className="bg-[#EDEDED] px-2 sm:px-4 py-1 sm:py-3">
+            <div className="bg-[#EDEDED] px-2 sm:px-4 py-1 sm:py-3 w-full max-w-[350px]">
               <label className="inline-flex items-center mr-4 text-[#4B465C] opacity-80">
                 <input
                   type="radio"
@@ -408,7 +408,7 @@ export const UserManagement: React.FC = () => {
               </label>
             </div>
           </div>
-          <div className="flex items-center border border-[#DBDADE] w-[244px] md:w-[330px] ml-12 md:ml-0">
+          <div className="flex items-center border border-[#DBDADE] justify-between max-w-[350px]">
             <input
               type="text"
               placeholder={t("Search by name")}
@@ -418,8 +418,9 @@ export const UserManagement: React.FC = () => {
             />
             <button
             onClick={handleSearch}
-             className="px-1 sm:px-3 cursor-pointer">
-              <BiSearch className="text-[#6F6B7D]" />
+             className="px-2 sm:px-3 cursor-pointer flex items-center text-white bg-primary py-3 gap-1">
+              <BiSearch className="" />
+              Search
             </button>
           </div>
         
