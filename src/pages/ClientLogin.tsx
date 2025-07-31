@@ -149,7 +149,7 @@ import type { SubmitHandler } from "react-hook-form";
 import useNotification from "../hooks/useNotification";
 import { useLogin } from "../hooks/useLogin";
 import { useUser } from "../hooks/useUser";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 interface LoginFormInput {
@@ -196,8 +196,17 @@ const LoginClient: React.FC = () => {
 
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-white px-4">
-      <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-md">
+    <div className="min-h-screen">
+      <header className="bg-white border-b border-[#E9EEF1] flex items-center justify-between px-6 sm:px-14 space-x-4 py-3 gap-3">
+        <img src="/rimilogo.png" alt="" className="w-[80px] h-9" />
+        <Link to="/adminlogin">
+          <p className="text-primary font-semibold">
+            Admin SignIn
+          </p>
+        </Link>
+      </header>
+      <div className="flex items-center justify-center bg-white px-4 h-[calc(100vh-64px)]">
+        <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-md">
         {/* Logo */}
         <div className="flex justify-center mb-6">
           <img
@@ -282,6 +291,7 @@ const LoginClient: React.FC = () => {
             {loading ? 'Signing in...' : 'Sign in Client'}
           </button>
         </form>
+      </div>
       </div>
       {NotificationComponent}
     </div>
