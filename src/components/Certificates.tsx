@@ -74,7 +74,7 @@ const Certificates: React.FC = () => {
         </div>
       </div>
       {/* 2 */}
-      <div
+      {/* <div
         style={{
           width: "1050px",
           height: "820px",
@@ -266,7 +266,7 @@ const Certificates: React.FC = () => {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

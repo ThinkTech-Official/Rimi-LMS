@@ -133,7 +133,7 @@ const AdminCategoryManager: React.FC = () => {
       )}
 
       {error && (
-        <div className="text-text-light-2 mb-2 fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white max-w-md p-10 shadow-lg border border-inputBorder z-50">
+        <div className="text-text-light-2 mb-2 fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white max-w-md p-10 shadow-lg border border-inputBorder z-50 text-center">
           <p className='text-red-500 mb-2 text-center'>Error deleting category:</p>
           {error}
           <MdClose onClick={() => setError('')} className="absolute top-2 right-2 cursor-pointer text-xl" />
