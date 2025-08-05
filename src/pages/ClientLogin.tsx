@@ -213,7 +213,7 @@ const LoginClient: React.FC = () => {
 
           {/* Heading */}
           <h2 className="text-center text-2xl font-bold text-neutral-800 mb-8">
-            Welcome to RIMI Insurance Learning Portal
+            Rimi Agent Training and Certification Portal
           </h2>
 
           {/* Login Form */}

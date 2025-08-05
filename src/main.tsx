@@ -43,6 +43,7 @@ import NotFound from "./components/PageNotFound.tsx";
 import TestCertificate from "./pages/TestCertificate.tsx";
 import AdminError from "./components/Admin/AdminError.tsx";
 import ClientError from "./components/client/ClientError.tsx";
+import AdminCreateAdmin from "./components/Admin/AdminCreateAdmin.tsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -67,7 +68,8 @@ const router = createBrowserRouter(
         {/* <Route index element={<AdminHome />} /> */}
         <Route path="/admin/home" element={<AdminHome />} />
         <Route path="/admin/category" element={<AdminCategoryManager />} />
-        <Route path="/admin/create-user" element={<AdminCreateUser />} />
+        <Route path="/admin/add-user" element={<AdminCreateUser />} />
+        <Route path="/admin/add-admin" element={<AdminCreateAdmin />} />
         <Route path="/admin/profile" element={<AdminProfile />} />
         <Route path="/admin/all-courses" element={<Courses />} />
         <Route path="/admin/certificates" element={<Certificates />} />

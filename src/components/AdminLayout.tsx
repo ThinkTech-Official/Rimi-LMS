@@ -11,7 +11,7 @@ import {
 import Header from "./Header";
 import { PiCertificateLight } from "react-icons/pi";
 import { useTranslation } from "react-i18next";
-import { RiUserAddLine } from "react-icons/ri";
+import { RiAdminLine, RiUserAddLine } from "react-icons/ri";
 import { MdOutlineFactCheck } from "react-icons/md";
 import Footer from "./Footer";
 
@@ -45,10 +45,16 @@ export const AdminLayout: React.FC = () => {
       url: "/admin/all-courses",
     },
     {
-      label: "Add User",
+      label: "Add Client",
       icon: RiUserAddLine,
-      key: "create-user",
-      url: "/admin/create-user",
+      key: "add-user",
+      url: "/admin/add-user",
+    },
+    {
+      label: "Add Admin",
+      icon: RiAdminLine,
+      key: "add-admin",
+      url: "/admin/add-admin",
     },
     {
       label: "users Management",
