@@ -62,13 +62,15 @@ const LoginAdmin: React.FC = () => {
       <header className="bg-white border-b border-[#E9EEF1] flex items-center justify-between px-6 sm:px-14 space-x-4 py-3 gap-3">
         <img src="/rimilogo.png" alt="" className="w-[80px] h-9" />
         <Link to="/">
-          <p className="text-primary font-semibold">
-            Client SignIn
-          </p>
+          <p className="text-primary font-semibold">Client SignIn</p>
         </Link>
       </header>
       <div className="flex items-center justify-center bg-white px-4 h-[calc(100vh-64px)]">
         <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-md">
+          <h3 className="text-center text-xl font-semibold text-neutral-800 mb-5">
+            Sign In as Admin
+          </h3>
+
           {/* Logo */}
           <div className="flex justify-center mb-6">
             <img
@@ -82,7 +84,6 @@ const LoginAdmin: React.FC = () => {
           <h2 className="text-center text-2xl font-bold text-neutral-800 mb-8">
             Welcome to RIMI Insurance Learning Portal
           </h2>
-
           {/* Login Form */}
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             <div>
@@ -100,7 +101,7 @@ const LoginAdmin: React.FC = () => {
                     message: "Invalid email address",
                   },
                 })}
-                placeholder="Username/email"
+                placeholder="Email"
                 className="w-full px-4 py-3 border border-zinc-300 focus:outline-none focus:ring-1 focus:ring-primary"
               />
               {errors.email && (

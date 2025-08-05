@@ -13,6 +13,7 @@ import { PiCertificateLight } from "react-icons/pi";
 import { useTranslation } from "react-i18next";
 import { RiUserAddLine } from "react-icons/ri";
 import { MdOutlineFactCheck } from "react-icons/md";
+import Footer from "./Footer";
 
 export const AdminLayout: React.FC = () => {
   const [active, setActive] = useState<
@@ -153,9 +154,10 @@ export const AdminLayout: React.FC = () => {
         }`}
       >
         <Header />
-        <main>
+        <main className="min-h-[calc(100vh-64px)]">
           <Outlet />
         </main>
+        <Footer/>
       </div>
     </div>
   );

@@ -287,9 +287,8 @@ const Quiz: FC<QuizProps> = ({ test, onBack, onResume, course , setCourse , acti
       >
         <FaArrowLeft /> Back
       </button>
-      <div className="flex flex-col absolute right-4 top-3">
-        <span className="text-lg font-medium text-text-dark">Mock Test</span>
-        <span className="text-base text-text-light">Session 1</span>
+      <div className="flex flex-col absolute right-14 top-3">
+        <span className="text-base text-text-light">Test 1</span>
       </div>
     </div>
   );

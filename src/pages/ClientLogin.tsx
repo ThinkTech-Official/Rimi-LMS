@@ -47,7 +47,6 @@
 //     }
 //   };
 
-
 //   return (
 //     <div className="min-h-screen flex items-center justify-center bg-white px-4">
 //       <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-md">
@@ -129,18 +128,7 @@
 
 // export default LoginClient;
 
-
-
-
-
-
 // ====================================================================
-
-
-
-
-
-
 
 import React, { useState } from "react";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
@@ -158,15 +146,18 @@ interface LoginFormInput {
 }
 
 const LoginClient: React.FC = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
-  const { register, handleSubmit, formState: {errors} } = useForm<LoginFormInput>();
-  const {NotificationComponent, triggerNotification } = useNotification();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginFormInput>();
+  const { NotificationComponent, triggerNotification } = useNotification();
 
-   const { login, loading, error } = useLogin();
+  const { login, loading, error } = useLogin();
   // const { refreshUser } = useUser();
-  const { reload }                = useAuth();
-  
+  const { reload } = useAuth();
 
   // const handleSubmit = (e: React.FormEvent) => {
   //   e.preventDefault();
@@ -183,115 +174,121 @@ const LoginClient: React.FC = () => {
   //   });
   // };
 
-   const onSubmit: SubmitHandler<LoginFormInput> = async (data) => {
+  const onSubmit: SubmitHandler<LoginFormInput> = async (data) => {
     try {
       await login(data);
       // await refreshUser();
       await reload();
-      navigate('/client');
+      navigate("/client");
     } catch {
-      triggerNotification({ type: 'error', message: error || 'Login failed', duration: 3000 });
+      triggerNotification({
+        type: "error",
+        message: error || "Login failed",
+        duration: 3000,
+      });
     }
   };
-
 
   return (
     <div className="min-h-screen">
       <header className="bg-white border-b border-[#E9EEF1] flex items-center justify-between px-6 sm:px-14 space-x-4 py-3 gap-3">
         <img src="/rimilogo.png" alt="" className="w-[80px] h-9" />
         <Link to="/adminlogin">
-          <p className="text-primary font-semibold">
-            Admin SignIn
-          </p>
+          <p className="text-primary font-semibold">Admin SignIn</p>
         </Link>
       </header>
       <div className="flex items-center justify-center bg-white px-4 h-[calc(100vh-64px)]">
         <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-md">
-        {/* Logo */}
-        <div className="flex justify-center mb-6">
-          <img
-            src="/rimilogo.png"
-            alt="RIMI Logo"
-            className="h-12 w-32 sm:h-[75px] sm:w-40"
-          />
-        </div>
-
-        {/* Heading */}
-        <h2 className="text-center text-2xl font-bold text-neutral-800 mb-8">
-          Welcome to RIMI Insurance Learning Portal
-        </h2>
-
-        {/* Login Form */}
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-          <div>
-            <label htmlFor="email" className="sr-only">
-              Username/email
-            </label>
-            <input
-              id="email"
-              type="email"
-              autoComplete="email"
-              {...register("email", {
-                required: "Email is required",
-                pattern: {
-                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                  message: "Invalid email address",
-                },
-              })}
-              placeholder="Email"
-              className="w-full px-4 py-3 border border-zinc-300 focus:outline-none focus:ring-1 focus:ring-primary"
+          <h3 className="text-center text-xl font-semibold text-neutral-800 mb-5">
+            Sign In as Client
+          </h3>
+          {/* Logo */}
+          <div className="flex justify-center mb-6">
+            <img
+              src="/rimilogo.png"
+              alt="RIMI Logo"
+              className="h-12 w-32 sm:h-[75px] sm:w-40"
             />
-            {errors.email && (
-              <p className="text-red-600 text-sm mt-1">{errors.email.message}</p>
-            )}
           </div>
 
-          <div className="relative">
-            <label htmlFor="password" className="sr-only">
-              Password
-            </label>
-          <div className="relative">
+          {/* Heading */}
+          <h2 className="text-center text-2xl font-bold text-neutral-800 mb-8">
+            Welcome to RIMI Insurance Learning Portal
+          </h2>
+
+          {/* Login Form */}
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            <div>
+              <label htmlFor="email" className="sr-only">
+                Username/email
+              </label>
               <input
-              id="password"
-             {...register("password", {
-                  required: "Password is required",
-                  minLength: {
-                    value: 6,
-                    message: "Password must be at least 6 characters",
+                id="email"
+                type="email"
+                autoComplete="email"
+                {...register("email", {
+                  required: "Email is required",
+                  pattern: {
+                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                    message: "Invalid email address",
                   },
                 })}
-              type={showPassword ? "text" : "password"}
-              autoComplete="current-password"
-              placeholder="Password"
-              className="w-full px-4 py-3 border border-zinc-300 focus:outline-none focus:ring-1 focus:ring-primary"
-            />
-            <button
-              type="button"
-              onClick={() => setShowPassword((prev) => !prev)}
-              className="absolute inset-y-0 right-0 pr-3 flex items-center text-zinc-500"
-            >
-              {showPassword ? (
-                <EyeSlashIcon className="h-5 w-5" aria-hidden="true" />
-              ) : (
-                <EyeIcon className="h-5 w-5" aria-hidden="true" />
+                placeholder="Email"
+                className="w-full px-4 py-3 border border-zinc-300 focus:outline-none focus:ring-1 focus:ring-primary"
+              />
+              {errors.email && (
+                <p className="text-red-600 text-sm mt-1">
+                  {errors.email.message}
+                </p>
               )}
-            </button>
-          </div>
-            {errors.password && (
-              <p className="text-red-600 text-sm mt-1">
-                {errors.password.message}
-              </p>
-            )}
-          </div>
+            </div>
 
-          <button
-            type="submit"
-            className="w-full py-3 bg-primary text-white font-semibold cursor-pointer transition-all delay-100 shadow hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-          >
-            {loading ? 'Signing in...' : 'Sign in Client'}
-          </button>
-        </form>
-      </div>
+            <div className="relative">
+              <label htmlFor="password" className="sr-only">
+                Password
+              </label>
+              <div className="relative">
+                <input
+                  id="password"
+                  {...register("password", {
+                    required: "Password is required",
+                    minLength: {
+                      value: 6,
+                      message: "Password must be at least 6 characters",
+                    },
+                  })}
+                  type={showPassword ? "text" : "password"}
+                  autoComplete="current-password"
+                  placeholder="Password"
+                  className="w-full px-4 py-3 border border-zinc-300 focus:outline-none focus:ring-1 focus:ring-primary"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-zinc-500"
+                >
+                  {showPassword ? (
+                    <EyeSlashIcon className="h-5 w-5" aria-hidden="true" />
+                  ) : (
+                    <EyeIcon className="h-5 w-5" aria-hidden="true" />
+                  )}
+                </button>
+              </div>
+              {errors.password && (
+                <p className="text-red-600 text-sm mt-1">
+                  {errors.password.message}
+                </p>
+              )}
+            </div>
+
+            <button
+              type="submit"
+              className="w-full py-3 bg-primary text-white font-semibold cursor-pointer transition-all delay-100 shadow hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            >
+              {loading ? "Signing in..." : "Sign in"}
+            </button>
+          </form>
+        </div>
       </div>
       {NotificationComponent}
     </div>
@@ -299,5 +296,3 @@ const LoginClient: React.FC = () => {
 };
 
 export default LoginClient;
-
-

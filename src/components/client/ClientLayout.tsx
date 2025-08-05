@@ -9,6 +9,7 @@ import {
 import ClientHeader from "./ClientHeader";
 import { PiCertificateLight } from "react-icons/pi";
 import { useTranslation } from "react-i18next";
+import Footer from "../Footer";
 
 const menuItems = [
   { label: "home", icon: HomeIcon, key: "home", url: "/client" },
@@ -114,9 +115,10 @@ const ClientLayout: React.FC = () => {
           }`}
         >
           <ClientHeader />
-          <main>
+          <main className="min-h-[calc(100vh-64px)]">
             <Outlet />
           </main>
+          <Footer/>
         </div>
       </div>
     </>
