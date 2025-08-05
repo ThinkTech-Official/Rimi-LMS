@@ -333,7 +333,7 @@ const filteredCourses = (() => {
                     <img
                       src={course.imageUrl}
                       alt={course.title}
-                      className="object-cover rounded-b-[2px] w-full h-40 sm:h-32 md:h-44"
+                      className="object-fill rounded-b-[2px] w-full h-40 sm:h-32 md:h-44"
                     />
                   </div>
                   <div className=" flex flex-col gap-2 p-2">

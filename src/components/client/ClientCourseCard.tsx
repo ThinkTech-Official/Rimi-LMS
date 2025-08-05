@@ -63,7 +63,7 @@ const ClientCourseCard = ({courseId, imageUrl , title, duration, description}: C
     <div
             key={courseId}
             title={title}
-            className="w-[95%] sm:w-[320px] xl:w-[380px] flex flex-col gap-2 p-4 justify-center items-centr md:justify-start"
+            className="w-[95%] sm:w-[320px] xl:w-[370px] flex flex-col gap-2 p-2 justify-center items-centr md:justify-start"
             style={{
               boxShadow: "0px 4px 6.7px 0px rgba(0, 0, 0, 0.04)",
               border: "1px solid rgba(235, 235, 235, 1)",
@@ -73,7 +73,7 @@ const ClientCourseCard = ({courseId, imageUrl , title, duration, description}: C
               <img
                 src={imageUrl}
                 alt={title}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-fill"
               />
 
               {/* Progress Bar  */}

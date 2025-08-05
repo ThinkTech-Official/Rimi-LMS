@@ -431,7 +431,7 @@ useEffect(() => {
           </ul>
         ))}
       </ul>
-      <label className="inline-block px-4 py-2 bg-primary text-white rounded cursor-pointer hover:bg-indigo-700 text-sm">
+      <label className="inline-block px-4 py-2 bg-primary text-white first-letter:capitalize cursor-pointer hover:bg-indigo-700 text-sm">
         {t("choose more files")}
         <input
           type="file"
