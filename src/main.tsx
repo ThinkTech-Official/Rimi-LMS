@@ -41,6 +41,8 @@ import UserProfile from "./components/UserProfile.tsx";
 import AdminTrackCertificate from "./components/Admin/AdminTrackCertificate.tsx";
 import NotFound from "./components/PageNotFound.tsx";
 import TestCertificate from "./pages/TestCertificate.tsx";
+import AdminError from "./components/Admin/AdminError.tsx";
+import ClientError from "./components/client/ClientError.tsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -59,6 +61,7 @@ const router = createBrowserRouter(
             </RequireAdmin>
           </AdminProvider>
         }
+        errorElement={<AdminError />}
       >
         {/* Admin Routes */}
         {/* <Route index element={<AdminHome />} /> */}
@@ -93,11 +96,14 @@ const router = createBrowserRouter(
       </Route>
 
       {/* Client routes */}
-      <Route element={
+      <Route 
+      element={
         <AuthProvider>
         <RequireAuth />
         </AuthProvider>
-        }>
+        }
+        errorElement={<ClientError />}
+        >
         <Route path="/client" element={<ClientLayout />}>
           {/* /client */}
           <Route index element={<ClientHome />} />
