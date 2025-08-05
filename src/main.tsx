@@ -23,6 +23,7 @@ import LoginClient from "./pages/ClientLogin.tsx";
 import ClientHome from "./components/client/ClientHome.tsx";
 import ClientCertificates from "./components/client/ClientCertificates.tsx";
 import EditTest from "./components/EditTest.tsx";
+import ViewCertificate from "./components/ViewCertificate.tsx";
 import ClientProfile from "./components/client/ClientProfile.tsx";
 import { GenerateCertificatePage } from "./pages/GenerateCertificatePage.tsx";
 import { RequireAuth } from "./components/client/RequireAuth.tsx";
@@ -86,6 +87,7 @@ const router = createBrowserRouter(
         />
         {/* This is Test Route for Testig Certificate gen  */}
         <Route path="/admin/test-cert" element={<TestCertificate />} />
+        <Route path="/admin/view-cert/:id" element={<ViewCertificate />} />
 
         {/*  */}
 

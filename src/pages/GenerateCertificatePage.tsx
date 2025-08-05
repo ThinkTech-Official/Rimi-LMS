@@ -1,9 +1,10 @@
 import React, { useRef } from "react";
 import { useParams, useLocation } from "react-router-dom";
-import Certificate from "../components/Certificate";
+// import Certificate from "../components/Certificate";
 import { useGenerateCertificate } from "../hooks/useGenerateCertificate";
 import { useAuth } from "../context/AuthContext";
 import SquareLoader from "../components/loaders/SquareLoader";
+import certificateTemplates from "../components/certifcateTemplates/templates";
 
 interface LocationState {
   courseTitle: string;
@@ -25,6 +26,8 @@ export const GenerateCertificatePage: React.FC = () => {
     courseTitle: state.courseTitle,
     certRef,
   });
+
+  const Certificate = certificateTemplates[1].component;
 
   if (status === "error") {
     return (

@@ -1,7 +1,9 @@
 import React, { useState, useRef } from 'react';
-import Certificate from '../components/Certificate';
+// import Certificate from '../components/Certificate';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
+import certificateTemplates from '../components/certifcateTemplates/templates';
+import type { CertificateProps } from '../components/certifcateTemplates/certificateTemplate1';
 
 /**
  * A standalone component to preview and download the Certificate template
@@ -19,6 +21,8 @@ const TestCertificate: React.FC = () => {
     year: 'numeric',
   });
   const certNumber = `CERT-1-1-${Date.now()}`;
+  const Certificate = certificateTemplates.find((template) => template.id == "2")?.component as React.FC<CertificateProps>;
+  // console.log(Certificate);
 
   const handleDownload = async () => {
     if (!certRef.current) return;

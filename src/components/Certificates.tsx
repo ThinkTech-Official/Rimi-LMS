@@ -1,353 +1,90 @@
-import { GiTempleGate } from "react-icons/gi";
+import { useNavigate } from "react-router-dom";
+import Frame from "react-frame-component";
+import { type CertificateProps } from "./certifcateTemplates/certificateTemplate1";
+import certificateTemplates from "./certifcateTemplates/templates";
+import { useState } from "react";
 
-const Certificates: React.FC = () => {
+export default function Certificates() {
+  const navigate = useNavigate();
+  const [activeTemplateId, setActiveTemplateId] = useState<string>("");
+  const data = {
+    recipientName: "John Doe",
+    courseTitle: "Insurance Mastery",
+    date: "July 31, 2025",
+    certNumber: "RIMI-2025-001",
+  };
+
+  const handleViewCertificate = (id: string) => {
+    navigate(`/admin/view-cert/${id}`);
+  };
   return (
-    <div className="flex flex-col gap-10 my-10 overflow-auto">
-      {/* 1 */}
-      <div className="w-[1050px] mx-auto m-4 border">
-        <div className="flex flex-col bg-white mx-auto">
-          <div className="w-full bg-primary p-4 pb-0 h-fit">
-            <div className="w-full flex flex-col items-center justify-center gap-1 font-rufina text-white border border-b-0 border-[#CB5A31]">
-              <img src="/RIMI.svg" alt="" className="w-[110px] mt-10" />
-              <h1 className=" text-[4rem] uppercase mt-2">Certificate</h1>
-              <div className="relative w-full flex justify-center">
-                <h2 className=" text-[2rem] -mt-5 uppercase bg-primary px-1 z-5">
-                  of Completion
-                </h2>
-                <div
-                  className="w-[500px] absolute top-1/6 z-0"
-                  style={{ border: "0.57px solid #FFFFFF" }}
-                ></div>
-              </div>
-              <img src="/certCurve.svg" alt="" className="mt-4" />
-            </div>
-          </div>
-          <div className="bg-white m-4 mt-0">
-            <div className="border border-[#CB5A31] border-t-0 flex flex-col gap-4 justify-center items-center pt-3 pb-5 w-full">
-              <p className="text-[2rem] text-[#4D4D4D] font-[200]">
-                This is to certify that
-              </p>
-              <p
-                className="text-[6.5rem] text-[#4D4D4D] -mt-8"
-                style={{ fontFamily: '"MonteCarlo", cursive' }}
+    <div
+      className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 w-fit"
+      style={{
+        padding: "1rem",
+        justifyItems: "start",
+        alignItems: "start",
+      }}
+    >
+      {certificateTemplates.map((template) => (
+        <div className="flex flex-col border border-inputBorder shadow-md bg-[#fbfbfc]">
+          <CertificatePreview
+            key={template.id}
+            isActive={activeTemplateId === template.id}
+            TemplateComponent={template.component}
+            data={data}
+          />
+          <div className="flex flex-col gap-2 px-2 pb-2">
+            <h3 className="font-semibold text-text-dark">{template.title}</h3>
+            <div className="flex justify-between flex-col gap-2">
+              <button
+                className="bg-primary text-white px-4 py-2 font-semibold hover:bg-indigo-700 transition-all duration-200 cursor-pointer"
+                onClick={() => handleViewCertificate(template.id)}
               >
-                Reciepient Name
-              </p>
-              <p className="max-w-[750px] text-center text-[#4D4D4D] font-extralight">
-                has successfully completed the RIMI  Insurance Training Program
-                This achievement reflects the dedication, knowledge, and skills
-                demonstrated in understanding insurance principles, policies,
-                client servicing, and compliance standards as set by RIMI
-                Insurance Training Program
-              </p>
-              <div className="flex items-center gap-[30%] w-full justify-center text-[#4D4D4D] mt-2">
-                <div className="flex gap-2">
-                  <span className="text-black">Date of Achievement:</span>
-                  <span className="font-extralight">20-06-2025</span>
-                </div>
-                <div className="flex gap-2">
-                  <span className="text-black">Certificate Number:</span>
-                  <span className="font-extralight">1232354664</span>
-                </div>
-              </div>
-              <span className="text-[#4D4D4D] font-extralight my-4 text-[22px]">
-                CERTIFICATE WAS AWARDED BY
-              </span>
-              <div className="flex items-center gap-[10%] w-full justify-center text-[#4D4D4D] font-extralight mt-6">
-                <div
-                  className="flex flex-col space-y-3 w-[300px] text-center"
-                  style={{ borderTop: "1px solid #000000" }}
-                >
-                  <span></span>
-                  <span>Director RIMI</span>
-                </div>
-                <div
-                  className="flex flex-col space-y-3 w-[300px] text-center"
-                  style={{ borderTop: "1px solid #000000" }}
-                >
-                  <span></span>
-                  <span>Head of Training & Development RIMI</span>
-                </div>
-              </div>
+                {activeTemplateId === template.id ? "Activated" : "Activate"}
+              </button>
+              <button className="border border-inputBorder px-4 py-2 font-semibold cursor-pointer hover:text-text-light-2 hover:border-primary transition-all duration-200"
+                onClick={() => navigate(`/admin/view-cert/${template.id}`)}
+              >
+                View
+              </button>
             </div>
           </div>
         </div>
-      </div>
-      {/* 2 */}
-      <div
-        style={{
-          width: "1050px",
-          height: "820px",
-          margin: "0 auto",
-          border: "1px solid #2b00b7",
-          padding: "16px",
-        }}
-      >
-        <div
-          style={{
-            border: "1px solid #CB5A31",
-            height: "100%",
-            display: "flex",
-            gap: "2.5rem",
-          }}
-        >
-          <div
-            style={{
-              position: "relative",
-              height: "820px",
-              width: "auto",
-              marginLeft: "1.25rem",
-            }}
-          >
-            <img
-              src="/certFrame.png"
-              alt="Frame"
-              style={{
-                height: "100%",
-                width: "100%",
-                objectFit: "cover",
-                marginTop: "-17.5px",
-              }}
-            />
-            <img
-              src="/RIMI.svg"
-              alt="RIMI Logo"
-              style={{
-                width: "120px",
-                position: "absolute",
-                top: "10%",
-                left: "50%",
-                transform: "translateX(-50%)",
-              }}
-            />
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                gap: "0.75rem",
-                width: "100%",
-                justifyContent: "center",
-                color: "white",
-                position: "absolute",
-                bottom: "10%",
-                left: "50%",
-                transform: "translateX(-50%)",
-                fontSize: "0.875rem",
-              }}
-            >
-              <div style={{ display: "flex", gap: "0.5rem" }}>
-                <span>Date of Achievement:</span>
-                <span>20-06-2025</span>
-              </div>
-              <div style={{ display: "flex", gap: "0.5rem" }}>
-                <span>Certificate Number:</span>
-                <span>1232354664</span>
-              </div>
-            </div>
-          </div>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              paddingTop: "1rem",
-              paddingBottom: "1rem",
-            }}
-          >
-            <h1
-              style={{
-                fontSize: "4rem",
-                textTransform: "uppercase",
-                marginTop: "0.5rem",
-                fontFamily: "'Rufina', serif",
-                color: "#4D4D4D",
-                fontWeight: "bold",
-              }}
-            >
-              Certificate
-            </h1>
-            <h2
-              style={{
-                fontSize: "2rem",
-                color: "#B57E10",
-                textTransform: "uppercase",
-                paddingLeft: "0.25rem",
-                paddingRight: "0.25rem",
-                zIndex: 5,
-              }}
-            >
-              of Completion
-            </h2>
-            <div style={{ marginTop: "1.5rem" }}>
-              <p style={{ fontSize: "2rem", color: "#4D4D4D" }}>
-                This is to certify that
-              </p>
-              <p
-                style={{
-                  fontSize: "6.5rem",
-                  color: "#4D4D4D",
-                  marginTop: "-0.75rem",
-                  fontFamily: '"MonteCarlo", cursive',
-                }}
-              >
-                Reciepient Name
-              </p>
-              <p
-                style={{
-                  maxWidth: "570px",
-                  color: "#4D4D4D",
-                  fontWeight: "200",
-                  marginTop: "0.75rem",
-                }}
-              >
-                has successfully completed the RIMI  Insurance Training Program
-                This achievement reflects the dedication, knowledge, and skills
-                demonstrated in understanding insurance principles, policies,
-                client servicing, and compliance standards as set by RIMI
-                Insurance Training Program
-              </p>
-            </div>
-            <span
-              style={{
-                color: "#4D4D4D",
-                fontSize: "2rem",
-                fontWeight: "500",
-                marginTop: "2rem",
-              }}
-            >
-              CERTIFICATE WAS AWARDED BY
-            </span>
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "1.5rem",
-                width: "100%",
-                justifyContent: "center",
-                color: "#4D4D4D",
-                fontWeight: "200",
-                marginTop: "2rem",
-              }}
-            >
-               <div className="flex flex-col w-[300px] text-center justify-center items-center">
-                <span>
-                  <img src="/signature.png" alt="director" className="h-24" />
-                </span>
-                <span
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "0.75rem",
-                    width: "300px",
-                    textAlign: "center",
-                    borderTop: "1px solid #000000",
-                  }}
-                >
-                  Director RIMI
-                </span>
-              </div>
-               <div className="flex flex-col w-[300px] text-center justify-center items-center">
-                <span>
-                  <img src="/signature.png" alt="director" className="h-24" />
-                </span>
-                <span
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "0.75rem",
-                    width: "300px",
-                    textAlign: "center",
-                    borderTop: "1px solid #000000",
-                  }}
-                >
-                  Head of Training & Development RIMI
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      ))}
     </div>
   );
-};
-
-export default Certificates;
-
-// design 2 of certificate GiTempleGate
-
-{
-  /* 2 */
 }
-{
-  /* <div className="w-[1050px] h-[820px] mx-auto p-4 border">
-        <div className="border border-[#CB5A31] h-full flex gap-10">
-          <div className="relative h-[820px] w-auto ml-5">
-            <img
-              src="/certFrame.png"
-              alt="Frame"
-              className="h-full w-full object-cover -mt-4"
-            />
-            <img
-              src="/RIMI.svg"
-              alt="RIMI Logo"
-              className="w-[120px] absolute top-[10%] left-[50%] translate-x-[-50%]"
-            />
-            <div className="flex flex-col items-center gap-3 w-full justify-center text-white absolute bottom-[10%] left-[50%] translate-x-[-50%] text-sm">
-              <div className="flex gap-2">
-                <span>Date of Achievement:</span>
-                <span>20-06-2025</span>
-              </div>
-              <div className="flex gap-2">
-                <span>Certificate Number:</span>
-                <span>1232354664</span>
-              </div>
-            </div>
-          </div>
-          <div className="flex flex-col py-4">
-            <h1 className=" text-[4rem] uppercase mt-2 font-rufina text-[#4D4D4D] font-bold">
-              Certificate
-            </h1>
-            <h2 className=" text-[2rem] text-[#B57E10] uppercase  px-1 z-5">
-              of Completion
-            </h2>
-            <div className="mt-6">
-              <p className="text-[2rem] text-[#4D4D4D]">
-                This is to certify that
-              </p>
-              <p
-                className="text-[6.5rem] text-[#4D4D4D] -mt-4"
-                style={{ fontFamily: '"MonteCarlo", cursive' }}
-              >
-                Reciepient Name
-              </p>
-              <p className="max-w-[570px] text-[#4D4D4D] font-extralight mt-3">
-                has successfully completed the RIMI  Insurance Training Program
-                This achievement reflects the dedication, knowledge, and skills
-                demonstrated in understanding insurance principles, policies,
-                client servicing, and compliance standards as set by RIMI
-                Insurance Training Program
-              </p>
-            </div>
-            <span className="text-[#4D4D4D] text-[2rem] font-medium mt-8">
-              CERTIFICATE WAS AWARDED BY
-            </span>
-            <div className="flex items-center gap-6 w-full justify-center text-[#4D4D4D] font-extralight mt-28">
-              <div
-                className="flex flex-col space-y-3 w-[300px] text-center"
-                style={{ borderTop: "1px solid #000000" }}
-              >
-                <span></span>
-                <span>Director RIMI</span>
-              </div>
-              <div
-                className="flex flex-col space-y-3 w-[300px] text-center"
-                style={{ borderTop: "1px solid #000000" }}
-              >
-                <span></span>
-                <span>Head of Training & Development RIMI</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div> */
-}
+
+const CertificatePreview = ({
+  TemplateComponent,
+  isActive,
+  data,
+}: {
+  TemplateComponent: React.FC<CertificateProps>;
+  isActive: boolean;
+  data: Omit<CertificateProps, "isPreview">;
+}) => (
+  <div style={{ width: `${980 * 0.3}px`, height: `${760 * 0.3}px` }}>
+    <Frame
+      style={{
+        width: "980px",
+        height: "760px",
+        transform: "scale(0.3)",
+        transformOrigin: "top left",
+        pointerEvents: "none",
+        overflow: "hidden",
+      }}
+      head={
+        <>
+          <link
+            href="https://fonts.googleapis.com/css2?family=MonteCarlo&family=Rufina&display=swap"
+            rel="stylesheet"
+          />
+        </>
+      }
+    >
+      <TemplateComponent {...data} isPreview={true} />
+    </Frame>
+  </div>
+);
