@@ -412,7 +412,7 @@ const onVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
           </div>
 
              {/* === CUSTOM SLIDER & MARKERS  === */}
-   <div className="mt-2 relative w-full max-w-[1100px] px-2 pb-6">
+   <div className="mt-2 relative w-full max-w-[1100px] px-2 pb-6 ">
      <input
        ref={rangeRef}
        type="range"
