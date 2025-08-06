@@ -8,6 +8,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useTranslation } from "react-i18next";
 import { MdKeyboardArrowRight } from "react-icons/md";
+import { FaUserLock } from "react-icons/fa6";
 
 interface LoginFormInput {
   email: string;
@@ -65,8 +66,7 @@ const LoginClient: React.FC = () => {
   };
   return (
     <div className="min-h-screen">
-      <header className="bg-white border-b border-[#E9EEF1] flex items-center justify-between px-6 sm:px-14 space-x-4 py-3 gap-3">
-        <img src="/rimilogo.png" alt="" className="w-[80px] h-9" />
+      <header className="bg-white border-b border-[#E9EEF1] flex items-center justify-end px-6 sm:px-14 space-x-4 py-4 gap-3">
         <div className="flex gap-6 items-center">
           <div className="relative">
             <button
@@ -112,25 +112,25 @@ const LoginClient: React.FC = () => {
               </div>
             )}
           </div>
-          <Link to="/adminlogin">
+          <Link to="/adminlogin" className="flex items-center gap-2">
+            <FaUserLock className="text-primary" />
             <p className="text-primary font-semibold">Admin SignIn</p>
           </Link>
         </div>
       </header>
       <div className="flex items-center justify-center bg-white px-4 h-[calc(100vh-64px)]">
         <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-md">
-          {/* <h3 className="text-center text-xl font-semibold text-neutral-800 mb-5">
-            Sign In as Client
-          </h3> */}
           {/* Logo */}
-          <div className="flex justify-center mb-6">
+          <div className="flex justify-center mb-5">
             <img
               src="/rimilogo.png"
               alt="RIMI Logo"
               className="h-12 w-32 sm:h-[75px] sm:w-40"
             />
           </div>
-
+          <h3 className="text-center text-base font-semibold text-primary mb-4">
+            Sign In as Client
+          </h3>
           {/* Heading */}
           <h2 className="text-center text-2xl font-bold text-neutral-800 mb-8">
             Rimi Agent Training and Certification Portal
@@ -205,7 +205,7 @@ const LoginClient: React.FC = () => {
               type="submit"
               className="w-full py-3 bg-primary text-white font-semibold cursor-pointer transition-all delay-100 shadow hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
             >
-              {loading ? "Signing in..." : "Sign in as Client"}
+              {loading ? "Signing in..." : "Sign In "}
             </button>
           </form>
         </div>
