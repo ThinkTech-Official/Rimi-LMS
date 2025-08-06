@@ -139,6 +139,8 @@ import { useLogin } from "../hooks/useLogin";
 import { useUser } from "../hooks/useUser";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { useTranslation } from "react-i18next";
+import { MdKeyboardArrowRight } from "react-icons/md";
 
 interface LoginFormInput {
   email: string;
@@ -154,6 +156,15 @@ const LoginClient: React.FC = () => {
     formState: { errors },
   } = useForm<LoginFormInput>();
   const { NotificationComponent, triggerNotification } = useNotification();
+  const [isLanguageSelectOpen, setIsLanguageSelectOpen] = useState(false);
+  const { i18n } = useTranslation();
+  type Language = "en" | "fr";
+  const previousSelectedLanguage = localStorage
+    .getItem("i18nextLng")
+    ?.split("-")[0];
+  const [selectedLanguage, setSelectedLanguage] = useState<Language>(
+    previousSelectedLanguage as Language
+  );
 
   const { login, loading, error } = useLogin();
   // const { refreshUser } = useUser();
@@ -188,20 +199,78 @@ const LoginClient: React.FC = () => {
       });
     }
   };
+  const toggleLanguageSelect = () => {
+    setIsLanguageSelectOpen(!isLanguageSelectOpen);
+  };
+  const handleLanguageSelect = (lang: Language) => {
+    if (lang === selectedLanguage) {
+      setIsLanguageSelectOpen(false);
+      return;
+    }
 
+    i18n.changeLanguage(lang);
+    setSelectedLanguage(lang);
+    setIsLanguageSelectOpen(false);
+  };
   return (
     <div className="min-h-screen">
       <header className="bg-white border-b border-[#E9EEF1] flex items-center justify-between px-6 sm:px-14 space-x-4 py-3 gap-3">
         <img src="/rimilogo.png" alt="" className="w-[80px] h-9" />
-        <Link to="/adminlogin">
-          <p className="text-primary font-semibold">Admin SignIn</p>
-        </Link>
+        <div className="flex gap-6 items-center">
+          <div className="relative">
+            <button
+              role="language-btn"
+              className="flex items-center gap-2 text-primary text-[16px] 2xl:text-xl font-medium relative cursor-pointer"
+              onClick={toggleLanguageSelect}
+            >
+              <span className="flex gap-2 items-center">
+                {" "}
+                <img
+                  src="/ion_language.svg"
+                  alt=""
+                  className="h-5 w-5 2xl:w-6 2xl:h-6"
+                />{" "}
+                {selectedLanguage}
+              </span>
+              <MdKeyboardArrowRight
+                className={`h-4 w-4 2xl:w-6 2xl:h-6 transform transition ${
+                  isLanguageSelectOpen ? "rotate-90" : ""
+                }`}
+              />
+            </button>
+            {isLanguageSelectOpen && (
+              <div className="absolute mt-4 w-24 2xl:w-28 rounded-sm shadow-lg bg-white border border-[#E9EEF1] z-10">
+                <ul className="py-1 text-sm 2xl:text-lg text-gray-700">
+                  <li>
+                    <button
+                      onClick={() => handleLanguageSelect("en")}
+                      className="block w-full text-left px-4 py-2 hover:bg-primary hover:text-white cursor-pointer"
+                    >
+                      En
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      onClick={() => handleLanguageSelect("fr")}
+                      className="block w-full text-left px-4 py-2 hover:bg-primary hover:text-white cursor-pointer"
+                    >
+                      Fr
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            )}
+          </div>
+          <Link to="/adminlogin">
+            <p className="text-primary font-semibold">Admin SignIn</p>
+          </Link>
+        </div>
       </header>
       <div className="flex items-center justify-center bg-white px-4 h-[calc(100vh-64px)]">
         <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-md">
-          <h3 className="text-center text-xl font-semibold text-neutral-800 mb-5">
+          {/* <h3 className="text-center text-xl font-semibold text-neutral-800 mb-5">
             Sign In as Client
-          </h3>
+          </h3> */}
           {/* Logo */}
           <div className="flex justify-center mb-6">
             <img
@@ -285,7 +354,7 @@ const LoginClient: React.FC = () => {
               type="submit"
               className="w-full py-3 bg-primary text-white font-semibold cursor-pointer transition-all delay-100 shadow hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
             >
-              {loading ? "Signing in..." : "Sign in"}
+              {loading ? "Signing in..." : "Sign in as Client"}
             </button>
           </form>
         </div>
