@@ -151,7 +151,7 @@ const AllCourses: React.FC<AllCoursesProps> = ({ onCreateCourse }) => {
       <div className="sm:px-4 py-4">
         {/* Page Title & Breadcrumb */}
 
-        <h1 className="text-lg 2xl:text-2xl font-bold text-[#1B1B1B] mb-3 sm:mb-6">
+        <h1 className="text-lg 2xl:text-2xl font-bold text-[#1B1B1B] mb-3 sm:mb-6 first-letter:capitalize">
           {t("all Courses")}
         </h1>
 

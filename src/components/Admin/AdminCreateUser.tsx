@@ -23,13 +23,11 @@ export const AdminCreateUser: React.FC = () => {
     const { name, email, password } = data;
     try {
       await createClient({ name, email, password });
-      if (success) {
         triggerNotification({
           type: "success",
           message: "Client created successfully",
           duration: 3000,
         });
-      }
       reset();
     } catch (error) {
       console.log("error in creting client", error);
