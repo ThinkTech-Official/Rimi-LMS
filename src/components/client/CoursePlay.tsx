@@ -25,7 +25,7 @@ const CoursePlay = () => {
     course: fetchedCourse,
     loading: loadingCourse,
     error: errorCourse,
-    refetch,
+    // refetch,
   } = useFetchCourseClient(courseId!);
 
   // Mirror the hook’s course into local state so we can mutate it
@@ -39,7 +39,7 @@ const CoursePlay = () => {
   const {
     test: fetchedTest,
     loading: loadingTest,
-    error: errorTest,
+    // error: errorTest,
   } = useFetchTestClient(courseId, activeTestBasic?.id);
 
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -190,17 +190,6 @@ const CoursePlay = () => {
     setShowTest(null);
     videoRef.current?.play();
   };
-
-  // if user failed allow re trigger and seek back
-  // const handleBack = () => {
-  //   if (activeTestBasic) triggeredTests.current.delete(activeTestBasic.id);
-  //   setShowTest(null);
-  //   if (videoRef.current) {
-  //     videoRef.current.currentTime = lastPassedTime;
-  //     videoRef.current.play();
-  //   }
-  // };
-
   // user failed allow re-trigger and seek back
   const handleBack = () => {
     // Hide the quiz UI
@@ -266,7 +255,7 @@ const CoursePlay = () => {
             >
               {isFullscreen ? (
                 <BiExitFullscreen
-                title="Exit Fullscreen"
+                  title="Exit Fullscreen"
                   className={`w-5 h-5 text-black ${
                     isFullscreen ? "w-6 h-6" : ""
                   }`}
@@ -380,8 +369,6 @@ const CoursePlay = () => {
             </li>
           ))}
         </ul>
-
-        {/* // DONE 2  */}
       </main>
     </div>
   );

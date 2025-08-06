@@ -11,7 +11,7 @@ import { useTranslation } from "react-i18next";
 const LoginAdmin: React.FC = () => {
   const navigate = useNavigate();
 
-  const { login, loading, error } = useAdminAuth();
+  const { login, loading, error: loginError } = useAdminAuth();
   const { reload: reloadAdmin } = useAdminContext();
   const [showPassword, setShowPassword] = useState(false);
   const [isLanguageSelectOpen, setIsLanguageSelectOpen] = useState(false);
@@ -43,11 +43,6 @@ const LoginAdmin: React.FC = () => {
     }
   }, [state, triggerNotification, navigate, location.pathname]);
 
-  // const handleSubmit = (e: React.FormEvent) => {
-  //   e.preventDefault();
-  //   login({ email, password } as SignInDto);
-  // };
-
   const onSubmit: SubmitHandler<SignInDto> = async (data: SignInDto) => {
     console.log(data);
     try {
@@ -60,7 +55,7 @@ const LoginAdmin: React.FC = () => {
       console.error(error);
       triggerNotification({
         type: "error",
-        message: "Invalid email or password",
+        message: loginError || "Login failed",
         duration: 3000,
       });
     }

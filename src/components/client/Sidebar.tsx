@@ -1,4 +1,3 @@
-
 import { type FC, type Dispatch, type SetStateAction } from "react";
 import { HomeIcon, CheckBadgeIcon } from "@heroicons/react/24/outline";
 
@@ -11,7 +10,11 @@ interface SidebarProps {
 
 const Sidebar: FC<SidebarProps> = ({ active, setActive }) => (
   <aside className="w-72 bg-neutral-100 p-6">
-    <img src="/rimilogo.png" alt="RIMI logo" className="w-24 h-11 mb-8 object-contain" />
+    <img
+      src="/rimilogo.png"
+      alt="RIMI logo"
+      className="w-24 h-11 mb-8 object-contain"
+    />
     <nav className="space-y-2">
       <button
         onClick={() => setActive("home")}

@@ -5,7 +5,7 @@ import ClientCertificates from "./ClientCertificates";
 import CoursePlay from "./CoursePlay";
 
 const ClientDashboard: FC = () => {
-  const [active, setActive] = useState<View>("home");
+  const [active, ] = useState<View>("home");
 
   return (
     <div className="flex min-h-screen bg-white">

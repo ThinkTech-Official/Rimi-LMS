@@ -2,9 +2,10 @@ import { useNavigate } from "react-router-dom";
 
 const FetchingError: React.FC = () => {
   const navigate = useNavigate();
-  const url  = window.location.href;
-  const isClient = url.includes('client');
-  const handleBackToHome = () => isClient ? navigate('/client') : navigate('/admin/home');
+  const url = window.location.href;
+  const isClient = url.includes("client");
+  const handleBackToHome = () =>
+    isClient ? navigate("/client") : navigate("/admin/home");
   return (
     <div className="p-4 fixed w-full left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center">
       <img src="/Failed.png" alt="Not Found" className="w-24 md:w-32" />

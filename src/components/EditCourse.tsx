@@ -3,13 +3,11 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { BiSearch } from "react-icons/bi";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { TbEdit } from "react-icons/tb";
-import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 import { useFetchTests, type TestEntry } from "../hooks/useFetchTests";
 import { useDeleteTest } from "../hooks/useDeleteTest";
 import { useTranslation } from "react-i18next";
 import Spinner from "./loaders/Spinner";
 import useNotification from "../hooks/useNotification";
-import { set } from "react-hook-form";
 import { useAdminFetchCourse } from "../hooks/useAdminFetchCourse";
 import { API_BASE } from "../utils/ulrs";
 import { useAdminUpdateCourseBasic } from "../hooks/useAdminUpdateCourseBasic";
@@ -19,7 +17,6 @@ import { CiFileOn } from "react-icons/ci";
 import { MdCancel } from "react-icons/md";
 import FetchingError from "./FetchingError";
 import { useToggleCoursePublish } from "../hooks/useToggleCoursePublish";
-// import { ToggleSwitch } from "./Admin/ToggleTest";
 
 const EditCourse: React.FC = () => {
   const navigate = useNavigate();
@@ -30,7 +27,6 @@ const EditCourse: React.FC = () => {
   const testsPerPage = 5;
   const { NotificationComponent, triggerNotification } = useNotification();
   const [isCoursePublished, setIsCoursePublished] = useState(false);
-  const [isTestPublished, setIsTestPublished] = useState(false);
   const location = useLocation();
   const state = location.state;
   useEffect(() => {
@@ -51,7 +47,7 @@ const EditCourse: React.FC = () => {
     error,
   } = useFetchTests(courseId!, currentPage, testsPerPage);
 
-  const { togglePublish } = useToggleCoursePublish(Number(courseId!))
+  const { togglePublish } = useToggleCoursePublish(Number(courseId!));
 
   const {
     deleteTest,
@@ -109,7 +105,7 @@ const EditCourse: React.FC = () => {
       thumbnail: basicCourse.thumbnail ?? "",
       videoUrl: basicCourse.videoUrl ?? "",
     });
-    setIsCoursePublished(basicCourse.liveStatus ?? false)
+    setIsCoursePublished(basicCourse.liveStatus ?? false);
   }, [basicCourse]);
 
   const handleBasicChange = (
@@ -150,7 +146,6 @@ const EditCourse: React.FC = () => {
     test.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const totalPages = Math.max(1, Math.ceil(total / testsPerPage));
   const startIndex = (currentPage - 1) * testsPerPage;
   const paginatedTests = filtered.slice(startIndex, startIndex + testsPerPage);
 
@@ -174,7 +169,6 @@ const EditCourse: React.FC = () => {
         duration: 3000,
       });
     } catch {
-      // error shown in modal
       triggerNotification({
         type: "error",
         message: "Failed to delete test",
@@ -213,62 +207,39 @@ const EditCourse: React.FC = () => {
     vid.onloadedmetadata = () => {
       URL.revokeObjectURL(url);
       const secs = Math.floor(vid.duration);
-      
+
       setBasicForm((f) => ({ ...f, duration: secs.toString() }));
     };
   };
 
+  const handleCoursePublish = async () => {
+    const desired = !isCoursePublished;
 
+    // 1) Optimistically flip it in the UI
+    // setIsCoursePublished(desired);
 
-//  const handleCoursePublish = async () => {
-//   try {
-//     const newStatus = !isCoursePublished;
-//     const updated = await togglePublish(newStatus);
+    try {
+      // 2) Push it to the server
+      const updated = await togglePublish(desired);
 
-//     setIsCoursePublished(updated.live);
-//     triggerNotification({
-//       type: 'success',
-//       message: `Course ${updated.live ? 'published' : 'unpublished'}`,
-//     });
-//   } catch {
-//     triggerNotification({
-//       type: 'error',
-//       message: `Failed to ${isCoursePublished ? 'unpublish' : 'publish'} course`,
-//     });
-//   }
-// };
-
-
-const handleCoursePublish = async () => {
-  const desired = !isCoursePublished;
-
-  // 1) Optimistically flip it in the UI
-  // setIsCoursePublished(desired);
-
-  try {
-    // 2) Push it to the server
-    const updated = await togglePublish(desired);
-
-    // 3) **Confirm** with whatever the server actually saved
-    console.log(updated)
-    if(updated.id){
-      setIsCoursePublished(updated.liveStatus);
+      // 3) **Confirm** with whatever the server actually saved
+      console.log(updated);
+      if (updated.id) {
+        setIsCoursePublished(updated.liveStatus);
+        triggerNotification({
+          type: "success",
+          message: `Course ${updated.liveStatus ? "published" : "unpublished"}`,
+        });
+      }
+    } catch {
+      // 4) On error, revert the toggle
+      setIsCoursePublished((prev) => !prev);
       triggerNotification({
-      type: 'success',
-      message: `Course ${updated.liveStatus ? 'published' : 'unpublished'}`,
-    });
+        type: "error",
+        message: `Failed to ${desired ? "publish" : "unpublish"} course`,
+      });
     }
-
-    
-  } catch {
-    // 4) On error, revert the toggle
-    setIsCoursePublished(prev => !prev);
-    triggerNotification({
-      type: 'error',
-      message: `Failed to ${desired ? 'publish' : 'unpublish'} course`,
-    });
-  }
-};
+  };
 
   const handleDeleteCourse = async () => {
     try {
@@ -289,8 +260,8 @@ const handleCoursePublish = async () => {
     }
   };
 
-  if(error || basicInfoError){
-    return <FetchingError />
+  if (error || basicInfoError) {
+    return <FetchingError />;
   }
 
   return (
@@ -301,7 +272,7 @@ const handleCoursePublish = async () => {
         className="underline underline-offset-2 cursor-pointer text-sm text-primary font-medium"
         title="All Courses"
       >
-       &lt; All Courses
+        &lt; All Courses
       </button>
       <div className="w-full flex justify-end gap-2 items-center">
         <span className="text-primary">
@@ -310,32 +281,18 @@ const handleCoursePublish = async () => {
 
         <div
           className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full transition-colors duration-200 ${
-              isCoursePublished
-                ? "bg-green-800"
-                : "bg-red-500"
-            }  rounded-full relative cursor-pointer`}
+            isCoursePublished ? "bg-green-800" : "bg-red-500"
+          }  rounded-full relative cursor-pointer`}
           onClick={handleCoursePublish}
         >
           <span
-            // className={`absolute top-0 left-0 w-6 h-6 rounded-full transition-transform duration-300 bg-slate-100`}
-             className={`
+            className={`
           inline-block h-6 w-6 transform rounded-full bg-white shadow transition-transform duration-200
-          ${isCoursePublished ? 'translate-x-5' : 'translate-x-0'}
+          ${isCoursePublished ? "translate-x-5" : "translate-x-0"}
         `}
-
           ></span>
         </div>
-
-        
       </div>
-
-      {/* <div>
-        <ToggleSwitch
-        enabled={true} 
-        onChange={()=> console.log("checking the toggle switch")}
-        label={'Publich toggle'}
-        />
-      </div> */}
 
       {basicInfoLoad ? (
         <Spinner className="mx-auto" />
@@ -764,99 +721,3 @@ const handleCoursePublish = async () => {
 };
 
 export default EditCourse;
-
-// Rough code section
-
-{
-  /* Table */
-}
-{
-  /* <div className="w-full overflow-x-auto custom-scrollbar pb-2">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-primary text-white text-[16px] 2xl:text-xl text-center">
-                <tr>
-                  <th className="px-2 py-3 font-medium">Test Name</th>
-                  <th className="px-2 py-3 font-medium"># Questions</th>
-                  <th className="px-2 py-3 font-medium">Duration</th>
-                  <th className="px-2 py-3 text-center font-medium">Action</th>
-                </tr>
-              </thead>
-              <tbody
-                className="bg-white text-[#808080] text-sm 2xl:text-xl text-center"
-                style={{ border: '1px solid #AAA9A9' }}
-              >
-                {paginatedTests.map((test) => (
-                  <tr key={test.id}>
-                    <td
-                      className="px-2 py-4 whitespace-nowrap"
-                      style={{ border: '0 1px 1px 0 solid #AAA9A9' }}
-                    >
-                      {test.name}
-                    </td>
-                    <td
-                      className="px-2 py-4 whitespace-nowrap"
-                      style={{ border: '0 1px 1px 0 solid #AAA9A9' }}
-                    >
-                      {test.questionCount}
-                    </td>
-                    <td
-                      className="px-2 py-4 whitespace-nowrap"
-                      style={{ border: '0 1px 1px 0 solid #AAA9A9' }}
-                    >
-                      {test.duration}
-                    </td>
-                    <td
-                      className="px-2 py-4 whitespace-nowrap text-center"
-                      style={{ border: '0 1px 1px 0 solid #AAA9A9' }}
-                    >
-                      <div className="flex gap-1.5 justify-center">
-                        <button
-                          onClick={() => handleDeleteClick(test.id)}
-                          className="text-primary hover:underline font-medium"
-                        >
-                          <RiDeleteBinLine className="w-5 h-5" />
-                        </button>
-                        <button className="text-primary hover:underline font-medium">
-                          <TbEdit className="w-5 h-5" />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div> */
-}
-
-{
-  /* Pagination */
-}
-{
-  /* <div className="flex items-center justify-center p-4 space-x-2">
-            <button
-              disabled={currentPage === 1}
-              onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-              className="px-3 py-[10px] bg-[#CCCCCC] text-[#6F6B7D] cursor-pointer"
-            >
-              <ChevronLeftIcon className="h-5 w-5" />
-            </button>
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map((num) => (
-              <button
-                key={num}
-                onClick={() => setCurrentPage(num)}
-                className={`px-3 py-2 cursor-pointer ${
-                  num === currentPage ? 'bg-primary text-white' : 'bg-[#F1F0F2] text-[#808080]'
-                }`}
-              >
-                {num}
-              </button>
-            ))}
-            <button
-              disabled={currentPage === totalPages}
-              onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-              className="px-3 py-[10px] bg-[#CCCCCC] text-[#6F6B7D] cursor-pointer"
-            >
-              <ChevronRightIcon className="h-5 w-5" />
-            </button>
-          </div> */
-}

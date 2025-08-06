@@ -1,9 +1,9 @@
-import { Link, useRouteError, isRouteErrorResponse } from 'react-router-dom';
+import { Link, useRouteError, isRouteErrorResponse } from "react-router-dom";
 
 export default function AdminError() {
   const error = useRouteError();
 
-  let message = 'An unexpected error occurred';
+  let message = "An unexpected error occurred";
   if (isRouteErrorResponse(error)) {
     // thrown by React Router loaders or actions
     message = `${error.status} – ${error.statusText}`;

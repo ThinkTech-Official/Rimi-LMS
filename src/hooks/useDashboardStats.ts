@@ -1,14 +1,12 @@
-import { useState, useEffect } from 'react';
-import adminApi from '../utils/adminApi';
-import { API_BASE } from '../utils/ulrs';
+import { useState, useEffect } from "react";
+import adminApi from "../utils/adminApi";
+import { API_BASE } from "../utils/ulrs";
 
 export interface DashboardStats {
   date: string;
   dailySignups: number;
   dailyCertificatesIssued: number;
 }
-
-
 
 export function useDashboardStats() {
   const [data, setData] = useState<DashboardStats | null>(null);
@@ -19,11 +17,11 @@ export function useDashboardStats() {
     let mounted = true;
     adminApi
       .get<DashboardStats>(`${API_BASE}/admin/dashboard`)
-      .then(res => {
-        console.log('from useDashboardStats ', res)
+      .then((res) => {
+        console.log("from useDashboardStats ", res);
         if (mounted) setData(res.data);
       })
-      .catch(err => {
+      .catch((err) => {
         if (mounted) setError(err);
       })
       .finally(() => {

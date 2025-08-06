@@ -1,16 +1,6 @@
-
-
-
-
-
-
-
-
-
-
-import { useState, useEffect, useCallback } from 'react';
-import axios, { type CancelTokenSource } from 'axios';
-import { API_BASE } from '../utils/ulrs';
+import { useState, useEffect, useCallback } from "react";
+import axios, { type CancelTokenSource } from "axios";
+import { API_BASE } from "../utils/ulrs";
 
 /**
  * Represents a single course test with user clearance info
@@ -68,8 +58,6 @@ export function useFetchCourseClient(
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
- 
-
   // useCallback to ensure stable reference
   const fetchCourse = useCallback(async () => {
     if (!courseId) return;
@@ -79,13 +67,10 @@ export function useFetchCourseClient(
     try {
       const response = await axios.get<
         CourseClient & { documents: { id: number; fileName: string }[] }
-      >(
-        `${API_BASE}/courses/${courseId}/client`,
-        {
-          withCredentials: true,
-          cancelToken: cancelTokenSource.token,
-        }
-      );
+      >(`${API_BASE}/courses/${courseId}/client`, {
+        withCredentials: true,
+        cancelToken: cancelTokenSource.token,
+      });
       const raw = response.data as any;
 
       // Map video and thumbnail URL
@@ -121,7 +106,7 @@ export function useFetchCourseClient(
     } finally {
       setLoading(false);
     }
-    return () => cancelTokenSource.cancel('Operation canceled by user.');
+    return () => cancelTokenSource.cancel("Operation canceled by user.");
   }, [courseId]);
 
   useEffect(() => {

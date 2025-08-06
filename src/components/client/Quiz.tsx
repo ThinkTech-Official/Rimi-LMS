@@ -1,8 +1,8 @@
 import { type FC, useEffect, useState } from "react";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa6";
 import { PiSmiley, PiSmileySad } from "react-icons/pi";
-import type { Test } from "./CoursePlay";
 import { useSubmitTest } from "../../hooks/useSubmitTest";
+import type { Test } from "../../hooks/useFetchCourse";
 
 export interface Question {
   id: string;
@@ -24,19 +24,25 @@ const formatTime = (sec: number) => {
   return `${m.toString().padStart(2, "0")} : ${s.toString().padStart(2, "0")}`;
 };
 
-const Quiz: FC<QuizProps> = ({ test, onBack, onResume, course , setCourse , activeTestBasic }) => {
+const Quiz: FC<QuizProps> = ({
+  test,
+  onBack,
+  onResume,
+  // course,
+  setCourse,
+  activeTestBasic,
+}) => {
   const [timeLeft, setTimeLeft] = useState(Number(test.duration));
   const [current, setCurrent] = useState(0);
   const [answers, setAnswers] = useState<Record<string, number>>({});
   const [finished, setFinished] = useState(false);
   const [passed, setPassed] = useState(false);
 
-  const { submit , loading: submitting , error: submitError } = useSubmitTest()
+  const { submit } = useSubmitTest();
 
   const questions = test.questions;
-  const passingScore = 0.5;
 
-  console.log('from quiz component printing the test', test)
+  console.log("from quiz component printing the test", test);
 
   // countdown timer
   useEffect(() => {
@@ -75,45 +81,33 @@ const Quiz: FC<QuizProps> = ({ test, onBack, onResume, course , setCourse , acti
     }
     setPassed(isPassed);
     // onComplete(isPassed, score);
-    if(!isPassed){
+    if (!isPassed) {
       return;
     }
 
-  //    const payload = test.questions.map(q => ({
-  //   questionId: Number(q.id),
-  //   optionId:   Number(q.options[answers[q.id]]!.id),
-  // }))
+    const percent = Math.round(score * 100);
 
-  const percent   = Math.round(score * 100); 
-
-   try {
-    // await submit(test.courseId, test.id, payload);
-    await submit(test.courseId, test.id, {
-      score:  percent,
-      passed: isPassed,
-    });
-
-    // Optimistically mark this test as cleared in our local copy:
-      setCourse((c: any) => c && {
-        ...c,
-        tests: c.tests.map((t: any) =>
-          t.id === activeTestBasic?.id ? { ...t, isCleared: true } : t
-        ),
+    try {
+      // await submit(test.courseId, test.id, payload);
+      await submit(test.courseId, test.id, {
+        score: percent,
+        passed: isPassed,
       });
 
-  } catch (err) {
-    console.error("Submission failed", err);
+      // Optimistically mark this test as cleared in our local copy:
+      setCourse(
+        (c: any) =>
+          c && {
+            ...c,
+            tests: c.tests.map((t: any) =>
+              t.id === activeTestBasic?.id ? { ...t, isCleared: true } : t
+            ),
+          }
+      );
+    } catch (err) {
+      console.error("Submission failed", err);
+    }
   }
-
-
-  }
-  // new comment
-  // const retry = () => {
-  //   setTimeLeft(duration);
-  //   setCurrent(0);
-  //   setAnswers({});
-  //   setFinished(false);
-  // };
 
   if (finished) {
     const correctCount = questions.filter(
@@ -183,7 +177,9 @@ const Quiz: FC<QuizProps> = ({ test, onBack, onResume, course , setCourse , acti
           {passed ? (
             <button
               className="px-2.5 py-3 bg-primary text-white flex gap-2 items-center justify-center cursor-pointer font-semibold mt-5"
-              onClick={() => {onResume()}}
+              onClick={() => {
+                onResume();
+              }}
             >
               Proceed to Next Session
             </button>
@@ -198,7 +194,7 @@ const Quiz: FC<QuizProps> = ({ test, onBack, onResume, course , setCourse , acti
           {/* {test.passingMarks}/{questions.length}  */}
           {!passed && (
             <span className="text-2xl text-text-dark mt-3 font-semibold">
-              Passing Score :  {test.passingMarks} %
+              Passing Score : {test.passingMarks} %
             </span>
           )}
         </div>
@@ -247,7 +243,7 @@ const Quiz: FC<QuizProps> = ({ test, onBack, onResume, course , setCourse , acti
 
         {/* Options */}
         <ul className="space-y-4 mt-7">
-          {q.options.map((opt : any, i: any) => (
+          {q.options.map((opt: any, i: any) => (
             <li key={i}>
               <label className="flex items-center justify-between space-x-3 py-2 px-5 bg-white cursor-pointer">
                 <span>{opt}</span>

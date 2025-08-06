@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import axios from 'axios';
-import { API_BASE } from '../utils/ulrs';
+import { useState } from "react";
+import axios from "axios";
+import { API_BASE } from "../utils/ulrs";
 
 interface OptionDto {
   text: string;
@@ -18,7 +18,6 @@ interface CreateTestDto {
   startTime: number;
   questions: QuestionDto[];
 }
-
 
 /**
  * Hook to create a new test for a given course.

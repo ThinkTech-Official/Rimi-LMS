@@ -68,40 +68,32 @@ const ClientCertificates: React.FC = () => {
                 alt={c.course.name}
                 className="w-full aspect-video h-44 border border-[#CB5A31]"
               />
-              <h3 className="font-semibold text-text-dark line-clamp-1 mt-2">{c.course.name}</h3>
+              <h3 className="font-semibold text-text-dark line-clamp-1 mt-2">
+                {c.course.name}
+              </h3>
               <div className="text-sm text-text-dark font-semibold">
                 Certificate ID:{" "}
-                <span className="text-text-light font-normal">{c.certNumber}</span>
+                <span className="text-text-light font-normal">
+                  {c.certNumber}
+                </span>
               </div>
               <div className="flex justify-between">
                 <div className="text-sm text-text-dark font-semibold">
                   Issue Date:{" "}
-                  <span className="text-text-light font-normal">{new Date(c.createdAt).toLocaleDateString()}</span>
+                  <span className="text-text-light font-normal">
+                    {new Date(c.createdAt).toLocaleDateString()}
+                  </span>
                 </div>
               </div>
-               <a
-              href={`${API_BASE}/uploads/certificates/${c.fileName}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-4 py-2 mt-2 bg-primary text-white cursor-pointer w-full text-center"
-            >
-              Download PDF
-            </a>
+              <a
+                href={`${API_BASE}/uploads/certificates/${c.fileName}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-4 py-2 mt-2 bg-primary text-white cursor-pointer w-full text-center"
+              >
+                Download PDF
+              </a>
             </div>
-            
-            {/* <div>
-              <p className='text-xl font-semibold text-text-dark line-clamp-1'>{c.course.name}</p>
-              <p className='text-text-light-2'>Issued: {new Date(c.createdAt).toLocaleDateString()}</p>
-              <p className='text-text-light-2'>Cert #: {c.certNumber}</p>
-            </div>
-            <a
-              href={`${API_BASE}/uploads/certificates/${c.fileName}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-4 py-2 bg-primary text-white cursor-pointer w-fit"
-            >
-              Download PDF
-            </a> */}
           </li>
         ))}
       </ul>

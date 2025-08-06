@@ -11,7 +11,7 @@
 //   duration: number;
 //   startTime: number;
 //   questions: Question[];
-  
+
 // }
 
 // /**
@@ -45,11 +45,9 @@
 //   return { tests,total, loading, error };
 // };
 
-
-
-import { useState, useEffect } from 'react';
-import axios from 'axios';
-import { API_BASE } from '../utils/ulrs';
+import { useState, useEffect } from "react";
+import axios from "axios";
+import { API_BASE } from "../utils/ulrs";
 
 export interface RawTestEntry {
   id: number;
@@ -66,11 +64,10 @@ export interface TestEntry {
   id: number;
   name: string;
   startTime: string;
-  duration: string;      
-  questionCount: number; 
+  duration: string;
+  questionCount: number;
   // courseId: string;
 }
-
 
 export const useFetchTests = (
   courseId: string,
@@ -95,10 +92,10 @@ export const useFetchTests = (
           id: t.id,
           name: t.name,
           startTime: `${t.startTime}`,
-          duration: `${t.duration}`,          
+          duration: `${t.duration}`,
           questionCount: Array.isArray(t.questions) ? t.questions.length : 0,
         }));
-        console.log('from useFetchTests ', res)
+        console.log("from useFetchTests ", res);
         setTests(normalized);
         setTotal(res.data.total);
       })

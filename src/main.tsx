@@ -14,7 +14,6 @@ import ClientLayout from "./components/client/ClientLayout.tsx";
 import AdminHome from "./components/AdminHome.tsx";
 import Courses from "./components/Courses.tsx";
 import Certificates from "./components/Certificates.tsx";
-import AllTests from "./components/AllTests.tsx";
 import { UserManagement } from "./components/UserManagement.tsx";
 import AdminProfile from "./components/AdminProfile.tsx";
 import EditCourse from "./components/EditCourse.tsx";
@@ -27,14 +26,8 @@ import ClientProfile from "./components/client/ClientProfile.tsx";
 import { GenerateCertificatePage } from "./pages/GenerateCertificatePage.tsx";
 import { RequireAuth } from "./components/client/RequireAuth.tsx";
 import { AuthProvider } from "./context/AuthContext.tsx";
-
 import { AdminProvider } from "./context/AdminContext.tsx";
-
 import { RequireAdmin } from "./components/RequireAdmin.tsx";
-
-// import Quiz from './components/client/Quiz.tsx';
-import i18n from "./i18n/i18.ts";
-// import AdminCategory from "./components/Admin/AdminCategoryManager.tsx";
 import AdminCreateUser from "./components/Admin/AdminCreateUser.tsx";
 import AdminCategoryManager from "./components/Admin/AdminCategoryManager.tsx";
 import UserProfile from "./components/UserProfile.tsx";
@@ -77,7 +70,6 @@ const router = createBrowserRouter(
           path="/admin/track-certificate"
           element={<AdminTrackCertificate />}
         />
-        <Route path="/admin/tests" element={<AllTests />} />
         <Route path="/admin/users" element={<UserManagement />} />
         <Route path="/admin/users/:id" element={<UserProfile />} />
         <Route path="/admin/edit-course/:courseId" element={<EditCourse />} />
@@ -98,14 +90,14 @@ const router = createBrowserRouter(
       </Route>
 
       {/* Client routes */}
-      <Route 
-      element={
-        <AuthProvider>
-        <RequireAuth />
-        </AuthProvider>
+      <Route
+        element={
+          <AuthProvider>
+            <RequireAuth />
+          </AuthProvider>
         }
         errorElement={<ClientError />}
-        >
+      >
         <Route path="/client" element={<ClientLayout />}>
           {/* /client */}
           <Route index element={<ClientHome />} />
@@ -127,7 +119,7 @@ const router = createBrowserRouter(
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     {/* <AuthProvider> */}
-      <RouterProvider router={router} />
+    <RouterProvider router={router} />
     {/* </AuthProvider> */}
   </StrictMode>
 );

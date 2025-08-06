@@ -1,10 +1,9 @@
-
-import { useState } from 'react';
-import adminApi from '../utils/adminApi';
+import { useState } from "react";
+import adminApi from "../utils/adminApi";
 
 export function useAdminResetPasswordOfClient(userId: number) {
   const [loading, setLoading] = useState(false);
-  const [error,   setError]   = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
 
   const resetPassword = async (password: string) => {

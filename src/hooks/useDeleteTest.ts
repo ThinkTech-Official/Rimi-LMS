@@ -1,8 +1,6 @@
-import { useState } from 'react';
-import axios from 'axios';
-import { API_BASE } from '../utils/ulrs';
-
-
+import { useState } from "react";
+import axios from "axios";
+import { API_BASE } from "../utils/ulrs";
 
 export const useDeleteTest = (courseId: string) => {
   const [loading, setLoading] = useState<boolean>(false);
@@ -12,9 +10,7 @@ export const useDeleteTest = (courseId: string) => {
     setLoading(true);
     setError(null);
     try {
-      await axios.delete(
-        `${API_BASE}/courses/${courseId}/tests/${testId}`
-      );
+      await axios.delete(`${API_BASE}/courses/${courseId}/tests/${testId}`);
     } catch (err: any) {
       setError(err.response?.data?.message || err.message);
       throw err;

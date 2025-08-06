@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useCreateTest } from "../hooks/useCreateTest";
 import { useTranslation } from "react-i18next";
 import { useForm, type SubmitHandler } from "react-hook-form";
+import useNotification from "../hooks/useNotification";
 
 interface Option {
   id: number;
@@ -29,9 +30,11 @@ const CreateTest: React.FC = () => {
   const navigate = useNavigate();
   const { createTest, loading, error } = useCreateTest(courseId!);
   const { t } = useTranslation();
-  const [questionErrors, setQuestionErrors] = useState<Record<number, string[]>>({});
+  const [questionErrors, setQuestionErrors] = useState<
+    Record<number, string[]>
+  >({});
   const [hasSubmitted, setHasSubmitted] = useState(false);
-
+  const { triggerNotification } = useNotification();
   const [questions, setQuestions] = useState<Question[]>([
     {
       id: 1,
@@ -52,14 +55,15 @@ const CreateTest: React.FC = () => {
   } = useForm<NewTest>();
 
   const validateQuestion = (q: Question): string[] => {
-  const errors: string[] = [];
-  if (!q.text.trim()) errors.push("Question text is required.");
-  if (q.options.length < 2) errors.push("At least 2 options required.");
-  if (q.options.some((o) => !o.text.trim())) errors.push("All options must have text.");
-  if (!q.options.some((o) => o.isCorrect)) errors.push("One option must be marked correct.");
-  return errors;
-};
-
+    const errors: string[] = [];
+    if (!q.text.trim()) errors.push("Question text is required.");
+    if (q.options.length < 2) errors.push("At least 2 options required.");
+    if (q.options.some((o) => !o.text.trim()))
+      errors.push("All options must have text.");
+    if (!q.options.some((o) => o.isCorrect))
+      errors.push("One option must be marked correct.");
+    return errors;
+  };
 
   const handleAddQuestion = () => {
     setQuestions((prev) => [
@@ -77,14 +81,69 @@ const CreateTest: React.FC = () => {
     ]);
   };
 
-const handleQuestionChange = (qid: number, text: string) => {
-  const updatedQuestions = questions.map((q) =>
-    q.id === qid ? { ...q, text } : q
-  );
-  setQuestions(updatedQuestions);
+  const handleQuestionChange = (qid: number, text: string) => {
+    const updatedQuestions = questions.map((q) =>
+      q.id === qid ? { ...q, text } : q
+    );
+    setQuestions(updatedQuestions);
 
-  // Only validate if submission has been attempted
-  if (hasSubmitted) {
+    // Only validate if submission has been attempted
+    if (hasSubmitted) {
+      const current = updatedQuestions.find((q) => q.id === qid)!;
+      const errors = validateQuestion(current);
+
+      setQuestionErrors((prev) => {
+        const updated = { ...prev };
+        if (errors.length > 0) {
+          updated[qid] = errors;
+        } else {
+          delete updated[qid];
+        }
+        return updated;
+      });
+    }
+  };
+
+  const handleOptionChange = (qid: number, oid: number, text: string) => {
+    const updatedQuestions = questions.map((q) =>
+      q.id === qid
+        ? {
+            ...q,
+            options: q.options.map((o) => (o.id === oid ? { ...o, text } : o)),
+          }
+        : q
+    );
+    setQuestions(updatedQuestions);
+
+    if (hasSubmitted) {
+      const current = updatedQuestions.find((q) => q.id === qid)!;
+      const errors = validateQuestion(current);
+
+      setQuestionErrors((prev) => {
+        const updated = { ...prev };
+        if (errors.length > 0) {
+          updated[qid] = errors;
+        } else {
+          delete updated[qid];
+        }
+        return updated;
+      });
+    }
+  };
+
+  const toggleCorrect = (qid: number, oid: number) => {
+    const updatedQuestions = questions.map((q) =>
+      q.id === qid
+        ? {
+            ...q,
+            options: q.options.map((o) =>
+              o.id === oid ? { ...o, isCorrect: !o.isCorrect } : o
+            ),
+          }
+        : q
+    );
+    setQuestions(updatedQuestions);
+
     const current = updatedQuestions.find((q) => q.id === qid)!;
     const errors = validateQuestion(current);
 
@@ -97,118 +156,48 @@ const handleQuestionChange = (qid: number, text: string) => {
       }
       return updated;
     });
-  }
-};
-
-
-
-
- const handleOptionChange = (qid: number, oid: number, text: string) => {
-  const updatedQuestions = questions.map((q) =>
-    q.id === qid
-      ? {
-          ...q,
-          options: q.options.map((o) =>
-            o.id === oid ? { ...o, text } : o
-          ),
-        }
-      : q
-  );
-  setQuestions(updatedQuestions);
-
-if (hasSubmitted) {
-    const current = updatedQuestions.find((q) => q.id === qid)!;
-  const errors = validateQuestion(current);
-
-  setQuestionErrors((prev) => {
-    const updated = { ...prev };
-    if (errors.length > 0) {
-      updated[qid] = errors;
-    } else {
-      delete updated[qid];
-    }
-    return updated;
-  });
-};}
-
-
-
-const toggleCorrect = (qid: number, oid: number) => {
-  const updatedQuestions = questions.map((q) =>
-    q.id === qid
-      ? {
-          ...q,
-          options: q.options.map((o) =>
-            o.id === oid ? { ...o, isCorrect: !o.isCorrect } : o
-          ),
-        }
-      : q
-  );
-  setQuestions(updatedQuestions);
-
-  const current = updatedQuestions.find((q) => q.id === qid)!;
-  const errors = validateQuestion(current);
-
-  setQuestionErrors((prev) => {
-    const updated = { ...prev };
-    if (errors.length > 0) {
-      updated[qid] = errors;
-    } else {
-      delete updated[qid];
-    }
-    return updated;
-  });
-};
-
-
-
-
-  const handleAddOption = (qid: number) => {
-    setQuestions((qs) =>
-      qs.map((q) => {
-        if (q.id !== qid) return q;
-        const newId = q.options.length + 1;
-        return {
-          ...q,
-          options: [...q.options, { id: newId, text: "", isCorrect: false }],
-        };
-      })
-    );
   };
+
+  // const handleAddOption = (qid: number) => {
+  //   setQuestions((qs) =>
+  //     qs.map((q) => {
+  //       if (q.id !== qid) return q;
+  //       const newId = q.options.length + 1;
+  //       return {
+  //         ...q,
+  //         options: [...q.options, { id: newId, text: "", isCorrect: false }],
+  //       };
+  //     })
+  //   );
+  // };
 
   const handleRemoveQuestion = (qid: number) => {
     setQuestions((prev) => prev.filter((q) => q.id !== qid));
   };
-
-  // const handleSave = (e: FormEvent) => {
-  //   e.preventDefault();
-  //   // handle submit
-  //   console.log({ name, courseId, duration, startTime, questions });
-  // };
-
   const onSubmit: SubmitHandler<NewTest> = async (data: NewTest) => {
     if (!courseId) return;
     setHasSubmitted(true);
-   const questionLevelErrors: Record<number, string[]> = {};
+    const questionLevelErrors: Record<number, string[]> = {};
 
-questions.forEach((q, i) => {
-  const errors: string[] = [];
-  if (!q.text.trim()) errors.push("Question text is required.");
-  if (q.options.length < 2) errors.push("At least 2 options required.");
-  const emptyOptions = q.options.filter((o) => !o.text.trim());
-  if (emptyOptions.length > 0) errors.push("All options must have text.");
-  if (!q.options.some((o) => o.isCorrect)) errors.push("One option must be marked correct.");
-  if (errors.length > 0) {
-    questionLevelErrors[q.id] = errors;
-  }
-});
+    questions.forEach((q) => {
+      const errors: string[] = [];
+      if (!q.text.trim()) errors.push("Question text is required.");
+      if (q.options.length < 2) errors.push("At least 2 options required.");
+      const emptyOptions = q.options.filter((o) => !o.text.trim());
+      if (emptyOptions.length > 0) errors.push("All options must have text.");
+      if (!q.options.some((o) => o.isCorrect))
+        errors.push("One option must be marked correct.");
+      if (errors.length > 0) {
+        questionLevelErrors[q.id] = errors;
+      }
+    });
 
-if (Object.keys(questionLevelErrors).length > 0) {
-  setQuestionErrors(questionLevelErrors);
-  return;
-} else {
-  setQuestionErrors({});
-}
+    if (Object.keys(questionLevelErrors).length > 0) {
+      setQuestionErrors(questionLevelErrors);
+      return;
+    } else {
+      setQuestionErrors({});
+    }
 
     const dto = {
       name: data.name.trim(),
@@ -229,14 +218,18 @@ if (Object.keys(questionLevelErrors).length > 0) {
 
     try {
       await createTest(dto);
-      navigate(`/admin/edit-course/${courseId}`,{
+      navigate(`/admin/edit-course/${courseId}`, {
         state: {
           type: "success",
           message: "Test created successfully",
-        }
+        },
       });
     } catch {
-      // error displayed by hook
+      triggerNotification({
+        type: "error",
+        message: "Failed to create test",
+        duration: 3000,
+      });
     }
   };
 
@@ -248,7 +241,7 @@ if (Object.keys(questionLevelErrors).length > 0) {
         className="underline underline-offset-2 cursor-pointer text-sm text-primary font-medium"
         title="Back to Course"
       >
-       &lt; Back to Course
+        &lt; Back to Course
       </button>
       <main className="flex-1">
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
@@ -318,7 +311,7 @@ if (Object.keys(questionLevelErrors).length > 0) {
                   <input
                     type="number"
                     {...register("startTime", {
-                      valueAsNumber : true,
+                      valueAsNumber: true,
                       required: "Start Time is required",
                       min: {
                         value: 1,
@@ -345,7 +338,7 @@ if (Object.keys(questionLevelErrors).length > 0) {
                   <input
                     type="number"
                     {...register("passingMarks", {
-                      valueAsNumber : true,
+                      valueAsNumber: true,
                       required: "Passing Marks is required",
                       min: {
                         value: 1,
@@ -354,7 +347,7 @@ if (Object.keys(questionLevelErrors).length > 0) {
                       max: {
                         value: 100,
                         message: "Passing Marks must be at most 100",
-                      }
+                      },
                     })}
                     placeholder="Passing Percentage"
                     className="w-full border border-inputBorder p-2 sm:px-4 sm:py-3 focus:outline-none focus:ring-1 focus:ring-primary"
@@ -372,7 +365,7 @@ if (Object.keys(questionLevelErrors).length > 0) {
                   <input
                     type="number"
                     {...register("quizQuestionNumber", {
-                      valueAsNumber : true,
+                      valueAsNumber: true,
                       required: "Number of Questions is required",
                       min: {
                         value: 1,
@@ -414,13 +407,12 @@ if (Object.keys(questionLevelErrors).length > 0) {
                     Options
                   </label>
                   {questionErrors[q.id]?.length > 0 && (
-  <ul className="text-sm text-red-500 list-disc pl-5 space-y-1">
-    {questionErrors[q.id].map((err, i) => (
-      <li key={i}>{err}</li>
-    ))}
-  </ul>
-)}
-
+                    <ul className="text-sm text-red-500 list-disc pl-5 space-y-1">
+                      {questionErrors[q.id].map((err, i) => (
+                        <li key={i}>{err}</li>
+                      ))}
+                    </ul>
+                  )}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-[800px] mt-2">
                     {" "}
                     {q.options.map((o) => (

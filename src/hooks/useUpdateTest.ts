@@ -1,10 +1,15 @@
-import { useState } from 'react';
-import axios from 'axios';
-import { API_BASE } from '../utils/ulrs';
+import { useState } from "react";
+import axios from "axios";
+import { API_BASE } from "../utils/ulrs";
 
-
-export interface CreateOptionDto { text: string; isCorrect: boolean; }
-export interface CreateQuestionDto { text: string; options: CreateOptionDto[]; }
+export interface CreateOptionDto {
+  text: string;
+  isCorrect: boolean;
+}
+export interface CreateQuestionDto {
+  text: string;
+  options: CreateOptionDto[];
+}
 export interface UpdateTestDto {
   name: string;
   duration: number;

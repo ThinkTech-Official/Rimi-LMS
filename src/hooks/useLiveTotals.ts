@@ -1,7 +1,6 @@
-import { useState, useEffect } from 'react';
-import adminApi from '../utils/adminApi';
-import { API_BASE } from '../utils/ulrs';
-
+import { useState, useEffect } from "react";
+import adminApi from "../utils/adminApi";
+import { API_BASE } from "../utils/ulrs";
 
 export interface LiveTotals {
   totalUsers: number;
@@ -17,14 +16,23 @@ export function useLiveTotals() {
 
   useEffect(() => {
     let mounted = true;
-    adminApi.get<LiveTotals>(`${API_BASE}/admin/dashboard/live`)
-      .then(res => { if (mounted) {
-        console.log('from live totals', res.data)
-        setTotals(res.data);
-    } })
-      .catch(err => { if (mounted) setError(err); })
-      .finally(() => { if (mounted) setLoading(false); });
-    return () => { mounted = false; };
+    adminApi
+      .get<LiveTotals>(`${API_BASE}/admin/dashboard/live`)
+      .then((res) => {
+        if (mounted) {
+          console.log("from live totals", res.data);
+          setTotals(res.data);
+        }
+      })
+      .catch((err) => {
+        if (mounted) setError(err);
+      })
+      .finally(() => {
+        if (mounted) setLoading(false);
+      });
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   return { totals, loading, error };

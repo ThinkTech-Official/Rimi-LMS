@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import adminApi from '../utils/adminApi';
-import { API_BASE } from '../utils/ulrs';
+import { useState } from "react";
+import adminApi from "../utils/adminApi";
+import { API_BASE } from "../utils/ulrs";
 
 export interface CreateClientUserDto {
   name: string;
@@ -10,7 +10,7 @@ export interface CreateClientUserDto {
 
 export function useAdminCreateClient() {
   const [loading, setLoading] = useState(false);
-  const [error, setError]     = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<boolean>(false);
 
   const createClient = async (dto: CreateClientUserDto) => {
@@ -19,14 +19,15 @@ export function useAdminCreateClient() {
     setSuccess(false);
     try {
       // POST /admin/clients
-      await adminApi.post<CreateClientUserDto>(`${API_BASE}/admin/auth/create-client`, dto);
-      console.log('user Created ')
+      await adminApi.post<CreateClientUserDto>(
+        `${API_BASE}/admin/auth/create-client`,
+        dto
+      );
+      console.log("user Created ");
       setSuccess(true);
     } catch (err: any) {
       setError(
-        err.response?.data?.message ||
-        err.response?.data?.error   ||
-        err.message
+        err.response?.data?.message || err.response?.data?.error || err.message
       );
       throw err;
     } finally {

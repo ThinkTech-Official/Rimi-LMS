@@ -1,9 +1,9 @@
-import { Link, useRouteError, isRouteErrorResponse } from 'react-router-dom';
+import { Link, useRouteError, isRouteErrorResponse } from "react-router-dom";
 
 export default function ClientError() {
   const error = useRouteError();
 
-  let message = 'An unexpected error occurred';
+  let message = "An unexpected error occurred";
   if (isRouteErrorResponse(error)) {
     // thrown by React Router loaders/actions
     message = `${error.status} – ${error.statusText}`;
@@ -14,7 +14,9 @@ export default function ClientError() {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-gray-50">
-      <h1 className="text-3xl font-bold mb-2 text-red-600">Something went wrong</h1>
+      <h1 className="text-3xl font-bold mb-2 text-red-600">
+        Something went wrong
+      </h1>
       <p className="mb-4 text-lg text-gray-700">{message}</p>
       <Link
         to="/client"

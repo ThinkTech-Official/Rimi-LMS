@@ -28,7 +28,8 @@ const Courses: React.FC = () => {
           )}
 
           {breadcrumb === "create-course" && (
-            <><li>
+            <>
+              <li>
                 <button
                   onClick={() => setBreadcrumb("courses")}
                   className="underline underline-offset-2 cursor-pointer"
@@ -38,7 +39,8 @@ const Courses: React.FC = () => {
                 </button>
               </li>
               <li>&gt;</li>
-            <li className="text-primary">Create Course</li></>
+              <li className="text-primary">Create Course</li>
+            </>
           )}
 
           {breadcrumb === "create-test" && (

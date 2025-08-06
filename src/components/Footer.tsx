@@ -5,7 +5,7 @@ const Footer = () => {
         Copyright © 2025 RIMI. All rights reserved.
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Footer
+export default Footer;
