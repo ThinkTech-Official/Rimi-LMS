@@ -1,25 +1,26 @@
-
+ 
 
 import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { useAdminCreateClient, type CreateClientUserDto } from '../../hooks/useAdminCreateClient';
+// import { useAdminCreateClient, type CreateClientUserDto } from '../../hooks/useAdminCreateClient';
 import useNotification from '../../hooks/useNotification';
+import { useCreateAdminUser, type CreateAdminUserDto } from '../../hooks/useCreateAdminUser';
 
 export const AdminCreateAdmin: React.FC = () => {
   const { register, handleSubmit, reset, watch, formState: { errors } } =
-    useForm<CreateClientUserDto & { confirmPassword: string }>();
-  const { createClient, loading, error, success } = useAdminCreateClient();
+    useForm<CreateAdminUserDto & { confirmPassword: string }>();
+
+  const { createUser, loading }  = useCreateAdminUser();
   const { triggerNotification, NotificationComponent } = useNotification();
 
-  const onSubmit = async (data: CreateClientUserDto & { confirmPassword: string }) => {
+  const onSubmit = async (data: CreateAdminUserDto & { confirmPassword: string }) => {
     const { name, email, password } = data;
     try {
-      await createClient({ name, email, password });
-      triggerNotification({ type: 'success', message: 'Client created successfully', duration: 3000 });
+      await createUser({ name, email, password });
+      triggerNotification({ type: 'success', message: 'Admin user created', duration: 3000 });
       reset();
-    } catch(error) {
-      console.log('error in creting client', error)
-      triggerNotification({ type: 'error', message: 'Failed to create client', duration: 3000 });
+    } catch {
+      triggerNotification({ type: 'error', message: 'Failed to create admin', duration: 3000 });
     }
   };
 
