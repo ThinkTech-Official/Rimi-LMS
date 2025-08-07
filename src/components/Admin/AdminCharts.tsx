@@ -73,7 +73,7 @@ const AdminCharts = () => {
           <h5 className="text-lg 2xl:text-2xl capitalize leading-[20px] 2xl:leading-1.5 font-bold text-[#1B1B1B] text-center lg:text-left">
             {t("Recent New Users Daily")}
           </h5>
-          <div className="bg-white py-4 2xl:px-2 h-96 2xl:h-[400px] w-full border border-[#DDDDDD]">
+          <div className="bg-white py-4 px-2 h-96 2xl:h-[400px] w-full border border-[#DDDDDD]">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart
                 data={lineChartData}
@@ -132,11 +132,11 @@ const AdminCharts = () => {
           <h5 className="text-lg 2xl:text-2xl capitalize leading-[20px] 2xl:leading-1.5 font-bold text-[#1B1B1B] text-center lg:text-left">
             {t("Recent Certificates Issued Daily")}
           </h5>
-          <div className="bg-white py-4 2xl:px-2 h-96 2xl:h-[400px] w-full border border-[#DDDDDD]">
+          <div className="bg-white py-4 px-2 h-96 2xl:h-[400px] w-full border border-[#DDDDDD]">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart
                 data={barChartData}
-                margin={{ top: 20, right: 20, left: 0, bottom: 0 }}
+                margin={{ top: 25, right: 20, left: 0, bottom: 0 }}
               >
                 <XAxis
                   dataKey="name"

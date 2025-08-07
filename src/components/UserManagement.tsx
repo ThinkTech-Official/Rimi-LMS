@@ -58,7 +58,7 @@ export const UserManagement: React.FC = () => {
     <div className="relative bg-white overflow-hidden min-h-screen">
       <div className="px-2 sm:px-6 py-4">
         <h2
-          className="text-primary text-sm font-medium mb-3"
+          className="text-primary text-sm font-medium mb-3 capitalize"
           role="breadcrumbs"
         >
           &gt; {t("users Management")}{" "}
@@ -71,7 +71,7 @@ export const UserManagement: React.FC = () => {
         <div className="flex flex-col md:flex-row gap-2 md:items-center justify-start md:justify-between space-x-4 mb-6">
           <div className="flex gap-2 sm:items-center flex-col sm:flex-row">
             {" "}
-            <span className="text-[#4B465C] opacity-80">{t("show")}</span>
+            <span className="text-[#4B465C] opacity-80 first-letter:uppercase">{t("show")}</span>
             <div className="bg-[#EDEDED] px-2 sm:px-4 py-1 sm:py-3 w-full max-w-[350px]">
               <label className="inline-flex items-center mr-4 text-[#4B465C] opacity-80">
                 <input
@@ -93,7 +93,7 @@ export const UserManagement: React.FC = () => {
                   onChange={() => handleFilterChange("certified")}
                   className="form-radio cursor-pointer"
                 />
-                <span className="ml-2">{t("certified users")}</span>
+                <span className="ml-2 capitalize">{t("certified users")}</span>
               </label>
             </div>
           </div>

@@ -107,7 +107,7 @@ export const UserProfile: React.FC = () => {
 
           {/* Content */}
           {activeTab === "Courses" && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {enrolledCourses.length > 0 ? (
                 <>
                   {enrolledCourses.map((course) => (
