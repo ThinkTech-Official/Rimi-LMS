@@ -1,8 +1,19 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { FaFilePdf, FaPause, FaPlay, FaVolumeMute, FaVolumeUp } from "react-icons/fa";
+import {
+  FaFilePdf,
+  FaPause,
+  FaPlay,
+  FaVolumeMute,
+  FaVolumeUp,
+} from "react-icons/fa";
 import Quiz from "./Quiz";
-import { MdFullscreen, MdPlayArrow, MdVolumeOff, MdVolumeUp } from "react-icons/md";
+import {
+  MdFullscreen,
+  MdPlayArrow,
+  MdVolumeOff,
+  MdVolumeUp,
+} from "react-icons/md";
 
 import {
   useFetchCourseClient,
@@ -64,53 +75,41 @@ const CoursePlay = () => {
   // keep track to avoid re-trigger
   const triggeredTests = useRef<Set<number>>(new Set());
 
-
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
   const [volume, setVolume] = useState(1);
-
-
-//   useEffect(() => {
-//   const v = videoRef.current;
-//   if (!v) return;
-//   const onLoaded = () => setVideoDuration(v.duration);
-//   v.addEventListener("loadedmetadata", onLoaded);
-//   return () => v.removeEventListener("loadedmetadata", onLoaded);
-// }, [videoRef]);
-
 
   useEffect(() => {
     setCourse(fetchedCourse);
   }, [fetchedCourse]);
 
-
   // toggle play/pause
-const togglePlay = () => {
-  const v = videoRef.current!;
-  if (isPlaying) v.pause();
-  else v.play();
-  setIsPlaying(!isPlaying);
-  if (!hasStarted) setHasStarted(true);
-};
+  const togglePlay = () => {
+    const v = videoRef.current!;
+    if (isPlaying) v.pause();
+    else v.play();
+    setIsPlaying(!isPlaying);
+    if (!hasStarted) setHasStarted(true);
+  };
 
-// toggle mute
-const toggleMute = () => {
-  const v = videoRef.current!;
-  v.muted = !v.muted;
-  setIsMuted(v.muted);
-};
+  // toggle mute
+  const toggleMute = () => {
+    const v = videoRef.current!;
+    v.muted = !v.muted;
+    setIsMuted(v.muted);
+  };
 
-// adjust volume slider
-const onVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  const vol = parseFloat(e.target.value);
-  const v = videoRef.current!;
-  v.volume = vol;
-  v.muted = vol === 0;
-  setVolume(vol);
-  setIsMuted(v.muted);
-};
+  // adjust volume slider
+  const onVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const vol = parseFloat(e.target.value);
+    const v = videoRef.current!;
+    v.volume = vol;
+    v.muted = vol === 0;
+    setVolume(vol);
+    setIsMuted(v.muted);
+  };
 
-// toggle full screen
+  // toggle full screen
 
   const toggleFullscreen = () => {
     if (!document.fullscreenElement) {
@@ -119,6 +118,7 @@ const onVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       document.exitFullscreen();
     }
   };
+
   const handleMouseActivity = () => {
     if (isVideoPaused) return; // Don't hide markers if video is paused
     setShowMarkers(true);
@@ -242,16 +242,6 @@ const onVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     videoRef.current?.play();
   };
 
-  // if user failed allow re trigger and seek back
-  // const handleBack = () => {
-  //   if (activeTestBasic) triggeredTests.current.delete(activeTestBasic.id);
-  //   setShowTest(null);
-  //   if (videoRef.current) {
-  //     videoRef.current.currentTime = lastPassedTime;
-  //     videoRef.current.play();
-  //   }
-  // };
-
   // user failed allow re-trigger and seek back
   const handleBack = () => {
     // Hide the quiz UI
@@ -264,8 +254,6 @@ const onVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       setActiveTestBasic(null);
     }
 
-   
-
     // Seek back to the last passed checkpoint (or 0)
     if (videoRef.current) {
       videoRef.current.currentTime = lastPassedTime;
@@ -273,18 +261,21 @@ const onVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     }
   };
 
+  const handleStart = () => {
+    setHasStarted(true);
+    setIsPlaying(true);
+    videoRef.current?.play();
+  };
 
-   const handleStart = () => {
-     setHasStarted(true);
-      videoRef.current?.play();
-      };
+  const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // parse and clamp
+    let t = Number(e.target.value);
+    if (t > seekLimit) t = seekLimit;
+    if (t < 0) t = 0;
 
-
-      const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const t = Number(e.target.value);
-      setCurrentTime(t);
-      videoRef.current!.currentTime = t;
-      };
+    setCurrentTime(t);
+    if (videoRef.current) videoRef.current.currentTime = t;
+  };
 
   // Show/hide long description
   const toggleDescription = () => setShowFull((f) => !f);
@@ -298,6 +289,28 @@ const onVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     );
   if (errorCourse) return <p>Error: {errorCourse}</p>;
 
+  // find the next un-cleared test
+  const nextTest = course!.tests
+    .filter((t) => !t.isCleared)
+    .sort((a, b) => a.startTime - b.startTime)[0];
+
+  // clamp point: either the next test startTime, or full video length
+  const seekLimit = nextTest ? nextTest.startTime : videoDuration;
+
+  const formatTime = (seconds: number) => {
+  if (!Number.isFinite(seconds)) return "00:00";
+  let s = Math.max(0, Math.floor(seconds));
+  const h = Math.floor(s / 3600);
+  s -= h * 3600;
+  const m = Math.floor(s / 60);
+  const sec = s % 60;
+
+  const mm = String(m).padStart(2, "0");
+  const ss = String(sec).padStart(2, "0");
+
+  return h > 0 ? `${h}:${mm}:${ss}` : `${mm}:${ss}`;
+};
+
   return (
     <div className="flex min-h-screen bg-white">
       <main className="flex-1 px-2 py-6 sm:p-8 overflow-auto">
@@ -309,93 +322,73 @@ const onVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         </button>
 
         <div className="mt-6 bg-black overflow-hidden relative max-w-[1100px] 2xl:max-w-[1200px]">
-         
-
-
-          
-
-  <div
-     className="relative w-full aspect-video overflow-hidden"
-    //  ref={containerRef}
-     onMouseMove={handleMouseActivity}
-     onMouseLeave={handleMouseLeave}
-   >
-
+          <div
+            className="relative w-full aspect-video overflow-hidden "
+            ref={containerRef}
+            onMouseMove={handleMouseActivity}
+            onMouseLeave={handleMouseLeave}
+          >
             <video
               ref={videoRef}
               src={course?.videoUrl}
               poster={course?.thumbnail}
               // controls
               // controlsList="nofullscreen"
-              disableRemotePlayback
-              disablePictureInPicture
+              // disableRemotePlayback
+              // disablePictureInPicture
               className="w-full h-full"
-              onLoadedMetadata={e => setVideoDuration(e.currentTarget.duration)}
-              onTimeUpdate={e => setCurrentTime(e.currentTarget.currentTime)}
+              onLoadedMetadata={(e) =>
+                setVideoDuration(e.currentTarget.duration)
+              }
+              // onTimeUpdate={(e) => setCurrentTime(e.currentTarget.currentTime)}
+              onTimeUpdate={(e) => {
+                const v = e.currentTarget;
+                // keep your UI in sync
+                setCurrentTime(v.currentTime);
+
+                // trigger tests
+                for (const t of course.tests) {
+                  if (
+                    v.currentTime >= t.startTime &&
+                    !triggeredTests.current.has(t.id) &&
+                    !t.isCleared
+                  ) {
+                    triggeredTests.current.add(t.id);
+                    v.pause();
+                    setActiveTestBasic(t);
+                    break;
+                  }
+                }
+              }}
             />
 
-              {/* PLAY OVERLAY */}
-  {!hasStarted && (
-    <div
-      className="absolute inset-0 bg-black/40 flex items-center justify-center cursor-pointer"
-      onClick={handleStart}
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        className="w-16 h-16 text-white"
-        viewBox="0 0 24 24"
-        fill="currentColor"
-      >
-        <path d="M8 5v14l11-7z" />
-      </svg>
-    </div>
-  )}
-
-            
-
-            {/* DONE 3  */}
-
-            {/* {showMarkers && (
-              <div className="absolute bottom-0 left-0 right-0 h-4 bg-transparent z-20 pointer-events-none">
-                <div className="relative w-full h-full">
-                  {course?.tests.map((test) => (
-                    <div
-                      key={test.id}
-                      className={`absolute bottom-3.5 h-full w-4 flex items-center justify-center rounded-full ${
-                        test.isCleared ? "bg-red-200" : "bg-[#D9D9D9]"
-                      }`}
-                      style={{
-                        left: `${
-                          (test.startTime / (course.duration || 1)) * 100
-                        }%`,
-                      }}
-                    >
-                      <img src="/Document.svg" alt="" className="h-2.5" />
-                    </div>
-                  ))}
-                </div>
+            {/* PLAY OVERLAY */}
+            {!hasStarted && (
+              <div
+                className="absolute inset-0 bg-black/40 flex items-center justify-center cursor-pointer"
+                onClick={handleStart}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="w-16 h-16 text-white"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                >
+                  <path d="M8 5v14l11-7z" />
+                </svg>
               </div>
-            )} */}
+            )}
 
-            {/* ========================= */}
+            {/* Loader Before QUIZ OVERLAY */}
 
-
-
-
-
-
-
-
-            {/* ============================== */}
-            
-
-            {/* // DONE 3  */}
             {loadingTest && (
               <div className="absolute z-50 inset-0 bg-white/90 flex flex-col justify-center items-center gap-2">
                 <Spinner className="w-6 h-6" />
                 <p className="text-text-dark">Loading Test...</p>
               </div>
             )}
+
+            {/* QUIZ OVERLAY */}
 
             {showTest && (
               <div className="absolute z-20 top-0 left-0 w-full h-full">
@@ -409,117 +402,129 @@ const onVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
                 />
               </div>
             )}
-          </div>
 
-             {/* === CUSTOM SLIDER & MARKERS  === */}
-   <div className="mt-2 relative w-full max-w-[1100px] px-2 pb-6 ">
-     <input
-       ref={rangeRef}
-       type="range"
-       min={0}
-       max={videoDuration}
-       step="0.1"
-       value={currentTime}
-       onChange={handleSeek}
-       className="w-full h-1 bg-gray-300 rounded-lg cursor-pointer focus:outline-none"
-     />
-
-     <div className="mt-2 flex items-center space-x-4 px-2 max-w-[1100px]">
-  {/* play / pause */}
-  <button onClick={togglePlay} className="text-white">
-    {isPlaying 
-      ? <FaPause  className="w-6 h-6 cursor-pointer" /> 
-      : <FaPlay  className="w-6 h-6 cursor-pointer" />
-    }
-  </button>
-
-  {/* mute / unmute */}
-  <button onClick={toggleMute} className="text-white">
-    {isMuted 
-      ? <FaVolumeMute  className="w-6 h-6 cursor-pointer" />
-      : <FaVolumeUp  className="w-6 h-6 cursor-pointer" />
-    }
-  </button>
-
-  {/* volume slider */}
-  <input
-    type="range"
-    min={0}
-    max={1}
-    step={0.01}
-    value={volume}
-    onChange={onVolumeChange}
-    className="w-24"
-  />
-
-  {/* timecode */}
-  <span className="text-sm text-white">
-    {new Date(currentTime * 1000).toISOString().substr(14, 5)} /{" "}
-    {new Date(videoDuration * 1000).toISOString().substr(14, 5)}
-  
-  </span>
-
-
-<button
-              onClick={toggleFullscreen}
-              className=" z-30 p-1.5 rounded-full cursor-pointer text-white"
-              title="Toggle Fullscreen"
+            {/* === CUSTOM SLIDER & MARKERS  === */}
+            <div
+              className={`absolute bottom-0 left-0 right-0 bg-black/50 backdrop-blur-sm p-3 transition-opacity duration-200 ${
+                showMarkers ? "opacity-100" : "opacity-0"
+              }`}
             >
-              {isFullscreen ? (
-                <BiExitFullscreen
-                title="Exit Fullscreen"
-                  className={`w-5 h-5 text-white ${
-                    isFullscreen ? "w-6 h-6" : ""
-                  }`}
+              <input
+                ref={rangeRef}
+                type="range"
+                min={0}
+                max={videoDuration}
+                step="0.1"
+                value={currentTime}
+                // onChange={handleSeek}
+                onInput={(e) => {
+                  let t = parseFloat(
+                    (e.currentTarget as HTMLInputElement).value
+                  );
+                  // clamp
+                  if (t > seekLimit) t = seekLimit;
+                  if (t < 0) t = 0;
+                  // update both slider and video
+                  setCurrentTime(t);
+                  videoRef.current!.currentTime = t;
+                }}
+                className="w-full h-1 bg-gray-300 rounded-lg cursor-pointer focus:outline-none"
+              />
+
+              <div className="mt-2 flex items-center space-x-4 px-2 max-w-[1100px]">
+                {/* play / pause */}
+                <button onClick={togglePlay} className="text-white">
+                  {isPlaying ? (
+                    <FaPause className="w-6 h-6 cursor-pointer" />
+                  ) : (
+                    <FaPlay className="w-6 h-6 cursor-pointer" />
+                  )}
+                </button>
+
+                {/* mute / unmute */}
+                <button onClick={toggleMute} className="text-white">
+                  {isMuted ? (
+                    <FaVolumeMute className="w-6 h-6 cursor-pointer" />
+                  ) : (
+                    <FaVolumeUp className="w-6 h-6 cursor-pointer" />
+                  )}
+                </button>
+
+                {/* volume slider */}
+                <input
+                  type="range"
+                  min={0}
+                  max={1}
+                  step={0.01}
+                  value={volume}
+                  onChange={onVolumeChange}
+                  className="w-24 h-1"
                 />
-              ) : (
-                <MdFullscreen
-                  title="Enter Fullscreen"
-                  className={`w-5 h-5 text-white ${
-                    isFullscreen ? "w-6 h-6" : ""
-                  }`}
-                />
-              )}
-            </button>
 
+                {/* timecode */}
+                {/* <span className="text-sm text-white">
+                  {new Date(currentTime * 1000).toISOString().substr(14, 5)} /{" "}
+                  {new Date(videoDuration * 1000).toISOString().substr(14, 5)}
+                </span> */}
 
+                <span className="text-sm text-white">
+  {formatTime(currentTime)} / {formatTime(videoDuration)}
+</span>
 
-</div>
+                <button
+                  onClick={toggleFullscreen}
+                  className=" z-30 p-1.5 rounded-full cursor-pointer text-white"
+                  title="Toggle Fullscreen"
+                >
+                  {isFullscreen ? (
+                    <BiExitFullscreen
+                      title="Exit Fullscreen"
+                      className={`w-8 h- text-white ${
+                        isFullscreen ? "w-8 h-8" : ""
+                      }`}
+                    />
+                  ) : (
+                    <MdFullscreen
+                      title="Enter Fullscreen"
+                      className={`w-8 h-8 text-white ${
+                        isFullscreen ? "w-8 h-8" : ""
+                      }`}
+                    />
+                  )}
+                </button>
+              </div>
 
-     {/* overlay the markers */}
-        <div className="absolute inset-0 pointer-events-none">
-     {course!.tests.map((test) => {
-       const pct = videoDuration
-         ? (test.startTime / videoDuration) * 100
-         : 0;
-       return (
-         <div
-           key={test.id}
-           className="absolute"
-           style={{
-             left: `${pct}%`,
-            //  transform: "translateX(-50%)",
-            //  bottom: "0.5px"              // nudge icon just below the track
-           }}
-         >
-           <img
-             src="/Document.svg"
-             alt="test marker"
-             className={`h-5 ${test.isCleared ? "bg-red-200" : "bg-[#D9D9D9]"}`}
-           />
-         </div>
-       );
-     })}
-   </div>
+              {/* overlay the markers */}
+              <div className="absolute top-2.5 left-0 right-0 bottom-2.5 pointer-events-none">
+                {course!.tests.map((test) => {
+                  const pct = videoDuration
+                    ? (test.startTime / videoDuration) * 100
+                    : 0;
 
+                  const isNearEnd = pct >= 98;
 
-    
-   </div>
-
-   
+                  return (
+                    <div
+                      key={test.id}
+                      className="absolute"
+                      style={{
+                        left: isNearEnd ? `calc(${pct}% - 16px)` : `${pct}%`,
+                      }}
+                    >
+                      <img
+                        src="/Document.svg"
+                        alt="test marker"
+                        className={`h-3 ${
+                          test.isCleared ? "bg-red-200" : "bg-[#D9D9D9]"
+                        }`}
+                      />
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
         </div>
-
-        {/* DONE 1 */}
 
         <h1 className="mt-6 text-xl sm:text-2xl font-semibold text-text-dark">
           {course?.name}
@@ -535,10 +540,6 @@ const onVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
             {showFull ? "less" : "more"}
           </button>
         </p>
-
-        {/* // DONE 1 */}
-
-        {/* DONE 2  */}
 
         <h2 className="mt-8 text-xl font-semibold text-text-dark">
           Study materials
@@ -571,8 +572,6 @@ const onVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
             </li>
           ))}
         </ul>
-
-        {/* // DONE 2  */}
       </main>
     </div>
   );
