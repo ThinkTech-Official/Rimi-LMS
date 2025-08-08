@@ -76,7 +76,7 @@ const CoursePlay = () => {
   const triggeredTests = useRef<Set<number>>(new Set());
 
   const [isPlaying, setIsPlaying] = useState(false);
-  const [isMuted, setIsMuted] = useState(true);
+  const [isMuted, setIsMuted] = useState(false);
   const [volume, setVolume] = useState(1);
 
   useEffect(() => {
@@ -485,20 +485,22 @@ const CoursePlay = () => {
                   const pct = videoDuration
                     ? (test.startTime / videoDuration) * 100
                     : 0;
+
+                  const isNearEnd = pct >= 98;
                   return (
                     <div
                       key={test.id}
                       className="absolute"
                       style={{
-                        left: `${pct}%`,
+                        left: isNearEnd ? `calc(${pct}% - 16px)` : `${pct}%`,
+                        transform: "translateX(-50%)",
                       }}
                     >
                       <img
                         src="/Document.svg"
                         alt="test marker"
-                        className={`h-4 w-4 rounded-full flex items-center justify-center p-[1px] -translate-x-2 ${
-                          test.isCleared ? "bg-green-300" : "bg-[#D9D9D9]"
-                        }`}
+                        className={`h-4 w-4 rounded-full flex items-center justify-center p-[1px] bg-[#D9D9D9]
+                        `}
                       />
                     </div>
                   );

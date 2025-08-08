@@ -75,7 +75,7 @@ export function useFetchCourseClient(
 
       // Map video and thumbnail URL
       const videoUrl = raw.videoUrl
-        ? `${API_BASE}/uploads/courses/${raw.videoUrl}`
+        ? `${API_BASE}${raw.videoUrl}`
         : undefined;
       const thumbnail = raw.thumbnail
         ? `${API_BASE}/uploads/courses/${raw.thumbnail}`

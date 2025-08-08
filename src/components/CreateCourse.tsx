@@ -419,7 +419,7 @@ const CreateCourse: React.FC<CreateCourseProps> = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 {/* Add Video */}
                 <div className="flex flex-col">
-                  <label className="text-sm text-text-light-2 mb-1">
+                  <label className="text-sm text-text-light-2 mb-1 capitalize">
                     {t("add video")}
                   </label>
                   <label className="flex items-center justify-center h-32 border border-inputBorder cursor-pointer hover:border-primary">
@@ -451,7 +451,7 @@ const CreateCourse: React.FC<CreateCourseProps> = () => {
                 </div>
                 {/* Add Thumbnail */}
                 <div className="flex flex-col">
-                  <label className="text-sm text-text-light-2 mb-1">
+                  <label className="text-sm text-text-light-2 mb-1 capitalize">
                     {t("add thumbnail image")}
                   </label>
                   <label className="flex items-center justify-center h-32 border border-inputBorder cursor-pointer hover:border-primary">
