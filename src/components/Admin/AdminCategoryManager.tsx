@@ -1,12 +1,11 @@
-
-
-
-import React, { use, useState } from 'react';
-import { useCategoriesAdmin, type Category } from '../../hooks/useCategoriesAdmin';
-import { MdClose } from 'react-icons/md';
-import Spinner from '../loaders/Spinner';
-import useNotification from '../../hooks/useNotification';
-
+import React, { useState } from "react";
+import {
+  useCategoriesAdmin,
+  type Category,
+} from "../../hooks/useCategoriesAdmin";
+import { MdClose } from "react-icons/md";
+import Spinner from "../loaders/Spinner";
+import useNotification from "../../hooks/useNotification";
 
 const AdminCategoryManager: React.FC = () => {
   const {
@@ -19,28 +18,27 @@ const AdminCategoryManager: React.FC = () => {
     deleteCategory,
   } = useCategoriesAdmin();
 
- // local state just for the Add button
+  // local state just for the Add button
   const [creating, setCreating] = useState(false);
 
   // form state
-  const [newName, setNewName]       = useState('');
-  const [editing, setEditing]       = useState<Category | null>(null);
-  const [editName, setEditName]     = useState('');
-  const [updating, setUpdating]     = useState(false);
+  const [newName, setNewName] = useState("");
+  const [editing, setEditing] = useState<Category | null>(null);
+  const [editName, setEditName] = useState("");
+  const [updating, setUpdating] = useState(false);
   const [deletingId, setDeletingId] = useState<number | null>(null);
-  const [deleting, setDeleting]     = useState(false);
-  const { triggerNotification, NotificationComponent }     = useNotification();
+  const [deleting, setDeleting] = useState(false);
+  const { triggerNotification, NotificationComponent } = useNotification();
 
-    //  while fetching the initial list, show a placeholder
+  //  while fetching the initial list, show a placeholder
   if (fetching && categories.length === 0) {
     return (
       <div className="fixed flex flex-col gap-2 justify-center items-center top-1/2 left-1/2">
-        <Spinner className='w-10 h-10'/>
+        <Spinner className="w-10 h-10" />
         <p>Loading categories…</p>
       </div>
     );
   }
-
 
   // Create form submit
   const handleCreate = async (e: React.FormEvent) => {
@@ -49,21 +47,22 @@ const AdminCategoryManager: React.FC = () => {
     setCreating(true);
     try {
       await createCategory(newName.trim());
-      triggerNotification({ type: 'success', message: 'Category created successfully', duration: 3000 });
-      setNewName('');
+      triggerNotification({
+        type: "success",
+        message: "Category created successfully",
+        duration: 3000,
+      });
+      setNewName("");
     } finally {
       setCreating(false);
     }
   };
-
 
   // Open edit modal
   const openEdit = (cat: Category) => {
     setEditing(cat);
     setEditName(cat.name);
   };
-;
-
   // Edit form submit
   const handleUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -71,20 +70,23 @@ const AdminCategoryManager: React.FC = () => {
     setUpdating(true);
     try {
       await updateCategory(editing.id, editName.trim());
-      triggerNotification({ type: 'success', message: 'Category updated successfully', duration: 3000 });
+      triggerNotification({
+        type: "success",
+        message: "Category updated successfully",
+        duration: 3000,
+      });
       setEditing(null);
     } finally {
       setUpdating(false);
     }
   };
 
-
   const closeModal = () => {
     setEditing(null);
-    setEditName('');
+    setEditName("");
   };
 
- const handleDeleteConfirm = (id: number) => {
+  const handleDeleteConfirm = (id: number) => {
     setDeletingId(id);
     setDeleting(true);
   };
@@ -94,49 +96,57 @@ const AdminCategoryManager: React.FC = () => {
     setDeletingId(id);
     try {
       await deleteCategory(id);
-      // triggerNotification({ type: 'success', message: 'Category deleted successfully', duration: 3000 });
-    }
-     finally {
+      triggerNotification({
+        type: "success",
+        message: "Category deleted successfully",
+        duration: 3000,
+      });
+    } finally {
       setDeletingId(null);
       setDeleting(false);
     }
   };
 
-
   return (
     <div className="p-4 max-w-2xl mx-auto">
-      <h2 className="text-2xl font-semibold mb-4 text-text-dark">Manage Categories</h2>
+      <h2 className="text-2xl font-semibold mb-4 text-text-dark">
+        Manage Categories
+      </h2>
 
       {deleting && (
-       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/10">
-  <div className="bg-white text-text-light-2 w-full max-w-md p-6 rounded shadow-lg flex flex-col gap-6">
-    <p>Are you sure you want to delete this category?</p>
-    <div className="flex gap-2 justify-end">
-      <button
-        type="button"
-        onClick={() => setDeleting(false)}
-        className="px-4 py-2 border border-inputBorder text-gray-700 hover:bg-gray-100 transition cursor-pointer"
-      >
-        Cancel
-      </button>
-      <button
-        type="button"
-        onClick={() => handleDelete(deletingId || 0)}
-        className="px-4 py-2 bg-red-500 text-white disabled:opacity-50 hover:bg-red-600 transition cursor-pointer"
-      >
-        {fetching ? 'Deleting…' : 'Delete'}
-      </button>
-    </div>
-  </div>
-</div>
-
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/10">
+          <div className="bg-white text-text-light-2 w-full max-w-md p-6 rounded shadow-lg flex flex-col gap-6">
+            <p>Are you sure you want to delete this category?</p>
+            <div className="flex gap-2 justify-end">
+              <button
+                type="button"
+                onClick={() => setDeleting(false)}
+                className="px-4 py-2 border border-inputBorder text-gray-700 hover:bg-gray-100 transition cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={() => handleDelete(deletingId || 0)}
+                className="px-4 py-2 bg-red-500 text-white disabled:opacity-50 hover:bg-red-600 transition cursor-pointer"
+              >
+                {fetching ? "Deleting…" : "Delete"}
+              </button>
+            </div>
+          </div>
+        </div>
       )}
 
       {error && (
         <div className="text-text-light-2 mb-2 fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white max-w-md p-10 shadow-lg border border-inputBorder z-50 text-center">
-          <p className='text-red-500 mb-2 text-center'>Error deleting category:</p>
+          <p className="text-red-500 mb-2 text-center">
+            Error deleting category:
+          </p>
           {error}
-          <MdClose onClick={() => setError('')} className="absolute top-2 right-2 cursor-pointer text-xl" />
+          <MdClose
+            onClick={() => setError("")}
+            className="absolute top-2 right-2 cursor-pointer text-xl"
+          />
         </div>
       )}
 
@@ -146,48 +156,63 @@ const AdminCategoryManager: React.FC = () => {
           className="border border-inputBorder px-3 py-2 flex-1 focus:border-0 focus:outline-none focus:ring-1 focus:ring-primary"
           placeholder="New category name"
           value={newName}
-          onChange={e => setNewName(e.target.value)}
+          onChange={(e) => setNewName(e.target.value)}
         />
         <button
           type="submit"
-           disabled={creating}
+          disabled={creating}
           className="px-4 py-2 sm:py-3 bg-primary text-white font-semibold cursor-pointer transition-all delay-100 shadow hover:bg-indigo-700"
         >
-          {creating ? 'Processing…' : 'Add'}
+          {creating ? "Processing…" : "Add"}
         </button>
       </form>
 
       {/* List */}
       <table className="min-w-full divide-y divide-gray-200">
-        <thead className='bg-primary text-white text-[16px] 2xl:text-xl'>
+        <thead className="bg-primary text-white text-[16px] 2xl:text-xl">
           <tr>
-            <th className="px-2 sm:px-6 py-1 sm:py-3 text-left font-medium">ID</th>
-            <th className="px-2 sm:px-6 py-1 sm:py-3 text-left font-medium">Name</th>
-            <th className="px-2 sm:px-6 py-1 sm:py-3 text-left font-medium">Actions</th>
+            <th className="px-2 sm:px-6 py-1 sm:py-3 text-left font-medium">
+              ID
+            </th>
+            <th className="px-2 sm:px-6 py-1 sm:py-3 text-left font-medium">
+              Name
+            </th>
+            <th className="px-2 sm:px-6 py-1 sm:py-3 text-left font-medium">
+              Actions
+            </th>
           </tr>
         </thead>
-        <tbody  className="bg-white"
-                  style={{ border: "1px solid #AAA9A9" }}>
-          {categories.map(cat => (
-            <tr key={cat.id}   className="text-[#808080] text-sm 2xl:text-xl">
-              <td   className="px-2 sm:px-6 py-2 sm:py-4 whitespace-nowrap"
-                        style={{
-                          borderWidth: "0px 1px 1px 0px",
-                          borderStyle: "solid",
-                          borderColor: "#AAA9A9",
-                        }}>{cat.id}</td>
-              <td   className="px-2 sm:px-6 py-2 sm:py-4 whitespace-nowrap"
-                        style={{
-                          borderWidth: "0px 1px 1px 0px",
-                          borderStyle: "solid",
-                          borderColor: "#AAA9A9",
-                        }}>{cat.name}</td>
-              <td   className="px-2 sm:px-6 py-2 sm:py-4 whitespace-nowrap space-x-2"
-                        style={{
-                          borderWidth: "0px 1px 1px 0px",
-                          borderStyle: "solid",
-                          borderColor: "#AAA9A9",
-                        }}>
+        <tbody className="bg-white" style={{ border: "1px solid #AAA9A9" }}>
+          {categories.map((cat) => (
+            <tr key={cat.id} className="text-[#808080] text-sm 2xl:text-xl">
+              <td
+                className="px-2 sm:px-6 py-2 sm:py-4 whitespace-nowrap"
+                style={{
+                  borderWidth: "0px 1px 1px 0px",
+                  borderStyle: "solid",
+                  borderColor: "#AAA9A9",
+                }}
+              >
+                {cat.id}
+              </td>
+              <td
+                className="px-2 sm:px-6 py-2 sm:py-4 whitespace-nowrap"
+                style={{
+                  borderWidth: "0px 1px 1px 0px",
+                  borderStyle: "solid",
+                  borderColor: "#AAA9A9",
+                }}
+              >
+                {cat.name}
+              </td>
+              <td
+                className="px-2 sm:px-6 py-2 sm:py-4 whitespace-nowrap space-x-2"
+                style={{
+                  borderWidth: "0px 1px 1px 0px",
+                  borderStyle: "solid",
+                  borderColor: "#AAA9A9",
+                }}
+              >
                 <button
                   onClick={() => openEdit(cat)}
                   className="text-primary hover:underline cursor-pointer"
@@ -210,12 +235,14 @@ const AdminCategoryManager: React.FC = () => {
       {editing && (
         <div className="fixed inset-0 bg-black/10 flex items-center justify-center z-50">
           <div className="bg-white p-6 shadow-lg min-w-[300px] sm:min-w-[400px]">
-            <h3 className="text-lg font-medium mb-4 text-text-dark">Edit Category</h3>
+            <h3 className="text-lg font-medium mb-4 text-text-dark">
+              Edit Category
+            </h3>
             <form onSubmit={handleUpdate} className="space-y-4 w-full">
               <input
                 className="w-full border border-inputBorder px-3 py-2 flex-1 focus:border-0 focus:outline-none focus:ring-1 focus:ring-primary"
                 value={editName}
-                onChange={e => setEditName(e.target.value)}
+                onChange={(e) => setEditName(e.target.value)}
               />
               <div className="flex justify-end space-x-2">
                 <button
@@ -230,7 +257,7 @@ const AdminCategoryManager: React.FC = () => {
                   disabled={updating}
                   className="px-4 py-2 w-[110px] bg-primary text-white font-semibold cursor-pointer transition-all delay-100 shadow hover:bg-indigo-700"
                 >
-                  {updating ? 'Saving…' : 'Save'}
+                  {updating ? "Saving…" : "Save"}
                 </button>
               </div>
             </form>

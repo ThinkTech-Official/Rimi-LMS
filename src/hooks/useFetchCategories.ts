@@ -1,8 +1,6 @@
-import { useState, useEffect, useCallback } from 'react';
-import axios from 'axios';
-import { API_BASE } from '../utils/ulrs';
-
-
+import { useState, useEffect, useCallback } from "react";
+import axios from "axios";
+import { API_BASE } from "../utils/ulrs";
 
 export interface Category {
   id: number;
@@ -21,12 +19,12 @@ export const useFetchCategories = () => {
     setLoading(true);
     axios
       .get<Category[]>(`${API_BASE}/categories`)
-      .then(res => {
-        console.log('from fetch categories',res.data)
-        setCategories(res.data)
-  })
-        
-      .catch(err => setError(err.message))
+      .then((res) => {
+        console.log("from fetch categories", res.data);
+        setCategories(res.data);
+      })
+
+      .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
   }, []);
 

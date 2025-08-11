@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import axios from 'axios';
-import { API_BASE } from '../utils/ulrs';
+import { useState } from "react";
+import axios from "axios";
+import { API_BASE } from "../utils/ulrs";
 
 export interface CertificateData {
   id: number;
@@ -28,14 +28,16 @@ export function useAdminCertificateSearch() {
     setCertificate(null);
 
     try {
-      const res = await axios.get<CertificateData>(`${API_BASE}/certificate/verify/${certNumber}`);
+      const res = await axios.get<CertificateData>(
+        `${API_BASE}/certificate/verify/${certNumber}`
+      );
       setCertificate(res.data);
-      console.log('From admin cert hook',res.data)
+      console.log("From admin cert hook", res.data);
     } catch (err: any) {
       if (err.response?.status === 404) {
-        setError('No such certificate found.');
+        setError("No such certificate found.");
       } else {
-        setError('Something went wrong.');
+        setError("Something went wrong.");
       }
     } finally {
       setLoading(false);

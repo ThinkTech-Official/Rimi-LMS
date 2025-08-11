@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import adminApi from '../utils/adminApi';
-import { API_BASE } from '../utils/ulrs';
+import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import adminApi from "../utils/adminApi";
+import { API_BASE } from "../utils/ulrs";
 
 export interface Certificate {
   id: string;
@@ -44,9 +44,11 @@ export function useAdminClientProfile() {
     const fetchProfile = async () => {
       setLoading(true);
       try {
-        const res = await adminApi.get<CLientProfileData>(`${API_BASE}/admin/users/${id}/profile`);
+        const res = await adminApi.get<CLientProfileData>(
+          `${API_BASE}/admin/users/${id}/profile`
+        );
 
-        console.log('from useAdmin CLient Profile ',res.data )
+        console.log("from useAdmin CLient Profile ", res.data);
         setData(res.data);
         setError(null);
       } catch (err: any) {

@@ -107,7 +107,7 @@ const ClientHeader: React.FC = () => {
       </div>
       <div className="relative">
         <button
-          className="flex items-center gap-2 text-primary text-[16px] 2xl:text-xl font-medium cursor-pointer"
+          className="flex items-center gap-2 min-w-24 text-primary text-[16px] 2xl:text-xl font-medium cursor-pointer"
           onClick={toggleProfileMenu}
         >
           <span className="flex gap-2 items-center">
@@ -148,10 +148,3 @@ const ClientHeader: React.FC = () => {
 };
 
 export default ClientHeader;
-
-
-
-// =======================================================
-
-
-

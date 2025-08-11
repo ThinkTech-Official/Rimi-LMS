@@ -1,8 +1,6 @@
-import { useState } from 'react';
-import axios from 'axios';
-import { API_BASE } from '../utils/ulrs';
-
-
+import { useState } from "react";
+import axios from "axios";
+import { API_BASE } from "../utils/ulrs";
 
 /**
  * Creates a new category on the backend

@@ -95,7 +95,7 @@ const AdminTrackCertificate: React.FC = () => {
                 rel="noopener noreferrer"
                 className="text-primary underline underline-offset-2"
               >
-                View PDF
+                View Certificate
               </a>
             </p>
           )}

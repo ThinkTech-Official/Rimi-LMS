@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
-import adminApi from '../utils/adminApi';
-import { API_BASE } from '../utils/ulrs';
+import { useState, useEffect } from "react";
+import adminApi from "../utils/adminApi";
+import { API_BASE } from "../utils/ulrs";
 
 export interface Category {
   id: number;
@@ -36,8 +36,10 @@ export function useCategoriesAdmin() {
   const createCategory = async (name: string) => {
     setLoading(true);
     try {
-      const res = await adminApi.post<Category>(`${API_BASE}/categories`, { name });
-      setCategories(prev => [...prev, res.data]);
+      const res = await adminApi.post<Category>(`${API_BASE}/categories`, {
+        name,
+      });
+      setCategories((prev) => [...prev, res.data]);
       setError(null);
     } catch (err: any) {
       setError(err.response?.data?.message || err.message);
@@ -50,9 +52,12 @@ export function useCategoriesAdmin() {
   const updateCategory = async (id: number, name: string) => {
     setLoading(true);
     try {
-      const res = await adminApi.patch<Category>(`${API_BASE}/categories/${id}`, { name });
-      setCategories(prev =>
-        prev.map(cat => (cat.id === id ? res.data : cat))
+      const res = await adminApi.patch<Category>(
+        `${API_BASE}/categories/${id}`,
+        { name }
+      );
+      setCategories((prev) =>
+        prev.map((cat) => (cat.id === id ? res.data : cat))
       );
       setError(null);
     } catch (err: any) {
@@ -67,7 +72,7 @@ export function useCategoriesAdmin() {
     setLoading(true);
     try {
       await adminApi.delete(`${API_BASE}/categories/${id}`);
-      setCategories(prev => prev.filter(cat => cat.id !== id));
+      setCategories((prev) => prev.filter((cat) => cat.id !== id));
       setError(null);
     } catch (err: any) {
       setError(err.response?.data?.message || err.message);

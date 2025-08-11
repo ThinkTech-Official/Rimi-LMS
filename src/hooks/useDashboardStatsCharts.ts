@@ -1,7 +1,6 @@
-
-import { useState, useEffect } from 'react';
-import adminApi from '../utils/adminApi';  
-import { API_BASE } from '../utils/ulrs';
+import { useState, useEffect } from "react";
+import adminApi from "../utils/adminApi";
+import { API_BASE } from "../utils/ulrs";
 
 export interface StatsItem {
   date: string;
@@ -20,11 +19,14 @@ export function useDashboardStatsCharts(targetDate?: string) {
       setError(null);
 
       try {
-        console.log('sending the date for chatrt data date is ', targetDate)
+        console.log("sending the date for chatrt data date is ", targetDate);
         const params = targetDate ? { date: targetDate } : {};
         //  use your adminApi (handles cookies, refresh, etc)
-        const response = await adminApi.get<StatsItem[]>(`${API_BASE}/admin/dashboard/range`, { params });
-        console.log('from use dashboard stats chart', response.data)
+        const response = await adminApi.get<StatsItem[]>(
+          `${API_BASE}/admin/dashboard/range`,
+          { params }
+        );
+        console.log("from use dashboard stats chart", response.data);
         setData(response.data);
       } catch (err) {
         setError(err);

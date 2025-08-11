@@ -1,8 +1,3 @@
-
-
-
-
-
 // import { useState, useEffect } from 'react';
 // import adminApi from '../utils/adminApi';
 // import { API_BASE } from '../utils/ulrs';
@@ -15,8 +10,6 @@
 //   progress: number;
 //   certificateIssued: boolean;
 // }
-
-
 
 // export const useAdminUsers = (
 //   page: number,
@@ -46,23 +39,11 @@
 //   return { users: data, total, loading, error };
 // };
 
-
 // ===================================================
 
-
-
-
-
-
-
-
-
-
-
-
-import { useState, useEffect } from 'react';
-import adminApi from '../utils/adminApi';
-import { API_BASE } from '../utils/ulrs';
+import { useState, useEffect } from "react";
+import adminApi from "../utils/adminApi";
+import { API_BASE } from "../utils/ulrs";
 
 export interface User {
   id: number;
@@ -76,18 +57,18 @@ export interface User {
 export const useAdminUsers = (
   page: number,
   limit: number,
-  filter: 'all' | 'certified',
-  search: string,
+  filter: "all" | "certified",
+  search: string
 ) => {
   const [users, setUsers] = useState<User[]>([]);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string>('');
+  const [error, setError] = useState<string>("");
 
   useEffect(() => {
     let isMounted = true;
     setLoading(true);
-    setError('');
+    setError("");
 
     adminApi
       .get<{
@@ -98,14 +79,14 @@ export const useAdminUsers = (
       }>(`${API_BASE}/admin/users`, {
         params: { page, limit, filter, search },
       })
-      .then(res => {
+      .then((res) => {
         if (!isMounted) return;
         setUsers(res.data.data);
         setTotal(res.data.total);
       })
-      .catch(err => {
+      .catch((err) => {
         if (!isMounted) return;
-        setError(err.message ?? 'Unknown error');
+        setError(err.message ?? "Unknown error");
       })
       .finally(() => {
         if (!isMounted) return;

@@ -23,7 +23,6 @@ export const AdminLayout: React.FC = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
 
-  // trying new code
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 768 && isSidebarOpen) {
@@ -163,7 +162,7 @@ export const AdminLayout: React.FC = () => {
         <main className="min-h-[calc(100vh-64px)]">
           <Outlet />
         </main>
-        <Footer/>
+        <Footer />
       </div>
     </div>
   );

@@ -1,8 +1,16 @@
 import { useState, useCallback, useRef } from "react";
 import { v4 as uuidv4 } from "uuid";
-import Notification, { type NotificationProps } from "../components/Notification";
+import Notification, {
+  type NotificationProps,
+} from "../components/Notification";
 
-type Position = "top-right" | "top-left" | "bottom-right" | "bottom-left" | "top-center" | "bottom-center";
+type Position =
+  | "top-right"
+  | "top-left"
+  | "bottom-right"
+  | "bottom-left"
+  | "top-center"
+  | "bottom-center";
 
 interface NotificationWithId extends NotificationProps {
   id: string;

@@ -1,4 +1,4 @@
-// THIS IS THE HEADER FOR ADMIN 
+// THIS IS THE HEADER FOR ADMIN
 
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -8,24 +8,21 @@ import { IoIosLogOut } from "react-icons/io";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 
-
-// CONTEXT 
-import { useAdminContext } from '../context/AdminContext'
+// CONTEXT
+import { useAdminContext } from "../context/AdminContext";
 import { useAdminLogout } from "../hooks/useAdminLogout";
 
-
 const Header: React.FC = () => {
-
-   const { admin, loading } = useAdminContext();
-
-   const logout = useAdminLogout()
-
+  const { admin } = useAdminContext();
+  const logout = useAdminLogout();
   const [isLanguageSelectOpen, setIsLanguageSelectOpen] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const navigate = useNavigate();
   const { i18n } = useTranslation();
   type Language = "en" | "fr";
-  const previousSelectedLanguage = localStorage.getItem("i18nextLng")?.split("-")[0];
+  const previousSelectedLanguage = localStorage
+    .getItem("i18nextLng")
+    ?.split("-")[0];
   const [selectedLanguage, setSelectedLanguage] = useState<Language>(
     previousSelectedLanguage as Language
   );
@@ -106,7 +103,7 @@ const Header: React.FC = () => {
         >
           <span className="flex gap-2 items-center">
             <FaUserCircle className="h-5 w-5 2xl:w-6 2xl:h-6 text-primary" />
-             {admin ? `${admin.name}` : 'Please log in'}
+            {admin ? `${admin.name}` : "Please log in"}
           </span>
           <MdKeyboardArrowRight
             className={`h-4 w-4 2xl:w-6 2xl:h-6 transform transition ${
@@ -127,8 +124,9 @@ const Header: React.FC = () => {
               </li>
               <li>
                 <button
-                onClick={logout}
-                 className="w-full text-left px-4 py-2 hover:bg-primary hover:text-white cursor-pointer flex gap-2 items-center">
+                  onClick={logout}
+                  className="w-full text-left px-4 py-2 hover:bg-primary hover:text-white cursor-pointer flex gap-2 items-center"
+                >
                   <IoIosLogOut className="h-4 w-4 2xl:w-5 2xl:h-5" /> Logout
                 </button>
               </li>

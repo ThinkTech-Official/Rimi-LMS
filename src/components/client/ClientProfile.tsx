@@ -1,7 +1,3 @@
-
-
-
-
 import { useState, useEffect, useRef } from "react";
 import { ImUser } from "react-icons/im";
 import { TbEdit, TbX } from "react-icons/tb";
@@ -9,27 +5,38 @@ import { useProfile } from "../../hooks/useProfile";
 import { useUpdateProfile } from "../../hooks/useUpdateProfile";
 import { useResetPassword } from "../../hooks/useResetPassword";
 import Spinner from "../loaders/Spinner";
-import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { IoMdClose } from "react-icons/io";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
+import useNotification from "../../hooks/useNotification";
 
 const ClientProfile: React.FC = () => {
-  const { profile, loading: loadingProfile, error: profileError, refetch } = useProfile();
-  const { updateProfile, loading: savingName, error: nameError } = useUpdateProfile();
-  const { resetPassword, loading: savingPwd, error: pwdError } = useResetPassword();
+  const {
+    profile,
+    loading: loadingProfile,
+    error: profileError,
+    refetch,
+  } = useProfile();
+  const {
+    updateProfile,
+    loading: savingName,
+    error: nameError,
+  } = useUpdateProfile();
+  const {
+    resetPassword,
+    loading: savingPwd,
+    // error: pwdError,
+  } = useResetPassword();
 
-  const [editMode, setEditMode]               = useState(false);
-  const [tempName, setTempName]               = useState("");
-  const [showPasswordReset, setShowPasswordReset] = useState(false);
-  const [newPassword, setNewPassword]         = useState("");
+  const [editMode, setEditMode] = useState(false);
+  const [tempName, setTempName] = useState("");
   const [showResetPasswordModal, setShowResetPasswordModal] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-   const [showPassword, setShowPassword] = useState(false);
-     const [newPwd, setNewPwd]           = useState('');
-  const [confirmPwd, setConfirmPwd]   = useState('');
-  const [localError, setLocalError]   = useState<string | null>(null);
+  const [newPwd, setNewPwd] = useState("");
+  const [confirmPwd, setConfirmPwd] = useState("");
+  const [localError, setLocalError] = useState<string | null>(null);
   const modalRef = useRef<HTMLDivElement>(null);
+  const { triggerNotification } = useNotification();
 
   // when profile loads, initialize tempName
   useEffect(() => {
@@ -38,15 +45,15 @@ const ClientProfile: React.FC = () => {
     }
   }, [profile]);
 
-    useEffect(() => {
-      const handleClickOutside = (e: MouseEvent) => {
-        if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
-          setShowResetPasswordModal(false);
-        }
-      };
-      document.addEventListener('mousedown', handleClickOutside);
-      return () => document.removeEventListener('mousedown', handleClickOutside);
-    }, []);
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
+        setShowResetPasswordModal(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   // handlers
   const handleNameSave = async () => {
@@ -56,38 +63,40 @@ const ClientProfile: React.FC = () => {
       setTempName(updated.name ?? "");
       await refetch();
     } catch {
-      // error is in nameError
-    }
-  };
-
-  const handlePwdSave = async () => {
-    try {
-      await resetPassword(newPassword);
-      setShowPasswordReset(false);
-      setNewPassword("");
-    } catch {
-      // error 
+      triggerNotification({
+        type: "error",
+        message: nameError ?? "Update failed",
+        duration: 3000,
+      });
     }
   };
   const handleResetSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-  setLocalError(null);
-  if (newPwd !== confirmPwd) {
-    setLocalError("Passwords don't match");
-    return;
-  }
-  try
-  {await resetPassword(newPwd);}
-  catch {}
-  finally
-  {setShowResetPasswordModal(false);}
-};
-  if (loadingProfile) return <div className="fixed top-1/2 left-1/2 flex flex-col items-center gap-2"><Spinner className="w-10 h-10"/> <p>Loading profile…</p></div>;
+    e.preventDefault();
+    setLocalError(null);
+    if (newPwd !== confirmPwd) {
+      setLocalError("Passwords don't match");
+      return;
+    }
+    try {
+      await resetPassword(newPwd);
+    } catch {
+    } finally {
+      setShowResetPasswordModal(false);
+    }
+  };
+  if (loadingProfile)
+    return (
+      <div className="fixed top-1/2 left-1/2 flex flex-col items-center gap-2">
+        <Spinner className="w-10 h-10" /> <p>Loading profile…</p>
+      </div>
+    );
   if (profileError)
     return (
       <div className="p-4 text-red-600">
         Error fetching profile: {profileError}{" "}
-        <button onClick={refetch} className="underline">Try again</button>
+        <button onClick={refetch} className="underline">
+          Try again
+        </button>
       </div>
     );
 
@@ -151,84 +160,91 @@ const ClientProfile: React.FC = () => {
             <span className="text-gray-700">{profile?.email}</span>
           </div>
 
-           
-            <button
-              onClick={() => setShowResetPasswordModal(true)}
-              className="text-primary underline text-sm cursor-pointer"
-            >
-              Reset password?
-            </button>
-          
+          <button
+            onClick={() => setShowResetPasswordModal(true)}
+            className="text-primary underline text-sm cursor-pointer"
+          >
+            Reset password?
+          </button>
         </div>
       </div>
-      
-            {showResetPasswordModal && (
+
+      {showResetPasswordModal && (
         <div className="fixed inset-0 bg-black/10 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded shadow-lg w-[90%] sm:w-md" ref={modalRef}>
+          <div
+            className="bg-white p-6 rounded shadow-lg w-[90%] sm:w-md"
+            ref={modalRef}
+          >
             <IoMdClose
               onClick={() => setShowResetPasswordModal(false)}
               className="absolute top-2 right-2 cursor-pointer text-xl text-primary"
             />
             <h2 className="text-lg font-bold mb-4">Reset Password</h2>
-      
-           
-            {/* {resetError && (
-              <div className="mb-2 text-red-600">{resetError}</div>
-            )}
-            {resetSuccess && (
-              <div className="mb-2 text-green-600">Password updated!</div>
-            )} */}
-      
+
             <form onSubmit={handleResetSubmit} className="space-y-4">
               <div className="relative">
                 <label className="block text-text-light-2">New Password</label>
                 <div className="relative">
-                <input
-                  type={showNewPassword ? 'text' : 'password'}
-                  value={newPwd}
-                  onChange={e => setNewPwd(e.target.value)}
-                  className="w-full border border-inputBorder px-4 py-2 sm:py-3 focus:outline-none focus:ring-1 focus:ring-primary"
-                  required
-                />
-                    <button
-              type="button"
-              onClick={() => setShowNewPassword((prev) => !prev)}
-              className="absolute inset-y-0 right-0 pr-3 flex items-center text-zinc-500"
-            >
-              {showNewPassword ? (
-                <EyeSlashIcon className="h-5 w-5 cursor-pointer" aria-hidden="true" />
-              ) : (
-                <EyeIcon className="h-5 w-5 cursor-pointer" aria-hidden="true" />
-              )}
-            </button>
-              </div>
-              </div>
-              <div className="relative">
-                <label className="block text-text-light-2">Confirm Password</label>
-                <div className="relative">
-                <input
-                  type={showConfirmPassword ? 'text' : 'password'}
-                  value={confirmPwd}
-                  onChange={e => setConfirmPwd(e.target.value)}
-                 className="w-full border border-inputBorder px-4 py-2 sm:py-3 focus:outline-none focus:ring-1 focus:ring-primary"
-                  required
-                />
-                 <button
-              type="button"
-              onClick={() => setShowConfirmPassword((prev) => !prev)}
-              className="absolute inset-y-3 right-0 pr-3 flex items-center text-zinc-500"
-            >
-              {showConfirmPassword ? (
-                <EyeSlashIcon className="h-5 w-5 cursor-pointer" aria-hidden="true" />
-              ) : (
-                <EyeIcon className="h-5 w-5 cursor-pointer" aria-hidden="true" />
-              )}
-            </button>
+                  <input
+                    type={showNewPassword ? "text" : "password"}
+                    value={newPwd}
+                    onChange={(e) => setNewPwd(e.target.value)}
+                    className="w-full border border-inputBorder px-4 py-2 sm:py-3 focus:outline-none focus:ring-1 focus:ring-primary"
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowNewPassword((prev) => !prev)}
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-zinc-500"
+                  >
+                    {showNewPassword ? (
+                      <EyeSlashIcon
+                        className="h-5 w-5 cursor-pointer"
+                        aria-hidden="true"
+                      />
+                    ) : (
+                      <EyeIcon
+                        className="h-5 w-5 cursor-pointer"
+                        aria-hidden="true"
+                      />
+                    )}
+                  </button>
                 </div>
               </div>
-       {localError && (
-              <div className="mb-2 text-red-600">{localError}</div>
-            )}
+              <div className="relative">
+                <label className="block text-text-light-2">
+                  Confirm Password
+                </label>
+                <div className="relative">
+                  <input
+                    type={showConfirmPassword ? "text" : "password"}
+                    value={confirmPwd}
+                    onChange={(e) => setConfirmPwd(e.target.value)}
+                    className="w-full border border-inputBorder px-4 py-2 sm:py-3 focus:outline-none focus:ring-1 focus:ring-primary"
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword((prev) => !prev)}
+                    className="absolute inset-y-3 right-0 pr-3 flex items-center text-zinc-500"
+                  >
+                    {showConfirmPassword ? (
+                      <EyeSlashIcon
+                        className="h-5 w-5 cursor-pointer"
+                        aria-hidden="true"
+                      />
+                    ) : (
+                      <EyeIcon
+                        className="h-5 w-5 cursor-pointer"
+                        aria-hidden="true"
+                      />
+                    )}
+                  </button>
+                </div>
+              </div>
+              {localError && (
+                <div className="mb-2 text-red-600">{localError}</div>
+              )}
               <div className="flex gap-4">
                 <button
                   type="button"
@@ -242,7 +258,7 @@ const ClientProfile: React.FC = () => {
                   // disabled={resetting}
                   className="flex-1 px-4 py-2 sm:py-3 bg-primary text-white font-semibold cursor-pointer transition-all delay-100 shadow hover:bg-indigo-700"
                 >
-                  { savingPwd? 'Updating…' : 'Update Password'}
+                  {savingPwd ? "Updating…" : "Update Password"}
                 </button>
               </div>
             </form>

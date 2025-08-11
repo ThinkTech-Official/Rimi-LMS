@@ -1,66 +1,64 @@
 // src/hooks/useFetchCourseProgress.ts
-import { useState, useEffect } from 'react'
-import api from '../utils/api'    
-import { API_BASE } from '../utils/ulrs'
+import { useState, useEffect } from "react";
+import api from "../utils/api";
+import { API_BASE } from "../utils/ulrs";
 
 export interface CourseProgress {
-  totalTests:      number
-  passedTests:     number
-  percentComplete: number
+  totalTests: number;
+  passedTests: number;
+  percentComplete: number;
   tests: {
-    id:        number
-    name:      string
-    duration:  number
-    startTime: number
-    isCleared: boolean
-  }[]
+    id: number;
+    name: string;
+    duration: number;
+    startTime: number;
+    isCleared: boolean;
+  }[];
 }
 
-
-
 export const useFetchCourseProgress = (courseId: number) => {
-  const [progress, setProgress] = useState<CourseProgress | null>(null)
-  const [loading,  setLoading]  = useState(false)
-  const [error,    setError]    = useState<string | null>(null)
+  const [progress, setProgress] = useState<CourseProgress | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  console.log('from use fetch course progress hook cpurse id is', courseId)
+  console.log("from use fetch course progress hook cpurse id is", courseId);
 
   useEffect(() => {
-    if (courseId == null) return
+    if (courseId == null) return;
 
-    let cancelled = false
+    let cancelled = false;
     const fetchProgress = async () => {
-      setLoading(true)
-      setError(null)
+      setLoading(true);
+      setError(null);
 
       try {
         const { data } = await api.get<CourseProgress>(
           `${API_BASE}/courses/${courseId}/progress`
-        )
+        );
         if (!cancelled) {
-          setProgress(data)
+          setProgress(data);
         }
       } catch (e: any) {
         if (!cancelled) {
           setError(
-            e.response?.data?.message
-              ?? e.message
-              ?? 'Error fetching course progress'
-          )
+            e.response?.data?.message ??
+              e.message ??
+              "Error fetching course progress"
+          );
         }
       } finally {
         if (!cancelled) {
-          setLoading(false)
+          setLoading(false);
         }
       }
-    }
+    };
 
-    fetchProgress()
+    fetchProgress();
 
     return () => {
-      cancelled = true
-    }
-  }, [courseId])
+      cancelled = true;
+    };
+  }, [courseId]);
 
-  return { progress, loading, error }
-}
+  return { progress, loading, error };
+};
