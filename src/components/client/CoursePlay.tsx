@@ -392,11 +392,11 @@ const CoursePlay = () => {
             {/* === CUSTOM SLIDER & MARKERS  === */}
             <div
               className={`
-      absolute bottom-0 left-0 right-0
-      bg-black/20 backdrop-blur-sm p-2
-      transition-opacity duration-200
-      ${showMarkers ? "opacity-100" : "opacity-0"}
-    `}
+                   absolute bottom-0 left-0 right-0
+                   bg-black/20 backdrop-blur-sm p-2
+                   transition-opacity duration-200
+                    ${showMarkers ? "opacity-100" : "opacity-0"}
+                 `}
             >
               <input
                 ref={rangeRef}
@@ -483,16 +483,15 @@ const CoursePlay = () => {
               <div className="absolute inset-4 pointer-events-none">
                 {course!.tests.map((test) => {
                   const pct = videoDuration
-                    ? (test.startTime / videoDuration) * 100
+                    ? Math.min((test.startTime / videoDuration) * 100)
                     : 0;
-
-                  const isNearEnd = pct >= 98;
                   return (
                     <div
                       key={test.id}
                       className="absolute"
                       style={{
-                        left: isNearEnd ? `calc(${pct}% - 16px)` : `${pct}%`,
+                        left: pct >= 98 ? "" : `${pct}%`,
+                        right: pct >= 98 ? "-16px" : ``,
                         transform: "translateX(-50%)",
                       }}
                     >
