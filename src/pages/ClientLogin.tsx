@@ -33,15 +33,6 @@ const LoginClient: React.FC = () => {
   const [selectedLanguage, setSelectedLanguage] = useState<Language>(
     previousSelectedLanguage as Language
   );
-  const [isLanguageSelectOpen, setIsLanguageSelectOpen] = useState(false);
-  const { i18n } = useTranslation();
-  type Language = "en" | "fr";
-  const previousSelectedLanguage = localStorage
-    .getItem("i18nextLng")
-    ?.split("-")[0];
-  const [selectedLanguage, setSelectedLanguage] = useState<Language>(
-    previousSelectedLanguage as Language
-  );
 
   const { login, loading, error } = useLogin();
   const { reload } = useAuth();
@@ -59,19 +50,6 @@ const LoginClient: React.FC = () => {
         duration: 3000,
       });
     }
-  };
-  const toggleLanguageSelect = () => {
-    setIsLanguageSelectOpen(!isLanguageSelectOpen);
-  };
-  const handleLanguageSelect = (lang: Language) => {
-    if (lang === selectedLanguage) {
-      setIsLanguageSelectOpen(false);
-      return;
-    }
-
-    i18n.changeLanguage(lang);
-    setSelectedLanguage(lang);
-    setIsLanguageSelectOpen(false);
   };
   const toggleLanguageSelect = () => {
     setIsLanguageSelectOpen(!isLanguageSelectOpen);
@@ -139,57 +117,6 @@ const LoginClient: React.FC = () => {
             <p className="text-primary font-semibold">Admin SignIn</p>
           </Link>
         </div>
-      <header className="bg-white border-b border-[#E9EEF1] flex items-center justify-end px-6 sm:px-14 space-x-4 py-4 gap-3">
-        <div className="flex gap-6 items-center">
-          <div className="relative">
-            <button
-              role="language-btn"
-              className="flex items-center gap-2 text-primary text-[16px] 2xl:text-xl font-medium relative cursor-pointer"
-              onClick={toggleLanguageSelect}
-            >
-              <span className="flex gap-2 items-center">
-                {" "}
-                <img
-                  src="/ion_language.svg"
-                  alt=""
-                  className="h-5 w-5 2xl:w-6 2xl:h-6"
-                />{" "}
-                {selectedLanguage}
-              </span>
-              <MdKeyboardArrowRight
-                className={`h-4 w-4 2xl:w-6 2xl:h-6 transform transition ${
-                  isLanguageSelectOpen ? "rotate-90" : ""
-                }`}
-              />
-            </button>
-            {isLanguageSelectOpen && (
-              <div className="absolute mt-4 w-24 2xl:w-28 rounded-sm shadow-lg bg-white border border-[#E9EEF1] z-10">
-                <ul className="py-1 text-sm 2xl:text-lg text-gray-700">
-                  <li>
-                    <button
-                      onClick={() => handleLanguageSelect("en")}
-                      className="block w-full text-left px-4 py-2 hover:bg-primary hover:text-white cursor-pointer"
-                    >
-                      En
-                    </button>
-                  </li>
-                  <li>
-                    <button
-                      onClick={() => handleLanguageSelect("fr")}
-                      className="block w-full text-left px-4 py-2 hover:bg-primary hover:text-white cursor-pointer"
-                    >
-                      Fr
-                    </button>
-                  </li>
-                </ul>
-              </div>
-            )}
-          </div>
-          <Link to="/adminlogin" className="flex items-center gap-2">
-            <FaUserLock className="text-primary" />
-            <p className="text-primary font-semibold">Admin SignIn</p>
-          </Link>
-        </div>
       </header>
       <div className="flex items-center justify-center bg-white px-4 h-[calc(100vh-64px)]">
         <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-md">
@@ -201,9 +128,6 @@ const LoginClient: React.FC = () => {
               className="h-12 w-32 sm:h-[75px] sm:w-40"
             />
           </div>
-          <h3 className="text-center text-base font-semibold text-primary mb-4">
-            Sign In as Client
-          </h3>
           <h3 className="text-center text-base font-semibold text-primary mb-4">
             Sign In as Client
           </h3>
@@ -282,7 +206,6 @@ const LoginClient: React.FC = () => {
               className="w-full py-3 bg-primary text-white font-semibold cursor-pointer transition-all delay-100 shadow hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
             >
               {loading ? "Signing in..." : "Sign In "}
-              {loading ? "Signing in..." : "Sign In "}
             </button>
           </form>
         </div>
@@ -293,4 +216,3 @@ const LoginClient: React.FC = () => {
 };
 
 export default LoginClient;
- 
