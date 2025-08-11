@@ -24,19 +24,25 @@ const processQueue = (error: any, tokenRefreshed = false) => {
   failedQueue = [];
 };
 
+
+const isAuthEndpoint = (url = '') =>
+  /\/client\/auth\/(login|signup|refresh)/.test(url);
+
 api.interceptors.response.use(
   resp => resp,
   (error: AxiosError & { config?: AxiosRequestConfig & { _retry?: boolean } }) => {
     const originalReq = error.config!;
     // const url  = originalReq.url || '';
     const status = error.response?.status;
+    const url = originalReq?.url || '';
 
     //  On first 401 of any request except /client/auth/refresh, try to renew
     if (
       status === 401 &&
       !originalReq._retry &&
       // url.startsWith('/client/') &&
-      !originalReq.url?.endsWith('/client/auth/refresh')
+      // !originalReq.url?.endsWith('/client/auth/refresh'
+      !isAuthEndpoint(url)
     ) {
       originalReq._retry = true;
 

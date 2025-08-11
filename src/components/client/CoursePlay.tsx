@@ -69,6 +69,8 @@ const CoursePlay = () => {
 
   const [videoDuration, setVideoDuration] = useState<number>(0);
 
+  const [videoReady, setVideoReady] = useState(false);
+
   const [currentTime, setCurrentTime] = useState(0);
   const rangeRef = useRef<HTMLInputElement>(null);
 
@@ -76,7 +78,7 @@ const CoursePlay = () => {
   const triggeredTests = useRef<Set<number>>(new Set());
 
   const [isPlaying, setIsPlaying] = useState(false);
-  const [isMuted, setIsMuted] = useState(true);
+  const [isMuted, setIsMuted] = useState(false);
   const [volume, setVolume] = useState(1);
 
   useEffect(() => {
@@ -153,7 +155,7 @@ const CoursePlay = () => {
   // On mount or when course loads: seek to first un-passed test and pre-mark triggers
   // on mount or course change: seek to beginning or 1s past last passed test
   useEffect(() => {
-    if (!course || !videoRef.current) return;
+    if (!course || !videoRef.current || !videoReady) return;
     // find all passed tests
     const passedTests = course.tests.filter((t) => t.isCleared);
     // last passed test startTime (or 0 if none)
@@ -180,6 +182,7 @@ const CoursePlay = () => {
     if (!video || !course) return;
 
     const onTimeUpdate = () => {
+      if (!markersReady) return;
       const now = video.currentTime;
       for (const t of course.tests) {
         if (
@@ -207,7 +210,7 @@ const CoursePlay = () => {
   // Prevent scrubbing past the next un-cleared test
   useEffect(() => {
     const video = videoRef.current;
-    if (!video || !course) return;
+    if (!video || !course || !videoReady) return;
 
     const onSeeking = () => {
       // find the next test the user hasn't cleared
@@ -311,6 +314,9 @@ const CoursePlay = () => {
   return h > 0 ? `${h}:${mm}:${ss}` : `${mm}:${ss}`;
 };
 
+const hasTests = !!course?.tests?.length;
+const markersReady = videoReady && hasTests;
+
   return (
     <div className="flex min-h-screen bg-white">
       <main className="flex-1 px-2 py-6 sm:p-8 overflow-auto">
@@ -337,9 +343,13 @@ const CoursePlay = () => {
               // disableRemotePlayback
               // disablePictureInPicture
               className="w-full h-full"
-              onLoadedMetadata={(e) =>
-                setVideoDuration(e.currentTarget.duration)
-              }
+              // onLoadedMetadata={(e) =>
+              //   setVideoDuration(e.currentTarget.duration)
+              // }
+              onLoadedMetadata={(e) => {
+                setVideoDuration(e.currentTarget.duration);
+                setVideoReady(true);             //  now we know duration
+                }}
               // onTimeUpdate={(e) => setCurrentTime(e.currentTarget.currentTime)}
               onTimeUpdate={(e) => {
                 const v = e.currentTarget;
@@ -468,8 +478,8 @@ const CoursePlay = () => {
                 </span> */}
 
                 <span className="text-sm text-white">
-  {formatTime(currentTime)} / {formatTime(videoDuration)}
-</span>
+                  {formatTime(currentTime)} / {formatTime(videoDuration)}
+                      </span>
 
                 <button
                   onClick={toggleFullscreen}
@@ -494,7 +504,19 @@ const CoursePlay = () => {
                 </button>
               </div>
 
+
+                {/* markers loading hint */}
+              {!markersReady && (
+                <div className="absolute top-2.5 left-0 right-0 bottom-2.5 flex items-center justify-center pointer-events-none">
+                  <div className="flex items-center gap-2 bg-black/40 px-3 py-1.5 rounded">
+                    <Spinner className="w-4 h-4" />
+                    <span className="text-white text-xs">Loading tests…</span>
+                  </div>
+                </div>
+              )}
+
               {/* overlay the markers */}
+              {markersReady && (
               <div className="absolute top-2.5 left-0 right-0 bottom-2.5 pointer-events-none">
                 {course!.tests.map((test) => {
                   const pct = videoDuration
@@ -522,6 +544,11 @@ const CoursePlay = () => {
                   );
                 })}
               </div>
+
+                )}
+
+
+
             </div>
           </div>
         </div>
