@@ -19,6 +19,9 @@ const processQueue = (error: any) => {
   failedQueue = [];
 };
 
+// const isAdminAuthEndpoint = (url = '') =>
+//   /\/admin\/auth\/(login|signup|refresh)/.test(url);
+
 adminApi.interceptors.response.use(
   (res) => res,
   (

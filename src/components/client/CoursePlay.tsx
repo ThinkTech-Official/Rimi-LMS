@@ -294,8 +294,23 @@ const CoursePlay = () => {
 
   // clamp point: either the next test startTime, or full video length
   const seekLimit = nextTest ? nextTest.startTime : videoDuration;
-  const hasTests = !!course?.tests?.length;
-  const markersReady = videoReady && hasTests;
+
+  const formatTime = (seconds: number) => {
+  if (!Number.isFinite(seconds)) return "00:00";
+  let s = Math.max(0, Math.floor(seconds));
+  const h = Math.floor(s / 3600);
+  s -= h * 3600;
+  const m = Math.floor(s / 60);
+  const sec = s % 60;
+
+  const mm = String(m).padStart(2, "0");
+  const ss = String(sec).padStart(2, "0");
+
+  return h > 0 ? `${h}:${mm}:${ss}` : `${mm}:${ss}`;
+};
+
+const hasTests = !!course?.tests?.length;
+const markersReady = videoReady && hasTests;
 
   return (
     <div className="flex min-h-screen bg-white">
@@ -328,8 +343,8 @@ const CoursePlay = () => {
               // }
               onLoadedMetadata={(e) => {
                 setVideoDuration(e.currentTarget.duration);
-                setVideoReady(true); //  now we know duration
-              }}
+                setVideoReady(true);             //  now we know duration
+                }}
               // onTimeUpdate={(e) => setCurrentTime(e.currentTarget.currentTime)}
               onTimeUpdate={(e) => {
                 const v = e.currentTarget;
@@ -457,6 +472,11 @@ const CoursePlay = () => {
                 <span className="text-sm text-white">
                   {new Date(currentTime * 1000).toISOString().substr(14, 5)} /{" "}
                   {new Date(videoDuration * 1000).toISOString().substr(14, 5)}
+                </span> */}
+
+                <span className="text-sm text-white">
+                  {formatTime(currentTime)} / {formatTime(videoDuration)}
+                      </span>
                 </span>
 
                 <button
