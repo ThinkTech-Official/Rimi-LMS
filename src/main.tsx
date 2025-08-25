@@ -37,6 +37,7 @@ import TestCertificate from "./pages/TestCertificate.tsx";
 import AdminError from "./components/Admin/AdminError.tsx";
 import ClientError from "./components/client/ClientError.tsx";
 import AdminCreateAdmin from "./components/Admin/AdminCreateAdmin.tsx";
+import i18n from "./i18n/i18.ts";
 
 const router = createBrowserRouter(
   createRoutesFromElements(

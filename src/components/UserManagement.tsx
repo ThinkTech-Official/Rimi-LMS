@@ -110,7 +110,7 @@ export const UserManagement: React.FC = () => {
               className="px-2 sm:px-3 cursor-pointer flex items-center text-white bg-primary py-3 gap-1"
             >
               <BiSearch className="" />
-              Search
+              {t("Search")}
             </button>
           </div>
         </div>
@@ -139,7 +139,7 @@ export const UserManagement: React.FC = () => {
                     {t("email")}
                   </th>
                   <th className="px-2 sm:px-6 py-1 sm:py-3 text-left font-medium">
-                    {t("course")}
+                    {t("Courses")}
                   </th>
                   <th className="px-2 sm:px-6 py-1 sm:py-3 text-left font-medium">
                     {t("progress")}

@@ -5,6 +5,7 @@ import { useFetchCoursesClient } from "../../hooks/useFetchCoursesClient";
 import ClientCourseCard from "./ClientCourseCard";
 import Spinner from "../loaders/Spinner";
 import FetchingError from "../FetchingError";
+import { useTranslation } from "react-i18next";
 
 const ClientHome = () => {
   // Fetching categories
@@ -25,9 +26,9 @@ const ClientHome = () => {
   );
 
   const [searchTerm, setSearchTerm] = useState<string>("");
-
   const allCategory = { id: 0, name: "All" };
   const allCategories = [allCategory, ...categories];
+  const { t } = useTranslation();
 
   // First time category loading leads to default first one
   useEffect(() => {
@@ -100,7 +101,7 @@ const ClientHome = () => {
     <main className="flex-1 p-2 sm:p-8 sm:pr-0 overflow-auto space-y-6">
       {/* Header */}
       <h1 className="text-2xl font-bold text-gray-900 capitalize">
-        all Courses
+        {t("all Courses")}
       </h1>
 
       {/* Search & Action */}
@@ -108,7 +109,7 @@ const ClientHome = () => {
         <div className="flex items-center border border-[#DBDADE] w-[230px] sm:w-[330px] relative">
           <input
             type="text"
-            placeholder="Search by name"
+            placeholder={t("Search by name")}
             value={searchTerm}
             onChange={handleSearchChange}
             className="relative px-2 sm:px-4 py-1 sm:py-3 w-[200px] sm:w-[330px] focus:outline-none focus:ring-1 focus:ring-primary"
@@ -132,7 +133,7 @@ const ClientHome = () => {
                   : "text-gray-600"
               }`}
             >
-              {cat.name}
+              {t(cat.name.toLowerCase())}
             </li>
           ))}
         </ul>

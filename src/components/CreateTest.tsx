@@ -239,25 +239,27 @@ const CreateTest: React.FC = () => {
       <button
         onClick={() => navigate("/admin/edit-course/" + courseId)}
         className="underline underline-offset-2 cursor-pointer text-sm text-primary font-medium"
-        title="Back to Course"
+        title={t("back to course")}
       >
-        &lt; Back to Course
+        &lt; {t("back to course")}
       </button>
+
       <main className="flex-1">
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
           {/* Test Information */}
           <section className="space-y-4">
             <div className="flex w-full justify-between items-center mb-6 sm:mb-3">
               <h2 className="text-lg 2xl:text-2xl font-bold text-[#1B1B1B]">
-                Test Information
+                {t("test information")}
               </h2>
               <button
                 type="submit"
-                className="inline-block w-[120px] sm:w-[150px] text-sm sm:text-[16px] px-5 py-2 sm:py-3 bg-primary text-white text-nowrap font-semibold hover:bg-indigo-700 cursor-pointer transition-colors delay-150"
+                className="inline-block text-sm sm:text-[16px] px-5 py-2 sm:py-3 bg-primary text-white text-nowrap font-semibold hover:bg-indigo-700 cursor-pointer transition-colors delay-150"
               >
-                {loading ? "Saving..." : "Save Test"}
+                {loading ? t("saving") : t("save test")}
               </button>
             </div>
+
             <div className="space-y-4">
               <div className="flex flex-col">
                 <label className="text-sm text-text-light-2 mb-1 capitalize">
@@ -266,13 +268,13 @@ const CreateTest: React.FC = () => {
                 <input
                   type="text"
                   {...register("name", {
-                    required: "Name is required",
+                    required: t("name required"),
                     minLength: {
                       value: 4,
-                      message: "Name must be at least 4 characters",
+                      message: t("name min length"),
                     },
                   })}
-                  placeholder="Enter Test Name"
+                  placeholder={t("enter test name")}
                   className="w-full border border-inputBorder p-2 sm:px-4 sm:py-3 focus:outline-none focus:ring-1 focus:ring-primary"
                 />
                 {errors.name && (
@@ -281,6 +283,7 @@ const CreateTest: React.FC = () => {
                   </p>
                 )}
               </div>
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="flex flex-col">
                   <label className="text-sm text-text-light-2 mb-1 capitalize">
@@ -289,13 +292,13 @@ const CreateTest: React.FC = () => {
                   <input
                     type="number"
                     {...register("duration", {
-                      required: "Duration is required",
+                      required: t("duration required"),
                       min: {
                         value: 1,
-                        message: "Duration must be at least 1 second",
+                        message: t("duration min"),
                       },
                     })}
-                    placeholder="Select Test Duration in Seconds"
+                    placeholder={t("select test duration")}
                     className="w-full border border-inputBorder p-2 sm:px-4 sm:py-3 focus:outline-none focus:ring-1 focus:ring-primary"
                   />
                   {errors.duration && (
@@ -304,21 +307,22 @@ const CreateTest: React.FC = () => {
                     </p>
                   )}
                 </div>
+
                 <div className="flex flex-col">
                   <label className="text-sm text-text-light-2 mb-1 capitalize">
-                    {t("Start Time")}
+                    {t("start time")}
                   </label>
                   <input
                     type="number"
                     {...register("startTime", {
                       valueAsNumber: true,
-                      required: "Start Time is required",
+                      required: t("start time required"),
                       min: {
                         value: 1,
-                        message: "Start Time must be at least 1 second",
+                        message: t("start time min"),
                       },
                     })}
-                    placeholder="Enter the starting time for the test in seconds during the video."
+                    placeholder={t("start time placeholder")}
                     className="w-full border border-inputBorder p-2 sm:px-4 sm:py-3 focus:outline-none focus:ring-1 focus:ring-primary"
                   />
                   {errors.startTime && (
@@ -329,7 +333,7 @@ const CreateTest: React.FC = () => {
                 </div>
               </div>
 
-              {/* Passing Marks and Quiz Questions  */}
+              {/* Passing Marks and Quiz Questions */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="flex flex-col">
                   <label className="text-sm text-text-light-2 mb-1 capitalize">
@@ -339,17 +343,17 @@ const CreateTest: React.FC = () => {
                     type="number"
                     {...register("passingMarks", {
                       valueAsNumber: true,
-                      required: "Passing Marks is required",
+                      required: t("passing marks required"),
                       min: {
                         value: 1,
-                        message: "Passing Marks must be at least 1 second",
+                        message: t("passing marks min"),
                       },
                       max: {
                         value: 100,
-                        message: "Passing Marks must be at most 100",
+                        message: t("passing marks max"),
                       },
                     })}
-                    placeholder="Passing Percentage"
+                    placeholder={t("passing percentage placeholder")}
                     className="w-full border border-inputBorder p-2 sm:px-4 sm:py-3 focus:outline-none focus:ring-1 focus:ring-primary"
                   />
                   {errors.passingMarks && (
@@ -358,6 +362,7 @@ const CreateTest: React.FC = () => {
                     </p>
                   )}
                 </div>
+
                 <div className="flex flex-col">
                   <label className="text-sm text-text-light-2 mb-1 capitalize">
                     {t("number of questions")}
@@ -366,14 +371,13 @@ const CreateTest: React.FC = () => {
                     type="number"
                     {...register("quizQuestionNumber", {
                       valueAsNumber: true,
-                      required: "Number of Questions is required",
+                      required: t("number of questions required"),
                       min: {
                         value: 1,
-                        message:
-                          "Number of Questions must be at least 1 second",
+                        message: t("number of questions min"),
                       },
                     })}
-                    placeholder="Number of Question In Quiz , if Not filled sets all the questions in test for quiz"
+                    placeholder={t("number of questions placeholder")}
                     className="w-full border border-inputBorder p-2 sm:px-4 sm:py-3 focus:outline-none focus:ring-1 focus:ring-primary"
                   />
                   {errors.quizQuestionNumber && (
@@ -389,32 +393,35 @@ const CreateTest: React.FC = () => {
           {/* Add Questions */}
           <section className="space-y-6">
             <div className="flex justify-between items-center">
-              <h2 className="text-lg font-bold text-gray-900">Add Questions</h2>
+              <h2 className="text-lg font-bold text-gray-900">
+                {t("add questions")}
+              </h2>
             </div>
 
             {questions.map((q, index) => (
               <div key={q.id} className="space-y-4">
-                <label className="font-medium">Q{index + 1}</label>
+                <label className="font-medium">
+                  {t("question label", { number: index + 1 })}
+                </label>
                 <textarea
                   value={q.text}
                   onChange={(e) => handleQuestionChange(q.id, e.target.value)}
-                  placeholder="Type Your Question Here"
+                  placeholder={t("type question here")}
                   className="w-full border border-inputBorder p-2 sm:px-4 sm:py-3 focus:outline-none focus:ring-1 focus:ring-primary"
                   rows={2}
                 />
                 <div className="space-y-2">
                   <label className="text-sm 2xl:text-base font-medium">
-                    Options
+                    {t("options")}
                   </label>
                   {questionErrors[q.id]?.length > 0 && (
                     <ul className="text-sm text-red-500 list-disc pl-5 space-y-1">
                       {questionErrors[q.id].map((err, i) => (
-                        <li key={i}>{err}</li>
+                        <li key={i}>{t(err)}</li>
                       ))}
                     </ul>
                   )}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-[800px] mt-2">
-                    {" "}
                     {q.options.map((o) => (
                       <div
                         key={o.id}
@@ -432,25 +439,17 @@ const CreateTest: React.FC = () => {
                           onChange={(e) =>
                             handleOptionChange(q.id, o.id, e.target.value)
                           }
-                          placeholder={`Option ${o.id}`}
+                          placeholder={t("option placeholder", { id: o.id })}
                           className="flex-1 px-4 py-2 focus:ring-primary focus:outline-none"
                         />
                       </div>
                     ))}
                   </div>
-                  {/* <button
-                    type="button"
-                    onClick={() => handleAddOption(q.id)}
-                    className="text-[#0832DE] font-medium flex items-center space-x-1 cursor-pointer"
-                  >
-                    <span className="text-2xl">+</span>
-                    <span>Add new option</span>
-                  </button> */}
                   <button
                     onClick={() => handleRemoveQuestion(q.id)}
-                    className="inline-block text-sm sm:text-[16px]  text-red-500 hover:text-red-600 text-nowrap font-semibold  cursor-pointer transition-colors delay-100"
+                    className="inline-block text-sm sm:text-[16px] text-red-500 hover:text-red-600 text-nowrap font-semibold cursor-pointer transition-colors delay-100"
                   >
-                    Remove Question
+                    {t("remove question")}
                   </button>
                 </div>
               </div>
@@ -464,13 +463,15 @@ const CreateTest: React.FC = () => {
               className="text-[#0832DE] font-medium flex items-center space-x-1 cursor-pointer"
             >
               <span className="text-2xl">+</span>
-              <span className="text-lg sm:text-xl">Add new Question</span>
+              <span className="text-lg sm:text-xl">
+                {t("add new question")}
+              </span>
             </button>
             <button
               type="submit"
-              className="inline-block w-[120px] sm:w-[150px] text-sm sm:text-[16px] px-5 py-2 sm:py-3 bg-primary text-white text-nowrap font-semibold hover:bg-indigo-700 cursor-pointer transition-colors delay-150"
+              className="inline-block text-sm sm:text-[16px] px-5 py-2 sm:py-3 bg-primary text-white text-nowrap font-semibold hover:bg-indigo-700 cursor-pointer transition-colors delay-150"
             >
-              {loading ? "Saving..." : "Save Test"}
+              {loading ? t("saving") : t("save test")}
             </button>
           </div>
         </form>

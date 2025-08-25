@@ -6,6 +6,7 @@ import {
   useCreateAdminUser,
   type CreateAdminUserDto,
 } from "../../hooks/useCreateAdminUser";
+import { useTranslation } from "react-i18next";
 
 export const AdminCreateAdmin: React.FC = () => {
   const {
@@ -18,6 +19,7 @@ export const AdminCreateAdmin: React.FC = () => {
 
   const { createUser, loading } = useCreateAdminUser();
   const { triggerNotification, NotificationComponent } = useNotification();
+  const { t } = useTranslation();
 
   const onSubmit = async (
     data: CreateAdminUserDto & { confirmPassword: string }
@@ -43,33 +45,33 @@ export const AdminCreateAdmin: React.FC = () => {
   return (
     <div className="w-[90%] sm:w-md mx-auto p-3 sm:p-6 bg-white shadow-lg mt-[10%] sm:mt-[5%]">
       <h2 className="text-xl text-center font-semibold mb-4 text-text-dark">
-        Create Admin
+        {t("Create Admin")}
       </h2>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         {/* Name */}
         <div>
           <label className="block mb-1 font-medium text-text-light-2">
-            Name
+            {t("name")}
           </label>
           <input
-            {...register("name", { required: "Name is required" })}
+            {...register("name", { required: t("Name is required") })}
             className="w-full p-2 sm:px-4 sm:py-3 border border-zinc-300 focus:border-0 focus:outline-none focus:ring-1 focus:ring-primary"
           />
           {errors.name && (
-            <p className="text-red-600 mt-1">{errors.name.message}</p>
+            <p className="text-red-600 mt-1">{t("Name is required")}</p>
           )}
         </div>
 
         {/* Email */}
         <div>
           <label className="block mb-1 font-medium text-text-light-2">
-            Email
+            {t("Email")}
           </label>
           <input
             type="email"
             {...register("email", {
-              required: "Email is required",
+              required: t("Email is required"),
               pattern: {
                 value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
                 message: "Invalid email address",
@@ -78,32 +80,32 @@ export const AdminCreateAdmin: React.FC = () => {
             className="w-full p-2 sm:px-4 sm:py-3 border border-zinc-300 focus:border-0 focus:outline-none focus:ring-1 focus:ring-primary"
           />
           {errors.email && (
-            <p className="text-red-600 mt-1">{errors.email.message}</p>
+            <p className="text-red-600 mt-1">{t("Email is required")}</p>
           )}
         </div>
 
         {/* Password */}
         <div>
           <label className="block mb-1 font-medium text-text-light-2">
-            Password
+            {t("Password")}
           </label>
           <input
             type="password"
             {...register("password", {
-              required: "Password is required",
+              required: t("Password is required"),
               minLength: { value: 6, message: "Minimum length is 6" },
             })}
             className="w-full p-2 sm:px-4 sm:py-3 border border-zinc-300 focus:border-0 focus:outline-none focus:ring-1 focus:ring-primary"
           />
           {errors.password && (
-            <p className="text-red-600 mt-1">{errors.password.message}</p>
+            <p className="text-red-600 mt-1">{t("Password is required")}</p>
           )}
         </div>
 
         {/* Confirm Password */}
         <div>
           <label className="block mb-1 font-medium text-text-light-2">
-            Confirm Password
+            {t("Confirm Password")}
           </label>
           <input
             type="password"
@@ -114,9 +116,9 @@ export const AdminCreateAdmin: React.FC = () => {
             })}
             className="w-full p-2 sm:px-4 sm:py-3 border border-zinc-300 focus:border-0 focus:outline-none focus:ring-1 focus:ring-primary"
           />
-          {errors.confirmPassword && (
+          {errors.confirmPassword?.message && (
             <p className="text-red-600 mt-1">
-              {errors.confirmPassword.message}
+              {t(String(errors.confirmPassword.message))}
             </p>
           )}
         </div>
@@ -126,7 +128,7 @@ export const AdminCreateAdmin: React.FC = () => {
           disabled={loading}
           className="w-full p-2 sm:py-3 bg-primary text-white font-semibold cursor-pointer transition-all delay-100 shadow hover:bg-indigo-700"
         >
-          {loading ? "Creating…" : "Create Admin"}
+          {loading ? `${t("Creating")}…` : t("Create Admin")}
         </button>
       </form>
       {NotificationComponent}

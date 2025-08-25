@@ -21,10 +21,12 @@ import {
 } from "../../hooks/useFetchTestClient";
 import Spinner from "../loaders/Spinner";
 import { BiExitFullscreen } from "react-icons/bi";
+import { useTranslation } from "react-i18next";
 
 const CoursePlay = () => {
   const { id: courseId } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   // Fetch course with isCleared flags
   const {
@@ -554,7 +556,7 @@ const CoursePlay = () => {
         </p>
 
         <h2 className="mt-8 text-xl font-semibold text-text-dark">
-          Study materials
+          {t("Study Materials")}
         </h2>
         <ul className="mt-4 space-y-3">
           {course?.documents.map((mat) => (

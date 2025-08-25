@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import api from "../../utils/api";
 import { API_BASE } from "../../utils/ulrs";
 import Spinner from "../loaders/Spinner";
+import { useTranslation } from "react-i18next";
 
 interface CertRecord {
   id: number;
@@ -14,6 +15,7 @@ interface CertRecord {
 const ClientCertificates: React.FC = () => {
   const [certs, setCerts] = useState<CertRecord[]>([]);
   const [loading, setLoading] = useState(true);
+  const { t } = useTranslation();
 
   useEffect(() => {
     api
@@ -53,7 +55,7 @@ const ClientCertificates: React.FC = () => {
   return (
     <div className="p-2 sm:p-8">
       <h1 className="text-2xl text-text-dark font-bold my-4">
-        My Certificates
+        {t("My Certificates")}
       </h1>
       <ul className="flex flex-col items-center w-full sm:grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:w-fit">
         {certs.map((c) => (

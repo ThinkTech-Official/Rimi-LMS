@@ -75,7 +75,7 @@ export const AdminLayout: React.FC = () => {
       url: "/admin/track-certificate",
     },
     {
-      label: "certificates Template",
+      label: "Certificate Templates",
       icon: PiCertificateLight,
       key: "certificates",
       url: "/admin/certificates",

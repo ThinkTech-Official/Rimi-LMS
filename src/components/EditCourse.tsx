@@ -18,6 +18,14 @@ import { MdCancel } from "react-icons/md";
 import FetchingError from "./FetchingError";
 import { useToggleCoursePublish } from "../hooks/useToggleCoursePublish";
 
+const testHeaders = [
+  "Test Name",
+  "Questions",
+  "Start Time",
+  "Duration",
+  "Actions",
+];
+
 const EditCourse: React.FC = () => {
   const navigate = useNavigate();
   const { courseId } = useParams<{ courseId: string }>();
@@ -269,14 +277,14 @@ const EditCourse: React.FC = () => {
       {/* Breadcrumbs */}
       <button
         onClick={() => navigate("/admin/all-courses")}
-        className="underline underline-offset-2 cursor-pointer text-sm text-primary font-medium"
-        title="All Courses"
+        className="underline capitalize underline-offset-2 cursor-pointer text-sm text-primary font-medium"
+        title={t("all Courses")}
       >
-        &lt; All Courses
+        &lt; {t("all Courses")}
       </button>
       <div className="w-full flex justify-end gap-2 items-center">
         <span className="text-primary">
-          {isCoursePublished ? "Published" : "Unpublished"}
+          {t(isCoursePublished ? "Published" : "Unpublished")}
         </span>
 
         <div
@@ -302,7 +310,7 @@ const EditCourse: React.FC = () => {
         basicCourse && (
           <div className="bg-white shadow-md p-6 relative mb-6 flex flex-col gap-5">
             <h3 className="text-xl font-semibold mb-4 text-text-dark">
-              Course Details
+              {t("Course Details")}
             </h3>
             <button
               onClick={() => setIsBasicModalOpen(true)}
@@ -319,13 +327,15 @@ const EditCourse: React.FC = () => {
               />
               <div className="flex flex-col justify-center gap-2">
                 <p className="flex flex-col">
-                  <span className="font-medium text-lg">Name:</span>{" "}
+                  <span className="font-medium text-lg capitalize">
+                    {t("name")}:
+                  </span>{" "}
                   <span className="text-text-light-2 max-w-lg">
                     {basicCourse.name}
                   </span>
                 </p>
                 <p className="flex flex-col">
-                  <span className="font-medium text-lg">Duration:</span>{" "}
+                  <span className="font-medium text-lg">{t("Duration")}:</span>{" "}
                   <span className="text-text-light-2">
                     {basicCourse.duration != null
                       ? `${formatTime(basicCourse.duration)}`
@@ -340,7 +350,7 @@ const EditCourse: React.FC = () => {
                       href={`${API_BASE}/uploads/courses/${basicCourse.videoUrl}`}
                       target="_blank"
                     >
-                      View Video
+                      {t("View Video")}
                     </a>
                   ) : (
                     "—"
@@ -357,7 +367,9 @@ const EditCourse: React.FC = () => {
 
       {/* Header & Search */}
       <div className="flex flex-col lg:flex-row lg:items-center justify-between">
-        <h2 className="text-lg font-bold text-gray-900 mb-2">Attached Tests</h2>
+        <h2 className="text-lg font-bold text-gray-900 mb-2">
+          {t("Attached Tests")}
+        </h2>
         <div className="flex flex-col lg:flex-row lg:items-center gap-4">
           <div className="flex items-center border border-[#DBDADE] w-[230px] sm:w-[330px] relative">
             <input
@@ -373,9 +385,9 @@ const EditCourse: React.FC = () => {
           </div>
           <button
             onClick={handleCreateTest}
-            className="inline-block text-sm sm:text-[16px] px-5 py-1 sm:py-3 bg-primary text-white font-semibold hover:bg-indigo-700 cursor-pointer transition-colors delay-150 w-fit"
+            className="inline-block capitalize text-sm sm:text-[16px] px-5 py-1 sm:py-3 bg-primary text-white font-semibold hover:bg-indigo-700 cursor-pointer transition-colors delay-150 w-fit"
           >
-            Create New Test
+            {t("create new test")}
           </button>
         </div>
       </div>
@@ -391,11 +403,11 @@ const EditCourse: React.FC = () => {
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-primary text-white text-[16px] 2xl:text-xl text-center text-nowrap">
               <tr>
-                <th className="px-2 py-3 font-medium">Test Name</th>
-                <th className="px-2 py-3 font-medium">Questions</th>
-                <th className="px-2 py-3 font-medium">Start Point</th>
-                <th className="px-2 py-3 font-medium">Duration</th>
-                <th className="px-2 py-3 text-center font-medium">Action</th>
+                {testHeaders.map((header, index) => (
+                  <th className="px-2 py-3 font-medium" key={index}>
+                    {t(header)}
+                  </th>
+                ))}
                 {/* <th className="px-2 py-3 text-center font-medium">
                   Publish Test
                 </th> */}
@@ -521,7 +533,7 @@ const EditCourse: React.FC = () => {
           disabled={deletingCourse}
           className="px-4 py-2 sm:py-3 bg-red-600 text-white hover:bg-red-500 transition delay-100 cursor-pointer"
         >
-          Delete Course
+          {t("Delete Course")}
         </button>
       </div>
 

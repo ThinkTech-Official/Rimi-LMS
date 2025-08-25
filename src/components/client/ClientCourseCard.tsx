@@ -4,6 +4,7 @@ import { useFetchCourseProgress } from "../../hooks/useFetchCourseProgress";
 import { useAuth } from "../../context/AuthContext";
 import { RiProgress3Line } from "react-icons/ri";
 import Spinner from "../loaders/Spinner";
+import { useTranslation } from "react-i18next";
 
 interface ClientCourseCardProps {
   courseId: any;
@@ -21,15 +22,11 @@ const ClientCourseCard = ({
   description,
 }: ClientCourseCardProps) => {
   const { user } = useAuth();
-
+  const { t } = useTranslation();
   const navigate = useNavigate();
-
   const { progress, loading } = useFetchCourseProgress(courseId);
-
   console.log("from client course card course id is ", courseId);
-
   console.log("from client course card course id is ", duration);
-
   const percent = loading ? 0 : progress?.percentComplete ?? 0;
 
   const handleStartCourse = (id: number) => {
@@ -108,7 +105,7 @@ const ClientCourseCard = ({
                 className="inline-block mt-2 text-sm sm:text-[16px] px-5 py-2 sm:py-3 bg-primary text-white text-nowrap font-semibold hover:bg-indigo-700 cursor-pointer transition-colors delay-150"
                 onClick={() => handleStartCourse(courseId)}
               >
-                Start Course
+                {t("Start Course")}
               </button>
             ) : percent === 100 ? (
               // 100 percent show get certificates
@@ -116,7 +113,7 @@ const ClientCourseCard = ({
                 className="inline-block mt-2 text-sm sm:text-[16px] px-5 py-2 sm:py-3 bg-primary text-white text-nowrap font-semibold hover:bg-indigo-700 cursor-pointer transition-colors delay-150"
                 onClick={() => handleGenerate()}
               >
-                Get Certificate
+                {t("Get Certificate")}
               </button>
             ) : (
               // Some where between 0 and 100
@@ -124,7 +121,7 @@ const ClientCourseCard = ({
                 className="inline-block mt-2 text-sm sm:text-[16px] px-5 py-2 sm:py-3 bg-primary text-white text-nowrap font-semibold hover:bg-indigo-700 cursor-pointer transition-colors delay-150"
                 onClick={() => handleStartCourse(courseId)}
               >
-                Continue Course
+                {t("Continue Learning")}
               </button>
             )}
           </>

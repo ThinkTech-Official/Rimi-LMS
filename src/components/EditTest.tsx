@@ -6,6 +6,7 @@ import { useUpdateTest, type UpdateTestDto } from "../hooks/useUpdateTest";
 import Spinner from "./loaders/Spinner";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import useNotification from "../hooks/useNotification";
+import { useTranslation } from "react-i18next";
 
 export interface EditTestDto {
   name: string;
@@ -62,6 +63,7 @@ const EditTest: React.FC = () => {
     },
   });
   const { triggerNotification } = useNotification();
+  const { t } = useTranslation();
 
   const validateQuestion = (q: QuestionDto): string[] => {
     const errors: string[] = [];
@@ -243,9 +245,9 @@ const EditTest: React.FC = () => {
       <button
         onClick={() => navigate("/admin/edit-course/" + courseId)}
         className="underline underline-offset-2 cursor-pointer text-sm text-primary font-medium"
-        title="Back to Course"
+        title={t("back to course")}
       >
-        &lt; Back to Course
+        &lt; {t("back to course")}
       </button>
       <main>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
@@ -256,9 +258,9 @@ const EditTest: React.FC = () => {
             <button
               type="submit"
               disabled={loadingSave}
-              className="inline-block w-[120px] sm:w-[150px] text-sm sm:text-[16px] px-5 py-2 sm:py-3 bg-primary text-white text-nowrap font-semibold hover:bg-indigo-700 cursor-pointer transition-colors delay-150"
+              className="inline-block text-sm sm:text-[16px] px-5 py-2 sm:py-3 bg-primary text-white text-nowrap font-semibold hover:bg-indigo-700 cursor-pointer transition-colors delay-150"
             >
-              {loadingSave ? "Saving…" : "Save Changes"}
+              {loadingSave ? t("saving") : t("Save Changes")}
             </button>
           </div>
 
@@ -269,18 +271,18 @@ const EditTest: React.FC = () => {
                 htmlFor=""
                 className="text-sm text-text-light-2 mb-1 capitalize"
               >
-                Test Name
+                {t("Test Name")}
               </label>
               <input
                 type="text"
                 {...register("name", {
-                  required: "Name is required",
+                  required: t("name required"),
                   minLength: {
                     value: 4,
-                    message: "Name must be at least 4 characters",
+                    message: t("name min length"),
                   },
                 })}
-                placeholder="Test Name"
+                placeholder={t("enter test name")}
                 className="w-full border border-inputBorder px-4 py-3 focus:outline-none focus:ring-1 focus:ring-primary"
               />
               {errors.name && (
@@ -295,18 +297,18 @@ const EditTest: React.FC = () => {
                   htmlFor=""
                   className="text-sm text-text-light-2 mb-1 capitalize"
                 >
-                  Test Duration
+                  {t("test")} {t("duration")}
                 </label>
                 <input
                   type="number"
                   {...register("duration", {
-                    required: "Duration is required",
+                    required: t("duration required"),
                     min: {
                       value: 1,
-                      message: "Duration must be at least 1 second",
+                      message: t("duration min"),
                     },
                   })}
-                  placeholder="Duration (min)"
+                  placeholder={t("select test duration")}
                   className="w-full border border-inputBorder px-4 py-3 focus:outline-none focus:ring-1 focus:ring-primary"
                 />
                 {errors.duration && (
@@ -320,19 +322,19 @@ const EditTest: React.FC = () => {
                   htmlFor=""
                   className="text-sm text-text-light-2 mb-1 capitalize"
                 >
-                  Start Time
+                  {t("start time")}
                 </label>
                 <input
                   type="number"
                   {...register("startTime", {
                     valueAsNumber: true,
-                    required: "Start Time is required",
+                    required: t("start time required"),
                     min: {
                       value: 1,
-                      message: "Start Time must be at least 1 second",
+                      message: t("start time min"),
                     },
                   })}
-                  placeholder="Start Time (min)"
+                  placeholder={t("start time placeholder")}
                   className="w-full border border-inputBorder px-4 py-3 focus:outline-none focus:ring-1 focus:ring-primary"
                 />
                 {errors.startTime && (
@@ -374,7 +376,7 @@ const EditTest: React.FC = () => {
                 {questionErrors[q.id]?.length > 0 && (
                   <ul className="text-sm text-red-500 list-disc pl-5 space-y-1">
                     {questionErrors[q.id].map((err, i) => (
-                      <li key={i}>{err}</li>
+                      <li key={i}>{t(err)}</li>
                     ))}
                   </ul>
                 )}
@@ -425,7 +427,7 @@ const EditTest: React.FC = () => {
               onClick={addQuestion}
               className="text-[#0832DE] font-medium flex items-center cursor-pointer"
             >
-              + Add Question
+              + {t("add questions")}
             </button>
           </section>
 

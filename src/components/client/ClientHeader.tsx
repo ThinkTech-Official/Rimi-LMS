@@ -30,6 +30,7 @@ const ClientHeader: React.FC = () => {
       setIsLanguageSelectOpen(false);
       return;
     }
+    console.log(lang);
 
     i18n.changeLanguage(lang);
     setSelectedLanguage(lang);
