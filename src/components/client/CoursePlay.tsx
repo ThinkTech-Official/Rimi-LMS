@@ -85,6 +85,30 @@ const CoursePlay = () => {
     setCourse(fetchedCourse);
   }, [fetchedCourse]);
 
+  // ===============================
+
+
+    // Helper function to calculate the last passed checkpoint
+  const calculateLastPassedCheckpoint = (courseData: CourseClient) => {
+    const passedTests = courseData.tests.filter((t) => t.isCleared);
+    if (passedTests.length === 0) return 0;
+    
+    // Get the latest passed test's start time
+    return Math.max(...passedTests.map((t) => t.startTime));
+  };
+
+  // Update lastPassedTime whenever course data changes
+  useEffect(() => {
+    if (course) {
+      const newLastPassedTime = calculateLastPassedCheckpoint(course);
+      setLastPassedTime(newLastPassedTime);
+    }
+  }, [course]);
+
+
+
+  // ===============================
+
   // toggle play/pause
   const togglePlay = () => {
     const v = videoRef.current!;
@@ -152,20 +176,49 @@ const CoursePlay = () => {
     return () =>
       document.removeEventListener("fullscreenchange", handleFullscreenChange);
   }, []);
+
+
+
+  // =================================
+
   // On mount or when course loads: seek to first un-passed test and pre-mark triggers
   // on mount or course change: seek to beginning or 1s past last passed test
+  // useEffect(() => {
+  //   if (!course || !videoRef.current || !videoReady) return;
+  //   // find all passed tests
+  //   const passedTests = course.tests.filter((t) => t.isCleared);
+  //   // last passed test startTime (or 0 if none)
+  //   const lastStart =
+  //     passedTests.length > 0
+  //       ? Math.max(...passedTests.map((t) => t.startTime))
+  //       : 0;
+  //   // resume at 1 second after last passed test, or 0
+  //   const resumeAt = lastStart > 0 ? lastStart + 1 : 0;
+  //   setLastPassedTime(lastStart);
+
+  //   // seek video to resume point
+  //   videoRef.current.currentTime = resumeAt;
+
+  //   // pre-mark tests up to resumeAt as triggered
+  //   triggeredTests.current = new Set(
+  //     course.tests.filter((t) => t.startTime <= resumeAt).map((t) => t.id)
+  //   );
+  // }, [course]);
+
+
+  // ooooooooooooooooooo
+
+
+   // On mount or when course loads: seek to first un-passed test and pre-mark triggers
   useEffect(() => {
     if (!course || !videoRef.current || !videoReady) return;
-    // find all passed tests
-    const passedTests = course.tests.filter((t) => t.isCleared);
-    // last passed test startTime (or 0 if none)
-    const lastStart =
-      passedTests.length > 0
-        ? Math.max(...passedTests.map((t) => t.startTime))
-        : 0;
-    // resume at 1 second after last passed test, or 0
-    const resumeAt = lastStart > 0 ? lastStart + 1 : 0;
-    setLastPassedTime(lastStart);
+    
+    // Calculate where to resume
+    const lastPassedCheckpoint = calculateLastPassedCheckpoint(course);
+    const resumeAt = lastPassedCheckpoint > 0 ? lastPassedCheckpoint + 1 : 0;
+    
+    // Set the last passed time
+    setLastPassedTime(lastPassedCheckpoint);
 
     // seek video to resume point
     videoRef.current.currentTime = resumeAt;
@@ -174,7 +227,10 @@ const CoursePlay = () => {
     triggeredTests.current = new Set(
       course.tests.filter((t) => t.startTime <= resumeAt).map((t) => t.id)
     );
-  }, [course]);
+  }, [course, videoReady]);
+
+
+// =========================
 
   // auto-pause at tests
   useEffect(() => {
@@ -235,17 +291,69 @@ const CoursePlay = () => {
     };
   }, [course]);
 
+
+  // ======================================================
+
+
   // if user passed update checkpoint and resume
+  // const handleResume = async () => {
+  //   if (activeTestBasic) {
+  //     setLastPassedTime(activeTestBasic.startTime);
+  //     //  await refetch()
+  //   }
+  //   setShowTest(null);
+  //   videoRef.current?.play();
+  // };
+
+
+   // if user passed update checkpoint and resume
   const handleResume = async () => {
-    if (activeTestBasic) {
+    if (activeTestBasic && course) {
+      // Update the course state to mark this test as cleared
+      const updatedCourse = {
+        ...course,
+        tests: course.tests.map(t => 
+          t.id === activeTestBasic.id 
+            ? { ...t, isCleared: true }
+            : t
+        )
+      };
+      setCourse(updatedCourse);
+      
+      // Update the last passed time to this test's start time
       setLastPassedTime(activeTestBasic.startTime);
-      //  await refetch()
+      
+      // Optionally refetch from server to get latest state
+      // await refetch();
     }
     setShowTest(null);
     videoRef.current?.play();
   };
 
+
+
   // user failed allow re-trigger and seek back
+  // const handleBack = () => {
+  //   // Hide the quiz UI
+  //   setShowTest(null);
+
+  //   if (activeTestBasic) {
+  //     // Allow this test to fire again when replaying
+  //     triggeredTests.current.delete(activeTestBasic.id);
+  //     // Reset activeTestBasic so state change is detected next time
+  //     setActiveTestBasic(null);
+  //   }
+
+  //   // Seek back to the last passed checkpoint (or 0)
+  //   if (videoRef.current) {
+  //     videoRef.current.currentTime = lastPassedTime;
+  //     videoRef.current.play();
+  //   }
+  // };
+
+
+
+    // user failed - seek back to last passed checkpoint or beginning
   const handleBack = () => {
     // Hide the quiz UI
     setShowTest(null);
@@ -257,12 +365,21 @@ const CoursePlay = () => {
       setActiveTestBasic(null);
     }
 
-    // Seek back to the last passed checkpoint (or 0)
+    // Calculate where to go back to based on current course state
+    const backToTime = course ? calculateLastPassedCheckpoint(course) : 0;
+    
+    // For failed first test, this will be 0 (beginning)
+    // For other failed tests, this will be the last passed test's start time
     if (videoRef.current) {
-      videoRef.current.currentTime = lastPassedTime;
+      videoRef.current.currentTime = backToTime;
       videoRef.current.play();
     }
   };
+
+
+
+
+  // =============================
 
   const handleStart = () => {
     setHasStarted(true);
