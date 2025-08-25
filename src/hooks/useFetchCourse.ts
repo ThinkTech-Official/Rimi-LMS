@@ -39,11 +39,12 @@ export interface StudyMaterial {
 
 export interface Test {
   id: number;
+  courseId: number;
   testName: string;
   duration: string;
   startTime: number;
   passingMarks: number;
-  isCleared: boolean;
+  // isCleared: boolean;
   questions: Question[];
 }
 

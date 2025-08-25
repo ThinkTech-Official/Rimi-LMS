@@ -8,12 +8,7 @@ import {
   FaVolumeUp,
 } from "react-icons/fa";
 import Quiz from "./Quiz";
-import {
-  MdFullscreen,
-  MdPlayArrow,
-  MdVolumeOff,
-  MdVolumeUp,
-} from "react-icons/md";
+import { MdFullscreen } from "react-icons/md";
 
 import {
   useFetchCourseClient,
@@ -26,10 +21,12 @@ import {
 } from "../../hooks/useFetchTestClient";
 import Spinner from "../loaders/Spinner";
 import { BiExitFullscreen } from "react-icons/bi";
+import { useTranslation } from "react-i18next";
 
 const CoursePlay = () => {
   const { id: courseId } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   // Fetch course with isCleared flags
   const {
@@ -89,21 +86,21 @@ const CoursePlay = () => {
 
 
     // Helper function to calculate the last passed checkpoint
-  const calculateLastPassedCheckpoint = (courseData: CourseClient) => {
-    const passedTests = courseData.tests.filter((t) => t.isCleared);
-    if (passedTests.length === 0) return 0;
+  // const calculateLastPassedCheckpoint = (courseData: CourseClient) => {
+  //   const passedTests = courseData.tests.filter((t) => t.isCleared);
+  //   if (passedTests.length === 0) return 0;
     
-    // Get the latest passed test's start time
-    return Math.max(...passedTests.map((t) => t.startTime));
-  };
+  //   // Get the latest passed test's start time
+  //   return Math.max(...passedTests.map((t) => t.startTime));
+  // };
 
-  // Update lastPassedTime whenever course data changes
-  useEffect(() => {
-    if (course) {
-      const newLastPassedTime = calculateLastPassedCheckpoint(course);
-      setLastPassedTime(newLastPassedTime);
-    }
-  }, [course]);
+  // // Update lastPassedTime whenever course data changes
+  // useEffect(() => {
+  //   if (course) {
+  //     const newLastPassedTime = calculateLastPassedCheckpoint(course);
+  //     setLastPassedTime(newLastPassedTime);
+  //   }
+  // }, [course]);
 
 
 
@@ -167,6 +164,19 @@ const CoursePlay = () => {
       clearTimeout(hideMarkersTimeoutRef.current);
     }
   };
+  const calculateLastPassedCheckpoint = (courseData: CourseClient) => {
+    const passedTests = courseData.tests.filter((t) => t.isCleared);
+    if (passedTests.length === 0) return 0;
+
+    // Get the latest passed test's start time
+    return Math.max(...passedTests.map((t) => t.startTime));
+  };
+  useEffect(() => {
+    if (course) {
+      const newLastPassedTime = calculateLastPassedCheckpoint(course);
+      setLastPassedTime(newLastPassedTime);
+    }
+  }, [course]);
   // Handle fullscreen toggle state
   useEffect(() => {
     const handleFullscreenChange = () => {
@@ -212,11 +222,17 @@ const CoursePlay = () => {
    // On mount or when course loads: seek to first un-passed test and pre-mark triggers
   useEffect(() => {
     if (!course || !videoRef.current || !videoReady) return;
-    
-    // Calculate where to resume
+    // find all passed tests
+    const passedTests = course.tests.filter((t) => t.isCleared);
+    // last passed test startTime (or 0 if none)
+    const lastStart =
+      passedTests.length > 0
+        ? Math.max(...passedTests.map((t) => t.startTime))
+        : 0;
+    // resume at 1 second after last passed test, or 0
     const lastPassedCheckpoint = calculateLastPassedCheckpoint(course);
     const resumeAt = lastPassedCheckpoint > 0 ? lastPassedCheckpoint + 1 : 0;
-    
+
     // Set the last passed time
     setLastPassedTime(lastPassedCheckpoint);
 
@@ -228,9 +244,6 @@ const CoursePlay = () => {
       course.tests.filter((t) => t.startTime <= resumeAt).map((t) => t.id)
     );
   }, [course, videoReady]);
-
-
-// =========================
 
   // auto-pause at tests
   useEffect(() => {
@@ -306,23 +319,29 @@ const CoursePlay = () => {
   // };
 
 
-   // if user passed update checkpoint and resume
+  // if user passed update checkpoint and resume
+  // const handleResume = async () => {
+  //   if (activeTestBasic) {
+  //     setLastPassedTime(activeTestBasic.startTime);
+  //     //  await refetch()
+  //   }
+  //   setShowTest(null);
+  //   videoRef.current?.play();
+  // };
   const handleResume = async () => {
     if (activeTestBasic && course) {
       // Update the course state to mark this test as cleared
       const updatedCourse = {
         ...course,
-        tests: course.tests.map(t => 
-          t.id === activeTestBasic.id 
-            ? { ...t, isCleared: true }
-            : t
-        )
+        tests: course.tests.map((t) =>
+          t.id === activeTestBasic.id ? { ...t, isCleared: true } : t
+        ),
       };
       setCourse(updatedCourse);
-      
+
       // Update the last passed time to this test's start time
       setLastPassedTime(activeTestBasic.startTime);
-      
+
       // Optionally refetch from server to get latest state
       // await refetch();
     }
@@ -365,15 +384,15 @@ const CoursePlay = () => {
       setActiveTestBasic(null);
     }
 
-    // Calculate where to go back to based on current course state
     const backToTime = course ? calculateLastPassedCheckpoint(course) : 0;
-    
+
     // For failed first test, this will be 0 (beginning)
     // For other failed tests, this will be the last passed test's start time
     if (videoRef.current) {
       videoRef.current.currentTime = backToTime;
       videoRef.current.play();
     }
+    setIsPlaying(true);
   };
 
 
@@ -387,15 +406,15 @@ const CoursePlay = () => {
     videoRef.current?.play();
   };
 
-  const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // parse and clamp
-    let t = Number(e.target.value);
-    if (t > seekLimit) t = seekLimit;
-    if (t < 0) t = 0;
+  // const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   // parse and clamp
+  //   let t = Number(e.target.value);
+  //   if (t > seekLimit) t = seekLimit;
+  //   if (t < 0) t = 0;
 
-    setCurrentTime(t);
-    if (videoRef.current) videoRef.current.currentTime = t;
-  };
+  //   setCurrentTime(t);
+  //   if (videoRef.current) videoRef.current.currentTime = t;
+  // };
 
   // Show/hide long description
   const toggleDescription = () => setShowFull((f) => !f);
@@ -415,24 +434,23 @@ const CoursePlay = () => {
     .sort((a, b) => a.startTime - b.startTime)[0];
 
   // clamp point: either the next test startTime, or full video length
+
   const seekLimit = nextTest ? nextTest.startTime : videoDuration;
-
   const formatTime = (seconds: number) => {
-  if (!Number.isFinite(seconds)) return "00:00";
-  let s = Math.max(0, Math.floor(seconds));
-  const h = Math.floor(s / 3600);
-  s -= h * 3600;
-  const m = Math.floor(s / 60);
-  const sec = s % 60;
+    if (!Number.isFinite(seconds)) return "00:00";
+    let s = Math.max(0, Math.floor(seconds));
+    const h = Math.floor(s / 3600);
+    s -= h * 3600;
+    const m = Math.floor(s / 60);
+    const sec = s % 60;
 
-  const mm = String(m).padStart(2, "0");
-  const ss = String(sec).padStart(2, "0");
+    const mm = String(m).padStart(2, "0");
+    const ss = String(sec).padStart(2, "0");
 
-  return h > 0 ? `${h}:${mm}:${ss}` : `${mm}:${ss}`;
-};
-
-const hasTests = !!course?.tests?.length;
-const markersReady = videoReady && hasTests;
+    return h > 0 ? `${h}:${mm}:${ss}` : `${mm}:${ss}`;
+  };
+  const hasTests = !!course?.tests?.length;
+  const markersReady = videoReady && hasTests;
 
   return (
     <div className="flex min-h-screen bg-white">
@@ -465,8 +483,8 @@ const markersReady = videoReady && hasTests;
               // }
               onLoadedMetadata={(e) => {
                 setVideoDuration(e.currentTarget.duration);
-                setVideoReady(true);             //  now we know duration
-                }}
+                setVideoReady(true); //  now we know duration
+              }}
               // onTimeUpdate={(e) => setCurrentTime(e.currentTarget.currentTime)}
               onTimeUpdate={(e) => {
                 const v = e.currentTarget;
@@ -492,7 +510,7 @@ const markersReady = videoReady && hasTests;
             {/* PLAY OVERLAY */}
             {!hasStarted && (
               <div
-                className="absolute inset-0 bg-black/40 flex items-center justify-center cursor-pointer"
+                className="absolute inset-0 bg-black/30 flex items-center justify-center cursor-pointer"
                 onClick={handleStart}
               >
                 <svg
@@ -509,7 +527,7 @@ const markersReady = videoReady && hasTests;
             {/* Loader Before QUIZ OVERLAY */}
 
             {loadingTest && (
-              <div className="absolute z-50 inset-0 bg-white/90 flex flex-col justify-center items-center gap-2">
+              <div className="absolute z-50 bg-white/90 flex flex-col justify-center items-center gap-2">
                 <Spinner className="w-6 h-6" />
                 <p className="text-text-dark">Loading Test...</p>
               </div>
@@ -532,9 +550,12 @@ const markersReady = videoReady && hasTests;
 
             {/* === CUSTOM SLIDER & MARKERS  === */}
             <div
-              className={`absolute bottom-0 left-0 right-0 bg-black/50 backdrop-blur-sm p-3 transition-opacity duration-200 ${
-                showMarkers ? "opacity-100" : "opacity-0"
-              }`}
+              className={`
+                   absolute bottom-0 left-0 right-0
+                   bg-black/20 backdrop-blur-sm p-2 pt-4
+                   transition-opacity duration-200
+                    ${showMarkers ? "opacity-100" : "opacity-0"}
+                 `}
             >
               <input
                 ref={rangeRef}
@@ -557,23 +578,22 @@ const markersReady = videoReady && hasTests;
                 }}
                 className="w-full h-1 bg-gray-300 rounded-lg cursor-pointer focus:outline-none"
               />
-
-              <div className="mt-2 flex items-center space-x-4 px-2 max-w-[1100px]">
+              <div className="sm:mt-2 flex items-center space-x-4 px-2 max-w-[1100px]">
                 {/* play / pause */}
                 <button onClick={togglePlay} className="text-white">
                   {isPlaying ? (
-                    <FaPause className="w-6 h-6 cursor-pointer" />
+                    <FaPause className="w-4 h-4 sm:w-5 sm:h-5 cursor-pointer" />
                   ) : (
-                    <FaPlay className="w-6 h-6 cursor-pointer" />
+                    <FaPlay className="w-4 h-4 sm:w-5 sm:h-5 cursor-pointer" />
                   )}
                 </button>
 
                 {/* mute / unmute */}
                 <button onClick={toggleMute} className="text-white">
                   {isMuted ? (
-                    <FaVolumeMute className="w-6 h-6 cursor-pointer" />
+                    <FaVolumeMute className="w-4 h-4 sm:w-5 sm:h-5 cursor-pointer" />
                   ) : (
-                    <FaVolumeUp className="w-6 h-6 cursor-pointer" />
+                    <FaVolumeUp className="w-4 h-4 sm:w-5 sm:h-5 cursor-pointer" />
                   )}
                 </button>
 
@@ -593,11 +613,9 @@ const markersReady = videoReady && hasTests;
                   {new Date(currentTime * 1000).toISOString().substr(14, 5)} /{" "}
                   {new Date(videoDuration * 1000).toISOString().substr(14, 5)}
                 </span> */}
-
                 <span className="text-sm text-white">
                   {formatTime(currentTime)} / {formatTime(videoDuration)}
-                      </span>
-
+                </span>
                 <button
                   onClick={toggleFullscreen}
                   className=" z-30 p-1.5 rounded-full cursor-pointer text-white"
@@ -606,23 +624,21 @@ const markersReady = videoReady && hasTests;
                   {isFullscreen ? (
                     <BiExitFullscreen
                       title="Exit Fullscreen"
-                      className={`w-8 h- text-white ${
-                        isFullscreen ? "w-8 h-8" : ""
+                      className={`w-5 h-5 text-white ${
+                        isFullscreen ? "w-6 h-6" : ""
                       }`}
                     />
                   ) : (
                     <MdFullscreen
                       title="Enter Fullscreen"
-                      className={`w-8 h-8 text-white ${
-                        isFullscreen ? "w-8 h-8" : ""
+                      className={`w-5 h-5 text-white ${
+                        isFullscreen ? "w-6 h-6" : ""
                       }`}
                     />
                   )}
                 </button>
               </div>
-
-
-                {/* markers loading hint */}
+              {/* markers loading hint */}
               {!markersReady && (
                 <div className="absolute top-2.5 left-0 right-0 bottom-2.5 flex items-center justify-center pointer-events-none">
                   <div className="flex items-center gap-2 bg-black/40 px-3 py-1.5 rounded">
@@ -631,41 +647,34 @@ const markersReady = videoReady && hasTests;
                   </div>
                 </div>
               )}
-
               {/* overlay the markers */}
               {markersReady && (
-              <div className="absolute top-2.5 left-0 right-0 bottom-2.5 pointer-events-none">
-                {course!.tests.map((test) => {
-                  const pct = videoDuration
-                    ? (test.startTime / videoDuration) * 100
-                    : 0;
-
-                  const isNearEnd = pct >= 98;
-
-                  return (
-                    <div
-                      key={test.id}
-                      className="absolute"
-                      style={{
-                        left: isNearEnd ? `calc(${pct}% - 16px)` : `${pct}%`,
-                      }}
-                    >
-                      <img
-                        src="/Document.svg"
-                        alt="test marker"
-                        className={`h-3 ${
-                          test.isCleared ? "bg-red-200" : "bg-[#D9D9D9]"
-                        }`}
-                      />
-                    </div>
-                  );
-                })}
-              </div>
-
-                )}
-
-
-
+                <div className="absolute inset-4 -mt-3 pointer-events-none">
+                  {course!.tests.map((test) => {
+                    console.log(test);
+                    const pct = videoDuration
+                      ? Math.min((test.startTime / videoDuration) * 100)
+                      : 0;
+                    return (
+                      <div
+                        key={test.id}
+                        className="absolute"
+                        style={{
+                          left: pct >= 98 ? "" : `${pct}%`,
+                          right: pct >= 98 ? "-16px" : ``,
+                          transform: "translateX(-50%)",
+                        }}
+                      >
+                        <img
+                          src={`${test.isCleared ? "/DocumentRed.svg" : "/Document.svg"}`}
+                          alt="test marker"
+                         className="h-4 w-4"
+                        />
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -686,7 +695,7 @@ const markersReady = videoReady && hasTests;
         </p>
 
         <h2 className="mt-8 text-xl font-semibold text-text-dark">
-          Study materials
+          {t("Study Materials")}
         </h2>
         <ul className="mt-4 space-y-3">
           {course?.documents.map((mat) => (

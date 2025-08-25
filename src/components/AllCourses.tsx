@@ -2,23 +2,13 @@ import React, { useEffect, useState, type ChangeEvent } from "react";
 import { BiSearch } from "react-icons/bi";
 import { GoClock } from "react-icons/go";
 import { useFetchCategories } from "../hooks/useFetchCategories";
-import { useFetchCourses , type Course } from "../hooks/useFetchCourses";
-import { Navigate, useLocation, useNavigate } from "react-router-dom";
+import { useFetchCourses } from "../hooks/useFetchCourses";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useCreateCategory } from "../hooks/useCreateCategory";
 import { useTranslation } from "react-i18next";
 import Spinner from "./loaders/Spinner";
 import useNotification from "../hooks/useNotification";
 import FetchingError from "./FetchingError";
-
-// interface Course {
-//   id: number;
-//   title: string;
-//   duration: string;
-//   questions: number;
-//   imageUrl: string;
-//   category: string;
-//   description?: string;
-// }
 
 export const initialCategories = [
   "Health Insurance",
@@ -26,117 +16,44 @@ export const initialCategories = [
   "Vehicle Insurance",
 ];
 
-export const sampleCourses: any[] = [
-  {
-    id: 1,
-    title: "RIMI Insurance Video 1",
-    duration: "1hr 20min",
-    questions: 30,
-    imageUrl: "https://placehold.co/400x200?text=Course+Image",
-    category: "Health Insurance",
-    description:
-      "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Aliquam non corrupti debitis pariatur optio consectetur nam cumque doloremque dicta in, quis voluptatem eius incidunt, officiis consequuntur, cum doloribus ut magnam!",
-  },
-  {
-    id: 2,
-    title: "RIMI Life Plan Basics",
-    duration: "2hr 05min",
-    questions: 20,
-    imageUrl: "https://placehold.co/400x200?text=Course+Image",
-    category: "Life Insurance",
-    description:
-      "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Aliquam non corrupti debitis pariatur optio consectetur nam cumque doloremque dicta in, quis voluptatem eius incidunt, officiis consequuntur, cum doloribus ut magnam!",
-  },
-  {
-    id: 3,
-    title: "Vehicle Coverage Essentials",
-    duration: "1hr 45min",
-    questions: 25,
-    imageUrl: "https://placehold.co/400x200?text=Course+Image",
-    category: "Vehicle Insurance",
-    description:
-      "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Aliquam non corrupti debitis pariatur optio consectetur nam cumque doloremque dicta in, quis voluptatem eius incidunt, officiis consequuntur, cum doloribus ut magnam!",
-  },
-  {
-    id: 4,
-    title: "Vehicle Coverage Essentials",
-    duration: "1hr 45min",
-    questions: 25,
-    imageUrl: "https://placehold.co/400x200?text=Course+Image",
-    category: "Health Insurance",
-    description:
-      "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Aliquam non corrupti debitis pariatur optio consectetur nam cumque doloremque dicta in, quis voluptatem eius incidunt, officiis consequuntur, cum doloribus ut magnam!",
-  },
-  {
-    id: 5,
-    title: "RIMI Insurance Video 1",
-    duration: "1hr 20min",
-    questions: 30,
-    imageUrl: "https://placehold.co/400x200?text=Course+Image",
-    category: "Health Insurance",
-  },
-  {
-    id: 6,
-    title: "RIMI Insurance Video 1",
-    duration: "1hr 20min",
-    questions: 30,
-    imageUrl: "https://placehold.co/400x200?text=Course+Image",
-    category: "Health Insurance",
-  },
-  {
-    id: 7,
-    title: "RIMI Insurance Video 1",
-    duration: "1hr 20min",
-    questions: 30,
-    imageUrl: "https://placehold.co/400x200?text=Course+Image",
-    category: "Health Insurance",
-  },
-  {
-    id: 8,
-    title: "RIMI Insurance Video 1",
-    duration: "1hr 20min",
-    questions: 30,
-    imageUrl: "https://placehold.co/400x200?text=Course+Image",
-    category: "Health Insurance",
-  },
-  {
-    id: 9,
-    title: "RIMI Insurance Video 1",
-    duration: "1hr 20min",
-    questions: 30,
-    imageUrl: "https://placehold.co/400x200?text=Course+Image",
-    category: "Health Insurance",
-  },
-];
-
 interface AllCoursesProps {
   onCreateCourse: () => void;
 }
 
 const AllCourses: React.FC<AllCoursesProps> = ({ onCreateCourse }) => {
-
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const { t } = useTranslation();
 
-  const { categories , loading: catLoading , error: catError , refetch: reloadCategories, } = useFetchCategories()
-  const { createCategory , loading: creatingCat , error: catCreateError } = useCreateCategory()
-  const { courses, loading: courseLoading , error: courseError } = useFetchCourses()
+  const {
+    categories,
+    loading: catLoading,
+    error: catError,
+    refetch: reloadCategories,
+  } = useFetchCategories();
+  const {
+    createCategory,
+    loading: creatingCat,
+    error: catCreateError,
+  } = useCreateCategory();
+  const {
+    courses,
+    loading: courseLoading,
+    error: courseError,
+  } = useFetchCourses();
 
-// which category is showing?
+  // which category is showing?
   const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(
     null
   );
   const [searchTerm, setSearchTerm] = useState<string>("");
 
-  // Category Handelling State
-  // add‐category UI
-
-  const [showAddCategoryModal, setShowAddCategoryModal] = useState<boolean>(false);
+  const [showAddCategoryModal, setShowAddCategoryModal] =
+    useState<boolean>(false);
   const [newCategory, setNewCategory] = useState<string>("");
   const { NotificationComponent, triggerNotification } = useNotification();
-const location = useLocation();
-const state = location.state;
- useEffect(() => {
+  const location = useLocation();
+  const state = location.state;
+  useEffect(() => {
     if (state?.type && state?.message) {
       triggerNotification({
         type: state.type,
@@ -146,44 +63,41 @@ const state = location.state;
       navigate(location.pathname, { replace: true });
     }
   }, [state, triggerNotification, navigate, location.pathname]);
-const allCategory = { id: 0, name: "All" };
-const allCategories = [allCategory, ...categories];
-  
+  const allCategory = { id: 0, name: "All" };
+  const allCategories = [allCategory, ...categories];
 
- // when categories first load, default to the first one
+  // when categories first load, default to the first one
   useEffect(() => {
     if (categories.length > 0 && selectedCategoryId === null) {
       setSelectedCategoryId(0);
     }
   }, [categories, selectedCategoryId]);
 
-    const handleCategoryClick = (id: number) => {
+  const handleCategoryClick = (id: number) => {
     setSelectedCategoryId(id);
   };
-  
 
-const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
-  const value = e.target.value;
-  setSearchTerm(value);
+  const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setSearchTerm(value);
 
-  if (value.trim() === "") {
-    // Reset category to default if search is cleared
-    if (categories.length > 0) {
-      setSelectedCategoryId(0);
+    if (value.trim() === "") {
+      // Reset category to default if search is cleared
+      if (categories.length > 0) {
+        setSelectedCategoryId(0);
+      }
+      return;
     }
-    return;
-  }
 
-  // Search in all courses regardless of category
-  const match = courses.find((c) =>
-    c.title.toLowerCase().includes(value.toLowerCase())
-  );
+    // Search in all courses regardless of category
+    const match = courses.find((c) =>
+      c.title.toLowerCase().includes(value.toLowerCase())
+    );
 
-  if (match) {
-    setSelectedCategoryId(0); // auto-select category
-  }
-};
-
+    if (match) {
+      setSelectedCategoryId(0); // auto-select category
+    }
+  };
 
   const handleAddCategory = async () => {
     const name = newCategory.trim();
@@ -197,72 +111,47 @@ const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (cat) setSelectedCategoryId(cat.id);
   };
 
-
   const handleSelectCourse = (id: any) => {
-    navigate(`/admin/edit-course/${id}`)
-  }
+    navigate(`/admin/edit-course/${id}`);
+  };
+  const filteredCourses = (() => {
+    const normalizedSearch = searchTerm.toLowerCase().trim();
 
-  //
+    if (selectedCategoryId === 0) {
+      // "All" tab
+      return (courses || []).filter((c) =>
+        c.title.toLowerCase().includes(normalizedSearch)
+      );
+    }
 
-  // const filteredCourses = courses.filter(
-  //   (course) =>
-  //     course.category === selectedCategory &&
-  //     course.title.toLowerCase().includes(searchTerm.toLowerCase())
-  // );
+    if (!normalizedSearch) {
+      // Normal category filtering
+      return (courses || []).filter((c) => c.categoryId === selectedCategoryId);
+    }
 
-    // Safe filtering if courses empty or selectedCategory unset, result is empty array
-  //   const filteredCourses = (courses || []).filter((c) => {
-  //   const byCat =
-  //     selectedCategoryId !== null ? c.categoryId === selectedCategoryId : true;
-  //   const bySearch = c.title
-  //     .toLowerCase()
-  //     .includes(searchTerm.toLowerCase());
-  //   return byCat && bySearch;
-  // });
-const filteredCourses = (() => {
-  const normalizedSearch = searchTerm.toLowerCase().trim();
-
-  if (selectedCategoryId === 0) {
-    // "All" tab
-    return (courses || []).filter((c) =>
-      c.title.toLowerCase().includes(normalizedSearch)
-    );
-  }
-
-  if (!normalizedSearch) {
-    // Normal category filtering
+    // Search term exists in specific category
     return (courses || []).filter(
-      (c) => c.categoryId === selectedCategoryId
+      (c) =>
+        c.categoryId === selectedCategoryId &&
+        c.title.toLowerCase().includes(normalizedSearch)
     );
-  }
+  })();
 
-  // Search term exists in specific category
-  return (courses || []).filter(
-    (c) =>
-      c.categoryId === selectedCategoryId &&
-      c.title.toLowerCase().includes(normalizedSearch)
-  );
-})();
-
-    // Render loading / errors
-   if (catLoading || courseLoading) return <div className="flex flex-col justify-center items-center gap-3 fixed top-1/2 left-1/2"><Spinner className="w-10 h-10" /><p>Loading...</p></div>;;
-  if(catError || courseError) return <FetchingError/>
-  // if (catError)
-  //   return <p className="text-red-500">Error loading categories: {catError}</p>;
-  // if (courseError)
-  //   return <p className="text-red-500">Error loading courses: {courseError}</p>;
-
-
-
-  // console.log('from all courses component',courses)
-
-
+  // Render loading / errors
+  if (catLoading || courseLoading)
+    return (
+      <div className="flex flex-col justify-center items-center gap-3 fixed top-1/2 left-1/2">
+        <Spinner className="w-10 h-10" />
+        <p>Loading...</p>
+      </div>
+    );
+  if (catError || courseError) return <FetchingError />;
   return (
-     <div className="min-h-screen bg-white px-2">
+    <div className="min-h-screen bg-white px-2">
       <div className="sm:px-4 py-4">
         {/* Page Title & Breadcrumb */}
 
-        <h1 className="text-lg 2xl:text-2xl font-bold text-[#1B1B1B] mb-3 sm:mb-6">
+        <h1 className="text-lg 2xl:text-2xl font-bold text-[#1B1B1B] mb-3 sm:mb-6 first-letter:capitalize">
           {t("all Courses")}
         </h1>
 
@@ -304,62 +193,56 @@ const filteredCourses = (() => {
                 {cat.name}
               </li>
             ))}
-               {/* <button
-              onClick={() => setShowAddCategoryModal(true)}
-              className="cursor-pointer border-2 border-primary px-3 py-1 text-sm sm:text-base text-nowrap text-primary hover:bg-primary hover:text-white transition-colors delay-100"
-            >
-              {t("add category")}
-            </button> */}
-              </ul>
+          </ul>
         </div>
 
         <div></div>
 
         {/* Courses Grid */}
         {catLoading || courseLoading ? (
-          <div className="text-sm text-[#6F6B7D]"><Spinner className="w-6 h-6"/></div>
+          <div className="text-sm text-[#6F6B7D]">
+            <Spinner className="w-6 h-6" />
+          </div>
         ) : (
           <div className="flex items-center justify-center sm:justify-start w-full">
             <div className="flex flex-wrap gap-6 items-center justify-center sm:justify-start sm:items-start">
               {filteredCourses.length > 0 ? (
                 filteredCourses.map((course) => (
-                <div
-                  key={course.id}
-                  title={course.title}
-                  className="rounded-[2px] overflow-hidden w-[80vw] max-w-[300px] sm:w-[300px] 2xl:w-[380px] hover:transform hover:scale-105 transition-transform delay-75 cursor-pointer border border-inputBorder shadow-md"
-                  onClick={() => handleSelectCourse(course.id)}
-                >
-                  <div className="relative">
-                    <img
-                      src={course.imageUrl}
-                      alt={course.title}
-                      className="object-fill rounded-b-[2px] w-full h-40 sm:h-32 md:h-44"
-                    />
-                  </div>
-                  <div className=" flex flex-col gap-2 p-2">
-                    <h2 className="text-base 2xl:text-xl font-semibold text-[#1B1B1B] line-clamp-1">
-                      {course.title}
-                    </h2>
-                    <div className="flex items-center text-[#6F6B7D] text-xs 2xl:text-base space-x-4">
-                      <div className="flex items-center gap-1">
-                        <GoClock />
-                     <span>{course.duration}</span>
-
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <img src="Document.svg" alt="" />
-                        {/* <span>{course.questions} Questions</span> */}
+                  <div
+                    key={course.id}
+                    title={course.title}
+                    className="rounded-[2px] overflow-hidden w-[80vw] max-w-[300px] sm:w-[300px] 2xl:w-[380px] hover:transform hover:scale-105 transition-transform delay-75 cursor-pointer border border-inputBorder shadow-md"
+                    onClick={() => handleSelectCourse(course.id)}
+                  >
+                    <div className="relative">
+                      <img
+                        src={course.imageUrl}
+                        alt={course.title}
+                        className="object-fill rounded-b-[2px] w-full h-40 sm:h-32 md:h-44"
+                      />
+                    </div>
+                    <div className=" flex flex-col gap-2 p-2">
+                      <h2 className="text-base 2xl:text-xl font-semibold text-[#1B1B1B] line-clamp-1">
+                        {course.title}
+                      </h2>
+                      <div className="flex items-center text-[#6F6B7D] text-xs 2xl:text-base space-x-4">
+                        <div className="flex items-center gap-1">
+                          <GoClock />
+                          <span>{course.duration}</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <img src="Document.svg" alt="" />
+                          {/* <span>{course.questions} Questions</span> */}
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              ))
+                ))
               ) : selectedCategoryId === 0 && searchTerm.trim() ? (
-  <p className="text-center text-gray-500 italic">
-    Course with the name "{searchTerm}" not found.
-  </p>
-) : null}
-              
+                <p className="text-center text-gray-500 italic">
+                  Course with the name "{searchTerm}" not found.
+                </p>
+              ) : null}
             </div>
           </div>
         )}

@@ -1,8 +1,6 @@
-import { useState, useCallback } from 'react';
-import api from '../utils/api';
-import { API_BASE } from '../utils/ulrs';
-
-
+import { useState, useCallback } from "react";
+import api from "../utils/api";
+import { API_BASE } from "../utils/ulrs";
 
 export function useLogout() {
   const [loading, setLoading] = useState(false);

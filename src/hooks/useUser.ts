@@ -1,13 +1,12 @@
-import { useState, useEffect, useCallback } from 'react';
-import api from '../utils/api';
-import { API_BASE } from '../utils/ulrs';
+import { useState, useEffect, useCallback } from "react";
+import api from "../utils/api";
+import { API_BASE } from "../utils/ulrs";
 
 interface User {
   id: number;
   email: string;
   username: string;
 }
-
 
 export function useUser() {
   const [user, setUser] = useState<User | null>(null);

@@ -25,7 +25,7 @@ const ClientLayout: React.FC = () => {
   const [active, setActive] = useState<View>("home");
   const [isSidebarOpen, setSidebarOpen] = useState(true);
   const navigate = useNavigate();
-  const {t} = useTranslation()
+  const { t } = useTranslation();
 
   useEffect(() => {
     const handleResize = () => {
@@ -97,7 +97,9 @@ const ClientLayout: React.FC = () => {
                     }`}
                   >
                     <Icon className="h-5 w-5 2xl:h-6 2xl:w-6" />
-                    {isSidebarOpen && <span className="capitalize">{t(item.label)}</span>}
+                    {isSidebarOpen && (
+                      <span className="capitalize">{t(item.label)}</span>
+                    )}
                     {!isSidebarOpen && (
                       <span className="absolute left-full top-1/2 -translate-y-1/2 ml-1 z-50 bg-[#393939] text-white text-xs px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
                         {item.label}
@@ -118,7 +120,7 @@ const ClientLayout: React.FC = () => {
           <main className="min-h-[calc(100vh-64px)]">
             <Outlet />
           </main>
-          <Footer/>
+          <Footer />
         </div>
       </div>
     </>

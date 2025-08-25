@@ -2,11 +2,13 @@ import React, { useEffect, useState } from "react";
 import { useAdminCertificateSearch } from "../../hooks/useAdminCertificateSearch";
 import { API_BASE } from "../../utils/ulrs";
 import { useForm, type SubmitHandler } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 
 const AdminTrackCertificate: React.FC = () => {
   const { certificate, loading, searchCertificate } =
     useAdminCertificateSearch();
   const [searchFailed, setSearchFailed] = useState(false);
+  const { t } = useTranslation();
 
   const {
     register,
@@ -35,7 +37,7 @@ const AdminTrackCertificate: React.FC = () => {
   return (
     <div className="w-[95%] sm:max-w-xl mx-auto p-6 bg-white shadow-md mt-10">
       <h2 className="text-2xl font-bold mb-4 text-center text-text-dark">
-        Verify Certificate
+        {t("Verify Certificate")}
       </h2>
 
       <form
@@ -45,16 +47,16 @@ const AdminTrackCertificate: React.FC = () => {
         <input
           type="text"
           {...register("certificateNumber", {
-            required: "Certificate number is required",
+            required: t("Certificate ID is required"),
           })}
-          placeholder="Enter certificate number"
+          placeholder= {t("Enter certificate ID")}
           className="flex-1 px-4 py-2 sm:py-3 border border-inputBorder focus:outline-none focus:ring-1 focus:ring-primary text-text-light-2"
         />
         <button
           type="submit"
           className="px-4 py-2 sm:py-3 bg-primary text-white cursor-pointer hover:bg-indigo-700 transition-colors delay-100"
         >
-          {loading ? "Searching..." : "Search"}
+          {loading ? `${t("Searching")}...` : `${t("Search")}`}
         </button>
       </form>
 
@@ -65,26 +67,26 @@ const AdminTrackCertificate: React.FC = () => {
       {certificate ? (
         <div className="mt-6 border border-inputBorder p-2 sm:p-4">
           <h3 className="text-xl font-semibold text-green-700 mb-2 text-center">
-            Certificate Found
+            {t("Certificate Found")}
           </h3>
           <p className="text-text-light">
-            <span className="font-medium text-text-dark">Name:</span>{" "}
+            <span className="font-medium text-text-dark">{t("name")}:</span>{" "}
             {certificate.user.name}
           </p>
           <p className="text-text-light">
-            <span className="font-medium text-text-dark">Email:</span>{" "}
+            <span className="font-medium text-text-dark">{t("Email")}:</span>{" "}
             {certificate.user.email}
           </p>
           <p className="text-text-light">
-            <span className="font-medium text-text-dark">Course:</span>{" "}
+            <span className="font-medium text-text-dark">{t("Course")}:</span>{" "}
             {certificate.course.name}
           </p>
           <p className="text-text-light">
-            <span className="font-medium text-text-dark">Issued At:</span>{" "}
+            <span className="font-medium text-text-dark">{t("Issued at")}:</span>{" "}
             {new Date(certificate.createdAt).toLocaleString()}
           </p>
           <p className="text-text-light">
-            <span className="font-medium text-text-dark">Certificate ID:</span>{" "}
+            <span className="font-medium text-text-dark">{t("Certificate")} ID:</span>{" "}
             {certificate.certNumber}
           </p>
           {certificate.fileName && (
@@ -95,7 +97,7 @@ const AdminTrackCertificate: React.FC = () => {
                 rel="noopener noreferrer"
                 className="text-primary underline underline-offset-2"
               >
-                View PDF
+                {t("View Certificate")}
               </a>
             </p>
           )}
@@ -104,7 +106,7 @@ const AdminTrackCertificate: React.FC = () => {
         searchFailed &&
         watchedCertNum && (
           <p className="text-base text-red-500 mb-2">
-            Certificate with this number not found
+            {t("Certificate with this ID not found")}
           </p>
         )
       )}

@@ -1,9 +1,6 @@
-import { useState, useEffect } from 'react';
-import adminApi from '../utils/adminApi';
-import { API_BASE } from '../utils/ulrs';
-
-
-
+import { useState, useEffect } from "react";
+import adminApi from "../utils/adminApi";
+import { API_BASE } from "../utils/ulrs";
 
 export interface RecentUser {
   id: number;
@@ -21,14 +18,16 @@ export function useRecentSignups(page: number = 1, limit: number = 10) {
   useEffect(() => {
     let mounted = true;
     adminApi
-      .get<{ recentUsers: RecentUser[]; totalCount: number }>(`${API_BASE}/admin/dashboard/recent-signups?limit=${limit}&page=${page}`)
-      .then(res => {
-        if( !mounted) return
-        console.log('from recent sign ups ', res.data)
+      .get<{ recentUsers: RecentUser[]; totalCount: number }>(
+        `${API_BASE}/admin/dashboard/recent-signups?limit=${limit}&page=${page}`
+      )
+      .then((res) => {
+        if (!mounted) return;
+        console.log("from recent sign ups ", res.data);
         setUsers(res.data.recentUsers);
         setTotalCount(res.data.totalCount);
       })
-      .catch(err => {
+      .catch((err) => {
         if (mounted) setError(err);
       })
       .finally(() => {
@@ -39,5 +38,5 @@ export function useRecentSignups(page: number = 1, limit: number = 10) {
     };
   }, [page, limit]);
 
-  return { users, totalCount , loading, error };
+  return { users, totalCount, loading, error };
 }

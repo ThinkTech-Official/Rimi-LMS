@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react';
-import axios from 'axios';
-import type { Question } from '../components/client/Quiz';
-import { API_BASE } from '../utils/ulrs';
+import { useState, useEffect } from "react";
+import axios from "axios";
+import type { Question } from "../components/client/Quiz";
+import { API_BASE } from "../utils/ulrs";
 
-//  Raw DTO from backend 
+//  Raw DTO from backend
 interface RawTestDTO {
   id: number;
   name: string;
@@ -27,12 +27,12 @@ interface RawTestDTO {
   }>;
 }
 
-//  Shape UI expects 
+//  Shape UI expects
 export interface TestWithQuestions {
   id: number;
   courseId: number;
   testName: string;
-  duration: string;        
+  duration: string;
   startTime: number;
   questions: Question[];
   passingMarks: number;
@@ -59,13 +59,11 @@ export function useFetchTestClient(
     setError(null);
 
     axios
-      .get<RawTestDTO>(
-        `${API_BASE}/courses/${courseId}/tests/${testId}`
-      )
+      .get<RawTestDTO>(`${API_BASE}/courses/${courseId}/tests/${testId}`)
       .then((res: any) => {
         const raw = res.data;
 
-        console.log('from use fetch test clients' , raw)
+        console.log("from use fetch test clients", raw);
 
         const mappedQuestions: Question[] = raw.questions.map((q: any) => ({
           id: q.id.toString(),
@@ -81,11 +79,11 @@ export function useFetchTestClient(
           duration: raw.duration.toString(),
           startTime: raw.startTime,
           questions: mappedQuestions,
-          passingMarks: raw.passingMarks
+          passingMarks: raw.passingMarks,
         });
       })
       .catch((err: any) => {
-        console.error('useFetchTest error:', err);
+        console.error("useFetchTest error:", err);
         setError(err);
       })
       .finally(() => {

@@ -1,18 +1,17 @@
-import React, {
+import {
   createContext,
   useContext,
   useState,
   useEffect,
   type ReactNode,
-} from 'react';
-import api from '../utils/api';
-import { API_BASE } from '../utils/ulrs';
+} from "react";
+import api from "../utils/api";
+import { API_BASE } from "../utils/ulrs";
 
 export interface User {
   userId: number;
   email: string;
   name?: string;
-  
 }
 
 interface AuthContextType {
@@ -30,9 +29,9 @@ const AuthContext = createContext<AuthContextType>({
 });
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser]       = useState<User | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError]     = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const loadProfile = async () => {
     setLoading(true);

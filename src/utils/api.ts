@@ -1,16 +1,9 @@
-
-
-
-
-
-
-
-import axios, { AxiosError, type AxiosRequestConfig } from 'axios';
-import { API_BASE } from './ulrs';
+import axios, { AxiosError, type AxiosRequestConfig } from "axios";
+import { API_BASE } from "./ulrs";
 
 const api = axios.create({
-  baseURL: API_BASE,     
-  withCredentials: true, 
+  baseURL: API_BASE,
+  withCredentials: true,
 });
 
 let isRefreshing = false;
@@ -29,8 +22,10 @@ const isAuthEndpoint = (url = '') =>
   /\/client\/auth\/(login|signup|refresh)/.test(url);
 
 api.interceptors.response.use(
-  resp => resp,
-  (error: AxiosError & { config?: AxiosRequestConfig & { _retry?: boolean } }) => {
+  (resp) => resp,
+  (
+    error: AxiosError & { config?: AxiosRequestConfig & { _retry?: boolean } }
+  ) => {
     const originalReq = error.config!;
     // const url  = originalReq.url || '';
     const status = error.response?.status;
@@ -70,8 +65,8 @@ api.interceptors.response.use(
           processQueue(refreshError, false);
 
           //  Only redirect if we're not already on the login page
-          if (window.location.pathname !== '/') {
-            window.location.href = '/';
+          if (window.location.pathname !== "/") {
+            window.location.href = "/";
           }
 
           reject(refreshError);

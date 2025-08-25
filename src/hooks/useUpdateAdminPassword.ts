@@ -1,10 +1,10 @@
-import { useState } from 'react';
-import adminApi from '../utils/adminApi';
-import { API_BASE } from '../utils/ulrs';
+import { useState } from "react";
+import adminApi from "../utils/adminApi";
+import { API_BASE } from "../utils/ulrs";
 
 export function useUpdateAdminPassword() {
   const [loading, setLoading] = useState(false);
-  const [error, setError]     = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
 
   async function updatePassword(currentPassword: string, newPassword: string) {
@@ -18,7 +18,7 @@ export function useUpdateAdminPassword() {
       });
       setSuccess(true);
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Failed to update password');
+      setError(err.response?.data?.message || "Failed to update password");
     } finally {
       setLoading(false);
     }

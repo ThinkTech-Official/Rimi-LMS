@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import api from "../../utils/api";
 import { API_BASE } from "../../utils/ulrs";
 import Spinner from "../loaders/Spinner";
+import { useTranslation } from "react-i18next";
 
 interface CertRecord {
   id: number;
@@ -14,6 +15,7 @@ interface CertRecord {
 const ClientCertificates: React.FC = () => {
   const [certs, setCerts] = useState<CertRecord[]>([]);
   const [loading, setLoading] = useState(true);
+  const { t } = useTranslation();
 
   useEffect(() => {
     api
@@ -53,7 +55,7 @@ const ClientCertificates: React.FC = () => {
   return (
     <div className="p-2 sm:p-8">
       <h1 className="text-2xl text-text-dark font-bold my-4">
-        My Certificates
+        {t("My Certificates")}
       </h1>
       <ul className="flex flex-col items-center w-full sm:grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:w-fit">
         {certs.map((c) => (
@@ -68,40 +70,32 @@ const ClientCertificates: React.FC = () => {
                 alt={c.course.name}
                 className="w-full aspect-video h-44 border border-[#CB5A31]"
               />
-              <h3 className="font-semibold text-text-dark line-clamp-1 mt-2">{c.course.name}</h3>
+              <h3 className="font-semibold text-text-dark line-clamp-1 mt-2">
+                {c.course.name}
+              </h3>
               <div className="text-sm text-text-dark font-semibold">
                 Certificate ID:{" "}
-                <span className="text-text-light font-normal">{c.certNumber}</span>
+                <span className="text-text-light font-normal">
+                  {c.certNumber}
+                </span>
               </div>
               <div className="flex justify-between">
                 <div className="text-sm text-text-dark font-semibold">
                   Issue Date:{" "}
-                  <span className="text-text-light font-normal">{new Date(c.createdAt).toLocaleDateString()}</span>
+                  <span className="text-text-light font-normal">
+                    {new Date(c.createdAt).toLocaleDateString()}
+                  </span>
                 </div>
               </div>
-               <a
-              href={`${API_BASE}/uploads/certificates/${c.fileName}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-4 py-2 mt-2 bg-primary text-white cursor-pointer w-full text-center"
-            >
-              Download PDF
-            </a>
+              <a
+                href={`${API_BASE}/uploads/certificates/${c.fileName}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-4 py-2 mt-2 bg-primary text-white cursor-pointer w-full text-center"
+              >
+                Download PDF
+              </a>
             </div>
-            
-            {/* <div>
-              <p className='text-xl font-semibold text-text-dark line-clamp-1'>{c.course.name}</p>
-              <p className='text-text-light-2'>Issued: {new Date(c.createdAt).toLocaleDateString()}</p>
-              <p className='text-text-light-2'>Cert #: {c.certNumber}</p>
-            </div>
-            <a
-              href={`${API_BASE}/uploads/certificates/${c.fileName}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-4 py-2 bg-primary text-white cursor-pointer w-fit"
-            >
-              Download PDF
-            </a> */}
           </li>
         ))}
       </ul>

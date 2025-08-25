@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useCreateTest } from "../hooks/useCreateTest";
 import { useTranslation } from "react-i18next";
 import { useForm, type SubmitHandler } from "react-hook-form";
+import useNotification from "../hooks/useNotification";
 
 interface Option {
   id: number;
@@ -29,9 +30,11 @@ const CreateTest: React.FC = () => {
   const navigate = useNavigate();
   const { createTest, loading, error } = useCreateTest(courseId!);
   const { t } = useTranslation();
-  const [questionErrors, setQuestionErrors] = useState<Record<number, string[]>>({});
+  const [questionErrors, setQuestionErrors] = useState<
+    Record<number, string[]>
+  >({});
   const [hasSubmitted, setHasSubmitted] = useState(false);
-
+  const { triggerNotification } = useNotification();
   const [questions, setQuestions] = useState<Question[]>([
     {
       id: 1,
@@ -52,14 +55,15 @@ const CreateTest: React.FC = () => {
   } = useForm<NewTest>();
 
   const validateQuestion = (q: Question): string[] => {
-  const errors: string[] = [];
-  if (!q.text.trim()) errors.push("Question text is required.");
-  if (q.options.length < 2) errors.push("At least 2 options required.");
-  if (q.options.some((o) => !o.text.trim())) errors.push("All options must have text.");
-  if (!q.options.some((o) => o.isCorrect)) errors.push("One option must be marked correct.");
-  return errors;
-};
-
+    const errors: string[] = [];
+    if (!q.text.trim()) errors.push("Question text is required.");
+    if (q.options.length < 2) errors.push("At least 2 options required.");
+    if (q.options.some((o) => !o.text.trim()))
+      errors.push("All options must have text.");
+    if (!q.options.some((o) => o.isCorrect))
+      errors.push("One option must be marked correct.");
+    return errors;
+  };
 
   const handleAddQuestion = () => {
     setQuestions((prev) => [
@@ -77,14 +81,69 @@ const CreateTest: React.FC = () => {
     ]);
   };
 
-const handleQuestionChange = (qid: number, text: string) => {
-  const updatedQuestions = questions.map((q) =>
-    q.id === qid ? { ...q, text } : q
-  );
-  setQuestions(updatedQuestions);
+  const handleQuestionChange = (qid: number, text: string) => {
+    const updatedQuestions = questions.map((q) =>
+      q.id === qid ? { ...q, text } : q
+    );
+    setQuestions(updatedQuestions);
 
-  // Only validate if submission has been attempted
-  if (hasSubmitted) {
+    // Only validate if submission has been attempted
+    if (hasSubmitted) {
+      const current = updatedQuestions.find((q) => q.id === qid)!;
+      const errors = validateQuestion(current);
+
+      setQuestionErrors((prev) => {
+        const updated = { ...prev };
+        if (errors.length > 0) {
+          updated[qid] = errors;
+        } else {
+          delete updated[qid];
+        }
+        return updated;
+      });
+    }
+  };
+
+  const handleOptionChange = (qid: number, oid: number, text: string) => {
+    const updatedQuestions = questions.map((q) =>
+      q.id === qid
+        ? {
+            ...q,
+            options: q.options.map((o) => (o.id === oid ? { ...o, text } : o)),
+          }
+        : q
+    );
+    setQuestions(updatedQuestions);
+
+    if (hasSubmitted) {
+      const current = updatedQuestions.find((q) => q.id === qid)!;
+      const errors = validateQuestion(current);
+
+      setQuestionErrors((prev) => {
+        const updated = { ...prev };
+        if (errors.length > 0) {
+          updated[qid] = errors;
+        } else {
+          delete updated[qid];
+        }
+        return updated;
+      });
+    }
+  };
+
+  const toggleCorrect = (qid: number, oid: number) => {
+    const updatedQuestions = questions.map((q) =>
+      q.id === qid
+        ? {
+            ...q,
+            options: q.options.map((o) =>
+              o.id === oid ? { ...o, isCorrect: !o.isCorrect } : o
+            ),
+          }
+        : q
+    );
+    setQuestions(updatedQuestions);
+
     const current = updatedQuestions.find((q) => q.id === qid)!;
     const errors = validateQuestion(current);
 
@@ -97,118 +156,48 @@ const handleQuestionChange = (qid: number, text: string) => {
       }
       return updated;
     });
-  }
-};
-
-
-
-
- const handleOptionChange = (qid: number, oid: number, text: string) => {
-  const updatedQuestions = questions.map((q) =>
-    q.id === qid
-      ? {
-          ...q,
-          options: q.options.map((o) =>
-            o.id === oid ? { ...o, text } : o
-          ),
-        }
-      : q
-  );
-  setQuestions(updatedQuestions);
-
-if (hasSubmitted) {
-    const current = updatedQuestions.find((q) => q.id === qid)!;
-  const errors = validateQuestion(current);
-
-  setQuestionErrors((prev) => {
-    const updated = { ...prev };
-    if (errors.length > 0) {
-      updated[qid] = errors;
-    } else {
-      delete updated[qid];
-    }
-    return updated;
-  });
-};}
-
-
-
-const toggleCorrect = (qid: number, oid: number) => {
-  const updatedQuestions = questions.map((q) =>
-    q.id === qid
-      ? {
-          ...q,
-          options: q.options.map((o) =>
-            o.id === oid ? { ...o, isCorrect: !o.isCorrect } : o
-          ),
-        }
-      : q
-  );
-  setQuestions(updatedQuestions);
-
-  const current = updatedQuestions.find((q) => q.id === qid)!;
-  const errors = validateQuestion(current);
-
-  setQuestionErrors((prev) => {
-    const updated = { ...prev };
-    if (errors.length > 0) {
-      updated[qid] = errors;
-    } else {
-      delete updated[qid];
-    }
-    return updated;
-  });
-};
-
-
-
-
-  const handleAddOption = (qid: number) => {
-    setQuestions((qs) =>
-      qs.map((q) => {
-        if (q.id !== qid) return q;
-        const newId = q.options.length + 1;
-        return {
-          ...q,
-          options: [...q.options, { id: newId, text: "", isCorrect: false }],
-        };
-      })
-    );
   };
+
+  // const handleAddOption = (qid: number) => {
+  //   setQuestions((qs) =>
+  //     qs.map((q) => {
+  //       if (q.id !== qid) return q;
+  //       const newId = q.options.length + 1;
+  //       return {
+  //         ...q,
+  //         options: [...q.options, { id: newId, text: "", isCorrect: false }],
+  //       };
+  //     })
+  //   );
+  // };
 
   const handleRemoveQuestion = (qid: number) => {
     setQuestions((prev) => prev.filter((q) => q.id !== qid));
   };
-
-  // const handleSave = (e: FormEvent) => {
-  //   e.preventDefault();
-  //   // handle submit
-  //   console.log({ name, courseId, duration, startTime, questions });
-  // };
-
   const onSubmit: SubmitHandler<NewTest> = async (data: NewTest) => {
     if (!courseId) return;
     setHasSubmitted(true);
-   const questionLevelErrors: Record<number, string[]> = {};
+    const questionLevelErrors: Record<number, string[]> = {};
 
-questions.forEach((q, i) => {
-  const errors: string[] = [];
-  if (!q.text.trim()) errors.push("Question text is required.");
-  if (q.options.length < 2) errors.push("At least 2 options required.");
-  const emptyOptions = q.options.filter((o) => !o.text.trim());
-  if (emptyOptions.length > 0) errors.push("All options must have text.");
-  if (!q.options.some((o) => o.isCorrect)) errors.push("One option must be marked correct.");
-  if (errors.length > 0) {
-    questionLevelErrors[q.id] = errors;
-  }
-});
+    questions.forEach((q) => {
+      const errors: string[] = [];
+      if (!q.text.trim()) errors.push("Question text is required.");
+      if (q.options.length < 2) errors.push("At least 2 options required.");
+      const emptyOptions = q.options.filter((o) => !o.text.trim());
+      if (emptyOptions.length > 0) errors.push("All options must have text.");
+      if (!q.options.some((o) => o.isCorrect))
+        errors.push("One option must be marked correct.");
+      if (errors.length > 0) {
+        questionLevelErrors[q.id] = errors;
+      }
+    });
 
-if (Object.keys(questionLevelErrors).length > 0) {
-  setQuestionErrors(questionLevelErrors);
-  return;
-} else {
-  setQuestionErrors({});
-}
+    if (Object.keys(questionLevelErrors).length > 0) {
+      setQuestionErrors(questionLevelErrors);
+      return;
+    } else {
+      setQuestionErrors({});
+    }
 
     const dto = {
       name: data.name.trim(),
@@ -229,14 +218,18 @@ if (Object.keys(questionLevelErrors).length > 0) {
 
     try {
       await createTest(dto);
-      navigate(`/admin/edit-course/${courseId}`,{
+      navigate(`/admin/edit-course/${courseId}`, {
         state: {
           type: "success",
           message: "Test created successfully",
-        }
+        },
       });
     } catch {
-      // error displayed by hook
+      triggerNotification({
+        type: "error",
+        message: "Failed to create test",
+        duration: 3000,
+      });
     }
   };
 
@@ -246,25 +239,27 @@ if (Object.keys(questionLevelErrors).length > 0) {
       <button
         onClick={() => navigate("/admin/edit-course/" + courseId)}
         className="underline underline-offset-2 cursor-pointer text-sm text-primary font-medium"
-        title="Back to Course"
+        title={t("back to course")}
       >
-       &lt; Back to Course
+        &lt; {t("back to course")}
       </button>
+
       <main className="flex-1">
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
           {/* Test Information */}
           <section className="space-y-4">
             <div className="flex w-full justify-between items-center mb-6 sm:mb-3">
               <h2 className="text-lg 2xl:text-2xl font-bold text-[#1B1B1B]">
-                Test Information
+                {t("test information")}
               </h2>
               <button
                 type="submit"
-                className="inline-block w-[120px] sm:w-[150px] text-sm sm:text-[16px] px-5 py-2 sm:py-3 bg-primary text-white text-nowrap font-semibold hover:bg-indigo-700 cursor-pointer transition-colors delay-150"
+                className="inline-block text-sm sm:text-[16px] px-5 py-2 sm:py-3 bg-primary text-white text-nowrap font-semibold hover:bg-indigo-700 cursor-pointer transition-colors delay-150"
               >
-                {loading ? "Saving..." : "Save Test"}
+                {loading ? t("saving") : t("save test")}
               </button>
             </div>
+
             <div className="space-y-4">
               <div className="flex flex-col">
                 <label className="text-sm text-text-light-2 mb-1 capitalize">
@@ -273,13 +268,13 @@ if (Object.keys(questionLevelErrors).length > 0) {
                 <input
                   type="text"
                   {...register("name", {
-                    required: "Name is required",
+                    required: t("name required"),
                     minLength: {
                       value: 4,
-                      message: "Name must be at least 4 characters",
+                      message: t("name min length"),
                     },
                   })}
-                  placeholder="Enter Test Name"
+                  placeholder={t("enter test name")}
                   className="w-full border border-inputBorder p-2 sm:px-4 sm:py-3 focus:outline-none focus:ring-1 focus:ring-primary"
                 />
                 {errors.name && (
@@ -288,6 +283,7 @@ if (Object.keys(questionLevelErrors).length > 0) {
                   </p>
                 )}
               </div>
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="flex flex-col">
                   <label className="text-sm text-text-light-2 mb-1 capitalize">
@@ -296,13 +292,13 @@ if (Object.keys(questionLevelErrors).length > 0) {
                   <input
                     type="number"
                     {...register("duration", {
-                      required: "Duration is required",
+                      required: t("duration required"),
                       min: {
                         value: 1,
-                        message: "Duration must be at least 1 second",
+                        message: t("duration min"),
                       },
                     })}
-                    placeholder="Select Test Duration in Seconds"
+                    placeholder={t("select test duration")}
                     className="w-full border border-inputBorder p-2 sm:px-4 sm:py-3 focus:outline-none focus:ring-1 focus:ring-primary"
                   />
                   {errors.duration && (
@@ -311,21 +307,22 @@ if (Object.keys(questionLevelErrors).length > 0) {
                     </p>
                   )}
                 </div>
+
                 <div className="flex flex-col">
                   <label className="text-sm text-text-light-2 mb-1 capitalize">
-                    {t("Start Time")}
+                    {t("start time")}
                   </label>
                   <input
                     type="number"
                     {...register("startTime", {
-                      valueAsNumber : true,
-                      required: "Start Time is required",
+                      valueAsNumber: true,
+                      required: t("start time required"),
                       min: {
                         value: 1,
-                        message: "Start Time must be at least 1 second",
+                        message: t("start time min"),
                       },
                     })}
-                    placeholder="Enter the starting time for the test in seconds during the video."
+                    placeholder={t("start time placeholder")}
                     className="w-full border border-inputBorder p-2 sm:px-4 sm:py-3 focus:outline-none focus:ring-1 focus:ring-primary"
                   />
                   {errors.startTime && (
@@ -336,7 +333,7 @@ if (Object.keys(questionLevelErrors).length > 0) {
                 </div>
               </div>
 
-              {/* Passing Marks and Quiz Questions  */}
+              {/* Passing Marks and Quiz Questions */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="flex flex-col">
                   <label className="text-sm text-text-light-2 mb-1 capitalize">
@@ -345,18 +342,18 @@ if (Object.keys(questionLevelErrors).length > 0) {
                   <input
                     type="number"
                     {...register("passingMarks", {
-                      valueAsNumber : true,
-                      required: "Passing Marks is required",
+                      valueAsNumber: true,
+                      required: t("passing marks required"),
                       min: {
                         value: 1,
-                        message: "Passing Marks must be at least 1 second",
+                        message: t("passing marks min"),
                       },
                       max: {
                         value: 100,
-                        message: "Passing Marks must be at most 100",
-                      }
+                        message: t("passing marks max"),
+                      },
                     })}
-                    placeholder="Passing Percentage"
+                    placeholder={t("passing percentage placeholder")}
                     className="w-full border border-inputBorder p-2 sm:px-4 sm:py-3 focus:outline-none focus:ring-1 focus:ring-primary"
                   />
                   {errors.passingMarks && (
@@ -365,6 +362,7 @@ if (Object.keys(questionLevelErrors).length > 0) {
                     </p>
                   )}
                 </div>
+
                 <div className="flex flex-col">
                   <label className="text-sm text-text-light-2 mb-1 capitalize">
                     {t("number of questions")}
@@ -372,15 +370,14 @@ if (Object.keys(questionLevelErrors).length > 0) {
                   <input
                     type="number"
                     {...register("quizQuestionNumber", {
-                      valueAsNumber : true,
-                      required: "Number of Questions is required",
+                      valueAsNumber: true,
+                      required: t("number of questions required"),
                       min: {
                         value: 1,
-                        message:
-                          "Number of Questions must be at least 1 second",
+                        message: t("number of questions min"),
                       },
                     })}
-                    placeholder="Number of Question In Quiz , if Not filled sets all the questions in test for quiz"
+                    placeholder={t("number of questions placeholder")}
                     className="w-full border border-inputBorder p-2 sm:px-4 sm:py-3 focus:outline-none focus:ring-1 focus:ring-primary"
                   />
                   {errors.quizQuestionNumber && (
@@ -396,33 +393,35 @@ if (Object.keys(questionLevelErrors).length > 0) {
           {/* Add Questions */}
           <section className="space-y-6">
             <div className="flex justify-between items-center">
-              <h2 className="text-lg font-bold text-gray-900">Add Questions</h2>
+              <h2 className="text-lg font-bold text-gray-900">
+                {t("add questions")}
+              </h2>
             </div>
 
             {questions.map((q, index) => (
               <div key={q.id} className="space-y-4">
-                <label className="font-medium">Q{index + 1}</label>
+                <label className="font-medium">
+                  {t("question label", { number: index + 1 })}
+                </label>
                 <textarea
                   value={q.text}
                   onChange={(e) => handleQuestionChange(q.id, e.target.value)}
-                  placeholder="Type Your Question Here"
+                  placeholder={t("type question here")}
                   className="w-full border border-inputBorder p-2 sm:px-4 sm:py-3 focus:outline-none focus:ring-1 focus:ring-primary"
                   rows={2}
                 />
                 <div className="space-y-2">
                   <label className="text-sm 2xl:text-base font-medium">
-                    Options
+                    {t("options")}
                   </label>
                   {questionErrors[q.id]?.length > 0 && (
-  <ul className="text-sm text-red-500 list-disc pl-5 space-y-1">
-    {questionErrors[q.id].map((err, i) => (
-      <li key={i}>{err}</li>
-    ))}
-  </ul>
-)}
-
+                    <ul className="text-sm text-red-500 list-disc pl-5 space-y-1">
+                      {questionErrors[q.id].map((err, i) => (
+                        <li key={i}>{t(err)}</li>
+                      ))}
+                    </ul>
+                  )}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-[800px] mt-2">
-                    {" "}
                     {q.options.map((o) => (
                       <div
                         key={o.id}
@@ -440,25 +439,17 @@ if (Object.keys(questionLevelErrors).length > 0) {
                           onChange={(e) =>
                             handleOptionChange(q.id, o.id, e.target.value)
                           }
-                          placeholder={`Option ${o.id}`}
+                          placeholder={t("option placeholder", { id: o.id })}
                           className="flex-1 px-4 py-2 focus:ring-primary focus:outline-none"
                         />
                       </div>
                     ))}
                   </div>
-                  {/* <button
-                    type="button"
-                    onClick={() => handleAddOption(q.id)}
-                    className="text-[#0832DE] font-medium flex items-center space-x-1 cursor-pointer"
-                  >
-                    <span className="text-2xl">+</span>
-                    <span>Add new option</span>
-                  </button> */}
                   <button
                     onClick={() => handleRemoveQuestion(q.id)}
-                    className="inline-block text-sm sm:text-[16px]  text-red-500 hover:text-red-600 text-nowrap font-semibold  cursor-pointer transition-colors delay-100"
+                    className="inline-block text-sm sm:text-[16px] text-red-500 hover:text-red-600 text-nowrap font-semibold cursor-pointer transition-colors delay-100"
                   >
-                    Remove Question
+                    {t("remove question")}
                   </button>
                 </div>
               </div>
@@ -472,13 +463,15 @@ if (Object.keys(questionLevelErrors).length > 0) {
               className="text-[#0832DE] font-medium flex items-center space-x-1 cursor-pointer"
             >
               <span className="text-2xl">+</span>
-              <span className="text-lg sm:text-xl">Add new Question</span>
+              <span className="text-lg sm:text-xl">
+                {t("add new question")}
+              </span>
             </button>
             <button
               type="submit"
-              className="inline-block w-[120px] sm:w-[150px] text-sm sm:text-[16px] px-5 py-2 sm:py-3 bg-primary text-white text-nowrap font-semibold hover:bg-indigo-700 cursor-pointer transition-colors delay-150"
+              className="inline-block text-sm sm:text-[16px] px-5 py-2 sm:py-3 bg-primary text-white text-nowrap font-semibold hover:bg-indigo-700 cursor-pointer transition-colors delay-150"
             >
-              {loading ? "Saving..." : "Save Test"}
+              {loading ? t("saving") : t("save test")}
             </button>
           </div>
         </form>
