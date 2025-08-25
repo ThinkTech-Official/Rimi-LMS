@@ -181,5 +181,6 @@
   "Certificate with this ID not found": "Certificate with this ID not found",
   "Enter certificate ID": "Enter certificate ID",
   "Certificate ID is required": "Certificate ID is required",
-  "Searching": "Searching"
+  "Searching": "Searching",
+  "Continue Learning": "Continue Learning"
 }

@@ -140,6 +140,19 @@ const CoursePlay = () => {
       clearTimeout(hideMarkersTimeoutRef.current);
     }
   };
+  const calculateLastPassedCheckpoint = (courseData: CourseClient) => {
+    const passedTests = courseData.tests.filter((t) => t.isCleared);
+    if (passedTests.length === 0) return 0;
+
+    // Get the latest passed test's start time
+    return Math.max(...passedTests.map((t) => t.startTime));
+  };
+  useEffect(() => {
+    if (course) {
+      const newLastPassedTime = calculateLastPassedCheckpoint(course);
+      setLastPassedTime(newLastPassedTime);
+    }
+  }, [course]);
   // Handle fullscreen toggle state
   useEffect(() => {
     const handleFullscreenChange = () => {
@@ -161,8 +174,11 @@ const CoursePlay = () => {
         ? Math.max(...passedTests.map((t) => t.startTime))
         : 0;
     // resume at 1 second after last passed test, or 0
-    const resumeAt = lastStart > 0 ? lastStart + 1 : 0;
-    setLastPassedTime(lastStart);
+    const lastPassedCheckpoint = calculateLastPassedCheckpoint(course);
+    const resumeAt = lastPassedCheckpoint > 0 ? lastPassedCheckpoint + 1 : 0;
+
+    // Set the last passed time
+    setLastPassedTime(lastPassedCheckpoint);
 
     // seek video to resume point
     videoRef.current.currentTime = resumeAt;
@@ -171,7 +187,7 @@ const CoursePlay = () => {
     triggeredTests.current = new Set(
       course.tests.filter((t) => t.startTime <= resumeAt).map((t) => t.id)
     );
-  }, [course]);
+  }, [course, videoReady]);
 
   // auto-pause at tests
   useEffect(() => {
@@ -233,10 +249,30 @@ const CoursePlay = () => {
   }, [course]);
 
   // if user passed update checkpoint and resume
+  // const handleResume = async () => {
+  //   if (activeTestBasic) {
+  //     setLastPassedTime(activeTestBasic.startTime);
+  //     //  await refetch()
+  //   }
+  //   setShowTest(null);
+  //   videoRef.current?.play();
+  // };
   const handleResume = async () => {
-    if (activeTestBasic) {
+    if (activeTestBasic && course) {
+      // Update the course state to mark this test as cleared
+      const updatedCourse = {
+        ...course,
+        tests: course.tests.map((t) =>
+          t.id === activeTestBasic.id ? { ...t, isCleared: true } : t
+        ),
+      };
+      setCourse(updatedCourse);
+
+      // Update the last passed time to this test's start time
       setLastPassedTime(activeTestBasic.startTime);
-      //  await refetch()
+
+      // Optionally refetch from server to get latest state
+      // await refetch();
     }
     setShowTest(null);
     videoRef.current?.play();
@@ -254,11 +290,15 @@ const CoursePlay = () => {
       setActiveTestBasic(null);
     }
 
-    // Seek back to the last passed checkpoint (or 0)
+    const backToTime = course ? calculateLastPassedCheckpoint(course) : 0;
+
+    // For failed first test, this will be 0 (beginning)
+    // For other failed tests, this will be the last passed test's start time
     if (videoRef.current) {
-      videoRef.current.currentTime = lastPassedTime;
+      videoRef.current.currentTime = backToTime;
       videoRef.current.play();
     }
+    setIsPlaying(true);
   };
 
   const handleStart = () => {
@@ -371,7 +411,7 @@ const CoursePlay = () => {
             {/* PLAY OVERLAY */}
             {!hasStarted && (
               <div
-                className="absolute inset-0 bg-black/40 flex items-center justify-center cursor-pointer"
+                className="absolute inset-0 bg-black/30 flex items-center justify-center cursor-pointer"
                 onClick={handleStart}
               >
                 <svg
@@ -413,7 +453,7 @@ const CoursePlay = () => {
             <div
               className={`
                    absolute bottom-0 left-0 right-0
-                   bg-black/20 backdrop-blur-sm p-2
+                   bg-black/20 backdrop-blur-sm p-2 pt-4
                    transition-opacity duration-200
                     ${showMarkers ? "opacity-100" : "opacity-0"}
                  `}
@@ -510,8 +550,9 @@ const CoursePlay = () => {
               )}
               {/* overlay the markers */}
               {markersReady && (
-                <div className="absolute inset-4 pointer-events-none">
+                <div className="absolute inset-4 -mt-3 pointer-events-none">
                   {course!.tests.map((test) => {
+                    console.log(test);
                     const pct = videoDuration
                       ? Math.min((test.startTime / videoDuration) * 100)
                       : 0;
@@ -526,10 +567,9 @@ const CoursePlay = () => {
                         }}
                       >
                         <img
-                          src="/Document.svg"
+                          src={`${test.isCleared ? "/DocumentRed.svg" : "/Document.svg"}`}
                           alt="test marker"
-                          className={`h-4 w-4 rounded-full flex items-center justify-center p-[1px] bg-[#D9D9D9]
-                        `}
+                         className="h-4 w-4"
                         />
                       </div>
                     );

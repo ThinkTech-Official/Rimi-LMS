@@ -182,5 +182,6 @@
   "Certificate with this ID not found": "Certificat avec cet ID non trouvé",
   "Enter certificate ID": "Saisir l'ID du certificat",
   "Certificate ID is required": "L'ID du certificat est obligatoire",
-  "Searching": "Recherche en cours"
+  "Searching": "Recherche en cours",
+  "Continue Learning": "Continuer de apprendre"
 }

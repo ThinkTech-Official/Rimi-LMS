@@ -227,6 +227,7 @@ const CreateCourse: React.FC<CreateCourseProps> = () => {
                 <input
                   type="text"
                   {...register("name", {
+                    setValueAs: (value) => value.trim(),
                     required: "Name is required",
                     minLength: {
                       value: 4,
@@ -248,6 +249,7 @@ const CreateCourse: React.FC<CreateCourseProps> = () => {
                 </label>
                 <textarea
                   {...register("description", {
+                    setValueAs: (value) => value.trim(),
                     required: "Description is required",
                   })}
                   placeholder={t("enter course description")}
