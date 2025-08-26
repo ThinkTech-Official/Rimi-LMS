@@ -193,5 +193,7 @@
   "Update": "Mettre à jour",
   "Password Updated": "Mot de passe mis à jour",
   "Confirm new password": "Confirmer le nouveau mot de passe",
-  "Current password": "Mot de passe actuel"
+  "Current password": "Mot de passe actuel",
+  "Edit Test": "Modifier le test",
+  "duration must be an integer": "La duree doit etre un entier"
 }

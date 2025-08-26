@@ -253,7 +253,7 @@ const EditTest: React.FC = () => {
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <div className="flex justify-between items-center">
             <h2 className="text-lg 2xl:text-2xl font-bold text-[#1B1B1B]">
-              Edit Test
+              {t("Edit Test")}
             </h2>
             <button
               type="submit"
