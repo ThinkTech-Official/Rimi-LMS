@@ -314,13 +314,17 @@ const CreateCourse: React.FC<CreateCourseProps> = () => {
                   <p className="text-red-500">Load error: {catError}</p>
                 ) : (
                   <div className="flex flex-col sm:flex-row gap-2 sm:items-center">
-                    <div className="relative w-[220px]">
+                    <div className="relative w-[250px]">
                       <button
                         type="button"
                         className="w-full border border-inputBorder px-3 py-2 focus:border-0 focus:ring-1 focus:ring-primary capitalize flex items-center justify-between text-left text-text-light cursor-pointer"
                         onClick={() => setIsCategoryOpen((prev) => !prev)}
                       >
-                        <span className="capitalize">
+                        <span className="capitalize truncate" title={`${selectedCategoryId
+                            ? categories.find(
+                                (cat) => cat.id === selectedCategoryId
+                              )?.name
+                            : "Select Category"}`}>
                           {selectedCategoryId
                             ? categories.find(
                                 (cat) => cat.id === selectedCategoryId
@@ -339,7 +343,8 @@ const CreateCourse: React.FC<CreateCourseProps> = () => {
                           {categories.map((cat) => (
                             <div
                               key={cat.id}
-                              className={`px-4 py-2 hover:bg-gray-200 text-text-light cursor-pointer capitalize ${
+                              title={cat.name}
+                              className={`px-4 py-2 hover:bg-gray-200 text-text-light cursor-pointer capitalize truncate ${
                                 selectedCategoryId === cat.id
                                   ? "bg-primary text-white hover:bg-gray-200 hover:text-text-light"
                                   : ""

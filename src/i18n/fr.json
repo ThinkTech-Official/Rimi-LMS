@@ -183,5 +183,7 @@
   "Enter certificate ID": "Saisir l'ID du certificat",
   "Certificate ID is required": "L'ID du certificat est obligatoire",
   "Searching": "Recherche en cours",
-  "Continue Learning": "Continuer de apprendre"
+  "Continue Learning": "Continuer de apprendre",
+  "No progres to show": "Aucune progression à afficher",
+  "No certificate issued yet": "Aucun certificat encore emis"
 }

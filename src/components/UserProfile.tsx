@@ -8,10 +8,12 @@ import { useParams } from "react-router-dom";
 import { API_BASE } from "../utils/ulrs";
 import { useAdminResetPasswordOfClient } from "../hooks/useAdminResetPasswordOfClient";
 import Spinner from "./loaders/Spinner";
+import { useTranslation } from "react-i18next";
+import { tab } from "@testing-library/user-event/dist/cjs/convenience/tab.js";
 
 export const UserProfile: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-
+  const { t } = useTranslation();
   const { data, loading, error } = useAdminClientProfile();
   const {
     resetPassword,
@@ -64,7 +66,6 @@ export const UserProfile: React.FC = () => {
   if (!data) return null;
 
   const { user, enrolledCourses, certificates } = data;
-  const tabs = ["Courses", "Certificates"] as const;
 
   return (
     <div className="flex min-h-screen bg-white">
@@ -76,11 +77,15 @@ export const UserProfile: React.FC = () => {
 
             <div className="space-y-2">
               <div className="flex items-center space-x-2 text-base">
-                <span className="font-semibold text-text-dark">Name:</span>
+                <span className="font-semibold text-text-dark">
+                  {t("name")}:
+                </span>
                 <span className="text-text-light">{user.name}</span>
               </div>
               <div className="flex items-center space-x-2 text-base">
-                <span className="font-semibold text-text-dark">Email:</span>
+                <span className="font-semibold text-text-dark">
+                  {t("Email")}:
+                </span>
                 <span className="text-text-light">{user.email}</span>
               </div>
             </div>
@@ -89,19 +94,26 @@ export const UserProfile: React.FC = () => {
           {/* Tabs */}
           <div className="border-b border-inputBorder mb-6">
             <ul className="flex space-x-4">
-              {tabs.map((tab) => (
-                <li
-                  key={tab}
-                  onClick={() => setActiveTab(tab)}
-                  className={`pb-2 cursor-pointer ${
-                    activeTab === tab
-                      ? "border-b-2 text-primary"
-                      : "text-gray-500"
-                  }`}
-                >
-                  {tab}
-                </li>
-              ))}
+              <li
+                onClick={() => setActiveTab("Courses")}
+                className={`pb-2 cursor-pointer ${
+                  activeTab === "Courses"
+                    ? "border-b-2 text-primary"
+                    : "text-gray-500"
+                }`}
+              >
+                {t("Courses")}
+              </li>
+              <li
+                onClick={() => setActiveTab("Certificates")}
+                className={`pb-2 cursor-pointer ${
+                  activeTab === "Certificates"
+                    ? "border-b-2 text-primary"
+                    : "text-gray-500"
+                }`}
+              >
+                {t("certificates")}
+              </li>
             </ul>
           </div>
 
@@ -129,8 +141,8 @@ export const UserProfile: React.FC = () => {
                           <GoClock className="mr-1 text-text-dark" />
                           {course.duration}
                         </div>
-                        <div className="mt-1 text-sm font-medium text-primary">
-                          Progress: {course.progress}%
+                        <div className="mt-1 text-sm font-medium text-primary capitalize">
+                          {t("progress")}: {course.progress}%
                         </div>
                       </div>
                     </div>
@@ -138,7 +150,7 @@ export const UserProfile: React.FC = () => {
                 </>
               ) : (
                 <>
-                  <p>No Progres To Show</p>
+                  <p>{t("No progres to show")}</p>
                 </>
               )}
             </div>
@@ -164,14 +176,14 @@ export const UserProfile: React.FC = () => {
                           {cert.courseName}
                         </h3>
                         <div className="text-sm text-text-dark font-semibold">
-                          Certificate ID:{" "}
+                          {t("Certificate")} ID:{" "}
                           <span className="text-text-light font-normal">
                             {cert.id}
                           </span>
                         </div>
                         <div className="flex justify-between">
                           <div className="text-sm text-text-dark font-semibold">
-                            Issue Date:{" "}
+                            {t("Issued at")}:{" "}
                             <span className="text-text-light font-normal">
                               {cert.issueDate}
                             </span>
@@ -182,7 +194,7 @@ export const UserProfile: React.FC = () => {
                             rel="noopener noreferrer"
                             className="text-sm text-primary font-semibold hover:underline cursor-pointer"
                           >
-                            View Certificate
+                            {t("View Certificate")}
                           </a>
                         </div>
                       </div>
@@ -191,7 +203,7 @@ export const UserProfile: React.FC = () => {
                 </>
               ) : (
                 <>
-                  <p>No Certificate Issued Yet</p>
+                  <p>{t("No certificate issued yet")}</p>
                 </>
               )}
             </div>

@@ -182,5 +182,7 @@
   "Enter certificate ID": "Enter certificate ID",
   "Certificate ID is required": "Certificate ID is required",
   "Searching": "Searching",
-  "Continue Learning": "Continue Learning"
+  "Continue Learning": "Continue Learning",
+  "No progres to show": "No progres to show",
+  "No certificate issued yet": "No certificate issued yet"
 }
