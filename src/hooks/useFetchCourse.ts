@@ -44,7 +44,7 @@ export interface Test {
   duration: string;
   startTime: number;
   passingMarks: number;
-  isCleared: boolean;
+  // isCleared: boolean;
   questions: Question[];
 }
 

@@ -55,7 +55,8 @@ export interface RawTestEntry {
   duration: number;
   startTime: number;
   courseId: number;
-  questions: any[];
+  // questions: any[];
+  questionCount: number;
   createdAt: string;
   updatedAt: string;
 }
@@ -92,10 +93,12 @@ export const useFetchTests = (
           id: t.id,
           name: t.name,
           startTime: `${t.startTime}`,
-          duration: `${t.duration}`,
-          questionCount: Array.isArray(t.questions) ? t.questions.length : 0,
+          duration: `${t.duration}`,          
+          // questionCount: Array.isArray(t.questions) ? t.questions.length : 0,
+          questionCount: t.questionCount || 0,
         }));
-        console.log("from useFetchTests ", res);
+        console.log('from useFetchTests ', res)
+        console.log('from useFetchTests Question COunt is normalized ', normalized)
         setTests(normalized);
         setTotal(res.data.total);
       })
