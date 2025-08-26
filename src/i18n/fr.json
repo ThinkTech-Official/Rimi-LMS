@@ -185,5 +185,13 @@
   "Searching": "Recherche en cours",
   "Continue Learning": "Continuer de apprendre",
   "No progres to show": "Aucune progression à afficher",
-  "No certificate issued yet": "Aucun certificat encore emis"
+  "No certificate issued yet": "Aucun certificat encore emis",
+  "Admin Profile": "Profil de l'administrateur",
+  "Joined at": "Inscrit le",
+  "User Information": "Informations sur l'utilisateur",
+  "Updating": "Mise à jour en cours",
+  "Update": "Mettre à jour",
+  "Password Updated": "Mot de passe mis à jour",
+  "Confirm new password": "Confirmer le nouveau mot de passe",
+  "Current password": "Mot de passe actuel"
 }

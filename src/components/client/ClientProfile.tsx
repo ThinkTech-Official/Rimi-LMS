@@ -8,6 +8,7 @@ import Spinner from "../loaders/Spinner";
 import { IoMdClose } from "react-icons/io";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 import useNotification from "../../hooks/useNotification";
+import { useTranslation } from "react-i18next";
 
 const ClientProfile: React.FC = () => {
   const {
@@ -37,6 +38,7 @@ const ClientProfile: React.FC = () => {
   const [localError, setLocalError] = useState<string | null>(null);
   const modalRef = useRef<HTMLDivElement>(null);
   const { triggerNotification } = useNotification();
+  const { t } = useTranslation();
 
   // when profile loads, initialize tempName
   useEffect(() => {
@@ -105,20 +107,20 @@ const ClientProfile: React.FC = () => {
       {/* Breadcrumb */}
       <button
         onClick={() => window.history.back()}
-        className="text-primary font-medium flex items-center gap-2 mb-4"
+        className="text-primary font-medium flex items-center gap-2 mb-4 cursor-pointer"
       >
-        &gt; Back To Courses
+        &gt; {t("back to course")}
       </button>
 
       <div className="flex flex-col mt-8">
         <ImUser className="w-24 h-24 bg-gray-200 text-gray-400 rounded-md p-2" />
 
         <div className="mt-8 w-full max-w-md">
-          <h2 className="text-2xl font-bold mb-6">User Information</h2>
+          <h2 className="text-2xl font-bold mb-6">{t("User Information")}</h2>
 
           {/* Name */}
           <div className="flex items-center mb-4 gap-2">
-            <span className="font-semibold ">Name:</span>
+            <span className="font-semibold ">{t("name")}:</span>
             {!editMode ? (
               <>
                 <span className="flex-1 text-gray-700">{profile?.name}</span>
@@ -164,7 +166,7 @@ const ClientProfile: React.FC = () => {
             onClick={() => setShowResetPasswordModal(true)}
             className="text-primary underline text-sm cursor-pointer"
           >
-            Reset password?
+            {t("reset password")}?
           </button>
         </div>
       </div>
@@ -172,18 +174,18 @@ const ClientProfile: React.FC = () => {
       {showResetPasswordModal && (
         <div className="fixed inset-0 bg-black/10 flex items-center justify-center z-50">
           <div
-            className="bg-white p-6 rounded shadow-lg w-[90%] sm:w-md"
+            className="bg-white p-6 rounded shadow-lg w-[90%] sm:w-md relative"
             ref={modalRef}
           >
             <IoMdClose
               onClick={() => setShowResetPasswordModal(false)}
               className="absolute top-2 right-2 cursor-pointer text-xl text-primary"
             />
-            <h2 className="text-lg font-bold mb-4">Reset Password</h2>
+            <h2 className="text-lg font-bold mb-4">{t("reset password")}</h2>
 
             <form onSubmit={handleResetSubmit} className="space-y-4">
               <div className="relative">
-                <label className="block text-text-light-2">New Password</label>
+                <label className="block text-text-light-2 capitalize">{t("new password")}</label>
                 <div className="relative">
                   <input
                     type={showNewPassword ? "text" : "password"}
@@ -212,8 +214,8 @@ const ClientProfile: React.FC = () => {
                 </div>
               </div>
               <div className="relative">
-                <label className="block text-text-light-2">
-                  Confirm Password
+                <label className="block text-text-light-2 capitalize">
+                  {t("confirm password")}
                 </label>
                 <div className="relative">
                   <input
@@ -251,14 +253,14 @@ const ClientProfile: React.FC = () => {
                   onClick={() => setShowResetPasswordModal(false)}
                   className="flex-1 border border-inputBorder cursor-pointer text-text-light-2"
                 >
-                  Cancel
+                  {t("cancel")}
                 </button>
                 <button
                   type="submit"
                   // disabled={resetting}
                   className="flex-1 px-4 py-2 sm:py-3 bg-primary text-white font-semibold cursor-pointer transition-all delay-100 shadow hover:bg-indigo-700"
                 >
-                  {savingPwd ? "Updating…" : "Update Password"}
+                  {savingPwd ? `${t("Updating")}...` : `${t("Update")}`}
                 </button>
               </div>
             </form>
