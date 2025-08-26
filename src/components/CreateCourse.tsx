@@ -41,6 +41,7 @@ const CreateCourse: React.FC<CreateCourseProps> = () => {
     createCategory,
     loading: creatingCat,
     error: catCreateError,
+    setError: setCatCreateError,
   } = useCreateCategory();
 
   // Form Fields
@@ -54,6 +55,7 @@ const CreateCourse: React.FC<CreateCourseProps> = () => {
     register,
     handleSubmit,
     formState: { errors },
+    watch,
   } = useForm<CreateCourseDto>({
     defaultValues: {
       name: "",
@@ -68,6 +70,9 @@ const CreateCourse: React.FC<CreateCourseProps> = () => {
   const [thumbnailError, setThumbnailError] = useState<string | null>(null);
   const [categoryError, setCategoryError] = useState<string | null>(null);
   const { triggerNotification, NotificationComponent } = useNotification();
+  const [categoryLimitError, setCategoryLimitError] = useState<string | null>(
+    null
+  );
 
   useEffect(() => {
     if (!categories.length) {
@@ -78,6 +83,17 @@ const CreateCourse: React.FC<CreateCourseProps> = () => {
   const handleAddCategory = async () => {
     const trimmed = newCategory.trim();
     if (!trimmed) return;
+    const catLength = newCategory.length;
+    
+    if (catLength > 50) {
+      setCategoryLimitError("Category name must be less than 50 characters");
+      return;
+    }
+    if (catLength < 4) {
+      setCategoryLimitError("Category name must be at least 4 characters");
+      return;
+    }
+
     try {
       const newCat = await createCategory(trimmed);
       triggerNotification({
@@ -206,6 +222,12 @@ const CreateCourse: React.FC<CreateCourseProps> = () => {
     }
   }, [error]);
 
+  const handleAddCategoryCancel = () => {
+    setAddingCat(false);
+    setNewCategory("");
+    setCatCreateError("");
+  };
+
   return (
     <div className="min-h-screen flex bg-white">
       <main className="flex-1 px-2 sm:px-8 pt-4 pb-10 overflow-auto">
@@ -230,8 +252,12 @@ const CreateCourse: React.FC<CreateCourseProps> = () => {
                     setValueAs: (value) => value.trim(),
                     required: "Name is required",
                     minLength: {
-                      value: 4,
-                      message: "Name must be at least 4 characters",
+                      value: 6,
+                      message: "Name must be at least 6 characters",
+                    },
+                    maxLength: {
+                      value: 100,
+                      message: "Name must be at most 100 characters",
                     },
                   })}
                   placeholder={t("enter course name")}
@@ -242,6 +268,9 @@ const CreateCourse: React.FC<CreateCourseProps> = () => {
                     {errors.name.message}
                   </p>
                 )}
+                <p className="text-sm text-text-light">
+                  {watch("name")?.length || 0}/100
+                </p>
               </div>
               <div className="flex flex-col">
                 <label className="text-sm text-text-light-2 mb-1 capitalize">
@@ -251,6 +280,14 @@ const CreateCourse: React.FC<CreateCourseProps> = () => {
                   {...register("description", {
                     setValueAs: (value) => value.trim(),
                     required: "Description is required",
+                    minLength: {
+                      value: 10,
+                      message: "Description must be at least 10 characters",
+                    },
+                    maxLength: {
+                      value: 1000,
+                      message: "Description must be at most 1000 characters",
+                    },
                   })}
                   placeholder={t("enter course description")}
                   rows={4}
@@ -261,6 +298,9 @@ const CreateCourse: React.FC<CreateCourseProps> = () => {
                     {errors.description.message}
                   </p>
                 )}
+                <p className="text-sm text-text-light">
+                  {watch("description")?.length || 0}/1000
+                </p>
               </div>
 
               {/* category dropdown & add */}
@@ -332,16 +372,22 @@ const CreateCourse: React.FC<CreateCourseProps> = () => {
                           <h2 className="text-lg font-semibold">
                             {t("add new category")}
                           </h2>
-                          <input
-                            type="text"
-                            value={newCategory}
-                            onChange={(e) => setNewCategory(e.target.value)}
-                            placeholder={` ${t("category")} ${t("name")}`}
-                            className="w-full border border-inputBorder px-2 py-1 sm:px-4 sm:py-3 focus:outline-none focus:ring-1 focus:ring-primary"
-                          />
+                          <div className="flex flex-col">
+                            <input
+                              type="text"
+                              value={newCategory}
+                              onChange={(e) => setNewCategory(e.target.value)}
+                              placeholder={` ${t("category")} ${t("name")}`}
+                              className="w-full border border-inputBorder px-2 py-1 sm:px-4 sm:py-3 focus:outline-none focus:ring-1 focus:ring-primary"
+                            />
+                            <p className="text-red-500 text-sm mt-1">
+                              {categoryLimitError}
+                            </p>
+                          </div>
+
                           <div className="flex justify-end space-x-2 mt-2">
                             <button
-                              onClick={() => setAddingCat(false)}
+                              onClick={handleAddCategoryCancel}
                               className="px-4 py-2 w-[110px] border border-inputBorder cursor-pointer"
                             >
                               {t("cancel")}
@@ -355,7 +401,7 @@ const CreateCourse: React.FC<CreateCourseProps> = () => {
                             </button>
                           </div>
                           {catCreateError && (
-                            <p className="text-red-500 mt-2">
+                            <p className="text-red-500 mt-2 text-center">
                               {catCreateError}
                             </p>
                           )}

@@ -26,5 +26,5 @@ export const useCreateCategory = () => {
     }
   };
 
-  return { createCategory, loading, error };
+  return { createCategory, loading, error, setError };
 };

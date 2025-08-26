@@ -35,6 +35,9 @@ const EditCourse: React.FC = () => {
   const testsPerPage = 5;
   const { NotificationComponent, triggerNotification } = useNotification();
   const [isCoursePublished, setIsCoursePublished] = useState(false);
+  const [errors, setErrors] = useState<{ name?: string; description?: string }>(
+    {}
+  );
   const location = useLocation();
   const state = location.state;
   useEffect(() => {
@@ -115,16 +118,41 @@ const EditCourse: React.FC = () => {
     });
     setIsCoursePublished(basicCourse.liveStatus ?? false);
   }, [basicCourse]);
+const validateField = (name: string, value: string) => {
+    let error = "";
 
+    if (name === "name") {
+      if (!value.trim()) error = "Name is required";
+      else if (value.length < 6) error = "Name must be at least 6 characters";
+      else if (value.length > 100)
+        error = "Name must be less than 100 characters";
+    }
+
+    if (name === "description") {
+      if (!value.trim()) error = "Description is required";
+      else if (value.length < 10)
+        error = "Description must be at least 10 characters";
+      else if (value.length > 1000)
+        error = "Description must be less than 1000 characters";
+    }
+
+    setErrors((prev) => ({ ...prev, [name]: error || undefined }));
+  };
   const handleBasicChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
     setBasicForm((f) => ({ ...f, [name]: value }));
+    validateField(name, value);
   };
 
   const handleBasicSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Validate name and description
+    validateField("name", basicForm.name);
+    validateField("description", basicForm.description);
+    if (errors.name || errors.description) return;
     try {
       await updateBasic(basicForm, thumbnailFile, videoFile);
       // re-fetch
@@ -144,6 +172,7 @@ const EditCourse: React.FC = () => {
       });
     }
   };
+  
 
   const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
@@ -575,25 +604,40 @@ const EditCourse: React.FC = () => {
               {/* Name */}
               <div>
                 <label className="block text-sm font-medium mb-1">Name</label>
-                <input
-                  name="name"
-                  value={basicForm.name}
-                  onChange={handleBasicChange}
-                  className="px-4 py-2 sm:py-3 w-full border border-inputBorder focus:border-0 focus:outline-none focus:ring focus:ring-primary"
-                />
+                <div className="flex flex-col">
+                  <input
+                    name="name"
+                    value={basicForm.name}
+                    onChange={handleBasicChange}
+                    className="px-4 py-2 sm:py-3 w-full border border-inputBorder focus:border-0 focus:outline-none focus:ring focus:ring-primary"
+                  />
+                  {errors.name && (
+                    <p className="text-red-500 text-sm mt-1">{errors.name}</p>
+                  )}
+                </div>
               </div>
               {/* Description */}
               <div>
                 <label className="block text-sm font-medium mb-1">
                   Description
                 </label>
-                <textarea
-                  name="description"
-                  value={basicForm.description}
-                  onChange={handleBasicChange}
-                  rows={3}
-                  className="px-4 py-2 sm:py-3 w-full border border-inputBorder focus:border-0 focus:outline-none focus:ring focus:ring-primary"
-                />
+                <div className="flex flex-col">
+                  <textarea
+                    name="description"
+                    value={basicForm.description}
+                    onChange={handleBasicChange}
+                    rows={3}
+                    className="px-4 py-2 sm:py-3 w-full border border-inputBorder focus:border-0 focus:outline-none focus:ring focus:ring-primary"
+                  />
+                  {errors.description && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors.description}
+                    </p>
+                  )}
+                  <p className="text-sm text-text-light">
+                    {basicForm.description.length}/1000
+                  </p>
+                </div>
               </div>
               {/* Thumbnail */}
               <div className="flex flex-col md:col-span-2">

@@ -31,6 +31,7 @@ const AdminCategoryManager: React.FC = () => {
   const [deleting, setDeleting] = useState(false);
   const { triggerNotification, NotificationComponent } = useNotification();
   const { t } = useTranslation();
+  const [nameError, setNameError] = useState<string>("");
 
   //  while fetching the initial list, show a placeholder
   if (fetching && categories.length === 0) {
@@ -46,6 +47,15 @@ const AdminCategoryManager: React.FC = () => {
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newName.trim()) return;
+    if (newName.length < 4) {
+      setNameError("Category name must be at least 4 characters");
+      return;
+    }
+    if (newName.length > 50) {
+      setNameError("Category name must be less than 50 characters");
+      return;
+    }
+
     setCreating(true);
     try {
       await createCategory(newName.trim());
@@ -108,7 +118,12 @@ const AdminCategoryManager: React.FC = () => {
       setDeleting(false);
     }
   };
-
+  const handleSetName = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setNewName(e.target.value);
+    if (e.target.value.length <= 0) {
+      setNameError("");
+    }
+  };
   return (
     <div className="p-4 max-w-2xl mx-auto">
       <h2 className="text-2xl font-semibold mb-4 text-text-dark">
@@ -153,22 +168,24 @@ const AdminCategoryManager: React.FC = () => {
       )}
 
       {/* Create */}
-      <form onSubmit={handleCreate} className="flex mb-6">
-        <input
-          className="border border-inputBorder px-3 py-2 flex-1 focus:border-0 focus:outline-none focus:ring-1 focus:ring-primary"
-          placeholder={t("New category name")}
-          value={newName}
-          onChange={(e) => setNewName(e.target.value)}
-        />
-        <button
-          type="submit"
-          disabled={creating}
-          className="px-4 py-2 sm:py-3 bg-primary text-white font-semibold cursor-pointer transition-all delay-100 shadow hover:bg-indigo-700"
-        >
-          {creating ? `${t("Adding")}…` : t("Add")}
-        </button>
-      </form>
-
+      <div className="flex flex-col mb-6">
+        <form onSubmit={handleCreate} className="flex">
+          <input
+            className="border border-inputBorder px-3 py-2 flex-1 focus:border-0 focus:outline-none focus:ring-1 focus:ring-primary"
+            placeholder={t("New category name")}
+            value={newName}
+            onChange={handleSetName}
+          />
+          <button
+            type="submit"
+            disabled={creating}
+            className="px-4 py-2 sm:py-3 bg-primary text-white font-semibold cursor-pointer transition-all delay-100 shadow hover:bg-indigo-700"
+          >
+            {creating ? `${t("Adding")}…` : t("Add")}
+          </button>
+        </form>
+        {nameError && <p className="text-sm text-red-500 mt-1">{nameError}</p>}
+      </div>
       {/* List */}
       <table className="min-w-full divide-y divide-gray-200">
         <thead className="bg-primary text-white text-[16px] 2xl:text-xl">
