@@ -14,7 +14,7 @@ export default function AdminError() {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4">
-      <div className=" flex flex-col items-center justify-center max-w-[90%]">
+      <div className=" flex flex-col items-center justify-center max-w-2xl">
         <h1 className="text-2xl font-bold mb-2 text-red-600">
           Oops, Something went wrong!
         </h1>
