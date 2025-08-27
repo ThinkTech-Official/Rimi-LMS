@@ -54,7 +54,10 @@ export const AdminCreateUser: React.FC = () => {
             {t("name")}
           </label>
           <input
-            {...register("name", { required: t("Name is required") })}
+            {...register("name", {
+              setValueAs: (value) => value.trim(),
+              required: t("Name is required"),
+            })}
             className="w-full p-2 sm:px-4 sm:py-3 border border-zinc-300 focus:border-0 focus:outline-none focus:ring-1 focus:ring-primary"
           />
           {errors.name && (
@@ -79,7 +82,9 @@ export const AdminCreateUser: React.FC = () => {
             className="w-full p-2 sm:px-4 sm:py-3 border border-zinc-300 focus:border-0 focus:outline-none focus:ring-1 focus:ring-primary"
           />
           {errors.email && (
-            <p className="text-red-600 mt-1">{t("Email is required")}</p>
+            <p className="text-red-600 mt-1">
+              {t(String(errors.email.message))}
+            </p>
           )}
         </div>
 
@@ -91,13 +96,16 @@ export const AdminCreateUser: React.FC = () => {
           <input
             type="password"
             {...register("password", {
+              setValueAs: (value) => value.trim(),
               required: t("Password is required"),
               minLength: { value: 6, message: "Minimum length is 6" },
             })}
             className="w-full p-2 sm:px-4 sm:py-3 border border-zinc-300 focus:border-0 focus:outline-none focus:ring-1 focus:ring-primary"
           />
           {errors.password && (
-            <p className="text-red-600 mt-1">{t("Password is required")}</p>
+            <p className="text-red-600 mt-1">
+              {t(String(errors.password.message))}
+            </p>
           )}
         </div>
 
@@ -109,6 +117,7 @@ export const AdminCreateUser: React.FC = () => {
           <input
             type="password"
             {...register("confirmPassword", {
+              setValueAs: (value) => value.trim(),
               required: "Please confirm password",
               validate: (value) =>
                 value === watch("password") || "Passwords do not match",

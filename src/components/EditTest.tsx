@@ -12,6 +12,7 @@ export interface EditTestDto {
   name: string;
   duration: number;
   startTime: number;
+  passingPercentage: number;
   questions: QuestionDto[];
 }
 
@@ -59,6 +60,7 @@ const EditTest: React.FC = () => {
       name: "",
       duration: 0,
       startTime: 0,
+      passingPercentage: 0,
       questions: [],
     },
   });
@@ -263,6 +265,7 @@ const EditTest: React.FC = () => {
               {loadingSave ? t("saving") : t("Save Changes")}
             </button>
           </div>
+          {saveError && <p className="text-red-500">{saveError}</p>}
 
           {/* Basic fields */}
           <div className="space-y-4 text-text-light">
@@ -291,7 +294,7 @@ const EditTest: React.FC = () => {
                 </p>
               )}
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="flex flex-col">
                 <label
                   htmlFor=""
@@ -340,6 +343,33 @@ const EditTest: React.FC = () => {
                 {errors.startTime && (
                   <p className="text-red-500 text-xs mt-1">
                     {errors.startTime.message}
+                  </p>
+                )}
+              </div>
+              <div className="flex flex-col">
+                <label className="text-sm text-text-light-2 mb-1 capitalize">
+                  {t("passing percentage")}
+                </label>
+                <input
+                  type="number"
+                  {...register("passingPercentage", {
+                    valueAsNumber: true,
+                    required: t("passing marks required"),
+                    min: {
+                      value: 1,
+                      message: t("passing marks min"),
+                    },
+                    max: {
+                      value: 100,
+                      message: t("passing marks max"),
+                    },
+                  })}
+                  placeholder={t("passing percentage placeholder")}
+                  className="w-full border border-inputBorder p-2 sm:px-4 sm:py-3 focus:outline-none focus:ring-1 focus:ring-primary"
+                />
+                {errors.passingPercentage && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {errors.passingPercentage.message}
                   </p>
                 )}
               </div>
@@ -430,8 +460,6 @@ const EditTest: React.FC = () => {
               + {t("add questions")}
             </button>
           </section>
-
-          {saveError && <p className="text-red-500">{saveError}</p>}
         </form>
       </main>
     </div>

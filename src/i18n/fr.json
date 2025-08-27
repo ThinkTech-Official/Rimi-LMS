@@ -195,5 +195,7 @@
   "Confirm new password": "Confirmer le nouveau mot de passe",
   "Current password": "Mot de passe actuel",
   "Edit Test": "Modifier le test",
-  "duration must be an integer": "La duree doit etre un entier"
+  "duration must be an integer": "La duree doit etre un entier",
+  "Minimum length is 6": "La longueur minimale est de 6",
+  "Invalid email address": "Adresse e-mail invalide"
 }

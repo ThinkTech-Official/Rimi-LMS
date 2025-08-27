@@ -6,6 +6,7 @@ import ClientCourseCard from "./ClientCourseCard";
 import Spinner from "../loaders/Spinner";
 import FetchingError from "../FetchingError";
 import { useTranslation } from "react-i18next";
+import { RxCross2 } from "react-icons/rx";
 
 const ClientHome = () => {
   // Fetching categories
@@ -115,6 +116,12 @@ const ClientHome = () => {
             className="relative px-2 sm:px-4 py-1 sm:py-3 w-[200px] sm:w-[330px] focus:outline-none focus:ring-1 focus:ring-primary"
           />
           <button className="px-1 sm:px-3 cursor-pointer absolute right-0">
+            {searchTerm && (
+              <RxCross2
+                className="h-5 w-5 text-text-light"
+                onClick={() => setSearchTerm("")}
+              />
+            )}
             <BiSearch className="text-[#6F6B7D]" />
           </button>
         </div>

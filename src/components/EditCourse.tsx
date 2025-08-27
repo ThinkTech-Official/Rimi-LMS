@@ -159,6 +159,8 @@ const validateField = (name: string, value: string) => {
       refetchBasic();
 
       setIsBasicModalOpen(false);
+      setThumbnailFile(null);
+      setVideoFile(null);
       triggerNotification({
         type: "success",
         message: "Course updated",
