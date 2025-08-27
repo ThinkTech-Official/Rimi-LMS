@@ -46,7 +46,7 @@ const AdminCategoryManager: React.FC = () => {
   // Create form submit
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newName.trim()) return;
+    if (!newName.trim()) return setNameError("Category name is required");
     if (newName.length < 4) {
       setNameError("Category name must be at least 4 characters");
       return;
@@ -159,7 +159,7 @@ const AdminCategoryManager: React.FC = () => {
           <p className="text-red-500 mb-2 text-center">
             {t("Error deleting category:")}
           </p>
-          {error}
+          {t(error)}
           <MdClose
             onClick={() => setError("")}
             className="absolute top-2 right-2 cursor-pointer text-xl"
@@ -184,7 +184,7 @@ const AdminCategoryManager: React.FC = () => {
             {creating ? `${t("Adding")}…` : t("Add")}
           </button>
         </form>
-        {nameError && <p className="text-sm text-red-500 mt-1">{nameError}</p>}
+        {nameError && <p className="text-sm text-red-500 mt-1">{t(nameError)}</p>}
       </div>
       {/* List */}
       <table className="min-w-full divide-y divide-gray-200">

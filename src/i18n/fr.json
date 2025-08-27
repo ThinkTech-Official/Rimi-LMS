@@ -197,5 +197,9 @@
   "Edit Test": "Modifier le test",
   "duration must be an integer": "La duree doit etre un entier",
   "Minimum length is 6": "La longueur minimale est de 6",
-  "Invalid email address": "Adresse e-mail invalide"
+  "Invalid email address": "Adresse e-mail invalide",
+  "Category name is required": "Le nom de la categorie est obligatoire",
+  "Category name must be at least 4 characters": "Le nom de la categorie doit comporter au moins 4 caractères",
+  "Category name must be less than 50 characters": "Le nom de la categorie doit comporter moins de 50 caractères",
+  "Category name must be unique": "Le nom de la categorie doit etre unique"
 }
