@@ -9,6 +9,7 @@ import { API_BASE } from "../utils/ulrs";
 export function useAdminUpdateCourseBasic(courseId: number) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [progress, setProgress] = useState<number>(0);
 
   /**
    * Update basic course info: name, description, duration, optional thumbnail and video files
@@ -24,6 +25,7 @@ export function useAdminUpdateCourseBasic(courseId: number) {
   ) {
     setLoading(true);
     setError(null);
+    setProgress(0);
     try {
       const fd = new FormData();
       fd.append("name", form.name);
@@ -38,6 +40,13 @@ export function useAdminUpdateCourseBasic(courseId: number) {
 
       await adminApi.patch(`${API_BASE}/courses/${courseId}/basic`, fd, {
         headers: { "Content-Type": "multipart/form-data" },
+        onUploadProgress: (progressEvent) => {
+          if (progressEvent.total) {
+            setProgress(
+              Math.round((progressEvent.loaded * 100) / progressEvent.total)
+            );
+          }
+        },
       });
     } catch (err: any) {
       // prefer server message if available
@@ -50,5 +59,5 @@ export function useAdminUpdateCourseBasic(courseId: number) {
     }
   }
 
-  return { updateBasic, loading, error };
+  return { updateBasic, loading, error, progress };
 }

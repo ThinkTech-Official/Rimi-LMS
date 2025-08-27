@@ -77,6 +77,7 @@ const EditCourse: React.FC = () => {
     updateBasic,
     loading: updating,
     error: updateError,
+    progress
   } = useAdminUpdateCourseBasic(Number(courseId!));
 
   const {
@@ -118,7 +119,7 @@ const EditCourse: React.FC = () => {
     });
     setIsCoursePublished(basicCourse.liveStatus ?? false);
   }, [basicCourse]);
-const validateField = (name: string, value: string) => {
+  const validateField = (name: string, value: string) => {
     let error = "";
 
     if (name === "name") {
@@ -174,7 +175,6 @@ const validateField = (name: string, value: string) => {
       });
     }
   };
-  
 
   const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
@@ -730,6 +730,14 @@ const validateField = (name: string, value: string) => {
                   {updating ? "Updating..." : "Update"}
                 </button>
               </div>
+              {updating && (
+                <div className="w-full h-2 mt-2 bg-gray-200 rounded overflow-hidden">
+                  <div
+                    className="h-full bg-primary transition-all duration-300"
+                    style={{ width: `${progress}%` }}
+                  ></div>
+                </div>
+              )}
             </form>
           </div>
         </div>
