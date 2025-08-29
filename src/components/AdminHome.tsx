@@ -64,7 +64,7 @@ const AdminHome: React.FC = () => {
     console.log(id);
     navigate(`/admin/users/${id}`);
   };
-
+const colors = ["#F0E2C3", "#DCECE9", "#F6C7b3", "#F2EAE0"];
   return (
     <div className="flex-1 flex flex-col">
       {/* Dashboard */}
@@ -76,20 +76,21 @@ const AdminHome: React.FC = () => {
           className="grid grid-cols-2 lg:grid-cols-4 gap-4 xl:gap-8 w-full"
           role="stats"
         >
-          {liveStats?.map((stat) => (
+          {liveStats?.map((stat, i) => (
             <div
               key={stat.label}
               data-testid="stat-card"
-              className="bg-white p-2 sm:p-6 sm:h-24"
+              className={`p-2 sm:p-6 sm:h-24`}
               style={{
+                backgroundColor: colors[i],
                 boxShadow: "0px 4px 6.7px 0px rgba(0, 0, 0, 0.04)",
                 border: "1px solid rgba(235, 235, 235, 1)",
               }}
             >
-              <div className="text-lg 2xl:text-2xl leading-6 font-bold text-[#232323]">
+              <div className="text-lg 2xl:text-2xl leading-6 font-bold text-text-dark">
                 {stat.value}
               </div>
-              <div className="text-sm 2xl:text-lg leading-[20px] text-[#6F6B7D] mt-1">
+              <div className="text-sm 2xl:text-lg leading-[20px] mt-1 text-text-light-2">
                 {stat.label}
               </div>
             </div>

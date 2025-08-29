@@ -201,5 +201,17 @@
   "Category name is required": "Le nom de la categorie est obligatoire",
   "Category name must be at least 4 characters": "Le nom de la categorie doit comporter au moins 4 caractères",
   "Category name must be less than 50 characters": "Le nom de la categorie doit comporter moins de 50 caractères",
-  "Category name must be unique": "Le nom de la categorie doit etre unique"
+  "Category name must be unique": "Le nom de la categorie doit etre unique",
+  "Sign in as client": "Se connecter en tant que client",
+  "Sign in as admin": "Se connecter en tant qu'administrateur",
+  "RIMI agent training and certification portal": "RIMI agent training and certification portal",
+  "Sign In": "Se connecter",
+  "Sign up": "S'inscrire",
+  "Sign out": "Se d&eacute;connecter",
+  "Signing In": "Connexion en cours",
+  "Password must contain at least one letter and one number": "Le mot de passe doit comporter au moins une lettre et un chiffre",
+  "Password must be at least 6 characters": "Le mot de passe doit comporter au moins 6 caractères",
+  "Passwords don't match": "Les mots de passe ne correspondent pas",
+  "Current password is required": "Le mot de passe actuel est obligatoire",
+  "New password is required": "Le nouveau mot de passe est obligatoire"
 }

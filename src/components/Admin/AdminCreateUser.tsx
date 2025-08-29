@@ -61,7 +61,7 @@ export const AdminCreateUser: React.FC = () => {
             className="w-full p-2 sm:px-4 sm:py-3 border border-zinc-300 focus:border-0 focus:outline-none focus:ring-1 focus:ring-primary"
           />
           {errors.name && (
-            <p className="text-red-600 mt-1">{t("Name is required")}</p>
+            <p className="text-red-600 mt-1 text-sm">{t("Name is required")}</p>
           )}
         </div>
 
@@ -82,7 +82,7 @@ export const AdminCreateUser: React.FC = () => {
             className="w-full p-2 sm:px-4 sm:py-3 border border-zinc-300 focus:border-0 focus:outline-none focus:ring-1 focus:ring-primary"
           />
           {errors.email && (
-            <p className="text-red-600 mt-1">
+            <p className="text-red-600 mt-1 text-sm">
               {t(String(errors.email.message))}
             </p>
           )}
@@ -98,12 +98,20 @@ export const AdminCreateUser: React.FC = () => {
             {...register("password", {
               setValueAs: (value) => value.trim(),
               required: t("Password is required"),
-              minLength: { value: 6, message: "Minimum length is 6" },
+              minLength: {
+                value: 6,
+                message: "Password must be at least 6 characters",
+              },
+              pattern: {
+                value: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]+$/,
+                message: "Password must contain at least one letter and one number",
+              },
             })}
             className="w-full p-2 sm:px-4 sm:py-3 border border-zinc-300 focus:border-0 focus:outline-none focus:ring-1 focus:ring-primary"
           />
+
           {errors.password && (
-            <p className="text-red-600 mt-1">
+            <p className="text-red-600 mt-1 text-sm">
               {t(String(errors.password.message))}
             </p>
           )}
@@ -125,7 +133,7 @@ export const AdminCreateUser: React.FC = () => {
             className="w-full p-2 sm:px-4 sm:py-3 border border-zinc-300 focus:border-0 focus:outline-none focus:ring-1 focus:ring-primary"
           />
           {errors.confirmPassword?.message && (
-            <p className="text-red-600 mt-1">
+            <p className="text-red-600 mt-1 text-sm">
               {t(String(errors.confirmPassword.message))}
             </p>
           )}

@@ -6,6 +6,7 @@ import { useAdminProfile } from "../hooks/useAdminProfile";
 import { useUpdateAdminPassword } from "../hooks/useUpdateAdminPassword";
 import Spinner from "./loaders/Spinner";
 import { useTranslation } from "react-i18next";
+import { useForm } from "react-hook-form";
 
 const AdminProfile: React.FC = () => {
   const { profile, loading, error } = useAdminProfile();
@@ -26,6 +27,20 @@ const AdminProfile: React.FC = () => {
   const modalRef = useRef<HTMLDivElement>(null);
   const { t } = useTranslation();
 
+  interface PasswordForm {
+    currentPwd: string;
+    newPwd: string;
+    confirmPwd: string;
+  }
+
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+    reset,
+  } = useForm<PasswordForm>();
+
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
@@ -35,16 +50,15 @@ const AdminProfile: React.FC = () => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
-
-  const handleResetSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLocalError(null);
-    if (newPwd !== confirmPwd) {
-      setLocalError("Passwords don't match");
-      return;
-    }
-    await updatePassword(currentPwd, newPwd);
+  const handleResetSubmit = async (data: PasswordForm) => {
+    await updatePassword(data.currentPwd, data.newPwd);
+    reset();
   };
+
+  const handleCloseModal = () => {
+    setShowResetPasswordModal(false);
+    reset();
+  }
 
   if (loading)
     return (
@@ -105,38 +119,66 @@ const AdminProfile: React.FC = () => {
                   ref={modalRef}
                 >
                   <IoMdClose
-                    onClick={() => setShowResetPasswordModal(false)}
+                    onClick={handleCloseModal}
                     className="absolute top-2 right-2 cursor-pointer text-xl text-primary"
                   />
                   <h2 className="text-lg font-bold mb-4">
                     {t("reset password")}
                   </h2>
 
-                  <form onSubmit={handleResetSubmit} className="space-y-4">
+                  <form
+                    onSubmit={handleSubmit(handleResetSubmit)}
+                    className="space-y-4"
+                  >
+                    {/* Current password */}
                     <div>
                       <label className="block text-text-light-2 capitalize">
                         {t("Current password")}
                       </label>
                       <input
                         type="password"
-                        value={currentPwd}
-                        onChange={(e) => setCurrentPwd(e.target.value)}
+                        {...register("currentPwd", {
+                          required: t("Current password is required") as string,
+                          minLength: {
+                            value: 6,
+                            message: "Password must be at least 6 characters",
+                          },
+                          pattern: {
+                            value: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]+$/,
+                            message:
+                              "Password must contain at least one letter and one number",
+                          },
+                        })}
                         className="w-full border border-inputBorder px-4 py-2 sm:py-3 focus:outline-none focus:ring-1 focus:ring-primary"
-                        required
                       />
+                      {errors.currentPwd && (
+                        <p className="text-red-500 text-sm">
+                          {t(String(errors.currentPwd.message))}
+                        </p>
+                      )}
                     </div>
 
-                    <div className="relative">
+                    {/* New password */}
+                    <div>
                       <label className="block text-text-light-2 capitalize">
                         {t("new password")}
                       </label>
                       <div className="relative">
                         <input
                           type={showNew ? "text" : "password"}
-                          value={newPwd}
-                          onChange={(e) => setNewPwd(e.target.value)}
+                          {...register("newPwd", {
+                            required: t("New password is required") as string,
+                            minLength: {
+                              value: 6,
+                              message: "Password must be at least 6 characters",
+                            },
+                            pattern: {
+                              value: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]+$/,
+                              message:
+                                "Password must contain at least one letter and one number",
+                            },
+                          })}
                           className="w-full border border-inputBorder px-4 py-2 sm:py-3 focus:outline-none focus:ring-1 focus:ring-primary"
-                          required
                         />
                         <button
                           type="button"
@@ -150,8 +192,14 @@ const AdminProfile: React.FC = () => {
                           )}
                         </button>
                       </div>
+                      {errors.newPwd && (
+                        <p className="text-red-500 text-sm">
+                          {t(String(errors.newPwd.message))}
+                        </p>
+                      )}
                     </div>
 
+                    {/* Confirm new password */}
                     <div>
                       <label className="block text-text-light-2 capitalize">
                         {t("Confirm new password")}
@@ -159,10 +207,13 @@ const AdminProfile: React.FC = () => {
                       <div className="relative">
                         <input
                           type={showConfirm ? "text" : "password"}
-                          value={confirmPwd}
-                          onChange={(e) => setConfirmPwd(e.target.value)}
+                          {...register("confirmPwd", {
+                            required: t("Confirm new password") as string,
+                            validate: (value) =>
+                              value === watch("newPwd") ||
+                              t("Passwords don't match"),
+                          })}
                           className="w-full border border-inputBorder px-4 py-2 sm:py-3 focus:outline-none focus:ring-1 focus:ring-primary"
-                          required
                         />
                         <button
                           type="button"
@@ -176,28 +227,26 @@ const AdminProfile: React.FC = () => {
                           )}
                         </button>
                       </div>
+                      {errors.confirmPwd && (
+                        <p className="text-red-500 text-sm">
+                          {t(String(errors.confirmPwd.message))}
+                        </p>
+                      )}
                     </div>
 
                     {updateError && (
-                      <p className="text-red-500 mb-2 -mt-2 text-sm">
-                        {updateError}
-                      </p>
+                      <p className="text-red-500 text-sm">{updateError}</p>
                     )}
                     {success && (
-                      <p className="text-green-600 mb-2 -mt-2 text-sm">
+                      <p className="text-green-600 text-sm">
                         {t("Password updated")}!
-                      </p>
-                    )}
-                    {localError && (
-                      <p className="text-red-600 mb-2 -mt-2 text-sm">
-                        {localError}
                       </p>
                     )}
 
                     <div className="flex gap-4">
                       <button
                         type="button"
-                        onClick={() => setShowResetPasswordModal(false)}
+                        onClick={handleCloseModal}
                         className="flex-1 border border-inputBorder cursor-pointer text-text-light-2"
                       >
                         {t("cancel")}

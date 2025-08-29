@@ -9,6 +9,7 @@ import { IoMdClose } from "react-icons/io";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 import useNotification from "../../hooks/useNotification";
 import { useTranslation } from "react-i18next";
+import { useForm } from "react-hook-form";
 
 const ClientProfile: React.FC = () => {
   const {
@@ -39,7 +40,17 @@ const ClientProfile: React.FC = () => {
   const modalRef = useRef<HTMLDivElement>(null);
   const { triggerNotification } = useNotification();
   const { t } = useTranslation();
-
+  interface PasswordForm {
+    newPwd: string;
+    confirmPwd: string;
+  }
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+    reset,
+  } = useForm<PasswordForm>();
   // when profile loads, initialize tempName
   useEffect(() => {
     if (profile) {
@@ -72,19 +83,13 @@ const ClientProfile: React.FC = () => {
       });
     }
   };
-  const handleResetSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLocalError(null);
-    if (newPwd !== confirmPwd) {
-      setLocalError("Passwords don't match");
-      return;
-    }
-    try {
-      await resetPassword(newPwd);
-    } catch {
-    } finally {
-      setShowResetPasswordModal(false);
-    }
+  const handleResetSubmit = async (data: PasswordForm) => {
+    await resetPassword(data.newPwd);
+    reset();
+  };
+  const handleCloseModal = () => {
+    setShowResetPasswordModal(false);
+    reset();
   };
   if (loadingProfile)
     return (
@@ -178,21 +183,35 @@ const ClientProfile: React.FC = () => {
             ref={modalRef}
           >
             <IoMdClose
-              onClick={() => setShowResetPasswordModal(false)}
+              onClick={handleCloseModal}
               className="absolute top-2 right-2 cursor-pointer text-xl text-primary"
             />
             <h2 className="text-lg font-bold mb-4">{t("reset password")}</h2>
 
-            <form onSubmit={handleResetSubmit} className="space-y-4">
+            <form
+              onSubmit={handleSubmit(handleResetSubmit)}
+              className="space-y-4"
+            >
               <div className="relative">
-                <label className="block text-text-light-2 capitalize">{t("new password")}</label>
+                <label className="block text-text-light-2 capitalize">
+                  {t("new password")}
+                </label>
                 <div className="relative">
                   <input
                     type={showNewPassword ? "text" : "password"}
-                    value={newPwd}
-                    onChange={(e) => setNewPwd(e.target.value)}
+                    {...register("newPwd", {
+                      required: t("New password is required") as string,
+                      minLength: {
+                        value: 6,
+                        message: "Password must be at least 6 characters",
+                      },
+                      pattern: {
+                        value: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]+$/,
+                        message:
+                          "Password must contain at least one letter and one number",
+                      },
+                    })}
                     className="w-full border border-inputBorder px-4 py-2 sm:py-3 focus:outline-none focus:ring-1 focus:ring-primary"
-                    required
                   />
                   <button
                     type="button"
@@ -212,6 +231,11 @@ const ClientProfile: React.FC = () => {
                     )}
                   </button>
                 </div>
+                {errors.newPwd && (
+                  <p className="text-red-500 text-sm">
+                    {t(String(errors.newPwd.message))}
+                  </p>
+                )}
               </div>
               <div className="relative">
                 <label className="block text-text-light-2 capitalize">
@@ -220,10 +244,12 @@ const ClientProfile: React.FC = () => {
                 <div className="relative">
                   <input
                     type={showConfirmPassword ? "text" : "password"}
-                    value={confirmPwd}
-                    onChange={(e) => setConfirmPwd(e.target.value)}
+                    {...register("confirmPwd", {
+                      required: t("Confirm new password") as string,
+                      validate: (value) =>
+                        value === watch("newPwd") || t("Passwords don't match"),
+                    })}
                     className="w-full border border-inputBorder px-4 py-2 sm:py-3 focus:outline-none focus:ring-1 focus:ring-primary"
-                    required
                   />
                   <button
                     type="button"
@@ -243,6 +269,11 @@ const ClientProfile: React.FC = () => {
                     )}
                   </button>
                 </div>
+                {errors.confirmPwd && (
+                  <p className="text-red-500 text-sm">
+                    {t(String(errors.confirmPwd.message))}
+                  </p>
+                )}
               </div>
               {localError && (
                 <div className="mb-2 text-red-600">{localError}</div>
@@ -250,7 +281,7 @@ const ClientProfile: React.FC = () => {
               <div className="flex gap-4">
                 <button
                   type="button"
-                  onClick={() => setShowResetPasswordModal(false)}
+                  onClick={handleCloseModal}
                   className="flex-1 border border-inputBorder cursor-pointer text-text-light-2"
                 >
                   {t("cancel")}

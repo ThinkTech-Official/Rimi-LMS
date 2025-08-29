@@ -26,6 +26,7 @@ const LoginClient: React.FC = () => {
   const { NotificationComponent, triggerNotification } = useNotification();
   const [isLanguageSelectOpen, setIsLanguageSelectOpen] = useState(false);
   const { i18n } = useTranslation();
+  const { t } = useTranslation();
   type Language = "en" | "fr";
   const previousSelectedLanguage = localStorage
     .getItem("i18nextLng")
@@ -129,11 +130,11 @@ const LoginClient: React.FC = () => {
             />
           </div>
           <h3 className="text-center text-base font-semibold text-primary mb-4">
-            Sign In as Client
+            {t("Sign in as client")}
           </h3>
           {/* Heading */}
-          <h2 className="text-center text-2xl font-bold text-neutral-800 mb-8">
-            Rimi Agent Training and Certification Portal
+          <h2 className="text-center text-2xl font-bold text-neutral-800 mb-8 capitalize">
+            {t("RIMI agent training and certification portal")}
           </h2>
 
           {/* Login Form */}
@@ -158,7 +159,7 @@ const LoginClient: React.FC = () => {
               />
               {errors.email && (
                 <p className="text-red-600 text-sm mt-1">
-                  {errors.email.message}
+                  {t(String(errors.email.message))}
                 </p>
               )}
             </div>
@@ -171,10 +172,16 @@ const LoginClient: React.FC = () => {
                 <input
                   id="password"
                   {...register("password", {
-                    required: "Password is required",
+                    setValueAs: (value) => value.trim(),
+                    required: t("Password is required"),
                     minLength: {
                       value: 6,
                       message: "Password must be at least 6 characters",
+                    },
+                    pattern: {
+                      value: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]+$/,
+                      message:
+                        "Password must contain at least one letter and one number",
                     },
                   })}
                   type={showPassword ? "text" : "password"}
@@ -196,7 +203,7 @@ const LoginClient: React.FC = () => {
               </div>
               {errors.password && (
                 <p className="text-red-600 text-sm mt-1">
-                  {errors.password.message}
+                  {t(String(errors.password.message))}
                 </p>
               )}
             </div>
@@ -205,7 +212,7 @@ const LoginClient: React.FC = () => {
               type="submit"
               className="w-full py-3 bg-primary text-white font-semibold cursor-pointer transition-all delay-100 shadow hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
             >
-              {loading ? "Signing in..." : "Sign In "}
+              {loading ? `${t("Signing In")}...` : t("Sign In")}
             </button>
           </form>
         </div>

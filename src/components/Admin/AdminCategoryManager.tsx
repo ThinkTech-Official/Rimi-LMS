@@ -32,6 +32,7 @@ const AdminCategoryManager: React.FC = () => {
   const { triggerNotification, NotificationComponent } = useNotification();
   const { t } = useTranslation();
   const [nameError, setNameError] = useState<string>("");
+  const [editNameError, setEditNameError] = useState<string>("");
 
   //  while fetching the initial list, show a placeholder
   if (fetching && categories.length === 0) {
@@ -78,10 +79,19 @@ const AdminCategoryManager: React.FC = () => {
   // Edit form submit
   const handleUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!editing || !editName.trim()) return;
+    setEditNameError("");
+    if (!editName.trim()) return setEditNameError("Category name is required");
+    if (editName.length < 4) {
+      setEditNameError("Category name must be at least 4 characters");
+      return;
+    }
+    if (editName.length > 50) {
+      setEditNameError("Category name must be less than 50 characters");
+      return;
+    }
     setUpdating(true);
     try {
-      await updateCategory(editing.id, editName.trim());
+      await updateCategory(editing!.id, editName.trim());
       triggerNotification({
         type: "success",
         message: "Category updated successfully",
@@ -96,6 +106,7 @@ const AdminCategoryManager: React.FC = () => {
   const closeModal = () => {
     setEditing(null);
     setEditName("");
+    setEditNameError("");
   };
 
   const handleDeleteConfirm = (id: number) => {
@@ -184,7 +195,9 @@ const AdminCategoryManager: React.FC = () => {
             {creating ? `${t("Adding")}…` : t("Add")}
           </button>
         </form>
-        {nameError && <p className="text-sm text-red-500 mt-1">{t(nameError)}</p>}
+        {nameError && (
+          <p className="text-sm text-red-500 mt-1">{t(nameError)}</p>
+        )}
       </div>
       {/* List */}
       <table className="min-w-full divide-y divide-gray-200">
@@ -263,6 +276,9 @@ const AdminCategoryManager: React.FC = () => {
                 value={editName}
                 onChange={(e) => setEditName(e.target.value)}
               />
+              {editNameError && (
+                <p className="text-sm text-red-500 -mt-3">{t(editNameError)}</p>
+              )}
               <div className="flex justify-end space-x-2">
                 <button
                   type="button"

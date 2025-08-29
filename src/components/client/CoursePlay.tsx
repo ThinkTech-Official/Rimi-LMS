@@ -109,6 +109,7 @@ const CoursePlay = () => {
   // toggle play/pause
   const togglePlay = () => {
     const v = videoRef.current!;
+    if(!markersReady) return;
     if (isPlaying) v.pause();
     else v.play();
     setIsPlaying(!isPlaying);
