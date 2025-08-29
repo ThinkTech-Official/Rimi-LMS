@@ -42,7 +42,9 @@ export function useCategoriesAdmin() {
       setCategories((prev) => [...prev, res.data]);
       setError(null);
     } catch (err: any) {
-      setError(err.response?.data?.message || err.message);
+      const message = err.response?.data?.message || err.message;
+      setError(message);
+      throw new Error(message);
     } finally {
       setLoading(false);
     }
@@ -61,7 +63,9 @@ export function useCategoriesAdmin() {
       );
       setError(null);
     } catch (err: any) {
-      setError(err.response?.data?.message || err.message);
+      const message = err.response?.data?.message || err.message;
+      setError(message);
+      throw new Error(message);
     } finally {
       setLoading(false);
     }
@@ -75,7 +79,9 @@ export function useCategoriesAdmin() {
       setCategories((prev) => prev.filter((cat) => cat.id !== id));
       setError(null);
     } catch (err: any) {
-      setError(err.response?.data?.message || err.message);
+      const message = err.response?.data?.message || err.message;
+      setError(message);
+      throw new Error(message);
     } finally {
       setLoading(false);
     }

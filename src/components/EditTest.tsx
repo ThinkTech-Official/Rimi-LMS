@@ -354,7 +354,7 @@ const EditTest: React.FC = () => {
                   type="number"
                   {...register("passingPercentage", {
                     valueAsNumber: true,
-                    required: t("passing marks required"),
+                    required: t("Passing percentage required"),
                     min: {
                       value: 1,
                       message: t("passing marks min"),

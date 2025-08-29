@@ -7,7 +7,7 @@ import { useCreateCourse } from "../hooks/useCreateCourse";
 import { useFetchCategories } from "../hooks/useFetchCategories";
 import { useCreateCategory } from "../hooks/useCreateCategory";
 import { useTranslation } from "react-i18next";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import Spinner from "./loaders/Spinner";
 import { FaAngleDown } from "react-icons/fa6";
 import { CiFileOn } from "react-icons/ci";
@@ -26,6 +26,7 @@ export interface CreateCourseDto {
 interface CreateCourseProps {
   onCreateTest: () => void;
 }
+
 const CreateCourse: React.FC<CreateCourseProps> = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
@@ -44,35 +45,40 @@ const CreateCourse: React.FC<CreateCourseProps> = () => {
     setError: setCatCreateError,
   } = useCreateCategory();
 
-  // Form Fields
-  const [video, setVideo] = useState<File | null>(null);
-  const [thumbnail, setThumbnail] = useState<File | null>(null);
-  const [documents, setDocuments] = useState<File[]>([]);
-
   // Duration
   const [duration, setDuration] = useState<number | null>(null);
+  
   const {
     register,
     handleSubmit,
     formState: { errors },
     watch,
+    setValue,
+    control,
+    setError,
+    clearErrors,
   } = useForm<CreateCourseDto>({
     defaultValues: {
       name: "",
       description: "",
+      video: null,
+      thumbnail: null,
+      documents: [],
+      category: "",
     },
   });
+
   const [addingCat, setAddingCat] = useState<boolean>(false);
   const [newCategory, setNewCategory] = useState<string>("");
   const [selectedCategoryId, setSelectedCategoryId] = useState<number>();
   const [isCategoryOpen, setIsCategoryOpen] = useState<boolean>(false);
-  const [videoError, setVideoError] = useState<string | null>(null);
-  const [thumbnailError, setThumbnailError] = useState<string | null>(null);
-  const [categoryError, setCategoryError] = useState<string | null>(null);
   const { triggerNotification, NotificationComponent } = useNotification();
-  const [categoryLimitError, setCategoryLimitError] = useState<string | null>(
-    null
-  );
+  const [categoryLimitError, setCategoryLimitError] = useState<string | null>(null);
+
+  // Watch form values
+  const watchedVideo = watch("video");
+  const watchedThumbnail = watch("thumbnail");
+  const watchedDocuments = watch("documents");
 
   useEffect(() => {
     if (!categories.length) {
@@ -105,6 +111,8 @@ const CreateCourse: React.FC<CreateCourseProps> = () => {
       setAddingCat(false);
       reloadCategories();
       setSelectedCategoryId(newCat.id);
+      setValue("category", newCat.id.toString());
+      clearErrors("category");
     } catch (error) {
       triggerNotification({
         type: "error",
@@ -117,8 +125,10 @@ const CreateCourse: React.FC<CreateCourseProps> = () => {
   // handle video change with meta data
   const handleVideoChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] ?? null;
-    if (file) setVideoError(null);
-    setVideo(file);
+    setValue("video", file);
+    if (file) {
+      clearErrors("video");
+    }
     setDuration(null);
 
     if (file) {
@@ -135,40 +145,25 @@ const CreateCourse: React.FC<CreateCourseProps> = () => {
 
   const handleThumbnailChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-      setThumbnail(e.target.files[0]);
-      setThumbnailError(null);
+      setValue("thumbnail", e.target.files[0]);
+      clearErrors("thumbnail");
     }
   };
 
   const handleDocsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const newFiles = Array.from(e.target.files);
-      setDocuments((prev) => [...prev, ...newFiles]);
+      const currentDocs = watchedDocuments || [];
+      setValue("documents", [...currentDocs, ...newFiles]);
     }
   };
 
   const handleRemoveDoc = (index: number) => {
-    setDocuments((prev) => prev.filter((_, i) => i !== index));
+    const currentDocs = watchedDocuments || [];
+    setValue("documents", currentDocs.filter((_, i) => i !== index));
   };
 
   const onSubmit = async (data: CreateCourseDto) => {
-    setVideoError(null);
-    setThumbnailError(null);
-    setCategoryError(null);
-
-    if (!video) {
-      setVideoError("Please select a video file");
-    }
-
-    if (!thumbnail) {
-      setThumbnailError("Please select a thumbnail image");
-    }
-
-    if (selectedCategoryId === undefined) {
-      setCategoryError("Please select a category");
-    }
-
-    if (videoError || thumbnailError || categoryError) return;
     const formData = new FormData();
     formData.append("name", data.name);
     formData.append("description", data.description);
@@ -179,18 +174,18 @@ const CreateCourse: React.FC<CreateCourseProps> = () => {
       return;
     }
 
-    if (thumbnail) {
-      formData.append("thumbnail", thumbnail);
+    if (data.thumbnail) {
+      formData.append("thumbnail", data.thumbnail);
     }
 
-    if (video) {
-      formData.append("video", video);
+    if (data.video) {
+      formData.append("video", data.video);
       if (duration !== null) {
         formData.append("duration", String(duration));
       }
     }
 
-    documents.forEach((file) => {
+    data.documents.forEach((file) => {
       formData.append("documents", file);
     });
 
@@ -272,6 +267,7 @@ const CreateCourse: React.FC<CreateCourseProps> = () => {
                   {watch("name")?.length || 0}/100
                 </p>
               </div>
+              
               <div className="flex flex-col">
                 <label className="text-sm text-text-light-2 mb-1 capitalize">
                   {t("description")}
@@ -306,117 +302,127 @@ const CreateCourse: React.FC<CreateCourseProps> = () => {
               {/* category dropdown & add */}
               <div className="flex flex-col">
                 <label>{t("category")}</label>
-                {catLoading ? (
-                  <div className="w-[200px] text-center">
-                    <Spinner className="w-5 h-5" />
-                  </div>
-                ) : catError ? (
-                  <p className="text-red-500">Load error: {catError}</p>
-                ) : (
-                  <div className="flex flex-col sm:flex-row gap-2 sm:items-center">
-                    <div className="relative w-[250px]">
-                      <button
-                        type="button"
-                        className="w-full border border-inputBorder px-3 py-2 focus:border-0 focus:ring-1 focus:ring-primary capitalize flex items-center justify-between text-left text-text-light cursor-pointer"
-                        onClick={() => setIsCategoryOpen((prev) => !prev)}
-                      >
-                        <span className="capitalize truncate" title={`${selectedCategoryId
-                            ? categories.find(
-                                (cat) => cat.id === selectedCategoryId
-                              )?.name
-                            : "Select Category"}`}>
-                          {selectedCategoryId
-                            ? categories.find(
-                                (cat) => cat.id === selectedCategoryId
-                              )?.name
-                            : "Select Category"}
-                        </span>
-                        <FaAngleDown
-                          className={`ml-2 cusor-pointer transition-transform ${
-                            isCategoryOpen ? "rotate-180" : ""
-                          }`}
-                        />
-                      </button>
-
-                      {isCategoryOpen && (
-                        <div className="absolute mt-[2px] top-full left-0 w-full bg-white border border-inputBorder shadow-md z-10 max-h-60 overflow-y-auto custom-scrollbar3 pr-[2px]">
-                          {categories.map((cat) => (
-                            <div
-                              key={cat.id}
-                              title={cat.name}
-                              className={`px-4 py-2 hover:bg-gray-200 text-text-light cursor-pointer capitalize truncate ${
-                                selectedCategoryId === cat.id
-                                  ? "bg-primary text-white hover:bg-gray-200 hover:text-text-light"
-                                  : ""
-                              }`}
-                              onClick={() => {
-                                setSelectedCategoryId(cat.id);
-                                setIsCategoryOpen(false);
-                                setCategoryError(null);
-                              }}
-                            >
-                              {cat.name}
-                            </div>
-                          ))}
+                <Controller
+                  name="category"
+                  control={control}
+                  rules={{ required: "Please select a category" }}
+                  render={({ field }) => (
+                    <>
+                      {catLoading ? (
+                        <div className="w-[200px] text-center">
+                          <Spinner className="w-5 h-5" />
                         </div>
-                      )}
-                    </div>
+                      ) : catError ? (
+                        <p className="text-red-500">Load error: {catError}</p>
+                      ) : (
+                        <div className="flex flex-col sm:flex-row gap-2 sm:items-center">
+                          <div className="relative w-[250px]">
+                            <button
+                              type="button"
+                              className="w-full border border-inputBorder px-3 py-2 focus:border-0 focus:ring-1 focus:ring-primary capitalize flex items-center justify-between text-left text-text-light cursor-pointer"
+                              onClick={() => setIsCategoryOpen((prev) => !prev)}
+                            >
+                              <span className="capitalize truncate" title={`${selectedCategoryId
+                                  ? categories.find(
+                                      (cat) => cat.id === selectedCategoryId
+                                    )?.name
+                                  : "Select Category"}`}>
+                                {selectedCategoryId
+                                  ? categories.find(
+                                      (cat) => cat.id === selectedCategoryId
+                                    )?.name
+                                  : "Select Category"}
+                              </span>
+                              <FaAngleDown
+                                className={`ml-2 cusor-pointer transition-transform ${
+                                  isCategoryOpen ? "rotate-180" : ""
+                                }`}
+                              />
+                            </button>
 
-                    <button
-                      type="button"
-                      onClick={() => setAddingCat(!addingCat)}
-                      className="text-primary hover:underline underline-offset-2 cursor-pointer uppercase items-center flex"
-                    >
-                      <BiPlus className="inline-block mr-1" />
-                      {t("add category")}
-                    </button>
-
-                    {addingCat && (
-                      <div className="fixed inset-0 bg-black/10 flex items-center justify-center z-50">
-                        <div className="bg-white p-6 shadow-lg w-[90vw] sm:w-100 space-y-3">
-                          <h2 className="text-lg font-semibold">
-                            {t("add new category")}
-                          </h2>
-                          <div className="flex flex-col">
-                            <input
-                              type="text"
-                              value={newCategory}
-                              onChange={(e) => setNewCategory(e.target.value)}
-                              placeholder={` ${t("category")} ${t("name")}`}
-                              className="w-full border border-inputBorder px-2 py-1 sm:px-4 sm:py-3 focus:outline-none focus:ring-1 focus:ring-primary"
-                            />
-                            <p className="text-red-500 text-sm mt-1">
-                              {categoryLimitError}
-                            </p>
+                            {isCategoryOpen && (
+                              <div className="absolute mt-[2px] top-full left-0 w-full bg-white border border-inputBorder shadow-md z-10 max-h-60 overflow-y-auto custom-scrollbar3 pr-[2px]">
+                                {categories.map((cat) => (
+                                  <div
+                                    key={cat.id}
+                                    title={cat.name}
+                                    className={`px-4 py-2 hover:bg-gray-200 text-text-light cursor-pointer capitalize truncate ${
+                                      selectedCategoryId === cat.id
+                                        ? "bg-primary text-white hover:bg-gray-200 hover:text-text-light"
+                                        : ""
+                                    }`}
+                                    onClick={() => {
+                                      setSelectedCategoryId(cat.id);
+                                      setIsCategoryOpen(false);
+                                      field.onChange(cat.id.toString());
+                                      clearErrors("category");
+                                    }}
+                                  >
+                                    {cat.name}
+                                  </div>
+                                ))}
+                              </div>
+                            )}
                           </div>
 
-                          <div className="flex justify-end space-x-2 mt-2">
-                            <button
-                              onClick={handleAddCategoryCancel}
-                              className="px-4 py-2 w-[110px] border border-inputBorder cursor-pointer"
-                            >
-                              {t("cancel")}
-                            </button>
-                            <button
-                              className="px-4 py-2 w-[110px] bg-primary text-white disabled:opacity-70 cursor-pointer"
-                              onClick={handleAddCategory}
-                              disabled={creatingCat}
-                            >
-                              {creatingCat ? "Adding…" : t("add")}
-                            </button>
-                          </div>
-                          {catCreateError && (
-                            <p className="text-red-500 mt-2 text-center">
-                              {catCreateError}
-                            </p>
+                          <button
+                            type="button"
+                            onClick={() => setAddingCat(!addingCat)}
+                            className="text-primary hover:underline underline-offset-2 cursor-pointer uppercase items-center flex"
+                          >
+                            <BiPlus className="inline-block mr-1" />
+                            {t("add category")}
+                          </button>
+
+                          {addingCat && (
+                            <div className="fixed inset-0 bg-black/10 flex items-center justify-center z-50">
+                              <div className="bg-white p-6 shadow-lg w-[90vw] sm:w-100 space-y-3">
+                                <h2 className="text-lg font-semibold">
+                                  {t("add new category")}
+                                </h2>
+                                <div className="flex flex-col">
+                                  <input
+                                    type="text"
+                                    value={newCategory}
+                                    onChange={(e) => setNewCategory(e.target.value)}
+                                    placeholder={` ${t("category")} ${t("name")}`}
+                                    className="w-full border border-inputBorder px-2 py-1 sm:px-4 sm:py-3 focus:outline-none focus:ring-1 focus:ring-primary"
+                                  />
+                                  <p className="text-red-500 text-sm mt-1">
+                                    {categoryLimitError}
+                                  </p>
+                                </div>
+
+                                <div className="flex justify-end space-x-2 mt-2">
+                                  <button
+                                    onClick={handleAddCategoryCancel}
+                                    className="px-4 py-2 w-[110px] border border-inputBorder cursor-pointer"
+                                  >
+                                    {t("cancel")}
+                                  </button>
+                                  <button
+                                    className="px-4 py-2 w-[110px] bg-primary text-white disabled:opacity-70 cursor-pointer"
+                                    onClick={handleAddCategory}
+                                    disabled={creatingCat}
+                                  >
+                                    {creatingCat ? "Adding…" : t("add")}
+                                  </button>
+                                </div>
+                                {catCreateError && (
+                                  <p className="text-red-500 mt-2 text-center">
+                                    {catCreateError}
+                                  </p>
+                                )}
+                              </div>
+                            </div>
                           )}
                         </div>
-                      </div>
-                    )}
-                  </div>
-                )}
-                {categoryError && (
-                  <p className="text-red-500 text-sm mt-1">{categoryError}</p>
+                      )}
+                    </>
+                  )}
+                />
+                {errors.category && (
+                  <p className="text-red-500 text-sm mt-1">{errors.category.message}</p>
                 )}
               </div>
 
@@ -426,7 +432,7 @@ const CreateCourse: React.FC<CreateCourseProps> = () => {
                   {t("documents")} ({t("optional")})
                 </label>
 
-                {!documents || documents.length === 0 ? (
+                {!watchedDocuments || watchedDocuments.length === 0 ? (
                   <div className="flex flex-col items-start space-y-2">
                     <p className="text-sm text-gray-500">
                       {t("No files added")}
@@ -444,7 +450,7 @@ const CreateCourse: React.FC<CreateCourseProps> = () => {
                 ) : (
                   <div className="space-y-2">
                     <ul className="list-disc list-inside text-sm text-gray-700">
-                      {documents.map((doc, index) => (
+                      {watchedDocuments.map((doc, index) => (
                         <ul key={index} className="flex gap-1 items-center">
                           <CiFileOn /> {doc.name} (
                           {(doc.size / 1024).toFixed(1)} KB){" "}
@@ -475,18 +481,25 @@ const CreateCourse: React.FC<CreateCourseProps> = () => {
                   <label className="text-sm text-text-light-2 mb-1 capitalize">
                     {t("add video")}
                   </label>
-                  <label className="flex items-center justify-center h-32 border border-inputBorder cursor-pointer hover:border-primary">
-                    <input
-                      type="file"
-                      accept="video/*"
-                      className="hidden"
-                      onChange={handleVideoChange}
-                    />
-                    <span className="text-[#59BDE2] flex items-center gap-4 p-4">
-                      <img src="/VideoUpload.svg" alt="" />
-                      {video ? video.name : t("select file to upload")}
-                    </span>
-                  </label>
+                  <Controller
+                    name="video"
+                    control={control}
+                    rules={{ required: "Please select a video file" }}
+                    render={({ field }) => (
+                      <label className="flex items-center justify-center h-32 border border-inputBorder cursor-pointer hover:border-primary">
+                        <input
+                          type="file"
+                          accept="video/*"
+                          className="hidden"
+                          onChange={handleVideoChange}
+                        />
+                        <span className="text-[#59BDE2] flex items-center gap-4 p-4">
+                          <img src="/VideoUpload.svg" alt="" />
+                          {watchedVideo ? watchedVideo.name : t("select file to upload")}
+                        </span>
+                      </label>
+                    )}
+                  />
                   {duration !== null && (
                     <p className="text-xs text-text-light-2 mt-2">
                       Video length: {Math.floor(duration / 60)}min{" "}
@@ -498,35 +511,43 @@ const CreateCourse: React.FC<CreateCourseProps> = () => {
                       "Select single video from your local storage * Max. upto 5Gb per video"
                     )}
                   </p>
-                  {videoError && (
-                    <p className="text-red-500 text-sm mt-1">{videoError}</p>
+                  {errors.video && (
+                    <p className="text-red-500 text-sm mt-1">{errors.video.message}</p>
                   )}
                 </div>
+                
                 {/* Add Thumbnail */}
                 <div className="flex flex-col">
                   <label className="text-sm text-text-light-2 mb-1 capitalize">
                     {t("add thumbnail image")}
                   </label>
-                  <label className="flex items-center justify-center h-32 border border-inputBorder cursor-pointer hover:border-primary">
-                    <input
-                      type="file"
-                      accept="image/png,image/jpeg"
-                      className="hidden"
-                      onChange={handleThumbnailChange}
-                    />
-                    <span className="text-[#59BDE2] flex items-center gap-2">
-                      <MdUpload className="text-[#59BDE2] w-7 h-7" />
-                      {thumbnail ? thumbnail.name : t("select file to upload")}
-                    </span>
-                  </label>
+                  <Controller
+                    name="thumbnail"
+                    control={control}
+                    rules={{ required: "Please select a thumbnail image" }}
+                    render={({ field }) => (
+                      <label className="flex items-center justify-center h-32 border border-inputBorder cursor-pointer hover:border-primary">
+                        <input
+                          type="file"
+                          accept="image/png,image/jpeg"
+                          className="hidden"
+                          onChange={handleThumbnailChange}
+                        />
+                        <span className="text-[#59BDE2] flex items-center gap-2">
+                          <MdUpload className="text-[#59BDE2] w-7 h-7" />
+                          {watchedThumbnail ? watchedThumbnail.name : t("select file to upload")}
+                        </span>
+                      </label>
+                    )}
+                  />
                   <p className="text-xs text-text-light-2 mt-2">
                     {t(
                       "Recommended Image Size: 800px x 600px, PNG or JPEG file"
                     )}
                   </p>
-                  {thumbnailError && (
+                  {errors.thumbnail && (
                     <p className="text-red-500 text-sm mt-1">
-                      {thumbnailError}
+                      {errors.thumbnail.message}
                     </p>
                   )}
                 </div>
@@ -546,7 +567,6 @@ const CreateCourse: React.FC<CreateCourseProps> = () => {
           </div>
 
           {/* Upload progress and Errors  */}
-
           {loading && (
             <div className="w-full h-2 mt-2 bg-gray-200 rounded overflow-hidden">
               <div

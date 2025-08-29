@@ -129,7 +129,7 @@
   "start time min": "L'heure de début doit être d'au moins 1 seconde",
   "start time placeholder": "Saisir l'heure de début du test en secondes pendant la vidéo.",
   "passing percentage": "Pourcentage de réussite",
-  "passing marks required": "Le pourcentage de réussite est obligatoire",
+  "Passing percentage required": "Le pourcentage de réussite est obligatoire",
   "passing marks min": "Le pourcentage de réussite doit être d'au moins 1 seconde",
   "passing marks max": "Le pourcentage de réussite doit être au maximum de 100",
   "passing percentage placeholder": "Pourcentage de réussite",
@@ -213,5 +213,6 @@
   "Password must be at least 6 characters": "Le mot de passe doit comporter au moins 6 caractères",
   "Passwords don't match": "Les mots de passe ne correspondent pas",
   "Current password is required": "Le mot de passe actuel est obligatoire",
-  "New password is required": "Le nouveau mot de passe est obligatoire"
+  "New password is required": "Le nouveau mot de passe est obligatoire",
+  "Error":"Erreur"
 }
