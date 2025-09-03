@@ -36,7 +36,7 @@ const AdminHome: React.FC = () => {
     return (
       <div className="flex flex-col justify-center items-center gap-3 fixed top-1/2 left-1/2">
         <Spinner className="w-10 h-10" />
-        <p>Loading...</p>
+        <p>{t("Loading...")}</p>
       </div>
     );
   }
@@ -64,7 +64,7 @@ const AdminHome: React.FC = () => {
     console.log(id);
     navigate(`/admin/users/${id}`);
   };
-const colors = ["#F0E2C3", "#DCECE9", "#F6C7b3", "#F2EAE0"];
+const colors = ["#E9E5F3", "#E0EDF4", "#E9E5F3", "#FEEEF5"];
   return (
     <div className="flex-1 flex flex-col">
       {/* Dashboard */}

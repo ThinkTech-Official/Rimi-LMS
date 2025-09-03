@@ -1,6 +1,6 @@
 // THIS IS THE HEADER FOR ADMIN
 
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FaUserCircle } from "react-icons/fa";
 import { FaUser } from "react-icons/fa6";
@@ -17,9 +17,8 @@ const Header: React.FC = () => {
   const logout = useAdminLogout();
   const [isLanguageSelectOpen, setIsLanguageSelectOpen] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
-  const modalRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
-  const { i18n } = useTranslation();
+  const { i18n, t } = useTranslation();
   type Language = "en" | "fr";
   const previousSelectedLanguage = localStorage
     .getItem("i18nextLng")
@@ -27,16 +26,7 @@ const Header: React.FC = () => {
   const [selectedLanguage, setSelectedLanguage] = useState<Language>(
     previousSelectedLanguage as Language
   );
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
-        setIsLanguageSelectOpen(false);
-        setIsProfileMenuOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+
   const handleLanguageSelect = (lang: Language) => {
     if (lang === selectedLanguage) {
       setIsLanguageSelectOpen(false);
@@ -54,12 +44,12 @@ const Header: React.FC = () => {
   };
 
   const toggleLanguageSelect = () => {
-    setIsLanguageSelectOpen(!isLanguageSelectOpen);
     setIsProfileMenuOpen(false);
+    setIsLanguageSelectOpen(prev => !prev);
   };
   const toggleProfileMenu = () => {
-    setIsProfileMenuOpen(!isProfileMenuOpen);
     setIsLanguageSelectOpen(false);
+    setIsProfileMenuOpen(prev => !prev);
   };
   return (
     <header className=" bg-white border-b border-[#E9EEF1] flex items-center justify-end px-6 space-x-4 py-4 gap-3">
@@ -87,7 +77,6 @@ const Header: React.FC = () => {
         {isLanguageSelectOpen && (
           <div
             className="absolute mt-4 w-24 2xl:w-28 rounded-sm shadow-lg bg-white border border-[#E9EEF1] z-10"
-            ref={modalRef}
           >
             <ul className="py-1 text-sm 2xl:text-lg text-gray-700">
               <li>
@@ -129,7 +118,6 @@ const Header: React.FC = () => {
         {isProfileMenuOpen && (
           <div
             className="absolute mt-4 ml-1 w-28 2xl:w-32 rounded-sm shadow-lg bg-white border border-[#E9EEF1] z-10"
-            ref={modalRef}
           >
             <ul className="py-1 text-sm 2xl:text-lg text-gray-700">
               <li>
@@ -137,7 +125,7 @@ const Header: React.FC = () => {
                   className="w-full text-left px-4 py-2 hover:bg-primary hover:text-white cursor-pointer flex gap-2 items-center"
                   onClick={handleProfileClick}
                 >
-                  <FaUser className="h-4 w-4 2xl:w-5 2xl:h-5" /> Profile
+                  <FaUser className="h-4 w-4 2xl:w-5 2xl:h-5 capitalize" /> {t("profile")}
                 </button>
               </li>
               <li>

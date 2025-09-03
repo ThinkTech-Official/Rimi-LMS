@@ -47,7 +47,7 @@ const LoginClient: React.FC = () => {
     } catch {
       triggerNotification({
         type: "error",
-        message: error || "Login failed",
+        message: error || t("Login failed"),
         duration: 3000,
       });
     }

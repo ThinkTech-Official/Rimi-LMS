@@ -18,12 +18,12 @@ const ClientHeader: React.FC = () => {
     previousSelectedLanguage as Language
   );
   const navigate = useNavigate();
+  const { t } = useTranslation();
+  const { user } = useAuth();
 
-    const { user } = useAuth()
+  console.log("from client head user value", user);
 
-    console.log('from client head user value',user)
-
-   const { logout, loading: logOutLoading, error: logOutError } = useLogout();
+  const { logout, loading: logOutLoading, error: logOutError } = useLogout();
 
   const handleLanguageSelect = (lang: Language) => {
     if (lang === selectedLanguage) {
@@ -44,22 +44,21 @@ const ClientHeader: React.FC = () => {
 
   const toggleLanguageSelect = () => {
     setIsLanguageSelectOpen(!isLanguageSelectOpen);
+    setIsProfileMenuOpen(false);
   };
   const toggleProfileMenu = () => {
     setIsProfileMenuOpen(!isProfileMenuOpen);
+    setIsLanguageSelectOpen(false);
   };
 
-
-    const handleLogoutClick = async () => {
+  const handleLogoutClick = async () => {
     try {
       await logout();
-      navigate('/');        
+      navigate("/");
     } catch {
-      
-      console.error('Logout failed:', logOutError);
+      console.error("Logout failed:", logOutError);
     }
   };
-
 
   return (
     <header className=" bg-white border-b border-[#E9EEF1] flex items-center justify-end px-6 space-x-4 py-4 gap-3">
@@ -129,14 +128,16 @@ const ClientHeader: React.FC = () => {
                   className="w-full text-left px-4 py-2 hover:bg-primary hover:text-white cursor-pointer flex gap-2 items-center"
                   onClick={handleProfileClick}
                 >
-                  <FaUser className="h-4 w-4 2xl:w-5 2xl:h-5" /> Profile
+                  <FaUser className="h-4 w-4 2xl:w-5 2xl:h-5 capitalize" />{" "}
+                  {t("profile")}
                 </button>
               </li>
               <li>
                 <button
-                 onClick={handleLogoutClick}
-                 disabled={logOutLoading}
-                className="w-full text-left px-4 py-2 hover:bg-primary hover:text-white cursor-pointer flex gap-2 items-center">
+                  onClick={handleLogoutClick}
+                  disabled={logOutLoading}
+                  className="w-full text-left px-4 py-2 hover:bg-primary hover:text-white cursor-pointer flex gap-2 items-center"
+                >
                   <IoIosLogOut className="h-4 w-4 2xl:w-5 2xl:h-5" /> Logout
                 </button>
               </li>

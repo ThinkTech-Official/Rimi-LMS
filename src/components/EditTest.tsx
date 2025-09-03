@@ -221,13 +221,13 @@ const EditTest: React.FC = () => {
       navigate(`/admin/edit-course/${courseId}`, {
         state: {
           type: "success",
-          message: "Test updated",
+          message: t("Test updated"),
         },
       });
     } catch {
       triggerNotification({
         type: "error",
-        message: "Update failed",
+        message: t("Failed to update test"),
         duration: 3000,
       });
     }

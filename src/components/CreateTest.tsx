@@ -221,13 +221,13 @@ const CreateTest: React.FC = () => {
       navigate(`/admin/edit-course/${courseId}`, {
         state: {
           type: "success",
-          message: "Test created successfully",
+          message: t("Test created successfully"),
         },
       });
     } catch {
       triggerNotification({
         type: "error",
-        message: "Failed to create test",
+        message: t("Failed to create test"),
         duration: 3000,
       });
     }

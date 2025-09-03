@@ -1,7 +1,9 @@
 import React, { useState, useRef } from "react";
-import Certificate from "../components/Certificate";
+import Certificate from "../components/certificates/Certificate";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
+import { useTranslation } from "react-i18next";
+import CertificateFrench from "../components/certificates/CertificateFrench";
 
 /**
  * A standalone component to preview and download the Certificate template
@@ -10,7 +12,8 @@ import jsPDF from "jspdf";
 const TestCertificate: React.FC = () => {
   const [name, setName] = useState("");
   const certRef = useRef<HTMLDivElement>(null);
-
+  const { i18n, t } = useTranslation();
+  const selectedLanguage = i18n.language.split("-")[0];
   // Static values for testing
   const courseTitle = "Sample Course";
   const date = new Date().toLocaleDateString("en-IN", {
@@ -70,12 +73,21 @@ const TestCertificate: React.FC = () => {
           </div>
 
           <div ref={certRef} className="border p-4 inline-block">
-            <Certificate
-              recipientName={name}
+            {selectedLanguage === "en" ? (
+              <Certificate
+                recipientName={name}
               courseTitle={courseTitle}
               date={date}
               certNumber={certNumber}
-            />
+              />
+            ) : (
+              <CertificateFrench
+               recipientName={name}
+              courseTitle={courseTitle}
+              date={date}
+              certNumber={certNumber}
+              />
+            )}
           </div>
         </>
       )}

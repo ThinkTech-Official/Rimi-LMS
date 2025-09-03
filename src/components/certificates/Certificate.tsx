@@ -233,7 +233,7 @@ const Certificate: React.FC<CertificateProps> = ({
               style={{
                 fontSize: "6.5rem",
                 color: "#4D4D4D",
-                marginTop: "-3.5rem",
+                marginTop: "-4rem",
                 fontFamily: '"MonteCarlo", cursive',
                 paddingBottom: "20px",
                 textTransform: "capitalize",
@@ -247,7 +247,7 @@ const Certificate: React.FC<CertificateProps> = ({
                 textAlign: "center",
                 color: "#4D4D4D",
                 fontWeight: 200,
-                marginTop: "-1.2rem",
+                marginTop: "-0.5rem",
               }}
             >
               has successfully completed the RIMI Insurance Training Program

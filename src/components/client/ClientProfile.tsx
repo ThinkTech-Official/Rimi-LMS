@@ -78,7 +78,7 @@ const ClientProfile: React.FC = () => {
     } catch {
       triggerNotification({
         type: "error",
-        message: nameError ?? "Update failed",
+        message: nameError ?? t("Update failed"),
         duration: 3000,
       });
     }

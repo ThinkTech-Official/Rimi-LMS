@@ -104,7 +104,7 @@ const CreateCourse: React.FC<CreateCourseProps> = () => {
       const newCat = await createCategory(trimmed);
       triggerNotification({
         type: "success",
-        message: "Category created",
+        message: t("Category created"),
         duration: 3000,
       });
       setNewCategory("");
@@ -116,7 +116,7 @@ const CreateCourse: React.FC<CreateCourseProps> = () => {
     } catch (error) {
       triggerNotification({
         type: "error",
-        message: "Failed to create category",
+        message: t("Failed to create category"),
         duration: 3000,
       });
     }
@@ -202,7 +202,7 @@ const CreateCourse: React.FC<CreateCourseProps> = () => {
     } catch {
       triggerNotification({
         type: "error",
-        message: "Failed to create course",
+        message: t("Failed to create course"),
       });
     }
   };
@@ -212,7 +212,7 @@ const CreateCourse: React.FC<CreateCourseProps> = () => {
       error &&
         triggerNotification({
           type: "error",
-          message: "Failed to create course",
+          message: t("Failed to create course"),
         });
     }
   }, [error]);
@@ -252,7 +252,7 @@ const CreateCourse: React.FC<CreateCourseProps> = () => {
                     },
                     maxLength: {
                       value: 100,
-                      message: "Name must be at most 100 characters",
+                      message: "Name must be less than 100 characters",
                     },
                   })}
                   placeholder={t("enter course name")}
@@ -260,7 +260,7 @@ const CreateCourse: React.FC<CreateCourseProps> = () => {
                 />
                 {errors.name && (
                   <p className="text-red-500 text-sm mt-1">
-                    {errors.name.message}
+                    {t(String(errors.name.message))}
                   </p>
                 )}
                 <p className="text-sm text-text-light">
@@ -282,7 +282,7 @@ const CreateCourse: React.FC<CreateCourseProps> = () => {
                     },
                     maxLength: {
                       value: 1000,
-                      message: "Description must be at most 1000 characters",
+                      message: "Description must be less than 1000 characters",
                     },
                   })}
                   placeholder={t("enter course description")}
@@ -291,7 +291,7 @@ const CreateCourse: React.FC<CreateCourseProps> = () => {
                 />
                 {errors.description && (
                   <p className="text-red-500 text-sm mt-1">
-                    {errors.description.message}
+                    {t(String(errors.description.message))}
                   </p>
                 )}
                 <p className="text-sm text-text-light">
@@ -422,7 +422,7 @@ const CreateCourse: React.FC<CreateCourseProps> = () => {
                   )}
                 />
                 {errors.category && (
-                  <p className="text-red-500 text-sm mt-1">{errors.category.message}</p>
+                  <p className="text-red-500 text-sm mt-1">{t(String(errors.category.message))}</p>
                 )}
               </div>
 
@@ -438,7 +438,7 @@ const CreateCourse: React.FC<CreateCourseProps> = () => {
                       {t("No files added")}
                     </p>
                     <label className="inline-block capitalize px-4 py-2 bg-primary text-white cursor-pointer hover:bg-indigo-700 text-sm">
-                      {t("choose files")}
+                      {t("choose file")}
                       <input
                         type="file"
                         multiple
@@ -484,7 +484,7 @@ const CreateCourse: React.FC<CreateCourseProps> = () => {
                   <Controller
                     name="video"
                     control={control}
-                    rules={{ required: "Please select a video file" }}
+                    rules={{ required: "Please select a video" }}
                     render={({ field }) => (
                       <label className="flex items-center justify-center h-32 border border-inputBorder cursor-pointer hover:border-primary">
                         <input
@@ -512,7 +512,7 @@ const CreateCourse: React.FC<CreateCourseProps> = () => {
                     )}
                   </p>
                   {errors.video && (
-                    <p className="text-red-500 text-sm mt-1">{errors.video.message}</p>
+                    <p className="text-red-500 text-sm mt-1">{t(String(errors.video.message))}</p>
                   )}
                 </div>
                 
@@ -547,7 +547,7 @@ const CreateCourse: React.FC<CreateCourseProps> = () => {
                   </p>
                   {errors.thumbnail && (
                     <p className="text-red-500 text-sm mt-1">
-                      {errors.thumbnail.message}
+                      {t(String(errors.thumbnail.message))}
                     </p>
                   )}
                 </div>
