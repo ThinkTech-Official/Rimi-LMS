@@ -1,17 +1,22 @@
+
+
+
+
+
+
 import axios, { AxiosError, type AxiosRequestConfig } from "axios";
 import { API_BASE } from "./ulrs";
 
-// this instance will hit /api/admin/* and send your admin cookies
 const adminApi = axios.create({
-  baseURL: "/",
+  baseURL: API_BASE, // Use your API base, not "/"
   withCredentials: true,
+  timeout: 300000, // 5 minutes for large file uploads
 });
 
 let isRefreshing = false;
 type QueueItem = { resolve: (value?: any) => void; reject: (err: any) => void };
 let failedQueue: QueueItem[] = [];
 
-// simple queue processor
 const processQueue = (error: any) => {
   failedQueue.forEach(({ resolve, reject }) => {
     error ? reject(error) : resolve(null);
@@ -19,18 +24,25 @@ const processQueue = (error: any) => {
   failedQueue = [];
 };
 
-// const isAdminAuthEndpoint = (url = '') =>
-//   /\/admin\/auth\/(login|signup|refresh)/.test(url);
+// Add request interceptor to handle file uploads properly
+adminApi.interceptors.request.use((config) => {
+ 
+  if (config.data instanceof FormData) {
+    if (config.headers) {
+      delete config.headers['Content-Type'];
+    }
+  }
+  return config;
+});
 
 adminApi.interceptors.response.use(
   (res) => res,
-  (
-    error: AxiosError & { config: AxiosRequestConfig & { _retry?: boolean } }
-  ) => {
+  (error: AxiosError & { config: AxiosRequestConfig & { _retry?: boolean } }) => {
     const originalReq = error.config;
     const status = error.response?.status;
+    
     if (
-      error.response?.status === 401 &&
+      status === 401 &&
       !originalReq._retry &&
       !originalReq.url?.includes("admin/auth/refresh")
     ) {
@@ -45,8 +57,6 @@ adminApi.interceptors.response.use(
       isRefreshing = true;
       return new Promise(async (resolve, reject) => {
         try {
-          // await adminApi.post(`${API_BASE}/admin/auth/refresh`);
-          //  use raw axios here so you don't re‐intercept
           const { data } = await axios.post(
             `${API_BASE}/admin/auth/refresh`,
             {},
@@ -57,9 +67,7 @@ adminApi.interceptors.response.use(
           resolve(adminApi(originalReq));
         } catch (err) {
           processQueue(err);
-          // both tokens are now invalid ==> redirect to login
           window.location.href = "/adminlogin";
-
           reject(err);
         } finally {
           isRefreshing = false;
@@ -67,20 +75,10 @@ adminApi.interceptors.response.use(
       });
     }
 
-    //  If we get 401 *after* a retry, it means refresh itself failed
-    // if (error.response?.status === 401 && originalReq._retry) {
-    //   window.location.href = '/adminlogin';
-    // if we get here, either it was a /auth/refresh or a second 401
-    // window.location.href = '/adminlogin';
-    // return Promise.reject(error);
-
     if (status === 401 && originalReq._retry) {
       window.location.href = "/adminlogin";
       return Promise.reject(error);
     }
-
-    // we still reject so the original caller can see the error if needed
-    // }
 
     return Promise.reject(error);
   }

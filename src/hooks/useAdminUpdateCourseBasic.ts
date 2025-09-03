@@ -39,7 +39,7 @@ export function useAdminUpdateCourseBasic(courseId: number) {
       }
 
       await adminApi.patch(`${API_BASE}/courses/${courseId}/basic`, fd, {
-        headers: { "Content-Type": "multipart/form-data" },
+        // headers: { "Content-Type": "multipart/form-data" },
         onUploadProgress: (progressEvent) => {
           if (progressEvent.total) {
             setProgress(
