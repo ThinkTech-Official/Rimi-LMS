@@ -743,13 +743,19 @@ const EditCourse: React.FC = () => {
                   {updating ? `${t("Updating")}...` : `${t("Update")}`}
                 </button>
               </div>
+
               {updating && (
-                <div className="w-full h-2 mt-2 bg-gray-200 rounded overflow-hidden">
-                  <div
-                    className="h-full bg-primary transition-all duration-300"
-                    style={{ width: `${progress}%` }}
-                  ></div>
-                </div>
+                <>
+                  <span>
+                    {t("Updating")}... {progress}%
+                  </span>
+                  <div className="w-full h-2 mt-2 bg-gray-200 rounded overflow-hidden">
+                    <div
+                      className="h-full bg-primary transition-all duration-300"
+                      style={{ width: `${progress}%` }}
+                    ></div>
+                  </div>
+                </>
               )}
             </form>
           </div>

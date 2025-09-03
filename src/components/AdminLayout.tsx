@@ -150,7 +150,7 @@ export const AdminLayout: React.FC = () => {
                     <span className="capitalize">{t(item.label)}</span>
                   )}
                   {!isSidebarOpen && (
-                    <span className="absolute left-full top-1/2 -translate-y-1/2 ml-1 z-50 bg-[#393939] text-white text-xs px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
+                    <span className="absolute left-full top-1/2 -translate-y-1/2 ml-1 z-50 bg-[#393939] text-white text-xs px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap pointer-events-none">
                       {item.label}
                     </span>
                   )}
