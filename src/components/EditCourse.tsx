@@ -26,6 +26,13 @@ const testHeaders = [
   "Actions",
 ];
 
+const DeleteCourseInfo = [
+  "All course materials (documents & thumbnail)",
+  "The course video file",
+  "All tests and their questions",
+  "All certificates and test results",
+];
+
 const EditCourse: React.FC = () => {
   const navigate = useNavigate();
   const { courseId } = useParams<{ courseId: string }>();
@@ -77,7 +84,7 @@ const EditCourse: React.FC = () => {
     updateBasic,
     loading: updating,
     error: updateError,
-    progress
+    progress,
   } = useAdminUpdateCourseBasic(Number(courseId!));
 
   const {
@@ -451,7 +458,7 @@ const EditCourse: React.FC = () => {
               {tests.length === 0 ? (
                 <tr>
                   <td colSpan={6} className="py-4 text-center">
-                    No tests created yet.
+                    {t("No tests created yet.")}
                   </td>
                 </tr>
               ) : filtered.length === 0 ? (
@@ -460,7 +467,7 @@ const EditCourse: React.FC = () => {
                     colSpan={6}
                     className="py-4 italic text-text-light text-center"
                   >
-                    Test with the name "{searchTerm}" not found.
+                    {t("Test with the name")} "{searchTerm}" {t("not found")}.
                   </td>
                 </tr>
               ) : (
@@ -572,22 +579,24 @@ const EditCourse: React.FC = () => {
       {modalTestId !== null && (
         <div className="fixed inset-0 bg-black/10  flex items-center justify-center z-50">
           <div className="bg-white shadow-lg p-6 w-[90%] max-w-md">
-            <h3 className="text-lg font-semibold">Confirm Delete</h3>
-            <p className="mt-4">Are you sure you want to delete this test?</p>
+            <h3 className="text-lg font-semibold">{t("Confirm Delete")}</h3>
+            <p className="mt-4">
+              {t("Are you sure you want to delete this test?")}
+            </p>
             {deleteError && <p className="text-red-500 mt-2">{deleteError}</p>}
             <div className="mt-6 flex justify-end space-x-4">
               <button
                 onClick={handleCancelDelete}
                 className="px-4 py-2 border border-inputBorder cursor-pointer"
               >
-                Cancel
+                {t("Cancel")}
               </button>
               <button
                 onClick={handleConfirmDelete}
                 disabled={deleting}
                 className="px-4 py-2 bg-red-600 text-white hover:bg-red-700 disabled:opacity-50 cursor-pointer"
               >
-                {deleting ? "Deleting..." : "Delete"}
+                {deleting ? `${t("Deleting")}…` : t("Delete")}
               </button>
             </div>
           </div>
@@ -605,7 +614,9 @@ const EditCourse: React.FC = () => {
             <form onSubmit={handleBasicSubmit} className="space-y-4">
               {/* Name */}
               <div>
-                <label className="block text-sm font-medium mb-1">Name</label>
+                <label className="block text-sm font-medium mb-1">
+                  {t("name")}
+                </label>
                 <div className="flex flex-col">
                   <input
                     name="name"
@@ -644,13 +655,13 @@ const EditCourse: React.FC = () => {
               {/* Thumbnail */}
               <div className="flex flex-col md:col-span-2">
                 <label className="block text-sm font-medium mb-1">
-                  Thumbnail
+                  {t("Thumbnail")}
                 </label>
 
                 {!thumbnailFile ? (
                   <div className="flex flex-col items-start space-y-2">
                     <label className="inline-block capitalize px-4 py-2 bg-primary text-white cursor-pointer hover:bg-indigo-700 text-sm">
-                      Choose Thumbnail
+                      {t("Choose Thumbnail")}
                       <input
                         type="file"
                         accept="image/*"
@@ -674,12 +685,14 @@ const EditCourse: React.FC = () => {
 
               {/* Video */}
               <div className="flex flex-col md:col-span-2">
-                <label className="block text-sm font-medium mb-1">Video</label>
+                <label className="block text-sm font-medium mb-1">
+                  {t("Video")}
+                </label>
 
                 {!videoFile ? (
                   <div className="flex flex-col items-start space-y-2">
                     <label className="inline-block capitalize px-4 py-2 bg-primary text-white cursor-pointer hover:bg-indigo-700 text-sm">
-                      Choose Video
+                      {t("Choose Video")}
                       <input
                         type="file"
                         accept="video/*"
@@ -721,13 +734,13 @@ const EditCourse: React.FC = () => {
                   onClick={() => setIsBasicModalOpen(false)}
                   className="px-4 py-2 sm:py-3 border border-inputBorder cursor-pointer"
                 >
-                  Cancel
+                  {t("Cancel")}
                 </button>
                 <button
                   type="submit"
                   className="px-4 py-2 sm:py-3 bg-primary text-white hover:bg-indigo-700 transition delay-100 cursor-pointer"
                 >
-                  {updating ? "Updating..." : "Update"}
+                  {updating ? `${t("Updating")}...` : `${t("Update")}`}
                 </button>
               </div>
               {updating && (
@@ -747,18 +760,17 @@ const EditCourse: React.FC = () => {
 
       {isDeleteModalOpen && (
         <div className="fixed h-screen inset-0 bg-black/10 bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white shadow-lg m-4 p-4 sm:p-6 w-full max-w-md">
+          <div className="bg-white shadow-lg m-4 p-4 sm:p-6 w-full max-w-lg">
             <h3 className="text-lg font-semibold mb-4 text-red-600">
-              Warning!
+              {t("Warning")}!
             </h3>
             <p className="mb-4 text-gray-800">
-              Deleting this course will permanently remove:
+              {t("Deleting this course will permanently remove")}:
             </p>
             <ul className="list-disc list-inside mb-4 text-gray-700">
-              <li>All course materials (documents & thumbnail)</li>
-              <li>The course video file</li>
-              <li>All tests and their questions</li>
-              <li>All certificates and test results</li>
+              {DeleteCourseInfo.map((info, index) => (
+                <li key={index}>{t(String(info))}</li>
+              ))}
             </ul>
             {deleteCourseError && (
               <p className="text-red-500 mb-2">{deleteCourseError}</p>
@@ -768,14 +780,14 @@ const EditCourse: React.FC = () => {
                 onClick={() => setIsDeleteModalOpen(false)}
                 className="px-4 py-2 border border-inputBorder text-text-light-2 cursor-pointer"
               >
-                Cancel
+                {t("Cancel")}
               </button>
               <button
                 onClick={handleDeleteCourse}
                 disabled={deletingCourse}
                 className="px-4 py-2 bg-red-600 text-white cursor-pointer hover:bg-red-700 transition duration-100 disabled:opacity-50"
               >
-                {deletingCourse ? "Deleting…" : "Yes, delete course"}
+                {deletingCourse ? `${t("Deleting")}…` : t("Yes, delete course")}
               </button>
             </div>
           </div>

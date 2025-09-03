@@ -84,7 +84,7 @@ const ClientCourseCard = ({
             </div>
           </div>
         </div>
-        <h2 className="text-lg font-semibold text-gray-900 line-clamp-1">
+        <h2 className="text-lg font-semibold text-gray-900 line-clamp-1 first-letter:capitalize">
           {title}
         </h2>
         <div className="text-gray-600 text-sm pr-2">

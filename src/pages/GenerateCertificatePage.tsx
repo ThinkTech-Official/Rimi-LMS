@@ -35,7 +35,7 @@ export const GenerateCertificatePage: React.FC = () => {
     );
   }
 
-  if (!user?.name) return <p>No User Logged in</p>;
+  if (!user?.name) return <p>{t("No User Logged in")}</p>;
 
   return (
     <div className="p-8">

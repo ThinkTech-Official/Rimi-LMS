@@ -17,13 +17,8 @@ const AdminProfile: React.FC = () => {
     success,
   } = useUpdateAdminPassword();
   const [showResetPasswordModal, setShowResetPasswordModal] = useState(false);
-  const [, setShowModal] = useState(false);
   const [showNew, setShowNew] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
-  const [currentPwd, setCurrentPwd] = useState("");
-  const [newPwd, setNewPwd] = useState("");
-  const [confirmPwd, setConfirmPwd] = useState("");
-  const [localError, setLocalError] = useState<string | null>(null);
   const modalRef = useRef<HTMLDivElement>(null);
   const { t } = useTranslation();
 
@@ -58,7 +53,7 @@ const AdminProfile: React.FC = () => {
   const handleCloseModal = () => {
     setShowResetPasswordModal(false);
     reset();
-  }
+  };
 
   if (loading)
     return (

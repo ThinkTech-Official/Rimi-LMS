@@ -16,9 +16,7 @@ import { MdOutlineFactCheck } from "react-icons/md";
 import Footer from "./Footer";
 
 export const AdminLayout: React.FC = () => {
-  const [active, setActive] = useState<
-    "home" | "courses" | "certificates" | "tests" | "users"
-  >("home");
+  const [active, setActive] = useState<string>("home");
   const [isSidebarOpen, setSidebarOpen] = useState(true);
   const navigate = useNavigate();
   const { t } = useTranslation();
@@ -40,7 +38,7 @@ export const AdminLayout: React.FC = () => {
     {
       label: "all Courses",
       icon: BookOpenIcon,
-      key: "courses",
+      key: "all-courses",
       url: "/admin/all-courses",
     },
     {
@@ -81,6 +79,15 @@ export const AdminLayout: React.FC = () => {
       url: "/admin/certificates",
     },
   ] as const;
+
+  useEffect(() => {
+    const current = menuItems.find((item) =>
+      location.pathname.startsWith(item.url)
+    );
+    if (current) {
+      setActive(current.key);
+    }
+  }, [location.pathname]);
 
   const handleLinkClick = (key: any) => {
     setActive(key);

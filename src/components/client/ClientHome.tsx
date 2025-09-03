@@ -115,7 +115,7 @@ const ClientHome = () => {
             onChange={handleSearchChange}
             className="relative px-2 sm:px-4 py-1 sm:py-3 w-[200px] sm:w-[330px] focus:outline-none focus:ring-1 focus:ring-primary"
           />
-          <button className="px-1 sm:px-3 cursor-pointer absolute right-0">
+          <button className="px-1 sm:px-3 cursor-pointer absolute right-0 flex items-center gap-1">
             {searchTerm && (
               <RxCross2
                 className="h-5 w-5 text-text-light"
@@ -168,7 +168,7 @@ const ClientHome = () => {
               ))
             ) : selectedCategoryId === 0 && searchTerm.trim() ? (
               <p className="text-center text-gray-500 italic">
-                Course with the name "{searchTerm}" not found.
+                {t("Course with the name")} "{searchTerm}" {t("not found")}.
               </p>
             ) : null}
           </div>

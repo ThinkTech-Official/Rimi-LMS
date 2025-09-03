@@ -229,7 +229,7 @@ const AllCourses: React.FC<AllCoursesProps> = ({ onCreateCourse }) => {
                       />
                     </div>
                     <div className=" flex flex-col gap-2 p-2">
-                      <h2 className="text-base 2xl:text-xl font-semibold text-[#1B1B1B] line-clamp-1">
+                      <h2 className="text-base 2xl:text-xl font-semibold text-[#1B1B1B] line-clamp-1 first-letter:capitalize">
                         {course.title}
                       </h2>
                       <div className="flex items-center text-[#6F6B7D] text-xs 2xl:text-base space-x-4">
@@ -247,7 +247,7 @@ const AllCourses: React.FC<AllCoursesProps> = ({ onCreateCourse }) => {
                 ))
               ) : selectedCategoryId === 0 && searchTerm.trim() ? (
                 <p className="text-center text-gray-500 italic">
-                  Course with the name "{searchTerm}" not found.
+                  {t("Course with the name")} "{searchTerm}" {t("not found")}
                 </p>
               ) : null}
             </div>

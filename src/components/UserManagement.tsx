@@ -79,7 +79,7 @@ export const UserManagement: React.FC = () => {
             <span className="text-[#4B465C] opacity-80 first-letter:uppercase">
               {t("show")}
             </span>
-            <div className="bg-[#EDEDED] px-2 sm:px-4 py-1 sm:py-3 w-full max-w-[350px]">
+            <div className="bg-[#EDEDED] px-2 sm:px-4 py-1 sm:py-3 w-full max-w-[400px]">
               <label className="inline-flex items-center mr-4 text-[#4B465C] opacity-80">
                 <input
                   type="radio"
