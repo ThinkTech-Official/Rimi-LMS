@@ -62,7 +62,7 @@ const AdminCategoryManager: React.FC = () => {
       await createCategory(newName.trim());
       triggerNotification({
         type: "success",
-        message: "Category created successfully",
+        message: t("Category created successfully"),
         duration: 3000,
       });
       setNewName("");
@@ -94,7 +94,7 @@ const AdminCategoryManager: React.FC = () => {
       await updateCategory(editing!.id, editName.trim());
       triggerNotification({
         type: "success",
-        message: "Category updated successfully",
+        message: t("Category updated successfully"),
         duration: 3000,
       });
       setEditing(null);
@@ -122,7 +122,7 @@ const AdminCategoryManager: React.FC = () => {
       await deleteCategory(id);
       triggerNotification({
         type: "success",
-        message: "Category deleted successfully",
+        message: t("Category deleted successfully"),
         duration: 3000,
       });
     } finally {
@@ -216,7 +216,7 @@ const AdminCategoryManager: React.FC = () => {
           </tr>
         </thead>
         <tbody className="bg-white" style={{ border: "1px solid #AAA9A9" }}>
-          {categories.map((cat) => (
+          {categories.map((cat,i) => (
             <tr key={cat.id} className="text-[#808080] text-sm 2xl:text-xl">
               <td
                 className="px-2 sm:px-6 py-2 sm:py-4 whitespace-nowrap"
@@ -226,7 +226,7 @@ const AdminCategoryManager: React.FC = () => {
                   borderColor: "#AAA9A9",
                 }}
               >
-                {cat.id}
+                {i+1}
               </td>
               <td
                 className="px-2 sm:px-6 py-2 sm:py-4 whitespace-nowrap"

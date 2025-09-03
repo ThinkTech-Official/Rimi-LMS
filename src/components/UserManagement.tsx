@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import { useAdminUsers } from "../hooks/useAdminUsers";
 import { useNavigate } from "react-router-dom";
 import Spinner from "./loaders/Spinner";
+import { RxCross2 } from "react-icons/rx";
 
 export const UserManagement: React.FC = () => {
   const navigate = useNavigate();
@@ -53,7 +54,11 @@ export const UserManagement: React.FC = () => {
         {t("Error")}: {error}
       </div>
     );
-
+  const handleCancelSearch = () => {
+    setSearch("");
+    setSearchInput("");
+    setCurrentPage(1);
+  };
   return (
     <div className="relative bg-white overflow-hidden min-h-screen">
       <div className="px-2 sm:px-6 py-4">
@@ -71,7 +76,9 @@ export const UserManagement: React.FC = () => {
         <div className="flex flex-col md:flex-row gap-2 md:items-center justify-start md:justify-between space-x-4 mb-6">
           <div className="flex gap-2 sm:items-center flex-col sm:flex-row">
             {" "}
-            <span className="text-[#4B465C] opacity-80 first-letter:uppercase">{t("show")}</span>
+            <span className="text-[#4B465C] opacity-80 first-letter:uppercase">
+              {t("show")}
+            </span>
             <div className="bg-[#EDEDED] px-2 sm:px-4 py-1 sm:py-3 w-full max-w-[350px]">
               <label className="inline-flex items-center mr-4 text-[#4B465C] opacity-80">
                 <input
@@ -105,6 +112,12 @@ export const UserManagement: React.FC = () => {
               onChange={(e) => setSearchInput(e.target.value)}
               className="px-2 sm:px-4 py-1 sm:py-3 w-[200px] sm:w-[330px] focus:outline-none"
             />
+            {searchInput && (
+              <RxCross2
+                className="h-8 w-8 text-text-light mr-2 cursor-pointer"
+                onClick={handleCancelSearch}
+              />
+            )}
             <button
               onClick={handleSearch}
               className="px-2 sm:px-3 cursor-pointer flex items-center text-white bg-primary py-3 gap-1"

@@ -59,7 +59,7 @@ export const UserProfile: React.FC = () => {
     return (
       <div className="flex flex-col justify-center items-center gap-3 fixed top-1/2 left-1/2">
         <Spinner className="w-10 h-10" />
-        <p>Loading...</p>
+        <p>{t("Loading...")}</p>
       </div>
     );
   if (error) return <div className="text-red-600">{error}</div>;

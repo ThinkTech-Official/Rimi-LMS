@@ -29,14 +29,14 @@ export const AdminCreateAdmin: React.FC = () => {
       await createUser({ name, email, password });
       triggerNotification({
         type: "success",
-        message: "Admin user created",
+        message: t("Admin user created"),
         duration: 3000,
       });
       reset();
     } catch {
       triggerNotification({
         type: "error",
-        message: "Failed to create admin",
+        message: t("Failed to create admin"),
         duration: 3000,
       });
     }

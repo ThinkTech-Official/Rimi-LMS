@@ -27,7 +27,7 @@ export const AdminCreateUser: React.FC = () => {
       await createClient({ name, email, password });
       triggerNotification({
         type: "success",
-        message: "Client created successfully",
+        message: t("Client created successfully"),
         duration: 3000,
       });
       reset();
@@ -35,7 +35,7 @@ export const AdminCreateUser: React.FC = () => {
       console.log("error in creting client", error);
       triggerNotification({
         type: "error",
-        message: "Failed to create client",
+        message: t("Failed to create client"),
         duration: 3000,
       });
     }

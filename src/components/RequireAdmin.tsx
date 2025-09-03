@@ -2,6 +2,7 @@ import React, { type ReactNode } from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import { useAdminContext } from "../context/AdminContext";
 import Spinner from "./loaders/Spinner";
+import { useTranslation } from "react-i18next";
 
 interface RequireAdminProps {
   children: ReactNode;
@@ -10,13 +11,14 @@ interface RequireAdminProps {
 export const RequireAdmin: React.FC<RequireAdminProps> = ({ children }) => {
   const { admin, loading, error } = useAdminContext();
   const location = useLocation();
+  const { t } = useTranslation();
 
   //  can show a spinner or nothing
   if (loading) {
     return (
       <div className="flex flex-col justify-center items-center gap-3 fixed top-1/2 left-1/2">
         <Spinner className="w-10 h-10" />
-        <p>Loading...</p>
+        <p>{t("Loading...")}</p>
       </div>
     );
   }

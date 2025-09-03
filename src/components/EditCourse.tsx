@@ -164,13 +164,13 @@ const EditCourse: React.FC = () => {
       setVideoFile(null);
       triggerNotification({
         type: "success",
-        message: "Course updated",
+        message: t("Course updated"),
         duration: 3000,
       });
     } catch {
       triggerNotification({
         type: "error",
-        message: updateError ?? "Update failed",
+        message: updateError ?? t("Update failed"),
         duration: 3000,
       });
     }
@@ -204,13 +204,13 @@ const EditCourse: React.FC = () => {
       setModalTestId(null);
       triggerNotification({
         type: "success",
-        message: "Test deleted",
+        message: t("Test deleted"),
         duration: 3000,
       });
     } catch {
       triggerNotification({
         type: "error",
-        message: "Failed to delete test",
+        message: t("Failed to delete test"),
         duration: 3000,
       });
     } finally {
@@ -287,13 +287,13 @@ const EditCourse: React.FC = () => {
       navigate("/admin/all-courses", {
         state: {
           type: "success",
-          message: "Course deleted",
+          message: t("Course deleted"),
         },
       });
     } catch {
       triggerNotification({
         type: "error",
-        message: deleteCourseError ?? "Delete failed!",
+        message: deleteCourseError ?? t("Failed to delete course"),
         duration: 3000,
       });
     }
