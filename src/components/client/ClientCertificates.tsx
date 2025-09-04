@@ -35,7 +35,7 @@ const ClientCertificates: React.FC = () => {
     return (
       <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col gap-2 items-center">
         <Spinner className="w-10 h-10" />
-        Loading certificates…
+        {t("Loading certificates…")}
       </div>
     );
   }
@@ -43,10 +43,13 @@ const ClientCertificates: React.FC = () => {
   if (!loading && certs.length === 0) {
     return (
       <div className="p-8">
-        <h1 className="text-2xl font-bold mb-4">My Certificates</h1>
+        <h1 className="text-2xl font-bold mb-4 capitalize">
+          {t("My certificates")}
+        </h1>
         <p>
-          No certificates issued yet. Please complete a course to get your
-          certificate.
+          {t(
+            "No certificates issued yet. Please complete a course to get your certificate."
+          )}
         </p>
       </div>
     );
@@ -74,14 +77,14 @@ const ClientCertificates: React.FC = () => {
                 {c.course.name}
               </h3>
               <div className="text-sm text-text-dark font-semibold">
-                Certificate ID:{" "}
+                {t("Certificate")} ID:{" "}
                 <span className="text-text-light font-normal">
                   {c.certNumber}
                 </span>
               </div>
               <div className="flex justify-between">
-                <div className="text-sm text-text-dark font-semibold">
-                  Issue Date:{" "}
+                <div className="text-sm text-text-dark font-semibold capitalize">
+                  {t("Issue date")}:{" "}
                   <span className="text-text-light font-normal">
                     {new Date(c.createdAt).toLocaleDateString()}
                   </span>
@@ -91,9 +94,9 @@ const ClientCertificates: React.FC = () => {
                 href={`${API_BASE}/uploads/certificates/${c.fileName}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-4 py-2 mt-2 bg-primary text-white cursor-pointer w-full text-center"
+                className="px-4 py-2 mt-2 bg-primary text-white cursor-pointer w-full text-center capitalize"
               >
-                Download PDF
+                {t("Download certificate")}
               </a>
             </div>
           </li>

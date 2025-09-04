@@ -2,10 +2,12 @@ import { useState } from "react";
 import AllCourses from "./AllCourses";
 import CreateCourse from "./CreateCourse";
 import CreateTest from "./CreateTest";
+import { useTranslation } from "react-i18next";
 
 const Courses: React.FC = () => {
   type Breadcrumb = "courses" | "create-course" | "create-test";
   const [breadcrumb, setBreadcrumb] = useState<Breadcrumb>("courses");
+  const { t } = useTranslation();
   return (
     <div>
       <nav
@@ -21,7 +23,7 @@ const Courses: React.FC = () => {
                   className=""
                   title="All Courses"
                 >
-                  Courses
+                  {t("courses")}
                 </button>
               </li>
             </>
@@ -35,11 +37,11 @@ const Courses: React.FC = () => {
                   className="underline underline-offset-2 cursor-pointer"
                   title="All Courses"
                 >
-                  Courses
+                  {t("courses")}
                 </button>
               </li>
               <li>&gt;</li>
-              <li className="text-primary">Create Course</li>
+              <li className="text-primary">{t("create course")}</li>
             </>
           )}
 

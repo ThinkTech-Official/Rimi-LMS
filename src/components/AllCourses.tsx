@@ -177,7 +177,7 @@ const AllCourses: React.FC<AllCoursesProps> = ({ onCreateCourse }) => {
             </button>
           </div>
           <button
-            className="inline-block capitalize text-sm sm:text-[16px] px-5 py-1 sm:py-3 bg-primary text-white text-nowrap font-semibold hover:bg-indigo-700 cursor-pointer transition-colors delay-150"
+            className="inline-block capitalize text-sm sm:text-[16px] px-5 py-2 sm:py-3 bg-primary text-white text-nowrap font-semibold hover:bg-indigo-700 cursor-pointer transition-colors delay-150"
             onClick={onCreateCourse}
           >
             {t("create course")}
@@ -191,7 +191,7 @@ const AllCourses: React.FC<AllCoursesProps> = ({ onCreateCourse }) => {
               <li
                 key={cat.id}
                 onClick={() => handleCategoryClick(cat.id)}
-                className={`pb-2 cursor-pointer font-medium text-nowrap text-sm capitalize sm:text-base 2xl:text-xl ${
+                className={`pb-2 cursor-pointer font-medium text-nowrap capitalize text-base 2xl:text-xl ${
                   selectedCategoryId === cat.id
                     ? "text-primary border-b-2 border-primary"
                     : "text-gray-600"
@@ -229,7 +229,7 @@ const AllCourses: React.FC<AllCoursesProps> = ({ onCreateCourse }) => {
                       />
                     </div>
                     <div className=" flex flex-col gap-2 p-2">
-                      <h2 className="text-base 2xl:text-xl font-semibold text-[#1B1B1B] line-clamp-1">
+                      <h2 className="text-base 2xl:text-xl font-semibold text-[#1B1B1B] line-clamp-1 first-letter:capitalize">
                         {course.title}
                       </h2>
                       <div className="flex items-center text-[#6F6B7D] text-xs 2xl:text-base space-x-4">
@@ -247,7 +247,7 @@ const AllCourses: React.FC<AllCoursesProps> = ({ onCreateCourse }) => {
                 ))
               ) : selectedCategoryId === 0 && searchTerm.trim() ? (
                 <p className="text-center text-gray-500 italic">
-                  Course with the name "{searchTerm}" not found.
+                  {t("Course with the name")} "{searchTerm}" {t("not found")}
                 </p>
               ) : null}
             </div>

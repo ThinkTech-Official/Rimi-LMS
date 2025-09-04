@@ -6,6 +6,7 @@ import { useAdminUsers } from "../hooks/useAdminUsers";
 import { useNavigate } from "react-router-dom";
 import Spinner from "./loaders/Spinner";
 import { RxCross2 } from "react-icons/rx";
+import { RenderPageNumbers } from "./RenderPageNumbers";
 
 export const UserManagement: React.FC = () => {
   const navigate = useNavigate();
@@ -79,7 +80,7 @@ export const UserManagement: React.FC = () => {
             <span className="text-[#4B465C] opacity-80 first-letter:uppercase">
               {t("show")}
             </span>
-            <div className="bg-[#EDEDED] px-2 sm:px-4 py-1 sm:py-3 w-full max-w-[350px]">
+            <div className="bg-[#EDEDED] px-2 sm:px-4 py-1 sm:py-3 max-w-[210px] sm:max-w-[400px]">
               <label className="inline-flex items-center mr-4 text-[#4B465C] opacity-80">
                 <input
                   type="radio"
@@ -89,7 +90,9 @@ export const UserManagement: React.FC = () => {
                   onChange={() => handleFilterChange("all")}
                   className="form-radio cursor-pointer"
                 />
-                <span className="ml-2 capitalize">{t("all users")}</span>
+                <span className="ml-2 capitalize text-nowrap">
+                  {t("all users")}
+                </span>
               </label>
               <label className="inline-flex items-center text-[#4B465C] opacity-80">
                 <input
@@ -100,27 +103,29 @@ export const UserManagement: React.FC = () => {
                   onChange={() => handleFilterChange("certified")}
                   className="form-radio cursor-pointer"
                 />
-                <span className="ml-2 capitalize">{t("certified users")}</span>
+                <span className="ml-2 capitalize text-nowrap">
+                  {t("certified users")}
+                </span>
               </label>
             </div>
           </div>
-          <div className="flex items-center border border-[#DBDADE] justify-between max-w-[350px]">
+          <div className="flex items-center border border-[#DBDADE] justify-between max-w-[330px] sm:max-w-[380px]">
             <input
               type="text"
               placeholder={t("Search by name")}
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
-              className="px-2 sm:px-4 py-1 sm:py-3 w-[200px] sm:w-[330px] focus:outline-none"
+              className="px-2 sm:px-4 py-1 sm:py-3 w-[170px] sm:w-[330px] focus:outline-none"
             />
             {searchInput && (
               <RxCross2
-                className="h-8 w-8 text-text-light mr-2 cursor-pointer"
+                className="sm:h-8 sm:w-8 text-text-light mr-2 cursor-pointer"
                 onClick={handleCancelSearch}
               />
             )}
             <button
               onClick={handleSearch}
-              className="px-2 sm:px-3 cursor-pointer flex items-center text-white bg-primary py-3 gap-1"
+              className="px-2 sm:px-3 text-sm sm:text-base cursor-pointer flex items-center text-white bg-primary py-3 gap-1"
             >
               <BiSearch className="" />
               {t("Search")}
@@ -264,19 +269,11 @@ export const UserManagement: React.FC = () => {
           >
             <ChevronLeftIcon className="h-5 w-5" />
           </button>
-          {Array.from({ length: totalPages }, (_, i) => i + 1).map((num) => (
-            <button
-              key={num}
-              onClick={() => setCurrentPage(num)}
-              className={`px-3 py-2 cursor-pointer ${
-                currentPage === num
-                  ? "bg-primary text-white"
-                  : "bg-[#F1F0F2] text-[#808080]"
-              }`}
-            >
-              {num}
-            </button>
-          ))}
+          <RenderPageNumbers
+            setCurrentPage={setCurrentPage}
+            totalPages={totalPages}
+            page={currentPage}
+          />
           <button
             disabled={currentPage === totalPages}
             onClick={() => setCurrentPage((p) => p + 1)}

@@ -248,13 +248,13 @@ const CreateTest: React.FC = () => {
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
           {/* Test Information */}
           <section className="space-y-4">
-            <div className="flex w-full justify-between items-center mb-6 sm:mb-3">
+            <div className="flex flex-col sm:flex-row w-full justify-between sm:items-center mb-6 sm:mb-3">
               <h2 className="text-lg 2xl:text-2xl font-bold text-[#1B1B1B]">
                 {t("test information")}
               </h2>
               <button
                 type="submit"
-                className="inline-block text-sm sm:text-[16px] px-5 py-2 sm:py-3 bg-primary text-white text-nowrap font-semibold hover:bg-indigo-700 cursor-pointer transition-colors delay-150"
+                className="w-fit inline-block text-sm sm:text-[16px] px-5 py-2 sm:py-3 bg-primary text-white text-nowrap font-semibold hover:bg-indigo-700 cursor-pointer transition-colors delay-150"
               >
                 {loading ? t("saving") : t("save test")}
               </button>
@@ -353,6 +353,11 @@ const CreateTest: React.FC = () => {
                         message: t("passing marks max"),
                       },
                     })}
+                    onKeyDown={(e) => {
+                      if (["e", "E", "+", "-"].includes(e.key)) {
+                        e.preventDefault();
+                      }
+                    }}
                     placeholder={t("passing percentage placeholder")}
                     className="w-full border border-inputBorder p-2 sm:px-4 sm:py-3 focus:outline-none focus:ring-1 focus:ring-primary"
                   />
@@ -456,7 +461,7 @@ const CreateTest: React.FC = () => {
             ))}
           </section>
 
-          <div className="flex gap-3 justify-between">
+          <div className="flex flex-col sm:flex-row gap-3 justify-between">
             <button
               type="button"
               onClick={handleAddQuestion}

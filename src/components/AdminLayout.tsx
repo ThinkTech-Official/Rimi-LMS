@@ -16,9 +16,7 @@ import { MdOutlineFactCheck } from "react-icons/md";
 import Footer from "./Footer";
 
 export const AdminLayout: React.FC = () => {
-  const [active, setActive] = useState<
-    "home" | "courses" | "certificates" | "tests" | "users"
-  >("home");
+  const [active, setActive] = useState<string>("home");
   const [isSidebarOpen, setSidebarOpen] = useState(true);
   const navigate = useNavigate();
   const { t } = useTranslation();
@@ -40,7 +38,7 @@ export const AdminLayout: React.FC = () => {
     {
       label: "all Courses",
       icon: BookOpenIcon,
-      key: "courses",
+      key: "all-courses",
       url: "/admin/all-courses",
     },
     {
@@ -81,6 +79,15 @@ export const AdminLayout: React.FC = () => {
       url: "/admin/certificates",
     },
   ] as const;
+
+  useEffect(() => {
+    const current = menuItems.find((item) =>
+      location.pathname.startsWith(item.url)
+    );
+    if (current) {
+      setActive(current.key);
+    }
+  }, [location.pathname]);
 
   const handleLinkClick = (key: any) => {
     setActive(key);
@@ -143,7 +150,7 @@ export const AdminLayout: React.FC = () => {
                     <span className="capitalize">{t(item.label)}</span>
                   )}
                   {!isSidebarOpen && (
-                    <span className="absolute left-full top-1/2 -translate-y-1/2 ml-1 z-50 bg-[#393939] text-white text-xs px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
+                    <span className="absolute left-full top-1/2 -translate-y-1/2 ml-1 z-50 bg-[#393939] text-white text-xs px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap pointer-events-none">
                       {item.label}
                     </span>
                   )}
