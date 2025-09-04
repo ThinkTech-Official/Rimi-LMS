@@ -33,10 +33,25 @@ export const AdminCreateAdmin: React.FC = () => {
         duration: 3000,
       });
       reset();
-    } catch {
+    } catch (error: any) {
+      // catch {
+      //   triggerNotification({
+      //     type: "error",
+      //     message: t("Failed to create admin"),
+      //     duration: 3000,
+      //   });
+      // }
+      let errorMessage = t("Failed to create admin");
+
+      if (error?.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      } else if (error?.message) {
+        errorMessage = error.message;
+      }
+
       triggerNotification({
         type: "error",
-        message: t("Failed to create admin"),
+        message: errorMessage,
         duration: 3000,
       });
     }
@@ -105,7 +120,8 @@ export const AdminCreateAdmin: React.FC = () => {
               },
               pattern: {
                 value: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]+$/,
-                message: "Password must contain at least one letter and one number",
+                message:
+                  "Password must contain at least one letter and one number",
               },
             })}
             className="w-full p-2 sm:px-4 sm:py-3 border border-zinc-300 focus:border-0 focus:outline-none focus:ring-1 focus:ring-primary"

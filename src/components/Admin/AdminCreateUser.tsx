@@ -31,11 +31,23 @@ export const AdminCreateUser: React.FC = () => {
         duration: 3000,
       });
       reset();
-    } catch (error) {
+    } catch (error: any) {
       console.log("error in creting client", error);
+      let errorMessage = t("Failed to create client"); // fallback message
+
+      if (error?.response?.data?.message) {
+        // If backend sends structured error response
+        errorMessage = error.response.data.message;
+      } else if (error?.response?.data?.error) {
+        // Alternative error field
+        errorMessage = error.response.data.error;
+      } else if (error?.message) {
+        // If error has a message property
+        errorMessage = error.message;
+      }
       triggerNotification({
         type: "error",
-        message: t("Failed to create client"),
+        message: errorMessage,
         duration: 3000,
       });
     }
@@ -104,7 +116,8 @@ export const AdminCreateUser: React.FC = () => {
               },
               pattern: {
                 value: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]+$/,
-                message: "Password must contain at least one letter and one number",
+                message:
+                  "Password must contain at least one letter and one number",
               },
             })}
             className="w-full p-2 sm:px-4 sm:py-3 border border-zinc-300 focus:border-0 focus:outline-none focus:ring-1 focus:ring-primary"

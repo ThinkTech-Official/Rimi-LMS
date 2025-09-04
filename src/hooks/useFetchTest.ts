@@ -19,6 +19,7 @@ export interface TestDetail {
   name: string;
   duration: number; // in minutes
   startTime: number; // minute offset in video
+   passingMarks: number;
   questions: QuestionDto[];
 }
 

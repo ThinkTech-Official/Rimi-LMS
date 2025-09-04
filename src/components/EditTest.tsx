@@ -12,7 +12,7 @@ export interface EditTestDto {
   name: string;
   duration: number;
   startTime: number;
-  passingPercentage: number;
+  passingMarks: number;
   questions: QuestionDto[];
 }
 
@@ -60,7 +60,7 @@ const EditTest: React.FC = () => {
       name: "",
       duration: 0,
       startTime: 0,
-      passingPercentage: 0,
+      passingMarks: 0,
       questions: [],
     },
   });
@@ -97,6 +97,7 @@ const EditTest: React.FC = () => {
       name: test.name,
       duration: test.duration,
       startTime: test.startTime,
+      passingMarks: test.passingMarks,
       questions: test.questions,
     });
     setQuestions(test.questions);
@@ -208,6 +209,7 @@ const EditTest: React.FC = () => {
       name: data.name,
       duration: data.duration,
       startTime: data.startTime,
+      passingMarks: data.passingMarks,
       questions: questions.map((q) => ({
         text: q.text,
         options: q.options.map((o) => ({
@@ -305,6 +307,7 @@ const EditTest: React.FC = () => {
                 <input
                   type="number"
                   {...register("duration", {
+                    valueAsNumber: true,
                     required: t("duration required"),
                     min: {
                       value: 1,
@@ -352,7 +355,7 @@ const EditTest: React.FC = () => {
                 </label>
                 <input
                   type="number"
-                  {...register("passingPercentage", {
+                  {...register("passingMarks", {
                     valueAsNumber: true,
                     required: t("Passing percentage required"),
                     min: {
@@ -367,9 +370,9 @@ const EditTest: React.FC = () => {
                   placeholder={t("passing percentage placeholder")}
                   className="w-full border border-inputBorder p-2 sm:px-4 sm:py-3 focus:outline-none focus:ring-1 focus:ring-primary"
                 />
-                {errors.passingPercentage && (
+                {errors.passingMarks && (
                   <p className="text-red-500 text-xs mt-1">
-                    {errors.passingPercentage.message}
+                    {errors.passingMarks.message}
                   </p>
                 )}
               </div>
