@@ -283,5 +283,7 @@
   "No User Logged in": "Aucun utilisateur connect&eacute;",
   "Tests Created":"Tests cr&eacute;es",
   "Open":"Ouvrir",
-  "Total":"Total"
+  "Total":"Total",
+  "Failed to load data": "Échec du chargement des données",
+  "Back to home": "Retour &agrave; l'accueil"
 }

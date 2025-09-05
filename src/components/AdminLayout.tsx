@@ -98,7 +98,7 @@ export const AdminLayout: React.FC = () => {
     <div className="flex">
       {/* Sidebar  */}
       <aside
-        className={`bg-[#F6F6F6] min-h-screen transition-all duration-300 ${
+        className={`bg-[#F6F6F6] min-h-screen transition-all duration-300 z-10 ${
           isSidebarOpen ? "w-64 z-10" : "w-12"
         }`}
       >
