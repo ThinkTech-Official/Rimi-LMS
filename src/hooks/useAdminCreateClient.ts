@@ -26,6 +26,7 @@ export function useAdminCreateClient() {
       console.log("user Created ");
       setSuccess(true);
     } catch (err: any) {
+      console.log('error from use admin create client hook',err)
       setError(
         err.response?.data?.message || err.response?.data?.error || err.message
       );

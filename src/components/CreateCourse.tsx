@@ -143,12 +143,138 @@ const CreateCourse: React.FC<CreateCourseProps> = () => {
     }
   };
 
-  const handleThumbnailChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      setValue("thumbnail", e.target.files[0]);
-      clearErrors("thumbnail");
+  // const handleThumbnailChange = (e: ChangeEvent<HTMLInputElement>) => {
+  //   if (e.target.files) {
+  //     setValue("thumbnail", e.target.files[0]);
+  //     clearErrors("thumbnail");
+  //   }
+  // };
+
+
+//   const handleThumbnailChange = (e: ChangeEvent<HTMLInputElement>) => {
+//   if (e.target.files && e.target.files[0]) {
+//     const file = e.target.files[0];
+    
+//     // Validate file size 
+//     const maxSizeInMB = 10; // 10MB limit
+//     if (file.size > maxSizeInMB * 1024 * 1024) {
+//       setError("thumbnail", {
+//         type: "manual",
+//         message: `File size must be less than ${maxSizeInMB}MB`
+//       });
+//       return;
+//     }
+
+//     // Validate image dimensions 
+//     const img = new Image();
+//     const objectUrl = URL.createObjectURL(file);
+    
+//     img.onload = () => {
+//       URL.revokeObjectURL(objectUrl);
+      
+//       // Optional: Set maximum dimensions if needed
+//       const maxWidth = 1200;
+//       const maxHeight = 1200;
+      
+//       if (img.width > maxWidth || img.height > maxHeight) {
+//         setError("thumbnail", {
+//           type: "manual",
+//           message: `Image dimensions must be less than ${maxWidth}x${maxHeight}px`
+//         });
+//         return;
+//       }
+      
+//       // If validation passes, set the file
+//       setValue("thumbnail", file);
+//       clearErrors("thumbnail");
+//     };
+    
+//     img.onerror = () => {
+//       URL.revokeObjectURL(objectUrl);
+//       setError("thumbnail", {
+//         type: "manual",
+//         message: "Invalid image file"
+//       });
+//     };
+    
+//     img.src = objectUrl;
+//   }
+// };
+
+
+const handleThumbnailChange = (e: ChangeEvent<HTMLInputElement>) => {
+  if (e.target.files && e.target.files[0]) {
+    const file = e.target.files[0];
+    
+    // Get file extension
+    const fileName = file.name.toLowerCase();
+    const allowedExtensions = ['.png', '.jpg', '.jpeg'];
+    const hasValidExtension = allowedExtensions.some(ext => fileName.endsWith(ext));
+    
+    // Validate file type by both MIME type and extension
+    const allowedMimeTypes = ['image/png', 'image/jpeg'];
+    const hasValidMimeType = allowedMimeTypes.includes(file.type);
+    
+    // Check both extension and MIME type for better security
+    if (!hasValidExtension || !hasValidMimeType) {
+      // Clear the input
+      e.target.value = '';
+      setError("thumbnail", {
+        type: "manual",
+        message: "Only PNG and JPEG image files are allowed"
+      });
+      return;
     }
-  };
+    
+    // Validate file size 
+    const maxSizeInMB = 10;
+    if (file.size > maxSizeInMB * 1024 * 1024) {
+      e.target.value = '';
+      setError("thumbnail", {
+        type: "manual",
+        message: `File size must be less than ${maxSizeInMB}MB`
+      });
+      return;
+    }
+
+    // Validate that it's actually an image by trying to load it
+    const img = new Image();
+    const objectUrl = URL.createObjectURL(file);
+    
+    img.onload = () => {
+      URL.revokeObjectURL(objectUrl);
+      
+      // Set maximum dimensions if needed
+      const maxWidth = 1200;
+      const maxHeight = 1200;
+      
+      if (img.width > maxWidth || img.height > maxHeight) {
+        setError("thumbnail", {
+          type: "manual",
+          message: `Image dimensions must be less than ${maxWidth}x${maxWidth}px. Current: ${img.width}x${img.height}px`
+        });
+        return;
+      }
+      
+      // If all validation passes, set the file
+      setValue("thumbnail", file);
+      clearErrors("thumbnail");
+    };
+    
+    img.onerror = () => {
+      URL.revokeObjectURL(objectUrl);
+      // Clear the input
+      e.target.value = '';
+      setError("thumbnail", {
+        type: "manual",
+        message: "Selected file is not a valid image"
+      });
+    };
+    
+    img.src = objectUrl;
+  }
+};
+
 
   const handleDocsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -529,20 +655,20 @@ const CreateCourse: React.FC<CreateCourseProps> = () => {
                       <label className="flex items-center justify-center h-32 border border-inputBorder cursor-pointer hover:border-primary">
                         <input
                           type="file"
-                          accept="image/png,image/jpeg"
+                          accept=".png,.jpg,.jpeg,image/png,image/jpeg"
                           className="hidden"
                           onChange={handleThumbnailChange}
                         />
                         <span className="text-[#59BDE2] flex items-center gap-2">
                           <MdUpload className="text-[#59BDE2] w-7 h-7" />
-                          {watchedThumbnail ? watchedThumbnail.name : t("select file to upload")}
+                          {watchedThumbnail ? watchedThumbnail.name : t("Please select PNG or JPEG file")}
                         </span>
                       </label>
                     )}
                   />
                   <p className="text-xs text-text-light-2 mt-2">
                     {t(
-                      "Recommended Image Size: 800px x 600px, PNG or JPEG file"
+                      "Recommended Image Size: 800px x 600px, PNG or JPEG file only"
                     )}
                   </p>
                   {errors.thumbnail && (
