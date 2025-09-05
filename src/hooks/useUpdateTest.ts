@@ -15,6 +15,7 @@ export interface UpdateTestDto {
   duration: number;
   startTime: number;
   questions: CreateQuestionDto[];
+  passingMarks: number;
 }
 
 /**

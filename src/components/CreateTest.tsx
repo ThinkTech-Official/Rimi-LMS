@@ -132,16 +132,27 @@ const CreateTest: React.FC = () => {
   };
 
   const toggleCorrect = (qid: number, oid: number) => {
-    const updatedQuestions = questions.map((q) =>
-      q.id === qid
-        ? {
-            ...q,
-            options: q.options.map((o) =>
-              o.id === oid ? { ...o, isCorrect: !o.isCorrect } : o
-            ),
-          }
-        : q
-    );
+    // only one option can be correct at a time
+    const updatedQuestions = questions.map((q) => {
+      if (q.id === qid) {
+        const clicked = q.options.find((o) => o.id === oid);
+
+        const isCurrentlyCorrect = clicked?.isCorrect;
+
+        return {
+          ...q,
+          options: q.options.map((o) => {
+            if (o.id === oid) {
+              // toggle the clicked one
+              return { ...o, isCorrect: !o.isCorrect };
+            }
+            // if we are selecting a new correct one → reset others
+            return isCurrentlyCorrect ? o : { ...o, isCorrect: false };
+          }),
+        };
+      }
+      return q;
+    });
     setQuestions(updatedQuestions);
 
     const current = updatedQuestions.find((q) => q.id === qid)!;
@@ -261,30 +272,29 @@ const CreateTest: React.FC = () => {
             </div>
 
             <div className="space-y-4">
-              <div className="flex flex-col">
-                <label className="text-sm text-text-light-2 mb-1 capitalize">
-                  {t("name")}
-                </label>
-                <input
-                  type="text"
-                  {...register("name", {
-                    required: t("name required"),
-                    minLength: {
-                      value: 4,
-                      message: t("name min length"),
-                    },
-                  })}
-                  placeholder={t("enter test name")}
-                  className="w-full border border-inputBorder p-2 sm:px-4 sm:py-3 focus:outline-none focus:ring-1 focus:ring-primary"
-                />
-                {errors.name && (
-                  <p className="text-red-500 text-xs mt-1">
-                    {errors.name.message}
-                  </p>
-                )}
-              </div>
-
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="flex flex-col">
+                  <label className="text-sm text-text-light-2 mb-1 capitalize">
+                    {t("name")}
+                  </label>
+                  <input
+                    type="text"
+                    {...register("name", {
+                      required: t("name required"),
+                      minLength: {
+                        value: 4,
+                        message: t("name min length"),
+                      },
+                    })}
+                    placeholder={t("enter test name")}
+                    className="w-full border border-inputBorder p-2 sm:px-4 sm:py-3 focus:outline-none focus:ring-1 focus:ring-primary"
+                  />
+                  {errors.name && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.name.message}
+                    </p>
+                  )}
+                </div>
                 <div className="flex flex-col">
                   <label className="text-sm text-text-light-2 mb-1 capitalize">
                     {t("duration")}
@@ -331,10 +341,42 @@ const CreateTest: React.FC = () => {
                     </p>
                   )}
                 </div>
+                <div className="flex flex-col">
+                  <label className="text-sm text-text-light-2 mb-1 capitalize">
+                    {t("passing percentage")}
+                  </label>
+                  <input
+                    type="number"
+                    {...register("passingMarks", {
+                      valueAsNumber: true,
+                      required: t("Passing percentage required"),
+                      min: {
+                        value: 1,
+                        message: t("passing marks min"),
+                      },
+                      max: {
+                        value: 100,
+                        message: t("passing marks max"),
+                      },
+                    })}
+                    onKeyDown={(e) => {
+                      if (["e", "E", "+", "-"].includes(e.key)) {
+                        e.preventDefault();
+                      }
+                    }}
+                    placeholder={t("passing percentage placeholder")}
+                    className="w-full border border-inputBorder p-2 sm:px-4 sm:py-3 focus:outline-none focus:ring-1 focus:ring-primary"
+                  />
+                  {errors.passingMarks && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.passingMarks.message}
+                    </p>
+                  )}
+                </div>
               </div>
 
               {/* Passing Marks and Quiz Questions */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="flex flex-col">
                   <label className="text-sm text-text-light-2 mb-1 capitalize">
                     {t("passing percentage")}
@@ -391,7 +433,7 @@ const CreateTest: React.FC = () => {
                     </p>
                   )}
                 </div>
-              </div>
+              </div> */}
             </div>
           </section>
 

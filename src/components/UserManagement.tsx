@@ -46,7 +46,7 @@ export const UserManagement: React.FC = () => {
     return (
       <div className="fixed top-1/2 left-1/2 flex flex-col items-center gap-2">
         <Spinner className="w-10 h-10" />{" "}
-        <p className="text-text-light">Loading...</p>
+        <p className="text-text-light">{t("Loading…")}</p>
       </div>
     );
   if (error)
@@ -174,115 +174,123 @@ export const UserManagement: React.FC = () => {
                 className="bg-white"
                 style={{ border: "1px solid #AAA9A9" }}
               >
-                {users.map((user: any) => (
-                  <tr
-                    key={user.email}
-                    className="text-[#808080] text-sm 2xl:text-xl"
-                  >
-                    <td
-                      className="px-2 sm:px-6 py-2 sm:py-4 whitespace-nowrap"
-                      style={{
-                        borderWidth: "0px 1px 1px 0px",
-                        borderStyle: "solid",
-                        borderColor: "#AAA9A9",
-                      }}
+                {users.length == 0 ? (
+                  <p className="p-2 text-red-500">
+                    {t("Users with the name")} "{search}" {t("not found")}.
+                  </p>
+                ) : (
+                  users.map((user: any) => (
+                    <tr
+                      key={user.email}
+                      className="text-[#808080] text-sm 2xl:text-xl"
                     >
-                      {" "}
-                      {user.name}
-                    </td>
-                    <td
-                      className="px-2 sm:px-6 py-2 sm:py-4 whitespace-nowrap"
-                      style={{
-                        borderWidth: "0px 1px 1px 0px",
-                        borderStyle: "solid",
-                        borderColor: "#AAA9A9",
-                      }}
-                    >
-                      {" "}
-                      {user.email}
-                    </td>
-                    <td
-                      className="px-2 sm:px-6 py-2 sm:py-4 min-w-[200px] max-w-[250px] text-wrap"
-                      style={{
-                        borderWidth: "0px 1px 1px 0px",
-                        borderStyle: "solid",
-                        borderColor: "#AAA9A9",
-                      }}
-                    >
-                      {" "}
-                      {user.course}
-                    </td>
-                    <td
-                      className="px-2 sm:px-6 py-2 sm:py-4 whitespace-nowrap"
-                      style={{
-                        borderWidth: "0px 1px 1px 0px",
-                        borderStyle: "solid",
-                        borderColor: "#AAA9A9",
-                      }}
-                    >
-                      {" "}
-                      {user.progress}
-                    </td>
-                    <td
-                      className="px-2 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-center"
-                      style={{
-                        borderWidth: "0px 1px 1px 0px",
-                        borderStyle: "solid",
-                        borderColor: "#AAA9A9",
-                      }}
-                    >
-                      {" "}
-                      {user.certificateIssued ? "Yes" : "No"}
-                    </td>
-                    <td
-                      className="px-2 sm:px-6 py-2 sm:py-4 whitespace-nowrap"
-                      style={{
-                        borderWidth: "0px 1px 1px 0px",
-                        borderStyle: "solid",
-                        borderColor: "#AAA9A9",
-                      }}
-                    >
-                      {" "}
-                      <button
-                        className="text-primary hover:underline hover:underline-offset-2 cursor-pointer font-medium px-4 text-center w-full"
-                        onClick={() => handleClientProfile(user.id)}
+                      <td
+                        className="px-2 sm:px-6 py-2 sm:py-4 whitespace-nowrap"
+                        style={{
+                          borderWidth: "0px 1px 1px 0px",
+                          borderStyle: "solid",
+                          borderColor: "#AAA9A9",
+                        }}
                       >
-                        {t("View Profile")}
-                      </button>
-                    </td>
-                  </tr>
-                ))}
+                        {" "}
+                        {user.name}
+                      </td>
+                      <td
+                        className="px-2 sm:px-6 py-2 sm:py-4 whitespace-nowrap"
+                        style={{
+                          borderWidth: "0px 1px 1px 0px",
+                          borderStyle: "solid",
+                          borderColor: "#AAA9A9",
+                        }}
+                      >
+                        {" "}
+                        {user.email}
+                      </td>
+                      <td
+                        className="px-2 sm:px-6 py-2 sm:py-4 min-w-[200px] max-w-[250px] text-wrap"
+                        style={{
+                          borderWidth: "0px 1px 1px 0px",
+                          borderStyle: "solid",
+                          borderColor: "#AAA9A9",
+                        }}
+                      >
+                        {" "}
+                        {user.course}
+                      </td>
+                      <td
+                        className="px-2 sm:px-6 py-2 sm:py-4 whitespace-nowrap"
+                        style={{
+                          borderWidth: "0px 1px 1px 0px",
+                          borderStyle: "solid",
+                          borderColor: "#AAA9A9",
+                        }}
+                      >
+                        {" "}
+                        {user.progress}
+                      </td>
+                      <td
+                        className="px-2 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-center"
+                        style={{
+                          borderWidth: "0px 1px 1px 0px",
+                          borderStyle: "solid",
+                          borderColor: "#AAA9A9",
+                        }}
+                      >
+                        {" "}
+                        {user.certificateIssued ? "Yes" : "No"}
+                      </td>
+                      <td
+                        className="px-2 sm:px-6 py-2 sm:py-4 whitespace-nowrap"
+                        style={{
+                          borderWidth: "0px 1px 1px 0px",
+                          borderStyle: "solid",
+                          borderColor: "#AAA9A9",
+                        }}
+                      >
+                        {" "}
+                        <button
+                          className="text-primary hover:underline hover:underline-offset-2 cursor-pointer font-medium px-4 text-center w-full"
+                          onClick={() => handleClientProfile(user.id)}
+                        >
+                          {t("View Profile")}
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </table>
           )}
         </div>
         {/* Pagination */}
-        <div
-          className="flex items-center justify-center p-4 space-x-2"
-          role="pagination"
-        >
-          <button
-            disabled={currentPage === 1}
-            onClick={() => setCurrentPage((p) => p - 1)}
-            className="px-2 py-[10px] bg-[#CCCCCC] text-[#6F6B7D] cursor-pointer"
-            title="Previous"
+        {users.length > 0 && (
+          <div
+            className="flex items-center justify-center p-4 space-x-2"
+            role="pagination"
           >
-            <ChevronLeftIcon className="h-5 w-5" />
-          </button>
-          <RenderPageNumbers
-            setCurrentPage={setCurrentPage}
-            totalPages={totalPages}
-            page={currentPage}
-          />
-          <button
-            disabled={currentPage === totalPages}
-            onClick={() => setCurrentPage((p) => p + 1)}
-            className="px-2 py-[10px] bg-[#CCCCCC] text-[#6F6B7D] cursor-pointer"
-            title="Next"
-          >
-            <ChevronRightIcon className="h-5 w-5" />
-          </button>
-        </div>
+            <button
+              disabled={currentPage === 1}
+              onClick={() => setCurrentPage((p) => p - 1)}
+              className="px-2 py-[10px] bg-[#CCCCCC] text-[#6F6B7D] cursor-pointer"
+              title="Previous"
+            >
+              <ChevronLeftIcon className="h-5 w-5" />
+            </button>
+            <RenderPageNumbers
+              setCurrentPage={setCurrentPage}
+              totalPages={totalPages}
+              page={currentPage}
+            />
+            <button
+              disabled={currentPage === totalPages}
+              onClick={() => setCurrentPage((p) => p + 1)}
+              className="px-2 py-[10px] bg-[#CCCCCC] text-[#6F6B7D] cursor-pointer"
+              title="Next"
+            >
+              <ChevronRightIcon className="h-5 w-5" />
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

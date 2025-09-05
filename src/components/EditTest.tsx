@@ -34,6 +34,7 @@ const EditTest: React.FC = () => {
     loading: loadingSave,
     error: saveError,
   } = useUpdateTest(courseId!, testId!);
+  console.log(test);
 
   const [questions, setQuestions] = useState<QuestionDto[]>([
     {
@@ -98,6 +99,7 @@ const EditTest: React.FC = () => {
       duration: test.duration,
       startTime: test.startTime,
       questions: test.questions,
+      passingPercentage: test.passingMarks,
     });
     setQuestions(test.questions);
   }, [test, reset]);
@@ -208,6 +210,7 @@ const EditTest: React.FC = () => {
       name: data.name,
       duration: data.duration,
       startTime: data.startTime,
+      passingMarks: data.passingPercentage,
       questions: questions.map((q) => ({
         text: q.text,
         options: q.options.map((o) => ({

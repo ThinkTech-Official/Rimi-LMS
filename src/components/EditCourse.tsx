@@ -17,6 +17,7 @@ import { CiFileOn } from "react-icons/ci";
 import { MdCancel } from "react-icons/md";
 import FetchingError from "./FetchingError";
 import { useToggleCoursePublish } from "../hooks/useToggleCoursePublish";
+import { FaExternalLinkAlt, FaFilePdf } from "react-icons/fa";
 
 const testHeaders = [
   "Test Name",
@@ -31,6 +32,15 @@ const DeleteCourseInfo = [
   "The course video file",
   "All tests and their questions",
   "All certificates and test results",
+];
+
+//sample document names
+const Documents = [
+  "Document 1",
+  "Document 2",
+  "Document 3",
+  "Document 4",
+  "Document 5",
 ];
 
 const EditCourse: React.FC = () => {
@@ -94,6 +104,8 @@ const EditCourse: React.FC = () => {
   } = useAdminDeleteCourse(Number(courseId!));
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isDeleteDocumentModalOpen, setIsDeleteDocumentModalOpen] =
+    useState(false);
 
   const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
   const [videoFile, setVideoFile] = useState<File | null>(null);
@@ -105,7 +117,9 @@ const EditCourse: React.FC = () => {
   }, [tests]);
 
   const [modalTestId, setModalTestId] = useState<number | null>(null);
-
+  const [activeTab, setActiveTab] = useState<"Description" | "Documents">(
+    "Description"
+  );
   const [isBasicModalOpen, setIsBasicModalOpen] = useState(false);
   const [basicForm, setBasicForm] = useState({
     name: "",
@@ -309,7 +323,9 @@ const EditCourse: React.FC = () => {
   if (error || basicInfoError) {
     return <FetchingError />;
   }
-
+  const handleDeleteDocument = async () => {
+    setIsDeleteDocumentModalOpen((prev) => !prev);
+  };
   return (
     <section className="space-y-6 p-2 md:p-4 lg:p-8">
       {/* Breadcrumbs */}
@@ -396,9 +412,61 @@ const EditCourse: React.FC = () => {
                 </p>
               </div>
             </div>
-            <div className="text-text-light first-letter:uppercase">
-              {basicCourse.description}
+            <div className="border-b border-inputBorder mb-6">
+              <ul className="flex space-x-4">
+                <li
+                  onClick={() => setActiveTab("Description")}
+                  className={`pb-2 cursor-pointer ${
+                    activeTab === "Description"
+                      ? "border-b-2 text-primary"
+                      : "text-gray-500"
+                  }`}
+                >
+                  {t("Description")}
+                </li>
+                <li
+                  onClick={() => setActiveTab("Documents")}
+                  className={`pb-2 cursor-pointer ${
+                    activeTab === "Documents"
+                      ? "border-b-2 text-primary"
+                      : "text-gray-500"
+                  }`}
+                >
+                  {t("Documents")}
+                </li>
+              </ul>
             </div>
+            {activeTab == "Description" && (
+              <p className="text-text-light-2">{basicCourse.description}</p>
+            )}
+            {activeTab == "Documents" && (
+              <div className="space-y-2">
+                <p className="text-text-light-2 -mt-4 px-3">{t("Total")} : {Documents.length}</p>
+                {Documents.map((doc, index) => (
+                  <div
+                    key={index}
+                    className="flex items-center gap-3 p-2 hover:bg-gray-50 rounded-md transition-colors"
+                  >
+                    <FaFilePdf className="w-6 h-6 fill-[#EF5350]" />
+                    <div className="flex justify-between items-center gap-2 w-full">
+                      <span className="text-text-light">{doc}</span>
+                      <div className="flex gap-2 justify-center items-center">
+                        <button
+                          // onClick={() => handleDeleteClick(test.id)}
+                          className="text-primary hover:underline font-medium cursor-pointer"
+                        >
+                          <RiDeleteBinLine
+                            className="w-5 h-5 cursor-pointer text-red-400"
+                            onClick={handleDeleteDocument}
+                          />
+                        </button>
+                        <FaExternalLinkAlt className="w-4 h-4 fill-primary cursor-pointer" />
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         )
       )}
@@ -574,7 +642,33 @@ const EditCourse: React.FC = () => {
           {t("Delete Course")}
         </button>
       </div>
-
+      {/* Delete Confirmation Modal FOR DOCUMENT */}
+      {isDeleteDocumentModalOpen && (
+        <div className="fixed inset-0 bg-black/10  flex items-center justify-center z-50">
+          <div className="bg-white shadow-lg p-6 w-[90%] max-w-md">
+            <h3 className="text-lg font-semibold">{t("Confirm Delete")}</h3>
+            <p className="mt-4">
+              {t("Are you sure you want to delete this document?")}
+            </p>
+            {deleteError && <p className="text-red-500 mt-2">{deleteError}</p>}
+            <div className="mt-6 flex justify-end space-x-4">
+              <button
+                onClick={handleDeleteDocument}
+                className="px-4 py-2 border border-inputBorder cursor-pointer"
+              >
+                {t("Cancel")}
+              </button>
+              <button
+                onClick={handleConfirmDelete}
+                disabled={deleting}
+                className="px-4 py-2 bg-red-600 text-white hover:bg-red-700 disabled:opacity-50 cursor-pointer"
+              >
+                {deleting ? `${t("Deleting")}…` : t("Delete")}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       {/* Delete Confirmation Modal FOR TEST */}
       {modalTestId !== null && (
         <div className="fixed inset-0 bg-black/10  flex items-center justify-center z-50">

@@ -261,12 +261,14 @@
   "Something went wrong": "Une erreur s'est produite",
   "Back to Dashboard": "Retour au dashboard",
   "Course with the name": "Cours avec le nom",
+  "Users with the name": "Utilisateurs avec le nom",
   "not found": "non trouv&eacute;e",
   "Authenticating": "Authentification en cours",
   "No tests created yet.": "Aucun test cr&eacute;e.",
   "Test with the name": "Test avec le nom",
   "Confirm Delete": "Confirmer la suppression",
   "Are you sure you want to delete this test?": "Voulez-vous vraiment supprimer ce test?",
+  "Are you sure you want to delete this document?": "Voulez-vous vraiment supprimer ce document?",
   "Choose Thumbnail": "Choisir l'image de vignette",
   "Choose Video": "Choisir la video",
   "Video": "Vidéo",
@@ -279,5 +281,7 @@
   "All certificates and test results": "Tous les certificats et les r&eacute;sultats des tests",
   "Yes, delete course": "Oui, supprimer le cours",
   "No User Logged in": "Aucun utilisateur connect&eacute;",
-  "Tests Created":"Tests cr&eacute;es"
+  "Tests Created":"Tests cr&eacute;es",
+  "Open":"Ouvrir",
+  "Total":"Total"
 }

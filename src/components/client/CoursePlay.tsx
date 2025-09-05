@@ -721,7 +721,7 @@ const CoursePlay = () => {
                 rel="noopener noreferrer"
                 className="px-4 py-1 sm:py-2 bg-primary text-base text-white font-medium hover:bg-indigo-700"
               >
-                Open
+                {t("Open")}
               </a>
             </li>
           ))}

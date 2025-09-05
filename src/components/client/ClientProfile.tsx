@@ -26,7 +26,7 @@ const ClientProfile: React.FC = () => {
   const {
     resetPassword,
     loading: savingPwd,
-    // error: pwdError,
+    // error: pwdError,fr
   } = useResetPassword();
 
   const [editMode, setEditMode] = useState(false);
@@ -34,8 +34,6 @@ const ClientProfile: React.FC = () => {
   const [showResetPasswordModal, setShowResetPasswordModal] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [newPwd, setNewPwd] = useState("");
-  const [confirmPwd, setConfirmPwd] = useState("");
   const [localError, setLocalError] = useState<string | null>(null);
   const modalRef = useRef<HTMLDivElement>(null);
   const { triggerNotification } = useNotification();

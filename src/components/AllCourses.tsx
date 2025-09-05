@@ -157,14 +157,14 @@ const AllCourses: React.FC<AllCoursesProps> = ({ onCreateCourse }) => {
         </h1>
 
         {/* Search & Action */}
-        <div className="flex flex-col sm:flex-row sm:items-center mb-6 gap-4 w-fit">
-          <div className="flex items-center border border-[#DBDADE] w-[230px] sm:w-[330px] relative">
+        <div className="flex flex-col sm:flex-row sm:items-center mb-6 gap-2 sm:gap-4 w-fit">
+          <div className="flex items-center border border-[#DBDADE] w-[250px] sm:w-[330px] relative">
             <input
               type="text"
               placeholder={t("Search by name")}
               value={searchTerm}
               onChange={handleSearchChange}
-              className="relative px-2 sm:px-4 py-1 sm:py-3 w-[200px] sm:w-[330px] focus:outline-none focus:ring-1 focus:ring-primary"
+              className="relative px-2 sm:px-4 py-3 w-[200px] sm:w-[330px] focus:outline-none focus:ring-1 focus:ring-primary"
             />
             <button className="px-1 sm:px-3 cursor-pointer absolute right-0 flex gap-2 items-center">
               {searchTerm && (
@@ -177,7 +177,7 @@ const AllCourses: React.FC<AllCoursesProps> = ({ onCreateCourse }) => {
             </button>
           </div>
           <button
-            className="inline-block capitalize text-sm sm:text-[16px] px-5 py-2 sm:py-3 bg-primary text-white text-nowrap font-semibold hover:bg-indigo-700 cursor-pointer transition-colors delay-150"
+            className="inline-block capitalize text-sm sm:text-[16px] px-5 py-3 bg-primary text-white text-nowrap font-semibold hover:bg-indigo-700 cursor-pointer transition-colors delay-150"
             onClick={onCreateCourse}
           >
             {t("create course")}
