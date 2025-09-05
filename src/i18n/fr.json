@@ -285,5 +285,7 @@
   "Open":"Ouvrir",
   "Total":"Total",
   "Failed to load data": "Échec du chargement des données",
-  "Back to home": "Retour &agrave; l'accueil"
+  "Back to home": "Retour &agrave; l'accueil",
+  "Password must contain at least one letter": "Le mot de passe doit contenir au moins une lettre",
+  "Password must contain at least one number": "Le mot de passe doit contenir au moins un chiffre"
 }

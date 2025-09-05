@@ -178,10 +178,13 @@ const LoginClient: React.FC = () => {
                       value: 6,
                       message: "Password must be at least 6 characters",
                     },
-                    pattern: {
-                      value: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]+$/,
-                      message:
-                        "Password must contain at least one letter and one number",
+                    validate: {
+                      hasLetter: (value) =>
+                        /[A-Za-z]/.test(value) ||
+                        "Password must contain at least one letter",
+                      hasNumber: (value) =>
+                        /\d/.test(value) ||
+                        "Password must contain at least one number",
                     },
                   })}
                   type={showPassword ? "text" : "password"}
