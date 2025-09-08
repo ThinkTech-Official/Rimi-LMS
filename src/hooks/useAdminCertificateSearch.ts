@@ -49,5 +49,6 @@ export function useAdminCertificateSearch() {
     loading,
     error,
     searchCertificate,
+    setCertificate
   };
 }

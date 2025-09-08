@@ -210,7 +210,9 @@ const EditCourse: React.FC = () => {
   const paginatedTests = filtered.slice(startIndex, startIndex + testsPerPage);
 
   const handleCreateTest = () => {
-    navigate(`/admin/edit-course/${courseId}/create-test`);
+    navigate(`/admin/edit-course/${courseId}/create-test`, {
+      state: { courseDuration: basicCourse?.duration },
+    });
   };
 
   const handleDeleteClick = (id: number) => {
@@ -441,7 +443,9 @@ const EditCourse: React.FC = () => {
             )}
             {activeTab == "Documents" && (
               <div className="space-y-2">
-                <p className="text-text-light-2 -mt-4 px-3">{t("Total")} : {Documents.length}</p>
+                <p className="text-text-light-2 -mt-4 px-3">
+                  {t("Total")} : {Documents.length}
+                </p>
                 {Documents.map((doc, index) => (
                   <div
                     key={index}

@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useAdminCertificateSearch } from "../../hooks/useAdminCertificateSearch";
 import { API_BASE } from "../../utils/ulrs";
-import { useForm, type SubmitHandler } from "react-hook-form";
+import { set, useForm, type SubmitHandler } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { RxCross2 } from "react-icons/rx";
 
 const AdminTrackCertificate: React.FC = () => {
-  const { certificate, loading, searchCertificate } =
+  const { certificate, loading, searchCertificate, setCertificate } =
     useAdminCertificateSearch();
   const [searchFailed, setSearchFailed] = useState(false);
   const { t } = useTranslation();
@@ -14,6 +15,7 @@ const AdminTrackCertificate: React.FC = () => {
     register,
     handleSubmit,
     watch,
+    setValue,
     formState: { errors },
   } = useForm<{ certificateNumber: string }>();
 
@@ -26,6 +28,12 @@ const AdminTrackCertificate: React.FC = () => {
     if (!certificate) {
       setSearchFailed(true);
     }
+  };
+
+  const handleClearInput = () => {
+    setValue("certificateNumber", "");
+    setCertificate(null);
+    setSearchFailed(false);
   };
 
   useEffect(() => {
@@ -44,14 +52,22 @@ const AdminTrackCertificate: React.FC = () => {
         onSubmit={handleSubmit(onSubmit)}
         className="flex flex-col sm:flex-row sm:items-center gap-2 mb-4"
       >
-        <input
-          type="text"
-          {...register("certificateNumber", {
-            required: t("Certificate ID is required"),
-          })}
-          placeholder= {t("Enter certificate ID")}
-          className="flex-1 px-4 py-2 sm:py-3 border border-inputBorder focus:outline-none focus:ring-1 focus:ring-primary text-text-light-2"
-        />
+        <div className="relative w-full">
+          <input
+            type="text"
+            {...register("certificateNumber", {
+              required: t("Certificate ID is required"),
+            })}
+            placeholder={t("Enter certificate ID")}
+            className="flex-1 px-4 py-2 sm:py-3 border border-inputBorder focus:outline-none focus:ring-1 focus:ring-primary text-text-light-2 w-full"
+          />
+          {watchedCertNum && (
+            <RxCross2
+              className="absolute right-2 top-1/2 transform -translate-y-1/2 cursor-pointer h-5 w-5"
+              onClick={handleClearInput}
+            />
+          )}
+        </div>
         <button
           type="submit"
           className="px-4 py-2 sm:py-3 bg-primary text-white cursor-pointer hover:bg-indigo-700 transition-colors delay-100"
@@ -82,11 +98,15 @@ const AdminTrackCertificate: React.FC = () => {
             {certificate.course.name}
           </p>
           <p className="text-text-light">
-            <span className="font-medium text-text-dark">{t("Issued at")}:</span>{" "}
+            <span className="font-medium text-text-dark">
+              {t("Issued at")}:
+            </span>{" "}
             {new Date(certificate.createdAt).toLocaleString()}
           </p>
           <p className="text-text-light">
-            <span className="font-medium text-text-dark">{t("Certificate")} ID:</span>{" "}
+            <span className="font-medium text-text-dark">
+              {t("Certificate")} ID:
+            </span>{" "}
             {certificate.certNumber}
           </p>
           {certificate.fileName && (

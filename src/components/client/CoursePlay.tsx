@@ -22,6 +22,7 @@ import {
 import Spinner from "../loaders/Spinner";
 import { BiExitFullscreen } from "react-icons/bi";
 import { useTranslation } from "react-i18next";
+import { HiOutlineDocumentCheck } from "react-icons/hi2";
 
 const CoursePlay = () => {
   const { id: courseId } = useParams<{ id: string }>();
@@ -666,11 +667,12 @@ const CoursePlay = () => {
                           transform: "translateX(-50%)",
                         }}
                       >
-                        <img
+                        <HiOutlineDocumentCheck className={`h-4 w-4 ${test.isCleared ? "text-red-500/80" : "text-white/50"}`}/>
+                        {/* <img
                           src={`${test.isCleared ? "/DocumentRed.svg" : "/Document.svg"}`}
                           alt="test marker"
                          className="h-4 w-4"
-                        />
+                        /> */}
                       </div>
                     );
                   })}

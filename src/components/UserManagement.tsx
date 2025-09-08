@@ -67,7 +67,7 @@ export const UserManagement: React.FC = () => {
           className="text-primary text-sm font-medium mb-3 capitalize"
           role="breadcrumbs"
         >
-          &gt; {t("users Management")}{" "}
+          {t("users Management")}{" "}
         </h2>
         <h1 className="text-lg 2xl:text-2xl font-bold text-text-dark mb-3 sm:mb-6 capitalize">
           {t("Users")}

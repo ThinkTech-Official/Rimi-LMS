@@ -287,5 +287,8 @@
   "Failed to load data": "Échec du chargement des données",
   "Back to home": "Retour &agrave; l'accueil",
   "Password must contain at least one letter": "Le mot de passe doit contenir au moins une lettre",
-  "Password must contain at least one number": "Le mot de passe doit contenir au moins un chiffre"
+  "Password must contain at least one number": "Le mot de passe doit contenir au moins un chiffre",
+  "Start time cannot be more then course duration": "Le temps de d&eacute;but ne peut pas &ecirc;tre plus long que la duree du cours",
+  "Course duration": "Duree du cours",
+  "Please add at least one question": "Veuillez ajouter au moins une question"
 }

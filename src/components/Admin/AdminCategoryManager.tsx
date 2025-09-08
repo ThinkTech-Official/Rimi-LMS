@@ -7,6 +7,7 @@ import { MdClose } from "react-icons/md";
 import Spinner from "../loaders/Spinner";
 import useNotification from "../../hooks/useNotification";
 import { useTranslation } from "react-i18next";
+import { RxCross2 } from "react-icons/rx";
 
 const AdminCategoryManager: React.FC = () => {
   const {
@@ -135,6 +136,9 @@ const AdminCategoryManager: React.FC = () => {
     if (e.target.value.length <= 0) {
       setNameError("");
     }
+    if (e.target.value.length >= 4) {
+      setNameError("");
+    }
   };
   return (
     <div className="p-4 max-w-2xl mx-auto">
@@ -168,9 +172,7 @@ const AdminCategoryManager: React.FC = () => {
 
       {error && (
         <div className="text-text-light-2 mb-2 fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white max-w-md p-10 shadow-lg border border-inputBorder z-50 text-center">
-          <p className="text-red-500 mb-2 text-center">
-            {t("Error")}:
-          </p>
+          <p className="text-red-500 mb-2 text-center">{t("Error")}:</p>
           {t(error)}
           <MdClose
             onClick={() => setError("")}
@@ -182,12 +184,20 @@ const AdminCategoryManager: React.FC = () => {
       {/* Create */}
       <div className="flex flex-col mb-6">
         <form onSubmit={handleCreate} className="flex">
-          <input
-            className="border border-inputBorder px-3 py-2 flex-1 focus:border-0 focus:outline-none focus:ring-1 focus:ring-primary"
-            placeholder={t("New category name")}
-            value={newName}
-            onChange={handleSetName}
-          />
+          <div className="relative w-full">
+            <input
+              className="w-full border border-inputBorder px-3 py-3 flex-1 focus:border-0 focus:outline-none focus:ring-1 focus:ring-primary"
+              placeholder={t("New category name")}
+              value={newName}
+              onChange={handleSetName}
+            />
+            {newName && (
+              <RxCross2
+                className="absolute right-2 top-1/2 transform -translate-y-1/2 cursor-pointer h-5 w-5"
+                onClick={() => setNewName("")}
+              />
+            )}
+          </div>
           <button
             type="submit"
             disabled={creating}
@@ -216,7 +226,7 @@ const AdminCategoryManager: React.FC = () => {
           </tr>
         </thead>
         <tbody className="bg-white" style={{ border: "1px solid #AAA9A9" }}>
-          {categories.map((cat,i) => (
+          {categories.map((cat, i) => (
             <tr key={cat.id} className="text-[#808080] text-sm 2xl:text-xl">
               <td
                 className="px-2 sm:px-6 py-2 sm:py-4 whitespace-nowrap"
@@ -226,7 +236,7 @@ const AdminCategoryManager: React.FC = () => {
                   borderColor: "#AAA9A9",
                 }}
               >
-                {i+1}
+                {i + 1}
               </td>
               <td
                 className="px-2 sm:px-6 py-2 sm:py-4 whitespace-nowrap"

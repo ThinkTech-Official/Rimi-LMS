@@ -316,6 +316,11 @@ const EditTest: React.FC = () => {
                       message: t("duration min"),
                     },
                   })}
+                  onKeyDown={(e) => {
+                    if (["e", "E", "+", "-"].includes(e.key)) {
+                      e.preventDefault();
+                    }
+                  }}
                   placeholder={t("select test duration")}
                   className="w-full border border-inputBorder px-4 py-3 focus:outline-none focus:ring-1 focus:ring-primary"
                 />
@@ -342,6 +347,11 @@ const EditTest: React.FC = () => {
                       message: t("start time min"),
                     },
                   })}
+                  onKeyDown={(e) => {
+                      if (["e", "E", "+", "-"].includes(e.key)) {
+                        e.preventDefault();
+                      }
+                    }}
                   placeholder={t("start time placeholder")}
                   className="w-full border border-inputBorder px-4 py-3 focus:outline-none focus:ring-1 focus:ring-primary"
                 />
