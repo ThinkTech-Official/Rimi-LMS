@@ -7,6 +7,7 @@ import Spinner from "./loaders/Spinner";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import useNotification from "../hooks/useNotification";
 import { useTranslation } from "react-i18next";
+import FetchingError from "./FetchingError";
 
 export interface EditTestDto {
   name: string;
@@ -242,7 +243,7 @@ const EditTest: React.FC = () => {
         <Spinner className="w-10 h-10" />
       </div>
     );
-  if (fetchError) return <p className="text-red-500">{fetchError}</p>;
+  if (fetchError) return <FetchingError />
 
   return (
     <div className="space-y-6 p-2 md:p-4 lg:p-8">
