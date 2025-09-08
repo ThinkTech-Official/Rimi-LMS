@@ -5,6 +5,12 @@ import { API_BASE } from "../utils/ulrs";
 /**
  * Shape of the basic course payload returned by /courses/:id/basic
  */
+
+interface document {
+  id: number;
+  fileName: string;
+}
+
 export interface BasicCourse {
   id: number;
   name: string;
@@ -13,6 +19,7 @@ export interface BasicCourse {
   videoUrl: string | null;
   duration: number | null;
   liveStatus: boolean | null;
+  documents: document[]
 }
 
 /**
@@ -33,7 +40,7 @@ export function useAdminFetchCourse(courseId: string | null) {
     adminApi
       .get<BasicCourse>(`${API_BASE}/courses/${courseId}/basic`)
       .then((r) => {
-        console.log(r.data);
+        console.log('new basic course',r.data);
         setBasicCourse(r.data);
       })
       .catch((err) =>

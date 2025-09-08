@@ -105,6 +105,26 @@ export const AdminCreateUser: React.FC = () => {
           <label className="block mb-1 font-medium text-text-light-2">
             {t("Password")}
           </label>
+          {/* <input
+            type="password"
+            {...register("password", {
+              setValueAs: (value) => value.trim(),
+              required: t("Password is required"),
+              minLength: {
+                value: 6,
+                message: "Password must be at least 6 characters",
+              },
+              validate: {
+                hasLetter: (value) =>
+                  /[A-Za-z]/.test(value) ||
+                  "Password must contain at least one letter",
+                hasNumber: (value) =>
+                  /\d/.test(value) ||
+                  "Password must contain at least one number",
+              },
+            })}
+            className="w-full p-2 sm:px-4 sm:py-3 border border-zinc-300 focus:border-0 focus:outline-none focus:ring-1 focus:ring-primary"
+          /> */}
           <input
             type="password"
             {...register("password", {
@@ -113,6 +133,10 @@ export const AdminCreateUser: React.FC = () => {
               minLength: {
                 value: 6,
                 message: "Password must be at least 6 characters",
+              },
+              pattern: {
+                value: /^[A-Za-z\d]+$/,
+                message: "Password must contain only letters and numbers",
               },
               validate: {
                 hasLetter: (value) =>
