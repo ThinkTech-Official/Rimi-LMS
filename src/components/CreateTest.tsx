@@ -215,7 +215,8 @@ const CreateTest: React.FC = () => {
       duration: Number(data.duration),
       startTime: Number(data.startTime),
       passingMarks: Number(data.passingMarks),
-      quizQuestionNumber: Number(data.quizQuestionNumber),
+      // quizQuestionNumber: Number(data.quizQuestionNumber) ,
+      quizQuestionNumber: 1 ,
       questions: questions.map((q) => ({
         text: q.text.trim(),
         options: q.options.map((o) => ({
