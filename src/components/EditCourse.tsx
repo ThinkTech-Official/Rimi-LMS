@@ -19,6 +19,10 @@ import FetchingError from "./FetchingError";
 import { useToggleCoursePublish } from "../hooks/useToggleCoursePublish";
 import { FaExternalLinkAlt, FaFilePdf } from "react-icons/fa";
 
+import { useUploadDocuments } from "../hooks/useUploadDocuments";
+import { useDeleteDocument } from "../hooks/useDeleteDocument";
+import FileTypeIcon from "./loaders/FileTypeIcon";
+
 const testHeaders = [
   "Test Name",
   "Questions",
@@ -109,6 +113,111 @@ const EditCourse: React.FC = () => {
 
   const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
   const [videoFile, setVideoFile] = useState<File | null>(null);
+
+
+
+  // documents fields
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
+  const [documentToDelete, setDocumentToDelete] = useState<{
+    id: number;
+    name: string;
+  } | null>(null);
+  const [localDocuments, setLocalDocuments] = useState<any[]>([]);
+
+
+  // documents hook
+const { uploadDocuments, loading: uploading, error: uploadError, progress: uploadProgress } = useUploadDocuments(Number(courseId!));
+const { deleteDocument, loading: deletingDoc, error: deleteDocError } = useDeleteDocument();
+
+
+// File selection handler
+const handleFileSelection = (e: ChangeEvent<HTMLInputElement>) => {
+  const files = Array.from(e.target.files || []);
+  setSelectedFiles(files);
+};
+
+
+// Remove selected file
+const removeSelectedFile = (index: number) => {
+  setSelectedFiles(prev => prev.filter((_, i) => i !== index));
+};
+
+
+
+
+
+
+
+// Upload documents handler
+const handleUploadDocuments = async () => {
+  if (selectedFiles.length === 0) {
+    triggerNotification({
+      type: "error",
+      message: "Please select files to upload",
+      duration: 3000,
+    });
+    return;
+  }
+
+  try {
+    const result = await uploadDocuments(selectedFiles);
+    
+    // Refresh the course data to get updated documents
+    await refetchBasic();
+    
+    setIsUploadModalOpen(false);
+    setSelectedFiles([]);
+    
+    triggerNotification({
+      type: "success",
+      message: result.message,
+      duration: 3000,
+    });
+  } catch (error) {
+    triggerNotification({
+      type: "error",
+      message: uploadError || "Failed to upload documents",
+      duration: 3000,
+    });
+  }
+};
+
+
+// Delete document handler
+const handleDeleteDocument = async (documentId: number, fileName: string) => {
+  setDocumentToDelete({ id: documentId, name: fileName });
+};
+
+
+
+// Confirm delete document
+const handleConfirmDeleteDocument = async () => {
+  if (!documentToDelete) return;
+
+  try {
+    await deleteDocument(documentToDelete.id);
+    
+    // Instead of updating localDocuments, refresh the course data
+    await refetchBasic();
+    
+    setDocumentToDelete(null);
+    
+    triggerNotification({
+      type: "success",
+      message: "Document deleted successfully",
+      duration: 3000,
+    });
+  } catch (error) {
+    triggerNotification({
+      type: "error",
+      message: deleteDocError || "Failed to delete document",
+      duration: 3000,
+    });
+  }
+};
+
+
 
   // local copy to sync front-end after delete
   const [localTests, setLocalTests] = useState<TestEntry[]>([]);
@@ -323,9 +432,7 @@ const EditCourse: React.FC = () => {
   if (error || basicInfoError) {
     return <FetchingError />;
   }
-  const handleDeleteDocument = async () => {
-    setIsDeleteDocumentModalOpen((prev) => !prev);
-  };
+ 
   return (
     <section className="space-y-6 p-2 md:p-4 lg:p-8">
       {/* Breadcrumbs */}
@@ -439,34 +546,166 @@ const EditCourse: React.FC = () => {
             {activeTab == "Description" && (
               <p className="text-text-light-2">{basicCourse.description}</p>
             )}
-            {activeTab == "Documents" && (
-              <div className="space-y-2">
-                <p className="text-text-light-2 -mt-4 px-3">{t("Total")} : {Documents.length}</p>
-                {Documents.map((doc, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center gap-3 p-2 hover:bg-gray-50 rounded-md transition-colors"
-                  >
-                    <FaFilePdf className="w-6 h-6 fill-[#EF5350]" />
-                    <div className="flex justify-between items-center gap-2 w-full">
-                      <span className="text-text-light">{doc}</span>
-                      <div className="flex gap-2 justify-center items-center">
-                        <button
-                          // onClick={() => handleDeleteClick(test.id)}
-                          className="text-primary hover:underline font-medium cursor-pointer"
-                        >
-                          <RiDeleteBinLine
-                            className="w-5 h-5 cursor-pointer text-red-400"
-                            onClick={handleDeleteDocument}
-                          />
-                        </button>
-                        <FaExternalLinkAlt className="w-4 h-4 fill-primary cursor-pointer" />
-                      </div>
-                    </div>
-                  </div>
-                ))}
+            {/* ================================================================ */}
+
+ {activeTab == "Documents" && (
+  <div className="space-y-2">
+    <div className="flex justify-end">
+      <button
+        onClick={() => setIsUploadModalOpen(true)}
+        className="px-4 py-2 bg-primary text-white hover:bg-indigo-700 transition delay-100 cursor-pointer"
+      >
+        Upload Documents
+      </button>
+    </div>
+    {basicCourse.documents?.map((doc, index) => (
+      <div
+        key={doc.id}
+        className="flex items-center gap-3 p-2 hover:bg-gray-50 rounded-md transition-colors"
+      >
+        {/* <FaFilePdf className="w-6 h-6 fill-[#EF5350]" /> */}
+        <FileTypeIcon fileName={doc.fileName} className="w-6 h-6" />
+        <div className="flex justify-between items-center gap-2 w-full">
+          <span className="text-text-light">{doc.fileName}</span>
+          <div className="flex gap-2 justify-center items-center">
+            <button
+              onClick={() => handleDeleteDocument(doc.id, doc.fileName)}
+              className="text-primary hover:underline font-medium cursor-pointer"
+              disabled={deletingDoc}
+            >
+              <RiDeleteBinLine className={`w-5 h-5 cursor-pointer ${deletingDoc ? 'text-gray-400' : 'text-red-400'}`} />
+            </button>
+            <a
+              href={`${API_BASE}/uploads/courses/${doc.fileName}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <FaExternalLinkAlt className="w-4 h-4 fill-primary cursor-pointer" />
+            </a>
+          </div>
+        </div>
+      </div>
+    ))}
+    {basicCourse.documents?.length === 0 && (
+      <p className="text-gray-500 text-center py-4">No documents uploaded yet.</p>
+    )}
+  </div>
+)}
+
+
+
+{isUploadModalOpen && (
+  <div className="fixed inset-0 bg-black/10 flex items-center justify-center z-50">
+    <div className="bg-white shadow-lg p-6 w-[90%] max-w-md">
+      <h3 className="text-lg font-semibold mb-4">{t("Upload Documents")}</h3>
+      
+      <div className="space-y-4">
+        <div>
+          <label className="block text-sm font-medium mb-2">
+            Select Files
+          </label>
+          <input
+            type="file"
+            multiple
+            onChange={handleFileSelection}
+            className="w-full px-3 py-2 border border-inputBorder focus:outline-none focus:ring focus:ring-primary"
+          />
+        </div>
+
+        {selectedFiles.length > 0 && (
+          <div className="space-y-2">
+            <p className="text-sm font-medium">Selected Files:</p>
+            {selectedFiles.map((file, index) => (
+              <div key={index} className="flex items-center justify-between p-2 bg-gray-50 rounded">
+                <span className="text-sm truncate">{file.name}</span>
+                <button
+                  onClick={() => removeSelectedFile(index)}
+                  className="text-red-500 hover:text-red-700"
+                >
+                  <MdCancel className="w-4 h-4" />
+                </button>
               </div>
-            )}
+            ))}
+          </div>
+        )}
+
+        {uploading && (
+          <div className="space-y-2">
+            <p className="text-sm">Uploading... {uploadProgress}%</p>
+            <div className="w-full bg-gray-200 rounded-full h-2">
+              <div
+                className="bg-primary h-2 rounded-full transition-all duration-300"
+                style={{ width: `${uploadProgress}%` }}
+              ></div>
+            </div>
+          </div>
+        )}
+
+        {uploadError && (
+          <p className="text-red-500 text-sm">{uploadError}</p>
+        )}
+      </div>
+
+      <div className="mt-6 flex justify-end space-x-4">
+        <button
+          onClick={() => {
+            setIsUploadModalOpen(false);
+            setSelectedFiles([]);
+          }}
+          className="px-4 py-2 border border-inputBorder cursor-pointer"
+        >
+          {t("Cancel")}
+        </button>
+        <button
+          onClick={handleUploadDocuments}
+          disabled={uploading || selectedFiles.length === 0}
+          className="px-4 py-2 bg-primary text-white hover:bg-indigo-700 disabled:opacity-50 cursor-pointer"
+        >
+          {uploading ? "Uploading..." : "Upload"}
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
+{/* Delete Document Confirmation Modal */}
+{documentToDelete && (
+  <div className="fixed inset-0 bg-black/10 flex items-center justify-center z-50">
+    <div className="bg-white shadow-lg p-6 w-[90%] max-w-md">
+      <h3 className="text-lg font-semibold">{t("Confirm Delete")}</h3>
+      <p className="mt-4">
+        {t("Are you sure you want to delete")} "{documentToDelete.name}"?
+      </p>
+      {deleteDocError && (
+        <p className="text-red-500 mt-2">{deleteDocError}</p>
+      )}
+      <div className="mt-6 flex justify-end space-x-4">
+        <button
+          onClick={() => setDocumentToDelete(null)}
+          className="px-4 py-2 border border-inputBorder cursor-pointer"
+        >
+          {t("Cancel")}
+        </button>
+        <button
+          onClick={handleConfirmDeleteDocument}
+          disabled={deletingDoc}
+          className="px-4 py-2 bg-red-600 text-white hover:bg-red-700 disabled:opacity-50 cursor-pointer"
+        >
+          {deletingDoc ? `${t("Deleting")}…` : t("Delete")}
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
+
+
+
+
+
+
+
+            {/* ============================================================ */}
           </div>
         )
       )}
@@ -643,7 +882,7 @@ const EditCourse: React.FC = () => {
         </button>
       </div>
       {/* Delete Confirmation Modal FOR DOCUMENT */}
-      {isDeleteDocumentModalOpen && (
+      {/* {isDeleteDocumentModalOpen && (
         <div className="fixed inset-0 bg-black/10  flex items-center justify-center z-50">
           <div className="bg-white shadow-lg p-6 w-[90%] max-w-md">
             <h3 className="text-lg font-semibold">{t("Confirm Delete")}</h3>
@@ -668,7 +907,7 @@ const EditCourse: React.FC = () => {
             </div>
           </div>
         </div>
-      )}
+      )} */}
       {/* Delete Confirmation Modal FOR TEST */}
       {modalTestId !== null && (
         <div className="fixed inset-0 bg-black/10  flex items-center justify-center z-50">

@@ -12,6 +12,8 @@ import { useTranslation } from "react-i18next";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 import { useForm } from "react-hook-form";
 
+import useNotification from "../hooks/useNotification";
+
 interface PasswordForm {
   newPwd: string;
   confirmPwd: string;
@@ -26,6 +28,10 @@ export const UserProfile: React.FC = () => {
     error: resetError,
     success: resetSuccess,
   } = useAdminResetPasswordOfClient(Number(id));
+
+  const { triggerNotification, NotificationComponent } =
+    useNotification("top-center");
+
   const [activeTab, setActiveTab] = useState<"Courses" | "Certificates">(
     "Courses"
   );
@@ -47,6 +53,30 @@ export const UserProfile: React.FC = () => {
     reset,
   } = useForm<PasswordForm>();
 
+  // Handle notification triggers for success/error
+  useEffect(() => {
+    if (resetSuccess) {
+      triggerNotification({
+        type: "success",
+        message: t("Password reset successfully"),
+        duration: 4000,
+      });
+      // Close modal on success
+      setShowResetPasswordModal(false);
+      reset(); // Reset form
+    }
+  }, [resetSuccess, triggerNotification, t, reset]);
+
+  useEffect(() => {
+    if (resetError) {
+      triggerNotification({
+        type: "error",
+        message: resetError,
+        duration: 5000,
+      });
+    }
+  }, [resetError, triggerNotification, t]);
+
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
@@ -59,7 +89,7 @@ export const UserProfile: React.FC = () => {
 
   const handleResetSubmit = async (data: PasswordForm) => {
     await resetPassword(data.newPwd);
-    reset();
+    // reset();
   };
   const handleCloseModal = () => {
     setShowResetPasswordModal(false);
@@ -343,6 +373,7 @@ export const UserProfile: React.FC = () => {
                 <button
                   type="submit"
                   // disabled={resetting}
+                  disabled={savingPwd}
                   className="flex-1 px-4 py-2 sm:py-3 bg-primary text-white font-semibold cursor-pointer transition-all delay-100 shadow hover:bg-indigo-700"
                 >
                   {savingPwd ? `${t("Updating")}...` : `${t("Update")}`}
@@ -352,6 +383,7 @@ export const UserProfile: React.FC = () => {
           </div>
         </div>
       )}
+      {NotificationComponent}
     </div>
   );
 };
