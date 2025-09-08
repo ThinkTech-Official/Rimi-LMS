@@ -290,5 +290,11 @@
   "Password must contain at least one number": "Le mot de passe doit contenir au moins un chiffre",
   "Start time cannot be more then course duration": "Le temps de d&eacute;but ne peut pas &ecirc;tre plus long que la duree du cours",
   "Course duration": "Duree du cours",
-  "Please add at least one question": "Veuillez ajouter au moins une question"
+  "Please add at least one question": "Veuillez ajouter au moins une question",
+  "Selected Files": "Fichiers sélectionnés",
+  "Uploading": "Téléchargement",
+  "Upload": "Télécharger",
+  "Upload Documents": "Télécharger des documents",
+  "Choose Files": "Choisir des fichiers",
+  "No documents uploaded yet": "Aucun document upload&eacute;"
 }

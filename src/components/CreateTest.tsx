@@ -225,7 +225,7 @@ const CreateTest: React.FC = () => {
       startTime: Number(data.startTime),
       passingMarks: Number(data.passingMarks),
       // quizQuestionNumber: Number(data.quizQuestionNumber) ,
-      quizQuestionNumber: 1 ,
+      quizQuestionNumber: 1,
       questions: questions.map((q) => ({
         text: q.text.trim(),
         options: q.options.map((o) => ({
@@ -526,6 +526,7 @@ const CreateTest: React.FC = () => {
                       ))}
                     </div>
                     <button
+                      type="button"
                       onClick={() => handleRemoveQuestion(q.id)}
                       className="inline-block text-sm sm:text-[16px] text-red-500 hover:text-red-600 text-nowrap font-semibold cursor-pointer transition-colors delay-100"
                     >

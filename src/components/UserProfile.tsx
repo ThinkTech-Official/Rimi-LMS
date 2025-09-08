@@ -3,7 +3,7 @@ import { useAdminClientProfile } from "../hooks/useAdminClientProfile";
 import { GoClock } from "react-icons/go";
 import { ImUser } from "react-icons/im";
 import { IoMdClose } from "react-icons/io";
-import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+// import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { useParams } from "react-router-dom";
 import { API_BASE } from "../utils/ulrs";
 import { useAdminResetPasswordOfClient } from "../hooks/useAdminResetPasswordOfClient";
@@ -36,7 +36,7 @@ export const UserProfile: React.FC = () => {
     "Courses"
   );
   const [showResetPasswordModal, setShowResetPasswordModal] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
+  // const [showPassword, setShowPassword] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
 
   // const onBack = () => navigate(-1);
