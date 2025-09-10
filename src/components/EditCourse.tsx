@@ -356,13 +356,61 @@ const EditCourse: React.FC = () => {
   // When user picks a new thumbnail
   const handleThumbnailFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) setThumbnailFile(file);
+
+    if (file) {
+      const fileName = file.name.toLowerCase();
+      const allowedExtensions = [".png", ".jpg", ".jpeg"];
+      const hasValidExtension = allowedExtensions.some((ext) =>
+        fileName.endsWith(ext)
+      );
+
+      if (!hasValidExtension) {
+        // Clear the input
+        e.target.value = "";
+        triggerNotification({
+          type: "error",
+          message: t("Only PNG and JPEG image files are allowed"),
+          duration: 3000,
+        });
+        return;
+      }
+      setThumbnailFile(file);
+    }
   };
 
   // When user picks a new video, load metadata to get duration
   const handleVideoFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+    const validVideoTypes = [
+      // Common web formats
+      "video/mp4",
+      "video/webm",
+      "video/ogg",
+      "video/avi",
+      "video/mov",
+      "video/wmv",
+      "video/flv",
+      "video/mkv",
+      "video/m4v",
+      "video/3gp",
+      "video/3g2",
+      // iOS specific formats
+      "video/quicktime",
+      // Additional formats
+      "video/x-msvideo", // .avi
+      "video/x-ms-wmv", // .wmv
+      "video/x-flv", // .flv
+      "video/x-matroska", // .mkv
+    ];
+    if (!validVideoTypes.includes(file.type)) {
+      triggerNotification({
+        type: "error",
+        message: "Please select a valid video file",
+        duration: 3000,
+      });
+      return;
+    }
     setVideoFile(file);
 
     // create a temporary video element to get its duration

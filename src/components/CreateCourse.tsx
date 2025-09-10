@@ -718,12 +718,11 @@ const CreateCourse: React.FC<CreateCourseProps> = () => {
                               if (!isValidExtension) {
                                 // Reset the input
                                 e.target.value = "";
-                                triggerNotification({
-                                  type: "error",
+                                setError("video", {
+                                  type: "manual",
                                   message: t(
                                     "Please select a valid video file"
                                   ),
-                                  duration: 3000,
                                 });
                                 return;
                               }
