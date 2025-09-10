@@ -1101,12 +1101,12 @@ const EditCourse: React.FC = () => {
                     </label>
                   </div>
                 ) : (
-                  <div className="flex space-x-1 items-center">
-                    <CiFileOn className="w-5 h-5" />
-                    <span> {thumbnailFile.name}</span>
+                  <div className="flex gap-4 items-center">
+                    <CiFileOn className="w-4 h-4 shrink-0" />
+                    <span className="truncate" title={thumbnailFile.name}> {thumbnailFile.name}</span>
                     <MdCancel
                       title="Remove File"
-                      className="cursor-pointer"
+                      className="cursor-pointer w-4 h-4 shrink-0"
                       onClick={() => setThumbnailFile(null)}
                     />
                   </div>
