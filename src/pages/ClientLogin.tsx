@@ -199,9 +199,15 @@ const LoginClient: React.FC = () => {
                   className="absolute inset-y-0 right-0 pr-3 flex items-center text-zinc-500"
                 >
                   {showPassword ? (
-                    <EyeSlashIcon className="h-5 w-5" aria-hidden="true" />
+                    <EyeIcon
+                      className="h-5 w-5 cursor-pointer"
+                      aria-hidden="true"
+                    />
                   ) : (
-                    <EyeIcon className="h-5 w-5" aria-hidden="true" />
+                    <EyeSlashIcon
+                      className="h-5 w-5 cursor-pointer"
+                      aria-hidden="true"
+                    />
                   )}
                 </button>
               </div>

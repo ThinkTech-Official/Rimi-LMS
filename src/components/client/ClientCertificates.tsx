@@ -3,6 +3,7 @@ import api from "../../utils/api";
 import { API_BASE } from "../../utils/ulrs";
 import Spinner from "../loaders/Spinner";
 import { useTranslation } from "react-i18next";
+import { formatDate } from "../UserProfile";
 
 interface CertRecord {
   id: number;
@@ -86,7 +87,7 @@ const ClientCertificates: React.FC = () => {
                 <div className="text-sm text-text-dark font-semibold capitalize">
                   {t("Issue date")}:{" "}
                   <span className="text-text-light font-normal">
-                    {new Date(c.createdAt).toLocaleDateString()}
+                    {formatDate(c.createdAt)}
                   </span>
                 </div>
               </div>

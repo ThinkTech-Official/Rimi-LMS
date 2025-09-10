@@ -1,5 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
-import { useAdminClientProfile } from "../hooks/useAdminClientProfile";
+import {
+  useAdminClientProfile,
+} from "../hooks/useAdminClientProfile";
 import { GoClock } from "react-icons/go";
 import { ImUser } from "react-icons/im";
 import { IoMdClose } from "react-icons/io";
@@ -18,6 +20,15 @@ interface PasswordForm {
   newPwd: string;
   confirmPwd: string;
 }
+export const formatDate = (date: string) => {
+  const d = date ? new Date(date) : new Date();
+  const formattedDate = [
+    String(d.getDate()).padStart(2, "0"),
+    String(d.getMonth() + 1).padStart(2, "0"),
+    d.getFullYear(),
+  ].join("-");
+  return formattedDate;
+};
 export const UserProfile: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const { t } = useTranslation();
@@ -232,7 +243,7 @@ export const UserProfile: React.FC = () => {
                           <div className="text-sm text-text-dark font-semibold">
                             {t("Issued at")}:{" "}
                             <span className="text-text-light font-normal">
-                              {new Date(cert.issueDate).toLocaleDateString()}
+                              {formatDate(cert.issueDate)}
                             </span>
                           </div>
                           <a

@@ -41,6 +41,14 @@ const AdminTrackCertificate: React.FC = () => {
       setSearchFailed(false);
     }
   }, [watchedCertNum, certificate]);
+  const d = certificate?.createdAt
+    ? new Date(certificate.createdAt)
+    : new Date();
+  const formattedDate = [
+    String(d.getDate()).padStart(2, "0"),
+    String(d.getMonth() + 1).padStart(2, "0"),
+    d.getFullYear(),
+  ].join("-");
 
   return (
     <div className="w-[95%] sm:max-w-xl mx-auto p-6 bg-white shadow-md mt-10">
@@ -101,7 +109,7 @@ const AdminTrackCertificate: React.FC = () => {
             <span className="font-medium text-text-dark">
               {t("Issued at")}:
             </span>{" "}
-            {new Date(certificate.createdAt).toLocaleString()}
+            {formattedDate}
           </p>
           <p className="text-text-light">
             <span className="font-medium text-text-dark">
