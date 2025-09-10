@@ -17,11 +17,14 @@ import { CiFileOn } from "react-icons/ci";
 import { MdCancel } from "react-icons/md";
 import FetchingError from "./FetchingError";
 import { useToggleCoursePublish } from "../hooks/useToggleCoursePublish";
-import { FaExternalLinkAlt, FaFilePdf } from "react-icons/fa";
+import { FaExternalLinkAlt } from "react-icons/fa";
 
 import { useUploadDocuments } from "../hooks/useUploadDocuments";
 import { useDeleteDocument } from "../hooks/useDeleteDocument";
 import FileTypeIcon from "./loaders/FileTypeIcon";
+import { RxCross2 } from "react-icons/rx";
+import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
+import { RenderPageNumbers } from "./RenderPageNumbers";
 
 const testHeaders = [
   "Test Name",
@@ -78,6 +81,8 @@ const EditCourse: React.FC = () => {
     loading,
     error,
   } = useFetchTests(courseId!, currentPage, testsPerPage);
+  const limit = 5;
+  const totalPages = Math.ceil(total / limit);
 
   const { togglePublish } = useToggleCoursePublish(Number(courseId!));
 
@@ -308,9 +313,6 @@ const EditCourse: React.FC = () => {
     test.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const startIndex = (currentPage - 1) * testsPerPage;
-  const paginatedTests = filtered.slice(startIndex, startIndex + testsPerPage);
-
   const handleCreateTest = () => {
     navigate(`/admin/edit-course/${courseId}/create-test`, {
       state: { courseDuration: basicCourse?.duration },
@@ -464,7 +466,7 @@ const EditCourse: React.FC = () => {
         <p className="text-red-500">{basicInfoError}</p>
       ) : (
         basicCourse && (
-          <div className="bg-white shadow-md p-6 relative mb-6 flex flex-col gap-5">
+          <div className="bg-white shadow-md p-3 sm:p-6 relative mb-6 flex flex-col gap-5">
             <h3 className="text-xl font-semibold mb-4 text-text-dark">
               {t("Course Details")}
             </h3>
@@ -479,7 +481,7 @@ const EditCourse: React.FC = () => {
               <img
                 src={`${API_BASE}/uploads/courses/${basicCourse.thumbnail}`}
                 alt="Thumbnail"
-                className="w-80 aspect-video object-cover"
+                className="w-88 aspect-video h-56"
               />
               <div className="flex flex-col justify-center gap-2">
                 <p className="flex flex-col">
@@ -739,6 +741,12 @@ const EditCourse: React.FC = () => {
             <button className="px-1 sm:px-3 cursor-pointer absolute right-0">
               <BiSearch className="text-[#6F6B7D]" />
             </button>
+            {searchTerm && (
+              <RxCross2
+                className="h-5 w-5 text-text-light cursor-pointer right-8 absolute"
+                onClick={() => setSearchTerm("")}
+              />
+            )}
           </div>
           <button
             onClick={handleCreateTest}
@@ -790,7 +798,7 @@ const EditCourse: React.FC = () => {
                   </td>
                 </tr>
               ) : (
-                paginatedTests.map((test: TestEntry) => (
+                tests.map((test: TestEntry) => (
                   <tr key={test.id}>
                     <td
                       className="px-2 py-4 whitespace-nowrap"
@@ -883,6 +891,35 @@ const EditCourse: React.FC = () => {
         </div>
       )}
 
+      {/* pagination */}
+      {tests.length > 0 && (
+        <div
+          className="flex items-center justify-center p-4 space-x-2"
+          role="pagination"
+        >
+          <button
+            disabled={currentPage === 1}
+            onClick={() => setCurrentPage((p) => p - 1)}
+            className="px-2 py-[10px] bg-[#CCCCCC] text-[#6F6B7D] cursor-pointer"
+            title="Previous"
+          >
+            <ChevronLeftIcon className="h-5 w-5" />
+          </button>
+          <RenderPageNumbers
+            setCurrentPage={setCurrentPage}
+            totalPages={totalPages}
+            page={currentPage}
+          />
+          <button
+            disabled={currentPage === totalPages}
+            onClick={() => setCurrentPage((p) => p + 1)}
+            className="px-2 py-[10px] bg-[#CCCCCC] text-[#6F6B7D] cursor-pointer"
+            title="Next"
+          >
+            <ChevronRightIcon className="h-5 w-5" />
+          </button>
+        </div>
+      )}
       {/* Delete course button  */}
       <div className="flex justify-end">
         <button

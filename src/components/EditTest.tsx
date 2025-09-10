@@ -243,7 +243,7 @@ const EditTest: React.FC = () => {
         <Spinner className="w-10 h-10" />
       </div>
     );
-  if (fetchError) return <FetchingError />
+  if (fetchError) return <FetchingError />;
 
   return (
     <div className="space-y-6 p-2 md:p-4 lg:p-8">
@@ -283,6 +283,7 @@ const EditTest: React.FC = () => {
               <input
                 type="text"
                 {...register("name", {
+                  setValueAs: (v) => v.trim(),
                   required: t("name required"),
                   minLength: {
                     value: 4,
@@ -346,12 +347,18 @@ const EditTest: React.FC = () => {
                       value: 1,
                       message: t("start time min"),
                     },
+                    max: {
+                      value: test?.duration || 0,
+                      message: t(
+                        "Start time cannot be more then course duration"
+                      ),
+                    },
                   })}
                   onKeyDown={(e) => {
-                      if (["e", "E", "+", "-"].includes(e.key)) {
-                        e.preventDefault();
-                      }
-                    }}
+                    if (["e", "E", "+", "-"].includes(e.key)) {
+                      e.preventDefault();
+                    }
+                  }}
                   placeholder={t("start time placeholder")}
                   className="w-full border border-inputBorder px-4 py-3 focus:outline-none focus:ring-1 focus:ring-primary"
                 />

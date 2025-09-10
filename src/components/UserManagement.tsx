@@ -1,4 +1,4 @@
-import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
+import { ChevronLeftIcon, ChevronRightIcon }  from "@heroicons/react/24/outline";
 import React, { useState } from "react";
 import { BiSearch } from "react-icons/bi";
 import { useTranslation } from "react-i18next";
@@ -15,6 +15,7 @@ export const UserManagement: React.FC = () => {
   const [searchInput, setSearchInput] = useState<string>("");
   const [search, setSearch] = useState("");
   const { t } = useTranslation();
+  const [inputError, setInputError] = useState<string>("");
 
   const [currentPage, setCurrentPage] = useState(1);
   const limit = 10;
@@ -33,6 +34,8 @@ export const UserManagement: React.FC = () => {
   };
 
   const handleSearch = () => {
+    if (searchInput.trim() === "")
+      return setInputError("Search field cannot be empty");
     setCurrentPage(1);
     setSearch(searchInput.trim());
   };
@@ -40,6 +43,12 @@ export const UserManagement: React.FC = () => {
   const handleClientProfile = (id: any) => {
     console.log(id);
     navigate(`/admin/users/${id}`);
+  };
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchInput(e.target.value);
+    if (inputError && e.target.value.trim() !== "") {
+      setInputError("");
+    }
   };
 
   if (loading)
@@ -56,6 +65,7 @@ export const UserManagement: React.FC = () => {
       </div>
     );
   const handleCancelSearch = () => {
+    setInputError("");
     setSearch("");
     setSearchInput("");
     setCurrentPage(1);
@@ -109,27 +119,32 @@ export const UserManagement: React.FC = () => {
               </label>
             </div>
           </div>
-          <div className="flex items-center border border-[#DBDADE] justify-between max-w-[330px] sm:max-w-[380px]">
-            <input
-              type="text"
-              placeholder={t("Search by name")}
-              value={searchInput}
-              onChange={(e) => setSearchInput(e.target.value)}
-              className="px-2 sm:px-4 py-1 sm:py-3 w-[170px] sm:w-[330px] focus:outline-none"
-            />
-            {searchInput && (
-              <RxCross2
-                className="sm:h-8 sm:w-8 text-text-light mr-2 cursor-pointer"
-                onClick={handleCancelSearch}
+          <div className="flex flex-col">
+            <div className="flex items-center border border-[#DBDADE] justify-between max-w-[330px] sm:max-w-[380px]">
+              <input
+                type="text"
+                placeholder={t("Search by name")}
+                value={searchInput}
+                onChange={handleInputChange}
+                className="px-2 sm:px-4 py-1 sm:py-3 w-[170px] sm:w-[330px] focus:outline-none"
               />
+              {searchInput && (
+                <RxCross2
+                  className="sm:h-8 sm:w-8 text-text-light mr-2 cursor-pointer"
+                  onClick={handleCancelSearch}
+                />
+              )}
+              <button
+                onClick={handleSearch}
+                className="px-2 sm:px-3 text-sm sm:text-base cursor-pointer flex items-center text-white bg-primary py-3 gap-1"
+              >
+                <BiSearch className="" />
+                {t("Search")}
+              </button>
+            </div>
+            {inputError && (
+              <span className="text-red-600 text-sm">{t(String(inputError))}</span>
             )}
-            <button
-              onClick={handleSearch}
-              className="px-2 sm:px-3 text-sm sm:text-base cursor-pointer flex items-center text-white bg-primary py-3 gap-1"
-            >
-              <BiSearch className="" />
-              {t("Search")}
-            </button>
           </div>
         </div>
 

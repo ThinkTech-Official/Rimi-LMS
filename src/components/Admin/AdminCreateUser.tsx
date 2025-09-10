@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import {
   useAdminCreateClient,
@@ -6,6 +6,7 @@ import {
 } from "../../hooks/useAdminCreateClient";
 import useNotification from "../../hooks/useNotification";
 import { useTranslation } from "react-i18next";
+import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 
 export const AdminCreateUser: React.FC = () => {
   const {
@@ -18,6 +19,8 @@ export const AdminCreateUser: React.FC = () => {
   const { createClient, loading, error, success } = useAdminCreateClient();
   const { triggerNotification, NotificationComponent } = useNotification();
   const { t } = useTranslation();
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const onSubmit = async (
     data: CreateClientUserDto & { confirmPassword: string }
@@ -85,6 +88,8 @@ export const AdminCreateUser: React.FC = () => {
           <input
             type="email"
             {...register("email", {
+              //trim email and make it of smaller letters
+              setValueAs: (value) => value.trim().toLowerCase(),
               required: t("Email is required"),
               pattern: {
                 value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
@@ -105,51 +110,45 @@ export const AdminCreateUser: React.FC = () => {
           <label className="block mb-1 font-medium text-text-light-2">
             {t("Password")}
           </label>
-          {/* <input
-            type="password"
-            {...register("password", {
-              setValueAs: (value) => value.trim(),
-              required: t("Password is required"),
-              minLength: {
-                value: 6,
-                message: "Password must be at least 6 characters",
-              },
-              validate: {
-                hasLetter: (value) =>
-                  /[A-Za-z]/.test(value) ||
-                  "Password must contain at least one letter",
-                hasNumber: (value) =>
-                  /\d/.test(value) ||
-                  "Password must contain at least one number",
-              },
-            })}
-            className="w-full p-2 sm:px-4 sm:py-3 border border-zinc-300 focus:border-0 focus:outline-none focus:ring-1 focus:ring-primary"
-          /> */}
-          <input
-            type="password"
-            {...register("password", {
-              setValueAs: (value) => value.trim(),
-              required: t("Password is required"),
-              minLength: {
-                value: 6,
-                message: "Password must be at least 6 characters",
-              },
-              pattern: {
-                value: /^[A-Za-z\d]+$/,
-                message: "Password must contain only letters and numbers",
-              },
-              validate: {
-                hasLetter: (value) =>
-                  /[A-Za-z]/.test(value) ||
-                  "Password must contain at least one letter",
-                hasNumber: (value) =>
-                  /\d/.test(value) ||
-                  "Password must contain at least one number",
-              },
-            })}
-            className="w-full p-2 sm:px-4 sm:py-3 border border-zinc-300 focus:border-0 focus:outline-none focus:ring-1 focus:ring-primary"
-          />
-
+          <div className="relative">
+            <input
+              type={showPassword ? "text" : "password"}
+              {...register("password", {
+                setValueAs: (value) => value.trim(),
+                required: t("Password is required"),
+                minLength: {
+                  value: 6,
+                  message: "Password must be at least 6 characters",
+                },
+                validate: {
+                  hasLetter: (value) =>
+                    /[A-Za-z]/.test(value) ||
+                    "Password must contain at least one letter",
+                  hasNumber: (value) =>
+                    /\d/.test(value) ||
+                    "Password must contain at least one number",
+                },
+              })}
+              className="w-full p-2 sm:px-4 sm:py-3 border border-zinc-300 focus:border-0 focus:outline-none focus:ring-1 focus:ring-primary pr-10"
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword((prev) => !prev)}
+              className="absolute inset-y-0 right-0 pr-3 flex items-center text-zinc-500"
+            >
+              {showPassword ? (
+                <EyeIcon
+                  className="h-5 w-5 cursor-pointer"
+                  aria-hidden="true"
+                />
+              ) : (
+                <EyeSlashIcon
+                  className="h-5 w-5 cursor-pointer"
+                  aria-hidden="true"
+                />
+              )}
+            </button>
+          </div>
           {errors.password && (
             <p className="text-red-600 mt-1 text-sm">
               {t(String(errors.password.message))}
@@ -162,16 +161,35 @@ export const AdminCreateUser: React.FC = () => {
           <label className="block mb-1 font-medium text-text-light-2">
             {t("Confirm Password")}
           </label>
-          <input
-            type="password"
-            {...register("confirmPassword", {
-              setValueAs: (value) => value.trim(),
-              required: "Please confirm password",
-              validate: (value) =>
-                value === watch("password") || "Passwords do not match",
-            })}
-            className="w-full p-2 sm:px-4 sm:py-3 border border-zinc-300 focus:border-0 focus:outline-none focus:ring-1 focus:ring-primary"
-          />
+          <div className="relative">
+            <input
+              type={showConfirmPassword ? "text" : "password"}
+              {...register("confirmPassword", {
+                setValueAs: (value) => value.trim(),
+                required: "Please confirm password",
+                validate: (value) =>
+                  value === watch("password") || "Passwords do not match",
+              })}
+              className="w-full p-2 sm:px-4 sm:py-3 border border-zinc-300 focus:border-0 focus:outline-none focus:ring-1 focus:ring-primary pr-10"
+            />
+            <button
+              type="button"
+              onClick={() => setShowConfirmPassword((prev) => !prev)}
+              className="absolute inset-y-0 right-0 pr-3 flex items-center text-zinc-500"
+            >
+              {showConfirmPassword ? (
+                <EyeIcon
+                  className="h-5 w-5 cursor-pointer"
+                  aria-hidden="true"
+                />
+              ) : (
+                <EyeSlashIcon
+                  className="h-5 w-5 cursor-pointer"
+                  aria-hidden="true"
+                />
+              )}
+            </button>
+          </div>
           {errors.confirmPassword?.message && (
             <p className="text-red-600 mt-1 text-sm">
               {t(String(errors.confirmPassword.message))}

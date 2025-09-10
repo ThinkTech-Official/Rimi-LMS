@@ -1,4 +1,4 @@
-import React, { useEffect, useState, type ChangeEvent } from "react";
+import React, { useEffect, useRef, useState, type ChangeEvent } from "react";
 import { BiPlus } from "react-icons/bi";
 import { MdCancel, MdUpload } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
@@ -7,7 +7,7 @@ import { useCreateCourse } from "../hooks/useCreateCourse";
 import { useFetchCategories } from "../hooks/useFetchCategories";
 import { useCreateCategory } from "../hooks/useCreateCategory";
 import { useTranslation } from "react-i18next";
-import { useForm, Controller } from "react-hook-form";
+import { useForm, Controller, set } from "react-hook-form";
 import Spinner from "./loaders/Spinner";
 import { FaAngleDown } from "react-icons/fa6";
 import { CiFileOn } from "react-icons/ci";
@@ -47,7 +47,7 @@ const CreateCourse: React.FC<CreateCourseProps> = () => {
 
   // Duration
   const [duration, setDuration] = useState<number | null>(null);
-  
+
   const {
     register,
     handleSubmit,
@@ -73,13 +73,29 @@ const CreateCourse: React.FC<CreateCourseProps> = () => {
   const [selectedCategoryId, setSelectedCategoryId] = useState<number>();
   const [isCategoryOpen, setIsCategoryOpen] = useState<boolean>(false);
   const { triggerNotification, NotificationComponent } = useNotification();
-  const [categoryLimitError, setCategoryLimitError] = useState<string | null>(null);
-
+  const [categoryLimitError, setCategoryLimitError] = useState<string | null>(
+    null
+  );
+  const categoryButtonRef = useRef<HTMLDivElement>(null);
   // Watch form values
   const watchedVideo = watch("video");
   const watchedThumbnail = watch("thumbnail");
   const watchedDocuments = watch("documents");
 
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (
+        categoryButtonRef.current &&
+        !categoryButtonRef.current.contains(e.target as Node)
+      ) {
+        setIsCategoryOpen(false);
+      }
+    };
+    document.addEventListener("click", handleClickOutside);
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  });
   useEffect(() => {
     if (!categories.length) {
       setSelectedCategoryId(undefined);
@@ -88,9 +104,9 @@ const CreateCourse: React.FC<CreateCourseProps> = () => {
 
   const handleAddCategory = async () => {
     const trimmed = newCategory.trim();
-    if (!trimmed) return;
+    if (!trimmed) return setCategoryLimitError("Category name is required");
     const catLength = newCategory.length;
-    
+
     if (catLength > 50) {
       setCategoryLimitError("Category name must be less than 50 characters");
       return;
@@ -119,6 +135,8 @@ const CreateCourse: React.FC<CreateCourseProps> = () => {
         message: t("Failed to create category"),
         duration: 3000,
       });
+    } finally {
+      setCategoryLimitError(null);
     }
   };
 
@@ -150,131 +168,130 @@ const CreateCourse: React.FC<CreateCourseProps> = () => {
   //   }
   // };
 
+  //   const handleThumbnailChange = (e: ChangeEvent<HTMLInputElement>) => {
+  //   if (e.target.files && e.target.files[0]) {
+  //     const file = e.target.files[0];
 
-//   const handleThumbnailChange = (e: ChangeEvent<HTMLInputElement>) => {
-//   if (e.target.files && e.target.files[0]) {
-//     const file = e.target.files[0];
-    
-//     // Validate file size 
-//     const maxSizeInMB = 10; // 10MB limit
-//     if (file.size > maxSizeInMB * 1024 * 1024) {
-//       setError("thumbnail", {
-//         type: "manual",
-//         message: `File size must be less than ${maxSizeInMB}MB`
-//       });
-//       return;
-//     }
+  //     // Validate file size
+  //     const maxSizeInMB = 10; // 10MB limit
+  //     if (file.size > maxSizeInMB * 1024 * 1024) {
+  //       setError("thumbnail", {
+  //         type: "manual",
+  //         message: `File size must be less than ${maxSizeInMB}MB`
+  //       });
+  //       return;
+  //     }
 
-//     // Validate image dimensions 
-//     const img = new Image();
-//     const objectUrl = URL.createObjectURL(file);
-    
-//     img.onload = () => {
-//       URL.revokeObjectURL(objectUrl);
-      
-//       // Optional: Set maximum dimensions if needed
-//       const maxWidth = 1200;
-//       const maxHeight = 1200;
-      
-//       if (img.width > maxWidth || img.height > maxHeight) {
-//         setError("thumbnail", {
-//           type: "manual",
-//           message: `Image dimensions must be less than ${maxWidth}x${maxHeight}px`
-//         });
-//         return;
-//       }
-      
-//       // If validation passes, set the file
-//       setValue("thumbnail", file);
-//       clearErrors("thumbnail");
-//     };
-    
-//     img.onerror = () => {
-//       URL.revokeObjectURL(objectUrl);
-//       setError("thumbnail", {
-//         type: "manual",
-//         message: "Invalid image file"
-//       });
-//     };
-    
-//     img.src = objectUrl;
-//   }
-// };
+  //     // Validate image dimensions
+  //     const img = new Image();
+  //     const objectUrl = URL.createObjectURL(file);
 
+  //     img.onload = () => {
+  //       URL.revokeObjectURL(objectUrl);
 
-const handleThumbnailChange = (e: ChangeEvent<HTMLInputElement>) => {
-  if (e.target.files && e.target.files[0]) {
-    const file = e.target.files[0];
-    
-    // Get file extension
-    const fileName = file.name.toLowerCase();
-    const allowedExtensions = ['.png', '.jpg', '.jpeg'];
-    const hasValidExtension = allowedExtensions.some(ext => fileName.endsWith(ext));
-    
-    // Validate file type by both MIME type and extension
-    const allowedMimeTypes = ['image/png', 'image/jpeg'];
-    const hasValidMimeType = allowedMimeTypes.includes(file.type);
-    
-    // Check both extension and MIME type for better security
-    if (!hasValidExtension || !hasValidMimeType) {
-      // Clear the input
-      e.target.value = '';
-      setError("thumbnail", {
-        type: "manual",
-        message: "Only PNG and JPEG image files are allowed"
-      });
-      return;
-    }
-    
-    // Validate file size 
-    const maxSizeInMB = 10;
-    if (file.size > maxSizeInMB * 1024 * 1024) {
-      e.target.value = '';
-      setError("thumbnail", {
-        type: "manual",
-        message: `File size must be less than ${maxSizeInMB}MB`
-      });
-      return;
-    }
+  //       // Optional: Set maximum dimensions if needed
+  //       const maxWidth = 1200;
+  //       const maxHeight = 1200;
 
-    // Validate that it's actually an image by trying to load it
-    const img = new Image();
-    const objectUrl = URL.createObjectURL(file);
-    
-    img.onload = () => {
-      URL.revokeObjectURL(objectUrl);
-      
-      // Set maximum dimensions if needed
-      const maxWidth = 1200;
-      const maxHeight = 1200;
-      
-      if (img.width > maxWidth || img.height > maxHeight) {
+  //       if (img.width > maxWidth || img.height > maxHeight) {
+  //         setError("thumbnail", {
+  //           type: "manual",
+  //           message: `Image dimensions must be less than ${maxWidth}x${maxHeight}px`
+  //         });
+  //         return;
+  //       }
+
+  //       // If validation passes, set the file
+  //       setValue("thumbnail", file);
+  //       clearErrors("thumbnail");
+  //     };
+
+  //     img.onerror = () => {
+  //       URL.revokeObjectURL(objectUrl);
+  //       setError("thumbnail", {
+  //         type: "manual",
+  //         message: "Invalid image file"
+  //       });
+  //     };
+
+  //     img.src = objectUrl;
+  //   }
+  // };
+
+  const handleThumbnailChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+
+      // Get file extension
+      const fileName = file.name.toLowerCase();
+      const allowedExtensions = [".png", ".jpg", ".jpeg"];
+      const hasValidExtension = allowedExtensions.some((ext) =>
+        fileName.endsWith(ext)
+      );
+
+      // Validate file type by both MIME type and extension
+      const allowedMimeTypes = ["image/png", "image/jpeg"];
+      const hasValidMimeType = allowedMimeTypes.includes(file.type);
+
+      // Check both extension and MIME type for better security
+      if (!hasValidExtension || !hasValidMimeType) {
+        // Clear the input
+        e.target.value = "";
         setError("thumbnail", {
           type: "manual",
-          message: `Image dimensions must be less than ${maxWidth}x${maxWidth}px. Current: ${img.width}x${img.height}px`
+          message: t("Only PNG and JPEG image files are allowed"),
         });
         return;
       }
-      
-      // If all validation passes, set the file
-      setValue("thumbnail", file);
-      clearErrors("thumbnail");
-    };
-    
-    img.onerror = () => {
-      URL.revokeObjectURL(objectUrl);
-      // Clear the input
-      e.target.value = '';
-      setError("thumbnail", {
-        type: "manual",
-        message: "Selected file is not a valid image"
-      });
-    };
-    
-    img.src = objectUrl;
-  }
-};
 
+      // Validate file size
+      const maxSizeInMB = 10;
+      if (file.size > maxSizeInMB * 1024 * 1024) {
+        e.target.value = "";
+        setError("thumbnail", {
+          type: "manual",
+          message: `File size must be less than ${maxSizeInMB}MB`,
+        });
+        return;
+      }
+
+      // Validate that it's actually an image by trying to load it
+      const img = new Image();
+      const objectUrl = URL.createObjectURL(file);
+
+      img.onload = () => {
+        URL.revokeObjectURL(objectUrl);
+
+        // Set maximum dimensions if needed
+        const maxWidth = 1200;
+        const maxHeight = 1200;
+
+        if (img.width > maxWidth || img.height > maxHeight) {
+          setError("thumbnail", {
+            type: "manual",
+            message: `Image dimensions must be less than ${maxWidth}x${maxWidth}px. Current: ${img.width}x${img.height}px`,
+          });
+          return;
+        }
+
+        // If all validation passes, set the file
+        setValue("thumbnail", file);
+        clearErrors("thumbnail");
+      };
+
+      img.onerror = () => {
+        URL.revokeObjectURL(objectUrl);
+        // Clear the input
+        e.target.value = "";
+        setError("thumbnail", {
+          type: "manual",
+          message: "Selected file is not a valid image",
+        });
+      };
+
+      img.src = objectUrl;
+    }
+  };
 
   const handleDocsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -286,7 +303,10 @@ const handleThumbnailChange = (e: ChangeEvent<HTMLInputElement>) => {
 
   const handleRemoveDoc = (index: number) => {
     const currentDocs = watchedDocuments || [];
-    setValue("documents", currentDocs.filter((_, i) => i !== index));
+    setValue(
+      "documents",
+      currentDocs.filter((_, i) => i !== index)
+    );
   };
 
   const onSubmit = async (data: CreateCourseDto) => {
@@ -347,8 +367,12 @@ const handleThumbnailChange = (e: ChangeEvent<HTMLInputElement>) => {
     setAddingCat(false);
     setNewCategory("");
     setCatCreateError("");
+    setCategoryLimitError("");
   };
-
+  const OpenAddCategoryModal = () => {
+    setAddingCat(!addingCat);
+    setIsCategoryOpen(false);
+  };
   return (
     <div className="min-h-screen flex bg-white">
       <main className="flex-1 px-2 sm:px-8 pt-4 pb-10 overflow-auto">
@@ -393,7 +417,7 @@ const handleThumbnailChange = (e: ChangeEvent<HTMLInputElement>) => {
                   {watch("name")?.length || 0}/100
                 </p>
               </div>
-              
+
               <div className="flex flex-col">
                 <label className="text-sm text-text-light-2 mb-1 capitalize">
                   {t("description")}
@@ -442,17 +466,25 @@ const handleThumbnailChange = (e: ChangeEvent<HTMLInputElement>) => {
                         <p className="text-red-500">Load error: {catError}</p>
                       ) : (
                         <div className="flex flex-col sm:flex-row gap-2 sm:items-center">
-                          <div className="relative w-[250px]">
+                          <div
+                            className="relative w-[250px]"
+                            ref={categoryButtonRef}
+                          >
                             <button
                               type="button"
                               className="w-full border border-inputBorder px-3 py-2 focus:border-0 focus:ring-1 focus:ring-primary capitalize flex items-center justify-between text-left text-text-light cursor-pointer"
                               onClick={() => setIsCategoryOpen((prev) => !prev)}
                             >
-                              <span className="capitalize truncate" title={`${selectedCategoryId
-                                  ? categories.find(
-                                      (cat) => cat.id === selectedCategoryId
-                                    )?.name
-                                  : "Select Category"}`}>
+                              <span
+                                className="capitalize truncate"
+                                title={`${
+                                  selectedCategoryId
+                                    ? categories.find(
+                                        (cat) => cat.id === selectedCategoryId
+                                      )?.name
+                                    : "Select Category"
+                                }`}
+                              >
                                 {selectedCategoryId
                                   ? categories.find(
                                       (cat) => cat.id === selectedCategoryId
@@ -493,7 +525,7 @@ const handleThumbnailChange = (e: ChangeEvent<HTMLInputElement>) => {
 
                           <button
                             type="button"
-                            onClick={() => setAddingCat(!addingCat)}
+                            onClick={OpenAddCategoryModal}
                             className="text-primary hover:underline underline-offset-2 cursor-pointer uppercase items-center flex"
                           >
                             <BiPlus className="inline-block mr-1" />
@@ -501,7 +533,7 @@ const handleThumbnailChange = (e: ChangeEvent<HTMLInputElement>) => {
                           </button>
 
                           {addingCat && (
-                            <div className="fixed inset-0 bg-black/10 flex items-center justify-center z-50">
+                            <div className="fixed inset-0 bg-black/20 flex items-center justify-center z-50">
                               <div className="bg-white p-6 shadow-lg w-[90vw] sm:w-100 space-y-3">
                                 <h2 className="text-lg font-semibold">
                                   {t("add new category")}
@@ -510,13 +542,19 @@ const handleThumbnailChange = (e: ChangeEvent<HTMLInputElement>) => {
                                   <input
                                     type="text"
                                     value={newCategory}
-                                    onChange={(e) => setNewCategory(e.target.value)}
-                                    placeholder={` ${t("category")} ${t("name")}`}
+                                    onChange={(e) =>
+                                      setNewCategory(e.target.value)
+                                    }
+                                    placeholder={` ${t("category")} ${t(
+                                      "name"
+                                    )}`}
                                     className="w-full border border-inputBorder px-2 py-1 sm:px-4 sm:py-3 focus:outline-none focus:ring-1 focus:ring-primary"
                                   />
-                                  <p className="text-red-500 text-sm mt-1">
-                                    {categoryLimitError}
-                                  </p>
+                                  {categoryLimitError && (
+                                    <p className="text-red-500 text-sm mt-1">
+                                      {t(String(categoryLimitError))}
+                                    </p>
+                                  )}
                                 </div>
 
                                 <div className="flex justify-end space-x-2 mt-2">
@@ -548,7 +586,9 @@ const handleThumbnailChange = (e: ChangeEvent<HTMLInputElement>) => {
                   )}
                 />
                 {errors.category && (
-                  <p className="text-red-500 text-sm mt-1">{t(String(errors.category.message))}</p>
+                  <p className="text-red-500 text-sm mt-1">
+                    {t(String(errors.category.message))}
+                  </p>
                 )}
               </div>
 
@@ -610,18 +650,94 @@ const handleThumbnailChange = (e: ChangeEvent<HTMLInputElement>) => {
                   <Controller
                     name="video"
                     control={control}
-                    rules={{ required: "Please select a video" }}
+                    rules={{
+                      required: "Please select a video",
+                      validate: {
+                        fileType: (file) => {
+                          if (!file) return "Please select a video";
+
+                          const validVideoTypes = [
+                            // Common web formats
+                            "video/mp4",
+                            "video/webm",
+                            "video/ogg",
+                            "video/avi",
+                            "video/mov",
+                            "video/wmv",
+                            "video/flv",
+                            "video/mkv",
+                            "video/m4v",
+                            "video/3gp",
+                            "video/3g2",
+                            // iOS specific formats
+                            "video/quicktime",
+                            // Additional formats
+                            "video/x-msvideo", // .avi
+                            "video/x-ms-wmv", // .wmv
+                            "video/x-flv", // .flv
+                            "video/x-matroska", // .mkv
+                          ];
+
+                          if (!validVideoTypes.includes(file.type)) {
+                            return "Please select a valid video file";
+                          }
+                          return true;
+                        },
+                      },
+                    }}
                     render={({ field }) => (
                       <label className="flex items-center justify-center h-32 border border-inputBorder cursor-pointer hover:border-primary">
                         <input
                           type="file"
-                          accept="video/*"
+                          accept="video/*,.mp4,.webm,.ogg,.avi,.mov,.wmv,.flv,.mkv,.m4v,.3gp,.3g2"
                           className="hidden"
-                          onChange={handleVideoChange}
+                          onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            if (file) {
+                              // Additional client-side validation
+                              const validExtensions = [
+                                ".mp4",
+                                ".webm",
+                                ".ogg",
+                                ".avi",
+                                ".mov",
+                                ".wmv",
+                                ".flv",
+                                ".mkv",
+                                ".m4v",
+                                ".3gp",
+                                ".3g2",
+                              ];
+
+                              const fileExtension = file.name
+                                .toLowerCase()
+                                .substring(file.name.lastIndexOf("."));
+                              const isValidExtension =
+                                validExtensions.includes(fileExtension);
+
+                              if (!isValidExtension) {
+                                // Reset the input
+                                e.target.value = "";
+                                triggerNotification({
+                                  type: "error",
+                                  message: t(
+                                    "Please select a valid video file"
+                                  ),
+                                  duration: 3000,
+                                });
+                                return;
+                              }
+                            }
+
+                            handleVideoChange(e);
+                            field.onChange(file);
+                          }}
                         />
                         <span className="text-[#59BDE2] flex items-center gap-4 p-4">
                           <img src="/VideoUpload.svg" alt="" />
-                          {watchedVideo ? watchedVideo.name : t("select file to upload")}
+                          {watchedVideo
+                            ? watchedVideo.name
+                            : t("select file to upload")}
                         </span>
                       </label>
                     )}
@@ -638,10 +754,12 @@ const handleThumbnailChange = (e: ChangeEvent<HTMLInputElement>) => {
                     )}
                   </p>
                   {errors.video && (
-                    <p className="text-red-500 text-sm mt-1">{t(String(errors.video.message))}</p>
+                    <p className="text-red-500 text-sm mt-1">
+                      {t(String(errors.video.message))}
+                    </p>
                   )}
                 </div>
-                
+
                 {/* Add Thumbnail */}
                 <div className="flex flex-col">
                   <label className="text-sm text-text-light-2 mb-1 capitalize">
@@ -661,14 +779,16 @@ const handleThumbnailChange = (e: ChangeEvent<HTMLInputElement>) => {
                         />
                         <span className="text-[#59BDE2] flex items-center gap-2">
                           <MdUpload className="text-[#59BDE2] w-7 h-7" />
-                          {watchedThumbnail ? watchedThumbnail.name : t("Please select PNG or JPEG file")}
+                          {watchedThumbnail
+                            ? watchedThumbnail.name
+                            : t("Please select PNG or JPEG file")}
                         </span>
                       </label>
                     )}
                   />
                   <p className="text-xs text-text-light-2 mt-2">
                     {t(
-                      "Recommended Image Size: 800px x 600px, PNG or JPEG file only"
+                      "Recommended Image Size: 1200px x 1200px, PNG or JPEG file only"
                     )}
                   </p>
                   {errors.thumbnail && (

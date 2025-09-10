@@ -45,7 +45,7 @@ const Certificates: React.FC = () => {
                 <div className="flex items-center gap-[30%] w-full justify-center text-[#4D4D4D] mt-2">
                   <div className="flex gap-2">
                     <span className="text-black">Date of Achievement:</span>
-                    <span className="font-extralight">20-06-2025</span>
+                    <span className="font-extralight">20/06/2025</span>
                   </div>
                   <div className="flex gap-2">
                     <span className="text-black">Certificate Number:</span>

@@ -232,7 +232,7 @@ export const UserProfile: React.FC = () => {
                           <div className="text-sm text-text-dark font-semibold">
                             {t("Issued at")}:{" "}
                             <span className="text-text-light font-normal">
-                              {cert.issueDate}
+                              {new Date(cert.issueDate).toLocaleDateString()}
                             </span>
                           </div>
                           <a
@@ -303,12 +303,12 @@ export const UserProfile: React.FC = () => {
                     className="absolute inset-y-0 right-0 pr-3 flex items-center text-zinc-500"
                   >
                     {showNewPassword ? (
-                      <EyeSlashIcon
+                      <EyeIcon
                         className="h-5 w-5 cursor-pointer"
                         aria-hidden="true"
                       />
                     ) : (
-                      <EyeIcon
+                      <EyeSlashIcon
                         className="h-5 w-5 cursor-pointer"
                         aria-hidden="true"
                       />
@@ -341,12 +341,12 @@ export const UserProfile: React.FC = () => {
                     className="absolute inset-y-3 right-0 pr-3 flex items-center text-zinc-500"
                   >
                     {showConfirmPassword ? (
-                      <EyeSlashIcon
+                      <EyeIcon
                         className="h-5 w-5 cursor-pointer"
                         aria-hidden="true"
                       />
                     ) : (
-                      <EyeIcon
+                      <EyeSlashIcon
                         className="h-5 w-5 cursor-pointer"
                         aria-hidden="true"
                       />

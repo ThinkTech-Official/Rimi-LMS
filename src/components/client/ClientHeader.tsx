@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FaUserCircle } from "react-icons/fa";
 import { FaUser } from "react-icons/fa6";
@@ -20,11 +20,33 @@ const ClientHeader: React.FC = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { user } = useAuth();
+  const languageDropdown = useRef<HTMLDivElement>(null);
+  const profileDropdown = useRef<HTMLDivElement>(null);
 
   console.log("from client head user value", user);
 
   const { logout, loading: logOutLoading, error: logOutError } = useLogout();
 
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (
+        languageDropdown.current &&
+        !languageDropdown.current.contains(e.target as Node)
+      ) {
+        setIsLanguageSelectOpen(false);
+      }
+      if (
+        profileDropdown.current &&
+        !profileDropdown.current.contains(e.target as Node)
+      ) {
+        setIsProfileMenuOpen(false);
+      }
+    };
+    document.addEventListener("click", handleClickOutside);
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, []);
   const handleLanguageSelect = (lang: Language) => {
     if (lang === selectedLanguage) {
       setIsLanguageSelectOpen(false);
@@ -62,7 +84,7 @@ const ClientHeader: React.FC = () => {
 
   return (
     <header className=" bg-white border-b border-[#E9EEF1] flex items-center justify-end px-6 space-x-4 py-4 gap-3">
-      <div className="relative">
+      <div className="relative" ref={languageDropdown}>
         <button
           className="flex items-center gap-2 text-primary text-[16px] 2xl:text-xl font-medium relative cursor-pointer"
           onClick={toggleLanguageSelect}
@@ -105,7 +127,7 @@ const ClientHeader: React.FC = () => {
           </div>
         )}
       </div>
-      <div className="relative">
+      <div className="relative" ref={profileDropdown}>
         <button
           className="flex items-center gap-2 min-w-24 text-primary text-[16px] 2xl:text-xl font-medium cursor-pointer"
           onClick={toggleProfileMenu}

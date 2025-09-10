@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
-  FaFilePdf,
   FaPause,
   FaPlay,
   FaVolumeMute,
@@ -23,6 +22,7 @@ import Spinner from "../loaders/Spinner";
 import { BiExitFullscreen } from "react-icons/bi";
 import { useTranslation } from "react-i18next";
 import { HiOutlineDocumentCheck } from "react-icons/hi2";
+import FileTypeIcon from "../loaders/FileTypeIcon";
 
 const CoursePlay = () => {
   const { id: courseId } = useParams<{ id: string }>();
@@ -85,12 +85,11 @@ const CoursePlay = () => {
 
   // ===============================
 
-
-    // Helper function to calculate the last passed checkpoint
+  // Helper function to calculate the last passed checkpoint
   // const calculateLastPassedCheckpoint = (courseData: CourseClient) => {
   //   const passedTests = courseData.tests.filter((t) => t.isCleared);
   //   if (passedTests.length === 0) return 0;
-    
+
   //   // Get the latest passed test's start time
   //   return Math.max(...passedTests.map((t) => t.startTime));
   // };
@@ -103,14 +102,12 @@ const CoursePlay = () => {
   //   }
   // }, [course]);
 
-
-
   // ===============================
 
   // toggle play/pause
   const togglePlay = () => {
     const v = videoRef.current!;
-    if(!markersReady) return;
+    if (!markersReady) return;
     if (isPlaying) v.pause();
     else v.play();
     setIsPlaying(!isPlaying);
@@ -189,8 +186,6 @@ const CoursePlay = () => {
       document.removeEventListener("fullscreenchange", handleFullscreenChange);
   }, []);
 
-
-
   // =================================
 
   // On mount or when course loads: seek to first un-passed test and pre-mark triggers
@@ -217,11 +212,9 @@ const CoursePlay = () => {
   //   );
   // }, [course]);
 
-
   // ooooooooooooooooooo
 
-
-   // On mount or when course loads: seek to first un-passed test and pre-mark triggers
+  // On mount or when course loads: seek to first un-passed test and pre-mark triggers
   useEffect(() => {
     if (!course || !videoRef.current || !videoReady) return;
     // find all passed tests
@@ -306,9 +299,7 @@ const CoursePlay = () => {
     };
   }, [course]);
 
-
   // ======================================================
-
 
   // if user passed update checkpoint and resume
   // const handleResume = async () => {
@@ -319,7 +310,6 @@ const CoursePlay = () => {
   //   setShowTest(null);
   //   videoRef.current?.play();
   // };
-
 
   // if user passed update checkpoint and resume
   // const handleResume = async () => {
@@ -351,8 +341,6 @@ const CoursePlay = () => {
     videoRef.current?.play();
   };
 
-
-
   // user failed allow re-trigger and seek back
   // const handleBack = () => {
   //   // Hide the quiz UI
@@ -372,9 +360,7 @@ const CoursePlay = () => {
   //   }
   // };
 
-
-
-    // user failed - seek back to last passed checkpoint or beginning
+  // user failed - seek back to last passed checkpoint or beginning
   const handleBack = () => {
     // Hide the quiz UI
     setShowTest(null);
@@ -396,9 +382,6 @@ const CoursePlay = () => {
     }
     setIsPlaying(true);
   };
-
-
-
 
   // =============================
 
@@ -531,7 +514,7 @@ const CoursePlay = () => {
             {loadingTest && (
               <div className="absolute z-50 bg-white/90 flex flex-col justify-center items-center gap-2">
                 <Spinner className="w-6 h-6" />
-                <p className="text-text-dark">Loading Test...</p>
+                <p className="text-text-dark">{t("Loading tests")}...</p>
               </div>
             )}
 
@@ -645,7 +628,7 @@ const CoursePlay = () => {
                 <div className="absolute top-2.5 left-0 right-0 bottom-2.5 flex items-center justify-center pointer-events-none">
                   <div className="flex items-center gap-2 bg-black/40 px-3 py-1.5 rounded">
                     <Spinner className="w-4 h-4" />
-                    <span className="text-white text-xs">Loading tests…</span>
+                    <span className="text-white text-xs">{t("Loading tests")}…</span>
                   </div>
                 </div>
               )}
@@ -667,7 +650,11 @@ const CoursePlay = () => {
                           transform: "translateX(-50%)",
                         }}
                       >
-                        <HiOutlineDocumentCheck className={`h-4 w-4 ${test.isCleared ? "text-red-500/80" : "text-white/50"}`}/>
+                        <HiOutlineDocumentCheck
+                          className={`h-4 w-4 ${
+                            test.isCleared ? "text-red-500/80" : "text-white/50"
+                          }`}
+                        />
                         {/* <img
                           src={`${test.isCleared ? "/DocumentRed.svg" : "/Document.svg"}`}
                           alt="test marker"
@@ -708,7 +695,10 @@ const CoursePlay = () => {
             >
               <div className="flex flex-col md:flex-row gap-2 sm:gap-0 items-center space-x-4">
                 <div className="bg-[#E4E3E3] flex items-center justify-center px-4 py-3 sm:px-6 sm:py-5">
-                  <FaFilePdf className="w-7 h-8 sm:w-9 sm:h-11 fill-[#EF5350]" />
+                  <FileTypeIcon
+                    fileName={mat.fileName}
+                    className="w-7 h-8 sm:w-9 sm:h-11"
+                  />
                 </div>
                 <div className="text-center sm:text-left">
                   <h3 className="text-text-dark font-semibold text-lg sm:text-xl">

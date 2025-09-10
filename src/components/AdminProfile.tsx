@@ -68,7 +68,7 @@ const AdminProfile: React.FC = () => {
     <div className="max-w-[1600px]">
       <div className="px-2 sm:px-6 py-4">
         <h2 className="text-primary text-sm font-medium mb-3 capitalize">
-          &gt; {t("profile")}{" "}
+          {t("profile")}{" "}
         </h2>
         <h1 className="text-lg 2xl:text-2xl font-bold text-text-dark mb-3 sm:mb-6">
           {t("Admin Profile")}

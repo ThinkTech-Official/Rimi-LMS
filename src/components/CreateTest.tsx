@@ -290,6 +290,7 @@ const CreateTest: React.FC = () => {
                     <input
                       type="text"
                       {...register("name", {
+                        setValueAs: (v) => v.trim(),
                         required: t("name required"),
                         minLength: {
                           value: 4,
@@ -349,10 +350,9 @@ const CreateTest: React.FC = () => {
                         // start time should not exceed the duration of the course
                         max: {
                           value: courseDuration || 0,
-                          message:
-                            t(
-                              "Start time cannot be more then course duration"
-                            ) + `(${courseDuration})`,
+                          message: t(
+                            "Start time cannot be more then course duration"
+                          ),
                         },
                       })}
                       onKeyDown={(e) => {

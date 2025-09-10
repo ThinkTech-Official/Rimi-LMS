@@ -31,8 +31,8 @@ import { useDashboardStatsCharts } from "../../hooks/useDashboardStatsCharts";
 // ];
 
 const AdminCharts = () => {
-  const { t } = useTranslation();
-
+  const { t, i18n } = useTranslation();
+  const currLanguage = i18n.language;
   const today = new Date().toISOString().slice(0, 10); // e.g. "2025-07-24"
   const { data, loading, error } = useDashboardStatsCharts(today);
 
@@ -40,21 +40,26 @@ const AdminCharts = () => {
   if (error)
     return <div className=" text-red-700">{t("Error loading Chart data")}</div>;
 
-  // transform backend data to recharts format
   const lineChartData = data.map((item) => {
     const d = new Date(item.date);
-    // e.g. “Jul” or “July” depending on your locale
-    const month = d.toLocaleDateString(undefined, { month: "short" });
+
+    const month = d.toLocaleDateString(currLanguage === "en" ? "en" : "fr", {
+      month: "short",
+    });
+
     const day = d.getDate();
+
     return {
-      name: `${month} ${day}`, // → “Jul 20”
+      name: `${month} ${day}`,
       users: item.dailySignups,
     };
   });
 
   const barChartData = data.map((item) => {
     const d = new Date(item.date);
-    const month = d.toLocaleDateString(undefined, { month: "short" });
+    const month = d.toLocaleDateString(currLanguage === "en" ? "en" : "fr", {
+      month: "short",
+    });
     const day = d.getDate();
     return {
       name: `${month} ${day}`,
@@ -71,7 +76,7 @@ const AdminCharts = () => {
           data-testid="chart"
         >
           <h5 className="text-lg 2xl:text-2xl capitalize leading-[20px] 2xl:leading-1.5 font-bold text-[#1B1B1B] text-center lg:text-left">
-            {t("Recent New Users Daily")}
+            {t("New Users per Day")}
           </h5>
           <div className="bg-white py-4 px-2 h-80 sm:h-96 2xl:h-[400px] w-full border border-[#DDDDDD]">
             <ResponsiveContainer width="100%" height="100%">
@@ -130,7 +135,7 @@ const AdminCharts = () => {
           data-testid="chart"
         >
           <h5 className="text-lg 2xl:text-2xl capitalize leading-[20px] 2xl:leading-1.5 font-bold text-[#1B1B1B] text-center lg:text-left">
-            {t("Recent Certificates Issued Daily")}
+            {t("Certificates Issued per Day")}
           </h5>
           <div className="bg-white py-4 px-2 h-80 sm:h-96 2xl:h-[400px] w-full border border-[#DDDDDD]">
             <ResponsiveContainer width="100%" height="100%">

@@ -148,6 +148,7 @@ const LoginClient: React.FC = () => {
                 type="email"
                 autoComplete="email"
                 {...register("email", {
+                  setValueAs: (value) => value.trim().toLowerCase(),
                   required: "Email is required",
                   pattern: {
                     value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
@@ -190,7 +191,7 @@ const LoginClient: React.FC = () => {
                   type={showPassword ? "text" : "password"}
                   autoComplete="current-password"
                   placeholder="Password"
-                  className="w-full px-4 py-3 border border-zinc-300 focus:outline-none focus:ring-1 focus:ring-primary"
+                  className="w-full px-4 py-3 border border-zinc-300 focus:outline-none focus:ring-1 focus:ring-primary pr-10"
                 />
                 <button
                   type="button"

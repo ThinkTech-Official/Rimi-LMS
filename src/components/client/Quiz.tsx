@@ -3,6 +3,7 @@ import { FaArrowLeft, FaArrowRight } from "react-icons/fa6";
 import { PiSmiley, PiSmileySad } from "react-icons/pi";
 import { useSubmitTest } from "../../hooks/useSubmitTest";
 import type { Test } from "../../hooks/useFetchCourse";
+import { useTranslation } from "react-i18next";
 
 export interface Question {
   id: string;
@@ -37,7 +38,7 @@ const Quiz: FC<QuizProps> = ({
   const [answers, setAnswers] = useState<Record<string, number>>({});
   const [finished, setFinished] = useState(false);
   const [passed, setPassed] = useState(false);
-
+  const { t } = useTranslation();
   const { submit } = useSubmitTest();
 
   const questions = test.questions;
@@ -119,10 +120,10 @@ const Quiz: FC<QuizProps> = ({
           {" "}
           <div className="flex flex-col items-center">
             <span className="text-lg font-semibold text-text-dark">
-              Overall Performance
+              {t("Overall Performance")}
             </span>
             <span className="text-base text-text-light">
-              Summary of your test results
+              {t("Summary of your test results")}
             </span>
           </div>
           <div className="flex flex-col gap-1 w-full justify-between">
@@ -131,10 +132,10 @@ const Quiz: FC<QuizProps> = ({
                 {correctCount}/{questions.length}
               </span>
               {passed ? (
-                <span className="text-green-600">Well done!</span>
+                <span className="text-green-600">{t("Well done")}!</span>
               ) : (
                 <span className="text-[#CD4947] text-base">
-                  Needs Improvement
+                  {t("Needs Improvement")}
                 </span>
               )}
             </div>
@@ -146,31 +147,29 @@ const Quiz: FC<QuizProps> = ({
             </div>
             <div className="flex justify-between text-text-light text-sm">
               <span>
-                Score : {((correctCount / questions.length) * 100).toFixed(2)}%
+                {t("Score")} : {((correctCount / questions.length) * 100).toFixed(2)}%
               </span>
-              <span>Progress</span>
+              <span>{t("Progress")}</span>
             </div>
           </div>
           {passed ? (
             <div className="flex flex-col gap-1 items-center mt-2">
               <PiSmiley className="text-[#797878] w-8 h-8" />
               <span className="text-lg text-green-600 font-semibold">
-                Congratulations! You Passed the Quiz
+                {t("Congratulations! You Passed the Quiz")}
               </span>
               <p className="text-base text-[#747474] text-center">
-                Great job! You've successfully completed this checkpoint and can
-                now continue with the video.
+                {t("Great job! You've successfully completed this checkpoint and can now continue with the video.")}
               </p>
             </div>
           ) : (
             <div className="flex flex-col gap-1 items-center mt-2">
               <PiSmileySad className="text-[#797878] w-8 h-8" />
               <span className="text-lg text-[#CD4947] font-semibold">
-                You Didn’t Pass This Time
+                {t("You Didn’t Pass This Time")}
               </span>
               <p className="text-base text-[#747474] text-center">
-                Don't worry! You can rewatch the video and try the quiz again to
-                move forward.
+                {t("Don't worry! You can rewatch the video and try the quiz again to move forward.")}
               </p>
             </div>
           )}
@@ -181,20 +180,20 @@ const Quiz: FC<QuizProps> = ({
                 onResume();
               }}
             >
-              Proceed to Next Session
+              {t("Proceed to Next Session")}
             </button>
           ) : (
             <button
               className="px-2.5 py-3 bg-primary text-white flex gap-2 items-center justify-center cursor-pointer font-semibold mt-5"
               onClick={onBack}
             >
-              Watch Video Again
+              {t("Watch Video Again")}
             </button>
           )}
           {/* {test.passingMarks}/{questions.length}  */}
           {!passed && (
             <span className="text-2xl text-text-dark mt-3 font-semibold">
-              Passing Score : {test.passingMarks} %
+              {t("Passing Score")} : {test.passingMarks} %
             </span>
           )}
         </div>
@@ -223,7 +222,7 @@ const Quiz: FC<QuizProps> = ({
           </div>
         </div>
         <div className="text-text-dark text-lg font-semibold">
-          Complete the Quiz to Continue
+          {t("Complete the Quiz to Continue")}
         </div>
       </div>
 
@@ -266,13 +265,13 @@ const Quiz: FC<QuizProps> = ({
             disabled={current === 0}
             className="w-[120px] px-2.5 py-3 bg-primary text-white flex gap-2 items-center justify-center disabled:cursor-default cursor-pointer font-semibold"
           >
-            <FaArrowLeft /> Previous
+            <FaArrowLeft /> {t("Previous")}
           </button>
           <button
             onClick={next}
             className="w-[120px] px-2.5 py-3 bg-primary text-white flex gap-2 items-center justify-center disabled:cursor-default cursor-pointer font-semibold"
           >
-            {current < questions.length - 1 ? "Next" : "Finish"}
+            {current < questions.length - 1 ? t("Next") : t("Finish")}
             {current < questions.length - 1 && <FaArrowRight />}
           </button>
         </div>
@@ -281,10 +280,10 @@ const Quiz: FC<QuizProps> = ({
         className="px-2.5 py-2 cursor-pointer bg-primary text-white flex gap-2 items-center justify-center font-semibold absolute left-5 top-5"
         onClick={onBack}
       >
-        <FaArrowLeft /> Back
+        <FaArrowLeft /> {t("Back")}
       </button>
       <div className="flex flex-col absolute right-14 top-3">
-        <span className="text-base text-text-light">Test 1</span>
+        {/* <span className="text-base text-text-light">Test 1</span> */}
       </div>
     </div>
   );
