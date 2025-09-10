@@ -28,10 +28,17 @@ export const GenerateCertificatePage: React.FC = () => {
     courseTitle: state.courseTitle,
     certRef,
   });
-
+  const d = certData?.createdAt ? new Date(certData.createdAt) : new Date();
+  const formattedDate = [
+  String(d.getDate()).padStart(2, "0"),
+  String(d.getMonth() + 1).padStart(2, "0"),
+  d.getFullYear()
+].join("-");
   if (status === "error") {
     return (
-      <div className="p-8 text-red-500">{t("Failed to generate certificate")}.</div>
+      <div className="p-8 text-red-500">
+        {t("Failed to generate certificate")}.
+      </div>
     );
   }
 
@@ -54,14 +61,14 @@ export const GenerateCertificatePage: React.FC = () => {
             <Certificate
               recipientName={user?.name}
               courseTitle={certData.course.name}
-              date={new Date(certData.createdAt).toLocaleDateString()} // certData.createdAt is string
+              date={formattedDate} // certData.createdAt is string
               certNumber={certData.certNumber}
             />
           ) : (
             <CertificateFrench
               recipientName={user?.name}
               courseTitle={certData.course.name}
-              date={new Date(certData.createdAt).toLocaleDateString()} // certData.createdAt is string
+              date={formattedDate} // certData.createdAt is string
               certNumber={certData.certNumber}
             />
           )}

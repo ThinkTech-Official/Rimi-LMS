@@ -128,7 +128,7 @@ const Header: React.FC = () => {
         >
           <span className="flex gap-2 items-center" title={admin?.name}>
             <FaUserCircle className="h-5 w-5 2xl:w-6 2xl:h-6 text-primary" />
-            {admin ? admin.name.length > 7 ? `${admin.name.slice(0, 10)}...` : admin.name : "Please log in"}
+            {admin ? admin.name.length > 10 ? `${admin.name.slice(0, 10)}...` : admin.name : "Please log in"}
           </span>
           <MdKeyboardArrowRight
             className={`h-4 w-4 2xl:w-6 2xl:h-6 transform transition ${

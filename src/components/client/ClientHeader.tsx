@@ -134,7 +134,9 @@ const ClientHeader: React.FC = () => {
         >
           <span className="flex gap-2 items-center">
             <FaUserCircle className="h-5 w-5 2xl:w-6 2xl:h-6 text-primary" />
-            {user?.name}
+            {user?.name && user?.name?.length > 10
+              ? user?.name?.slice(0, 10) + "..."
+              : user?.name}
           </span>
           <MdKeyboardArrowRight
             className={`h-4 w-4 2xl:w-6 2xl:h-6 transform transition ${
