@@ -80,6 +80,7 @@ const EditCourse: React.FC = () => {
     total,
     loading,
     error,
+    refetch: refetchTests,
   } = useFetchTests(courseId!, currentPage, testsPerPage);
   const limit = 5;
   const totalPages = Math.ceil(total / limit);
@@ -327,8 +328,9 @@ const EditCourse: React.FC = () => {
     if (modalTestId === null) return;
     try {
       await deleteTest(modalTestId);
-      setLocalTests((prev) => prev.filter((t) => t.id !== modalTestId));
-      setModalTestId(null);
+      // setLocalTests((prev) => prev.filter((t) => t.id !== modalTestId));
+      // setModalTestId(null);
+      await refetchTests();
       triggerNotification({
         type: "success",
         message: t("Test deleted"),
