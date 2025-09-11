@@ -26,7 +26,7 @@ const ClientProfile: React.FC = () => {
   const {
     resetPassword,
     loading: savingPwd,
-    // error: pwdError,fr
+    // error: pwdError,
   } = useResetPassword();
 
   const [editMode, setEditMode] = useState(false);
@@ -203,10 +203,13 @@ const ClientProfile: React.FC = () => {
                         value: 6,
                         message: "Password must be at least 6 characters",
                       },
-                      pattern: {
-                        value: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]+$/,
-                        message:
-                          "Password must contain at least one letter and one number",
+                      validate: {
+                        hasLetter: (value) =>
+                          /[A-Za-z]/.test(value) ||
+                          "Password must contain at least one letter",
+                        hasNumber: (value) =>
+                          /\d/.test(value) ||
+                          "Password must contain at least one number",
                       },
                     })}
                     className="w-full border border-inputBorder px-4 py-2 sm:py-3 focus:outline-none focus:ring-1 focus:ring-primary"
@@ -286,7 +289,7 @@ const ClientProfile: React.FC = () => {
                 </button>
                 <button
                   type="submit"
-                  // disabled={resetting}
+                  disabled={savingPwd}
                   className="flex-1 px-4 py-2 sm:py-3 bg-primary text-white font-semibold cursor-pointer transition-all delay-100 shadow hover:bg-indigo-700"
                 >
                   {savingPwd ? `${t("Updating")}...` : `${t("Update")}`}

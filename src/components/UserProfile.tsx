@@ -1,7 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import {
-  useAdminClientProfile,
-} from "../hooks/useAdminClientProfile";
+import { useAdminClientProfile } from "../hooks/useAdminClientProfile";
 import { GoClock } from "react-icons/go";
 import { ImUser } from "react-icons/im";
 import { IoMdClose } from "react-icons/io";
@@ -300,10 +298,13 @@ export const UserProfile: React.FC = () => {
                         value: 6,
                         message: "Password must be at least 6 characters",
                       },
-                      pattern: {
-                        value: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]+$/,
-                        message:
-                          "Password must contain at least one letter and one number",
+                      validate: {
+                        hasLetter: (value) =>
+                          /[A-Za-z]/.test(value) ||
+                          "Password must contain at least one letter",
+                        hasNumber: (value) =>
+                          /\d/.test(value) ||
+                          "Password must contain at least one number",
                       },
                     })}
                     className="w-full border border-inputBorder px-4 py-2 sm:py-3 focus:outline-none focus:ring-1 focus:ring-primary"

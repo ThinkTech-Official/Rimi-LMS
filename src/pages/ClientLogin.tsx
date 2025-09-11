@@ -220,6 +220,7 @@ const LoginClient: React.FC = () => {
 
             <button
               type="submit"
+              disabled={loading}
               className="w-full py-3 bg-primary text-white font-semibold cursor-pointer transition-all delay-100 shadow hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
             >
               {loading ? `${t("Signing In")}...` : t("Sign In")}

@@ -1,8 +1,3 @@
-
-
-
-
-
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useCreateTest } from "../hooks/useCreateTest";
@@ -33,7 +28,11 @@ interface NewTest {
 const CreateTest: React.FC = () => {
   const { courseId } = useParams<{ courseId: string }>();
   const navigate = useNavigate();
-  const { createTest, loading, error } = useCreateTest(courseId!);
+  const {
+    createTest,
+    loading,
+    error: createTestError,
+  } = useCreateTest(courseId!);
   const { t } = useTranslation();
   const [questionErrors, setQuestionErrors] = useState<
     Record<number, string[]>
@@ -65,7 +64,7 @@ const CreateTest: React.FC = () => {
     if (state?.courseDuration) {
       setCourseDuration(state.courseDuration);
     }
-  },[state]);
+  }, [state]);
 
   const validateQuestion = (q: Question): string[] => {
     const errors: string[] = [];
@@ -253,10 +252,11 @@ const CreateTest: React.FC = () => {
     } catch (error: any) {
       console.error("Test creation error:", error);
 
-      const errorMessage = error.response?.data?.message || 
-                        error.response?.data?.error || 
-                        error.message || 
-                        t("Failed to create test");
+      const errorMessage =
+        error.response?.data?.message ||
+        error.response?.data?.error ||
+        error.message ||
+        t("Failed to create test");
 
       triggerNotification({
         type: "error",
@@ -563,6 +563,7 @@ const CreateTest: React.FC = () => {
               </button>
               <button
                 type="submit"
+                disabled={loading}
                 className="inline-block text-sm sm:text-[16px] px-5 py-2 sm:py-3 bg-primary text-white text-nowrap font-semibold hover:bg-indigo-700 cursor-pointer transition-colors delay-150"
               >
                 {loading ? t("saving") : t("save test")}

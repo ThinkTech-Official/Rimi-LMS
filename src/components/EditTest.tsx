@@ -249,11 +249,17 @@ const EditTest: React.FC = () => {
           message: t("Test updated"),
         },
       });
-    } catch {
+    } catch (error: any) {
+      const errorMessage =
+        error.response?.data?.message ||
+        error.response?.data?.error ||
+        error.message ||
+        t("Failed to create test");
+
       triggerNotification({
         type: "error",
-        message: t("Failed to update test"),
-        duration: 3000,
+        message: errorMessage,
+        duration: 5000,
       });
     }
   };
@@ -290,7 +296,6 @@ const EditTest: React.FC = () => {
               {loadingSave ? t("saving") : t("Save Changes")}
             </button>
           </div>
-          {saveError && <p className="text-red-500">{saveError}</p>}
 
           {/* Basic fields */}
           <div className="space-y-4 text-text-light">
