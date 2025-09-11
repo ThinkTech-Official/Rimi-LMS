@@ -350,7 +350,9 @@ const EditCourse: React.FC = () => {
   };
 
   const handleTestEdit = (testId: number) => {
-    navigate(`/admin/edit-course/${courseId}/edit-test/${testId}`);
+    navigate(`/admin/edit-course/${courseId}/edit-test/${testId}`, {
+      state: { courseDuration: basicCourse?.duration },
+    });
   };
 
   // When user picks a new thumbnail
@@ -1103,7 +1105,10 @@ const EditCourse: React.FC = () => {
                 ) : (
                   <div className="flex gap-4 items-center">
                     <CiFileOn className="w-4 h-4 shrink-0" />
-                    <span className="truncate" title={thumbnailFile.name}> {thumbnailFile.name}</span>
+                    <span className="truncate" title={thumbnailFile.name}>
+                      {" "}
+                      {thumbnailFile.name}
+                    </span>
                     <MdCancel
                       title="Remove File"
                       className="cursor-pointer w-4 h-4 shrink-0"

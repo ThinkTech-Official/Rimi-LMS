@@ -129,7 +129,7 @@ export const AdminCreateUser: React.FC = () => {
                     "Password must contain at least one number",
                 },
               })}
-              className="w-full p-2 sm:px-4 sm:py-3 border border-zinc-300 focus:border-0 focus:outline-none focus:ring-1 focus:ring-primary pr-10"
+              className="w-full px-2 sm:px-4 py-2 sm:py-3 border border-zinc-300 focus:outline-none focus:ring-1 focus:ring-primary pr-10 sm:pr-10"
             />
             <button
               type="button"
@@ -170,7 +170,7 @@ export const AdminCreateUser: React.FC = () => {
                 validate: (value) =>
                   value === watch("password") || "Passwords do not match",
               })}
-              className="w-full p-2 sm:px-4 sm:py-3 border border-zinc-300 focus:border-0 focus:outline-none focus:ring-1 focus:ring-primary pr-10"
+              className="w-full p-2 sm:px-4 sm:py-3 border border-zinc-300 focus:border-0 focus:outline-none focus:ring-1 focus:ring-primary pr-10 sm:pr-10"
             />
             <button
               type="button"

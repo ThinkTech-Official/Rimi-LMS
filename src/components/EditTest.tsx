@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { useFetchTest, type QuestionDto } from "../hooks/useFetchTest";
 import { useUpdateTest, type UpdateTestDto } from "../hooks/useUpdateTest";
@@ -66,8 +66,16 @@ const EditTest: React.FC = () => {
       questions: [],
     },
   });
-  const { triggerNotification } = useNotification();
+  const { triggerNotification, NotificationComponent } = useNotification();
   const { t } = useTranslation();
+  const [courseDuration, setCourseDuration] = useState<number>(0);
+  const location = useLocation();
+  const state = location.state;
+  useEffect(() => {
+    if (state?.courseDuration) {
+      setCourseDuration(state.courseDuration);
+    }
+  });
 
   const validateQuestion = (q: QuestionDto): string[] => {
     const errors: string[] = [];
@@ -197,6 +205,19 @@ const EditTest: React.FC = () => {
   // };
 
   const onSubmit: SubmitHandler<EditTestDto> = async (data: EditTestDto) => {
+    if (questions.length === 0)
+      return triggerNotification({
+        type: "error",
+        message: t("Please add at least one question"),
+        duration: 3000,
+      });
+
+    if (questions.length === 0)
+      return triggerNotification({
+        type: "error",
+        message: t("Please add at least one question"),
+        duration: 3000,
+      });
     const questionLevelErrors: Record<number, string[]> = {};
     questions.forEach((q) => {
       const errs = validateQuestion(q);
@@ -348,7 +369,7 @@ const EditTest: React.FC = () => {
                       message: t("start time min"),
                     },
                     max: {
-                      value: test?.duration || 0,
+                      value: courseDuration || 0,
                       message: t(
                         "Start time cannot be more then course duration"
                       ),
@@ -489,6 +510,7 @@ const EditTest: React.FC = () => {
           </section>
         </form>
       </main>
+      {NotificationComponent}
     </div>
   );
 };
