@@ -1,3 +1,8 @@
+
+
+
+
+
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useCreateTest } from "../hooks/useCreateTest";
@@ -60,7 +65,7 @@ const CreateTest: React.FC = () => {
     if (state?.courseDuration) {
       setCourseDuration(state.courseDuration);
     }
-  });
+  },[state]);
 
   const validateQuestion = (q: Question): string[] => {
     const errors: string[] = [];
@@ -246,10 +251,17 @@ const CreateTest: React.FC = () => {
         },
       });
     } catch (error: any) {
+      console.error("Test creation error:", error);
+
+      const errorMessage = error.response?.data?.message || 
+                        error.response?.data?.error || 
+                        error.message || 
+                        t("Failed to create test");
+
       triggerNotification({
         type: "error",
-        message: t("Failed to create test"),
-        duration: 3000,
+        message: errorMessage,
+        duration: 5000,
       });
     }
   };
@@ -275,6 +287,7 @@ const CreateTest: React.FC = () => {
                 </h2>
                 <button
                   type="submit"
+                  disabled={loading}
                   className="w-fit inline-block text-sm sm:text-[16px] px-5 py-2 sm:py-3 bg-primary text-white text-nowrap font-semibold hover:bg-indigo-700 cursor-pointer transition-colors delay-150"
                 >
                   {loading ? t("saving") : t("save test")}
