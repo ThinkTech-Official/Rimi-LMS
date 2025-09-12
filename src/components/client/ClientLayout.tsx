@@ -43,6 +43,12 @@ const ClientLayout: React.FC = () => {
     setActive(key);
     navigate(menuItems.find((item) => item.key === key)?.url || "/");
   };
+
+  const handleLogoClick = () => {
+    setActive("home");
+    navigate("/client");
+  };
+
   return (
     <>
       <div className="flex">
@@ -63,6 +69,7 @@ const ClientLayout: React.FC = () => {
                   src="/rimilogo.png"
                   alt="RIMI"
                   className="h-11 w-[100px] ml-4 mt-[10px]"
+                  onClick= {handleLogoClick}
                 />
                 <ChevronLeftIcon
                   className="h-8 mr-2 text-primary cursor-pointer"

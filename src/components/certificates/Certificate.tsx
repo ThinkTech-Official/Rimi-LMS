@@ -13,6 +13,13 @@ const Certificate: React.FC<CertificateProps> = ({
   date,
   certNumber,
 }) => {
+
+  const certText = `has successfully completed the ${courseTitle}
+              This achievement reflects the dedication, knowledge, and skills
+              demonstrated in understanding insurance principles, policies,
+              client servicing, and compliance standards as set by RIMI
+              Insurance Training Program`
+
   return (
     // <>
     //   <div className="w-[1050px] mx-auto m-4 border">
@@ -250,11 +257,7 @@ const Certificate: React.FC<CertificateProps> = ({
                 marginTop: "-0.5rem",
               }}
             >
-              has successfully completed the RIMI Insurance Training Program
-              This achievement reflects the dedication, knowledge, and skills
-              demonstrated in understanding insurance principles, policies,
-              client servicing, and compliance standards as set by RIMI
-              Insurance Training Program
+              {certText}
             </p>
             <div
               style={{
