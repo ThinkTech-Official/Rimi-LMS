@@ -39,6 +39,18 @@ const ClientLayout: React.FC = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  useEffect(() => {
+    const currentPath = location.pathname;
+    const activeMenuItem = menuItems.find((item) => item.url === currentPath);
+
+    if (activeMenuItem) {
+      setActive(activeMenuItem.key as View);
+    } else {
+      // Default to home if no exact match found
+      setActive("home");
+    }
+  }, [location.pathname]);
+  
   const handleLinkClick = (key: any) => {
     setActive(key);
     navigate(menuItems.find((item) => item.key === key)?.url || "/");
@@ -62,7 +74,8 @@ const ClientLayout: React.FC = () => {
                 <img
                   src="/rimilogo.png"
                   alt="RIMI"
-                  className="h-11 w-[100px] ml-4 mt-[10px]"
+                  className="h-11 w-[100px] ml-4 mt-[10px] cursor-pointer"
+                  onClick={() => navigate("/client")}
                 />
                 <ChevronLeftIcon
                   className="h-8 mr-2 text-primary cursor-pointer"

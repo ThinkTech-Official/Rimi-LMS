@@ -10,6 +10,7 @@ interface CertificateProps {
 const CertificateFrench: React.FC<CertificateProps> = ({
   recipientName,
   date,
+  courseTitle,
   certNumber,
 }) => {
   return (
@@ -158,7 +159,7 @@ const CertificateFrench: React.FC<CertificateProps> = ({
                 marginTop: "-0.5rem",
               }}
             >
-              a suivi avec succès le programme de formation RIMI Assurance. Cet
+              a suivi avec succès {courseTitle}. Cet
               accomplissement reflète le dévouement, les connaissances et les
               compétences démontrés dans la compréhension des principes
               d’assurance, des politiques, du service client et des normes de

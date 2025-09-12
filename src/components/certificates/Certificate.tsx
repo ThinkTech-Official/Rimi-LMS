@@ -250,7 +250,7 @@ const Certificate: React.FC<CertificateProps> = ({
                 marginTop: "-0.5rem",
               }}
             >
-              has successfully completed the RIMI Insurance Training Program
+              has successfully completed {courseTitle}.
               This achievement reflects the dedication, knowledge, and skills
               demonstrated in understanding insurance principles, policies,
               client servicing, and compliance standards as set by RIMI
