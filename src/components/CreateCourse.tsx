@@ -301,33 +301,52 @@ const CreateCourse: React.FC<CreateCourseProps> = () => {
   //   }
   // };
 
-
-
   const handleDocsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  if (e.target.files) {
-    const newFiles = Array.from(e.target.files);
-    
-    // Add file type validation
-    const allowedTypes = ['.doc', '.docx', '.xls', '.xlsx', '.ppt', '.pptx', '.pdf', '.txt', '.rtf', '.odt', '.ods', '.odp', '.md', '.csv'];
-    
-    const invalidFiles = newFiles.filter(file => {
-      const extension = file.name.toLowerCase().substring(file.name.lastIndexOf('.'));
-      return !allowedTypes.includes(extension);
-    });
-    
-    if (invalidFiles.length > 0) {
-      // invalid files
-      console.log(`unsuported file types selected only allowed files type is ${allowedTypes}`)
-      return;
+    if (e.target.files) {
+      const newFiles = Array.from(e.target.files);
+
+      // Add file type validation
+      const allowedTypes = [
+        ".doc",
+        ".docx",
+        ".xls",
+        ".xlsx",
+        ".ppt",
+        ".pptx",
+        ".pdf",
+        ".txt",
+        ".rtf",
+        ".odt",
+        ".ods",
+        ".odp",
+        ".md",
+        ".csv",
+      ];
+
+      const invalidFiles = newFiles.filter((file) => {
+        const extension = file.name
+          .toLowerCase()
+          .substring(file.name.lastIndexOf("."));
+        return !allowedTypes.includes(extension);
+      });
+
+      if (invalidFiles.length > 0) {
+        // invalid files
+        console.log(
+          `unsuported file types selected only allowed files type is ${allowedTypes}`
+        );
+        triggerNotification({
+          type: "error",
+          message: `Unsuported file type(s)`,
+          duration: 3000,
+        });
+        return;
+      }
+
+      const currentDocs = watchedDocuments || [];
+      setValue("documents", [...currentDocs, ...newFiles]);
     }
-    
-    const currentDocs = watchedDocuments || [];
-    setValue("documents", [...currentDocs, ...newFiles]);
-  }
-};
-
-
-
+  };
 
   const handleRemoveDoc = (index: number) => {
     const currentDocs = watchedDocuments || [];
@@ -667,6 +686,10 @@ const CreateCourse: React.FC<CreateCourseProps> = () => {
                     </label>
                   </div>
                 )}
+                <p className="text-sm text-text-light-2 mt-2">
+                  Supported formats: .doc, .docx, .xls, .xlsx, .ppt, .pptx,
+                  .pdf, .txt, .rtf, .odt, .ods, .odp, .md, .csv
+                </p>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">

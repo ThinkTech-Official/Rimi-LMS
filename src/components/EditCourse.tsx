@@ -144,8 +144,49 @@ const EditCourse: React.FC = () => {
 
   // File selection handler
   const handleFileSelection = (e: ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files || []);
-    setSelectedFiles(files);
+    if (e.target.files) {
+      const newFiles = Array.from(e.target.files);
+
+      // Add file type validation
+      const allowedTypes = [
+        ".doc",
+        ".docx",
+        ".xls",
+        ".xlsx",
+        ".ppt",
+        ".pptx",
+        ".pdf",
+        ".txt",
+        ".rtf",
+        ".odt",
+        ".ods",
+        ".odp",
+        ".md",
+        ".csv",
+      ];
+
+      const invalidFiles = newFiles.filter((file) => {
+        const extension = file.name
+          .toLowerCase()
+          .substring(file.name.lastIndexOf("."));
+        return !allowedTypes.includes(extension);
+      });
+
+      if (invalidFiles.length > 0) {
+        // invalid files
+        console.log(
+          `unsuported file types selected only allowed files type is ${allowedTypes}`
+        );
+        triggerNotification({
+          type: "error",
+          message: `Unsuported file type(s)`,
+          duration: 3000,
+        });
+        return;
+      }
+
+      setSelectedFiles(newFiles);
+    }
   };
 
   // Remove selected file
@@ -671,6 +712,10 @@ const EditCourse: React.FC = () => {
                         onChange={handleFileSelection}
                         className="w-full px-3 py-2 border border-inputBorder focus:outline-none focus:ring focus:ring-primary hidden"
                       />
+                      <p className="text-sm text-text-light-2 mt-2">
+                        Supported formats: .doc, .docx, .xls, .xlsx, .ppt,
+                        .pptx, .pdf, .txt, .rtf, .odt, .ods, .odp, .md, .csv
+                      </p>
                     </div>
 
                     {selectedFiles.length > 0 && (
