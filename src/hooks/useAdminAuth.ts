@@ -21,7 +21,7 @@ export const useAdminAuth = () => {
       console.log(response);
       return true;
     } catch (err: any) {
-      console.log('from adminnauth hook', err)
+      console.log('from adminnauth hook when error', err)
       setError(err.response?.data?.message || err.message || "Login failed");
       throw err;
     } finally {
@@ -31,3 +31,13 @@ export const useAdminAuth = () => {
 
   return { login, loading, error };
 };
+
+
+
+
+
+
+
+
+
+

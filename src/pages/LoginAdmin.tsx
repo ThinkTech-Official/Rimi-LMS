@@ -33,31 +33,34 @@ const LoginAdmin: React.FC = () => {
   const { NotificationComponent, triggerNotification } = useNotification();
   const location = useLocation();
   const state = location.state;
-  useEffect(() => {
-    if (state?.type && state?.message) {
-      triggerNotification({
-        type: state.type,
-        message: state.message,
-        duration: 3000,
-      });
+  // useEffect(() => {
+  //   if (state?.type && state?.message) {
+  //     triggerNotification({
+  //       type: state.type,
+  //       message: state.message,
+  //       duration: 3000,
+  //     });
 
-      navigate(location.pathname, { replace: true });
-    }
-  }, [state, triggerNotification, navigate, location.pathname]);
+  //     navigate(location.pathname, { replace: true });
+  //   }
+  // }, [state, triggerNotification, navigate, location.pathname]);
 
   const onSubmit: SubmitHandler<SignInDto> = async (data: SignInDto) => {
     console.log(data);
     try {
       const ok = await login(data);
+      console.log('from login admin vaue of ok', ok)
       if (ok) {
         await reloadAdmin();
         navigate("/admin/home");
       }
-    } catch (error) {
+    } catch (error: any) {
+      
       console.error(error);
+      const errorMessage = error?.response?.data?.message || error?.message || "Login failed"
       triggerNotification({
         type: "error",
-        message: loginError || t("Login failed"),
+        message: errorMessage || t("Login failed"),
         duration: 3000,
       });
     }

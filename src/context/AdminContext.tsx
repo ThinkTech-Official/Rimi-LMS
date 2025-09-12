@@ -37,14 +37,17 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
     setLoading(true);
     setError(null);
     try {
+      // console.log('in admin context 111111')
       const { data } = await adminApi.post<Admin>(
         `${API_BASE}/admin/auth/profile`
       );
       setAdmin(data);
     } catch (err: any) {
+      // console.log('in admin context 222222')
       setAdmin(null);
       setError(err.response?.data?.message || err.message);
     } finally {
+      // console.log('in admin context 333333')
       setLoading(false);
     }
   };

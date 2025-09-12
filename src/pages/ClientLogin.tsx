@@ -44,10 +44,11 @@ const LoginClient: React.FC = () => {
       // await refreshUser();
       await reload();
       navigate("/client");
-    } catch {
+    } catch(error: any) {
+      const errorMessage = error?.response?.data?.message || error?.message || "Login failed"
       triggerNotification({
         type: "error",
-        message: error || t("Login failed"),
+        message: errorMessage || t("Login failed"),
         duration: 3000,
       });
     }
