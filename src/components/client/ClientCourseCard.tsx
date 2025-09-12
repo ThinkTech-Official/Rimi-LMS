@@ -50,7 +50,7 @@ const ClientCourseCard = ({
           border: "1px solid rgba(235, 235, 235, 1)",
         }}
       >
-        <div className="relative bg-blue-200 rounded-sm overflow-hidden h-60">
+        <div className="relative bg-blue-200 rounded-sm overflow-hidden h-52 xs:h-60">
           <img
             src={imageUrl}
             alt={title}

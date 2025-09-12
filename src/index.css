@@ -9,6 +9,7 @@
   --font-rufina: "Rufina", serif;
   --font-monte: "MonteCarlo", cursive;
   --breakpoint-2xl: 1600px;
+  --breakpoint-xs:500px;
 }
 
 @layer utilities {
