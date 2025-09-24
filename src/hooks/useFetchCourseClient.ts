@@ -1,3 +1,127 @@
+// import { useState, useEffect, useCallback } from "react";
+// import axios, { type CancelTokenSource } from "axios";
+// import { API_BASE } from "../utils/ulrs";
+
+// /**
+//  * Represents a single course test with user clearance info
+//  */
+// export interface TestClient {
+//   id: number;
+//   name: string;
+//   duration: number;
+//   startTime: number;
+//   passingMarks: number;
+//   quizQuestionNumber: number;
+//   isCleared: boolean;
+// }
+
+// /**
+//  * Represents a course document
+//  */
+// export interface DocumentClient {
+//   id: number;
+//   fileName: string;
+//   url: string;
+// }
+
+// /**
+//  * Represents the course payload for the client
+//  */
+// export interface CourseClient {
+//   id: number;
+//   name: string;
+//   description: string;
+//   thumbnail?: string;
+//   videoUrl?: string;
+//   duration?: number;
+//   documents: DocumentClient[];
+//   tests: TestClient[];
+// }
+
+// interface UseFetchCourseClientResult {
+//   course: CourseClient | null;
+//   loading: boolean;
+//   error: string | null;
+//   refetch: any;
+// }
+
+// /**
+//  * Hook to fetch a course with user-specific test clearance info
+//  * Uses axios to include cookies (accessToken, refreshToken)
+//  * Transforms raw file names into full URLs for video, thumbnail, and documents
+//  * @param courseId the ID of the course to fetch
+//  */
+// export function useFetchCourseClient(
+//   courseId: string
+// ): UseFetchCourseClientResult {
+//   const [course, setCourse] = useState<CourseClient | null>(null);
+//   const [loading, setLoading] = useState<boolean>(false);
+//   const [error, setError] = useState<string | null>(null);
+
+//   // useCallback to ensure stable reference
+//   const fetchCourse = useCallback(async () => {
+//     if (!courseId) return;
+//     setLoading(true);
+//     setError(null);
+//     const cancelTokenSource: CancelTokenSource = axios.CancelToken.source();
+//     try {
+//       const response = await axios.get<
+//         CourseClient & { documents: { id: number; fileName: string }[] }
+//       >(`${API_BASE}/courses/${courseId}/client`, {
+//         withCredentials: true,
+//         cancelToken: cancelTokenSource.token,
+//       });
+//       const raw = response.data as any;
+
+//       // Map video and thumbnail URL
+//       const videoUrl = raw.videoUrl
+//         ? `${API_BASE}${raw.videoUrl}`
+//         : undefined;
+//       const thumbnail = raw.thumbnail
+//         ? `${API_BASE}/uploads/courses/${raw.thumbnail}`
+//         : undefined;
+
+//       // Map documents array
+//       const documents: DocumentClient[] = raw.documents.map((d: any) => ({
+//         id: d.id,
+//         fileName: d.fileName,
+//         url: `${API_BASE}/uploads/courses/${d.fileName}`,
+//       }));
+
+//       // Assemble final course object
+//       setCourse({
+//         id: raw.id,
+//         name: raw.name,
+//         description: raw.description,
+//         thumbnail,
+//         videoUrl,
+//         duration: raw.duration,
+//         documents,
+//         tests: raw.tests,
+//       });
+//     } catch (err: any) {
+//       if (!axios.isCancel(err)) {
+//         setError(err.response?.data?.message || err.message);
+//       }
+//     } finally {
+//       setLoading(false);
+//     }
+//     return () => cancelTokenSource.cancel("Operation canceled by user.");
+//   }, [courseId]);
+
+//   useEffect(() => {
+//     fetchCourse();
+//   }, [fetchCourse]);
+
+//   return { course, loading, error, refetch: fetchCourse };
+// }
+
+
+
+
+// =================================
+
+
 import { useState, useEffect, useCallback } from "react";
 import axios, { type CancelTokenSource } from "axios";
 import { API_BASE } from "../utils/ulrs";
@@ -49,6 +173,7 @@ interface UseFetchCourseClientResult {
  * Hook to fetch a course with user-specific test clearance info
  * Uses axios to include cookies (accessToken, refreshToken)
  * Transforms raw file names into full URLs for video, thumbnail, and documents
+ * Now uses secure Azure streaming endpoints instead of static file serving
  * @param courseId the ID of the course to fetch
  */
 export function useFetchCourseClient(
@@ -73,20 +198,27 @@ export function useFetchCourseClient(
       });
       const raw = response.data as any;
 
-      // Map video and thumbnail URL
+      // Updated: Use secure streaming endpoints for video and thumbnail
+      // Video streaming through your secure API (includes authentication)
       const videoUrl = raw.videoUrl
-        ? `${API_BASE}${raw.videoUrl}`
+        ? `${API_BASE}/files/video/course/${courseId}`
         : undefined;
+      
+      // Thumbnail streaming through your secure API
       const thumbnail = raw.thumbnail
-        ? `${API_BASE}/uploads/courses/${raw.thumbnail}`
+        ? `${API_BASE}/files/thumbnail/course/${courseId}`
         : undefined;
 
-      // Map documents array
+      // Updated: Map documents to use secure document download endpoint
       const documents: DocumentClient[] = raw.documents.map((d: any) => ({
         id: d.id,
         fileName: d.fileName,
-        url: `${API_BASE}/uploads/courses/${d.fileName}`,
+        url: `${API_BASE}/files/document/${d.id}`, // Use document ID for secure access
       }));
+
+
+      console.log('fetched course data is from usefetch course client ', raw)
+      console.log('fetched course testssss are from usefetch course client ', raw.tests)
 
       // Assemble final course object
       setCourse({
@@ -115,3 +247,5 @@ export function useFetchCourseClient(
 
   return { course, loading, error, refetch: fetchCourse };
 }
+
+

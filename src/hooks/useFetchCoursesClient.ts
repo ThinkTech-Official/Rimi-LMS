@@ -30,6 +30,9 @@ export const useFetchCoursesClient = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
+
+// imageUrl: `${API_BASE}/uploads/courses/${c.thumbnail}`,
+
   useEffect(() => {
     setLoading(true);
     api
@@ -40,7 +43,10 @@ export const useFetchCoursesClient = () => {
           title: c.name,
           duration: String(Math.ceil(c.duration / 60)) + " Min", // `${Math.floor(c.duration/60)}hr ${c.duration%60}min`,
           //   questions: c.questionCount,
-          imageUrl: `${API_BASE}/uploads/courses/${c.thumbnail}`,
+          // imageUrl: `${API_BASE}/uploads/courses/${c.thumbnail}`,
+          imageUrl: c.thumbnail 
+            ? `${API_BASE}/files/thumbnail/course/${c.id}` 
+            : '',
           categoryId: c.categoryId ? c.categoryId : 0,
           description: c.description,
         }));

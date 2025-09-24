@@ -18,6 +18,10 @@ const ClientCertificates: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const { t } = useTranslation();
 
+
+  // .get<CertRecord[]>(`${API_BASE}/certificates`)
+  // href={`${API_BASE}/uploads/certificates/${c.fileName}`}
+
   useEffect(() => {
     api
       .get<CertRecord[]>(`${API_BASE}/certificates`)
@@ -92,7 +96,7 @@ const ClientCertificates: React.FC = () => {
                 </div>
               </div>
               <a
-                href={`${API_BASE}/uploads/certificates/${c.fileName}`}
+                href={`${API_BASE}/files/certificate/${c.id}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="px-4 py-2 mt-2 bg-primary text-white cursor-pointer w-full text-center capitalize"

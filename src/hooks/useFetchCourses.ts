@@ -46,7 +46,10 @@ export const useFetchCourses = () => {
           title: c.name,
           duration: formatTime(c.duration), // `${Math.floor(c.duration/60)}hr ${c.duration%60}min`,
           //   questions: c.questionCount,
-          imageUrl: `${API_BASE}/uploads/courses/${c.thumbnail}`,
+          // imageUrl: `${API_BASE}/uploads/courses/${c.thumbnail}`,
+          imageUrl: c.thumbnail 
+            ? `${API_BASE}/files/thumbnail/course/${c.id}` 
+            : '',
           categoryId: c.categoryId ? c.categoryId : 0,
           description: c.description,
         }));

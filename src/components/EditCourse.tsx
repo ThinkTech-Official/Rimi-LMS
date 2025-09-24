@@ -572,7 +572,9 @@ const EditCourse: React.FC = () => {
 
             <div className="flex flex-col md:flex-row gap-5">
               <img
-                src={`${API_BASE}/uploads/courses/${basicCourse.thumbnail}`}
+                // src={`${API_BASE}/uploads/courses/${basicCourse.thumbnail}`}
+                // src={`${API_BASE}/files/thumbnail/course/${basicCourse.id}`}
+                src={`${API_BASE}/files/thumbnail/course/${basicCourse.id}?v=${basicCourse.thumbnail}`}
                 alt="Thumbnail"
                 className="w-88 aspect-video h-56"
               />
@@ -598,7 +600,8 @@ const EditCourse: React.FC = () => {
                     <a
                       rel="noopener noreferrer"
                       className="text-primary hover:underline underline-offset-2 text-lg font-medium"
-                      href={`${API_BASE}/uploads/courses/${basicCourse.videoUrl}`}
+                      // href={`${API_BASE}/uploads/courses/${basicCourse.videoUrl}`}
+                      href={`${API_BASE}/files/video/course/${basicCourse.id}`}
                       target="_blank"
                     >
                       {t("View Video")}
@@ -672,7 +675,8 @@ const EditCourse: React.FC = () => {
                           />
                         </button>
                         <a
-                          href={`${API_BASE}/uploads/courses/${doc.fileName}`}
+                          // href={`${API_BASE}/uploads/courses/${doc.fileName}`}
+                          href={`${API_BASE}/files/document/${doc.id}`}
                           target="_blank"
                           rel="noopener noreferrer"
                         >
