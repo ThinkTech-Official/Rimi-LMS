@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { useFetchTest, type QuestionDto } from "../hooks/useFetchTest";
 import { useUpdateTest, type UpdateTestDto } from "../hooks/useUpdateTest";
@@ -66,8 +66,16 @@ const EditTest: React.FC = () => {
       questions: [],
     },
   });
-  const { triggerNotification } = useNotification();
+  const { triggerNotification, NotificationComponent } = useNotification();
   const { t } = useTranslation();
+  const [courseDuration, setCourseDuration] = useState<number>(0);
+  const location = useLocation();
+  const state = location.state;
+  useEffect(() => {
+    if (state?.courseDuration) {
+      setCourseDuration(state.courseDuration);
+    }
+  });
 
   const validateQuestion = (q: QuestionDto): string[] => {
     const errors: string[] = [];
@@ -133,21 +141,28 @@ const EditTest: React.FC = () => {
   };
 
   const toggleCorrect = (qid: number, oid: number) => {
-    setQuestions((prev) => {
-      const updated = prev.map((q) =>
-        q.id === qid
-          ? {
-              ...q,
-              options: q.options.map((o) =>
-                o.id === oid ? { ...o, isCorrect: !o.isCorrect } : o
-              ),
+    const updatedQuestions = questions.map((q) => {
+      if (q.id === qid) {
+        const clicked = q.options.find((o) => o.id === oid);
+
+        const isCurrentlyCorrect = clicked?.isCorrect;
+
+        return {
+          ...q,
+          options: q.options.map((o) => {
+            if (o.id === oid) {
+              // toggle the clicked one
+              return { ...o, isCorrect: !o.isCorrect };
             }
-          : q
-      );
-      const q = updated.find((q) => q.id === qid)!;
-      updateErrorsForQuestion(qid, q);
-      return updated;
+            // if we are selecting a new correct one → reset others
+            return isCurrentlyCorrect ? o : { ...o, isCorrect: false };
+          }),
+        };
+      }
+      return q;
     });
+    setQuestions(updatedQuestions);
+    updateErrorsForQuestion(qid, updatedQuestions.find((q) => q.id === qid)!);
   };
 
   const addQuestion = () => {
@@ -197,6 +212,19 @@ const EditTest: React.FC = () => {
   // };
 
   const onSubmit: SubmitHandler<EditTestDto> = async (data: EditTestDto) => {
+    if (questions.length === 0)
+      return triggerNotification({
+        type: "error",
+        message: t("Please add at least one question"),
+        duration: 3000,
+      });
+
+    if (questions.length === 0)
+      return triggerNotification({
+        type: "error",
+        message: t("Please add at least one question"),
+        duration: 3000,
+      });
     const questionLevelErrors: Record<number, string[]> = {};
     questions.forEach((q) => {
       const errs = validateQuestion(q);
@@ -228,11 +256,17 @@ const EditTest: React.FC = () => {
           message: t("Test updated"),
         },
       });
-    } catch {
+    } catch (error: any) {
+      const errorMessage =
+        error.response?.data?.message ||
+        error.response?.data?.error ||
+        error.message ||
+        t("Failed to create test");
+
       triggerNotification({
         type: "error",
-        message: t("Failed to update test"),
-        duration: 3000,
+        message: errorMessage,
+        duration: 5000,
       });
     }
   };
@@ -269,7 +303,6 @@ const EditTest: React.FC = () => {
               {loadingSave ? t("saving") : t("Save Changes")}
             </button>
           </div>
-          {saveError && <p className="text-red-500">{saveError}</p>}
 
           {/* Basic fields */}
           <div className="space-y-4 text-text-light">
@@ -348,7 +381,7 @@ const EditTest: React.FC = () => {
                       message: t("start time min"),
                     },
                     max: {
-                      value: test?.duration || 0,
+                      value: courseDuration || 0,
                       message: t(
                         "Start time cannot be more then course duration"
                       ),
@@ -489,6 +522,7 @@ const EditTest: React.FC = () => {
           </section>
         </form>
       </main>
+      {NotificationComponent}
     </div>
   );
 };

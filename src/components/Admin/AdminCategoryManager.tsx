@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   useCategoriesAdmin,
   type Category,
@@ -34,6 +34,19 @@ const AdminCategoryManager: React.FC = () => {
   const { t } = useTranslation();
   const [nameError, setNameError] = useState<string>("");
   const [editNameError, setEditNameError] = useState<string>("");
+  const errorRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (errorRef.current && !errorRef.current.contains(e.target as Node)) {
+        setError("");
+      }
+    };
+    document.addEventListener("click", handleClickOutside);
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  });
 
   //  while fetching the initial list, show a placeholder
   if (fetching && categories.length === 0) {
@@ -49,11 +62,11 @@ const AdminCategoryManager: React.FC = () => {
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newName.trim()) return setNameError("Category name is required");
-    if (newName.length < 4) {
+    if (newName.trim().length < 4) {
       setNameError("Category name must be at least 4 characters");
       return;
     }
-    if (newName.length > 50) {
+    if (newName.trim().length > 50) {
       setNameError("Category name must be less than 50 characters");
       return;
     }
@@ -133,10 +146,11 @@ const AdminCategoryManager: React.FC = () => {
   };
   const handleSetName = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNewName(e.target.value);
-    if (e.target.value.length <= 0) {
+    const trimmedName = e.target.value.trim();
+    if (trimmedName.length <= 0) {
       setNameError("");
     }
-    if (e.target.value.length >= 4) {
+    if (trimmedName.length >= 4) {
       setNameError("");
     }
   };
@@ -171,7 +185,10 @@ const AdminCategoryManager: React.FC = () => {
       )}
 
       {error && (
-        <div className="text-text-light-2 mb-2 fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white max-w-md p-10 shadow-lg border border-inputBorder z-50 text-center">
+        <div
+          className="text-text-light-2 mb-2 fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white max-w-md p-6 sm:p-10 shadow-lg border border-inputBorder z-50 text-center min-w-xs"
+          ref={errorRef}
+        >
           <p className="text-red-500 mb-2 text-center">{t("Error")}:</p>
           {t(error)}
           <MdClose
@@ -201,7 +218,7 @@ const AdminCategoryManager: React.FC = () => {
           <button
             type="submit"
             disabled={creating}
-            className="px-4 py-2 sm:py-3 bg-primary text-white font-semibold cursor-pointer transition-all delay-100 shadow hover:bg-indigo-700"
+            className="px-4 py-2 sm:py-3 bg-primary text-white font-semibold cursor-pointer transition-all delay-100 shadow hover:bg-indigo-700 text-nowrap"
           >
             {creating ? `${t("Adding")}…` : t("Add")}
           </button>
