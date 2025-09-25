@@ -147,9 +147,9 @@ const ClientProfile: React.FC = () => {
                   onClick={handleNameSave}
                   disabled={savingName}
                   title="Save Name"
-                  className="bg-primary text-white px-3 py-1 cursor-pointer"
+                  className="bg-primary text-white px-3 py-1 cursor-pointer text-nowrap"
                 >
-                  {savingName ? "Saving…" : "Save"}
+                  {savingName ? t("Saving") : t("Save")}
                 </button>
                 <button onClick={() => setEditMode(false)} title="Cancel">
                   <TbX className="w-5 h-5 text-text-light cursor-pointer" />

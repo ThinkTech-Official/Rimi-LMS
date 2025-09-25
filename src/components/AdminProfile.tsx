@@ -7,6 +7,7 @@ import { useUpdateAdminPassword } from "../hooks/useUpdateAdminPassword";
 import Spinner from "./loaders/Spinner";
 import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form";
+import useNotification from "../hooks/useNotification";
 
 const AdminProfile: React.FC = () => {
   const { profile, loading, error } = useAdminProfile();
@@ -14,6 +15,7 @@ const AdminProfile: React.FC = () => {
     updatePassword,
     loading: updating,
     error: updateError,
+    setError: setUpdateError,
     success,
   } = useUpdateAdminPassword();
   const [showResetPasswordModal, setShowResetPasswordModal] = useState(false);
@@ -21,6 +23,7 @@ const AdminProfile: React.FC = () => {
   const [showConfirm, setShowConfirm] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
   const { t } = useTranslation();
+  const {triggerNotification, NotificationComponent} = useNotification();
 
   interface PasswordForm {
     currentPwd: string;
@@ -39,19 +42,31 @@ const AdminProfile: React.FC = () => {
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
-        setShowResetPasswordModal(false);
+        handleCloseModal();
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
   const handleResetSubmit = async (data: PasswordForm) => {
-    await updatePassword(data.currentPwd, data.newPwd);
+  await updatePassword(data.currentPwd, data.newPwd);
     reset();
   };
+  useEffect(() => {
+    if (success) {
+      triggerNotification({
+        type: "success",
+        message: t("Password updated successfully"),
+        duration: 3000,
+      })
+      setShowResetPasswordModal(false);
+      reset();
+    }
+  }, [success]);
 
   const handleCloseModal = () => {
     setShowResetPasswordModal(false);
+    setUpdateError(null);
     reset();
   };
 
@@ -115,7 +130,7 @@ const AdminProfile: React.FC = () => {
                 >
                   <IoMdClose
                     onClick={handleCloseModal}
-                    className="absolute top-2 right-2 cursor-pointer text-xl text-primary"
+                    className="absolute top-2 right-2 cursor-pointer text-xl text-text-dark"
                   />
                   <h2 className="text-lg font-bold mb-4">
                     {t("reset password")}
@@ -234,14 +249,8 @@ const AdminProfile: React.FC = () => {
                         </p>
                       )}
                     </div>
-
                     {updateError && (
                       <p className="text-red-500 text-sm">{updateError}</p>
-                    )}
-                    {success && (
-                      <p className="text-green-600 text-sm">
-                        {t("Password updated")}!
-                      </p>
                     )}
 
                     <div className="flex gap-4">
@@ -267,6 +276,7 @@ const AdminProfile: React.FC = () => {
           </div>
         )}
       </div>
+      {NotificationComponent}
     </div>
   );
 };

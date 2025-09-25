@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useCreateTest } from "../hooks/useCreateTest";
 import { useTranslation } from "react-i18next";
@@ -76,12 +76,12 @@ const CreateTest: React.FC = () => {
       errors.push("One option must be marked correct.");
     return errors;
   };
-
+  const nextId = useRef(1);
   const handleAddQuestion = () => {
     setQuestions((prev) => [
       ...prev,
       {
-        id: prev.length + 1,
+        id: ++nextId.current,
         text: "",
         options: [
           { id: 1, text: "", isCorrect: false },

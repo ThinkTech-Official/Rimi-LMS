@@ -14,7 +14,7 @@ import { useAdminUpdateCourseBasic } from "../hooks/useAdminUpdateCourseBasic";
 import { useAdminDeleteCourse } from "../hooks/useAdminDeleteCourse";
 import { formatTime } from "../hooks/useFetchCourses";
 import { CiFileOn } from "react-icons/ci";
-import { MdCancel } from "react-icons/md";
+import { MdCancel, MdOutlineFileDownload } from "react-icons/md";
 import FetchingError from "./FetchingError";
 import { useToggleCoursePublish } from "../hooks/useToggleCoursePublish";
 import { FaExternalLinkAlt } from "react-icons/fa";
@@ -295,16 +295,16 @@ const EditCourse: React.FC = () => {
 
     if (name === "name") {
       if (!value.trim()) error = "Name is required";
-      else if (value.length < 6) error = "Name must be at least 6 characters";
-      else if (value.length > 100)
+      else if (value.trim().length < 6) error = "Name must be at least 6 characters";
+      else if (value.trim().length > 100)
         error = "Name must be less than 100 characters";
     }
 
     if (name === "description") {
       if (!value.trim()) error = "Description is required";
-      else if (value.length < 10)
+      else if (value.trim().length < 10)
         error = "Description must be at least 10 characters";
-      else if (value.length > 1000)
+      else if (value.trim().length > 1000)
         error = "Description must be less than 1000 characters";
     }
 
@@ -488,7 +488,7 @@ const EditCourse: React.FC = () => {
         setIsCoursePublished(updated.liveStatus);
         triggerNotification({
           type: "success",
-          message: `Course ${updated.liveStatus ? "published" : "unpublished"}`,
+          message: t(`Course ${updated.liveStatus ? "published" : "unpublished"}`),
         });
       }
     } catch {
@@ -496,7 +496,7 @@ const EditCourse: React.FC = () => {
       setIsCoursePublished((prev) => !prev);
       triggerNotification({
         type: "error",
-        message: `Failed to ${desired ? "publish" : "unpublish"} course`,
+        message: t(`Failed to ${desired ? "publish" : "unpublish"} course`),
       });
     }
   };
@@ -698,7 +698,7 @@ const EditCourse: React.FC = () => {
                           fileName={doc.fileName}
                           type="document"
                         >
-                          <FaExternalLinkAlt className="w-4 h-4 fill-primary cursor-pointer" />
+                          <MdOutlineFileDownload className="w-6 h-6 fill-primary cursor-pointer" />
                         </AdminFileDownload>
                       </div>
                     </div>
@@ -1238,7 +1238,7 @@ const EditCourse: React.FC = () => {
                   onClick={() => setIsBasicModalOpen(false)}
                   className="px-4 py-2 sm:py-3 border border-inputBorder cursor-pointer"
                 >
-                  {t("Cancel")}
+                  {t("Close")}
                 </button>
                 <button
                   type="submit"

@@ -40,7 +40,7 @@ const AdminCategoryManager: React.FC = () => {
     return (
       <div className="fixed flex flex-col gap-2 justify-center items-center top-1/2 left-1/2">
         <Spinner className="w-10 h-10" />
-        <p>Loading categories…</p>
+        <p>{t("Loading categories")}…</p>
       </div>
     );
   }
@@ -49,11 +49,11 @@ const AdminCategoryManager: React.FC = () => {
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newName.trim()) return setNameError("Category name is required");
-    if (newName.length < 4) {
+    if (newName.trim().length < 4) {
       setNameError("Category name must be at least 4 characters");
       return;
     }
-    if (newName.length > 50) {
+    if (newName.trim().length > 50) {
       setNameError("Category name must be less than 50 characters");
       return;
     }
@@ -82,11 +82,11 @@ const AdminCategoryManager: React.FC = () => {
     e.preventDefault();
     setEditNameError("");
     if (!editName.trim()) return setEditNameError("Category name is required");
-    if (editName.length < 4) {
+    if (editName.trim().length < 4) {
       setEditNameError("Category name must be at least 4 characters");
       return;
     }
-    if (editName.length > 50) {
+    if (editName.trim().length > 50) {
       setEditNameError("Category name must be less than 50 characters");
       return;
     }
@@ -133,10 +133,11 @@ const AdminCategoryManager: React.FC = () => {
   };
   const handleSetName = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNewName(e.target.value);
-    if (e.target.value.length <= 0) {
+    const trimmedName = e.target.value.trim();
+    if (trimmedName.length <= 0) {
       setNameError("");
     }
-    if (e.target.value.length >= 4) {
+    if (trimmedName.length >= 4) {
       setNameError("");
     }
   };
@@ -201,7 +202,7 @@ const AdminCategoryManager: React.FC = () => {
           <button
             type="submit"
             disabled={creating}
-            className="px-4 py-2 sm:py-3 bg-primary text-white font-semibold cursor-pointer transition-all delay-100 shadow hover:bg-indigo-700"
+            className="px-4 py-2 sm:py-3 text-nowrap bg-primary text-white font-semibold cursor-pointer transition-all delay-100 shadow hover:bg-indigo-700"
           >
             {creating ? `${t("Adding")}…` : t("Add")}
           </button>
