@@ -13,6 +13,7 @@ import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 import { useForm } from "react-hook-form";
 
 import useNotification from "../hooks/useNotification";
+import { AdminImage } from "../utils/AdminFileComponents";
 
 interface PasswordForm {
   newPwd: string;
@@ -183,8 +184,13 @@ export const UserProfile: React.FC = () => {
                       key={course.id}
                       className="border border-inputBorder p-2"
                     >
-                      <img
+                      {/* <img
                         src={`${API_BASE}/uploads/courses/${course.imageUrl}`}
+                        alt={course.title}
+                        className="w-full aspect-video object-cover"
+                      /> */}
+                      <AdminImage
+                        courseId={course.id}
                         alt={course.title}
                         className="w-full aspect-video object-cover"
                       />
@@ -245,7 +251,8 @@ export const UserProfile: React.FC = () => {
                             </span>
                           </div>
                           <a
-                            href={`${API_BASE}${cert.imageUrl}`}
+                            // href={`${API_BASE}${cert.imageUrl}`}
+                            href={`${API_BASE}/files/certificate/${cert.id}`}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="text-sm text-primary font-semibold hover:underline cursor-pointer"

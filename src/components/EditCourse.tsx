@@ -25,6 +25,7 @@ import FileTypeIcon from "./loaders/FileTypeIcon";
 import { RxCross2 } from "react-icons/rx";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 import { RenderPageNumbers } from "./RenderPageNumbers";
+import { AdminFileDownload, AdminImage, AdminVideoLink } from "../utils/AdminFileComponents";
 
 const testHeaders = [
   "Test Name",
@@ -571,12 +572,17 @@ const EditCourse: React.FC = () => {
             </button>
 
             <div className="flex flex-col md:flex-row gap-5">
-              <img
+              {/* <img
                 // src={`${API_BASE}/uploads/courses/${basicCourse.thumbnail}`}
                 // src={`${API_BASE}/files/thumbnail/course/${basicCourse.id}`}
                 src={`${API_BASE}/files/thumbnail/course/${basicCourse.id}?v=${basicCourse.thumbnail}`}
                 alt="Thumbnail"
                 className="w-88 aspect-video h-56"
+              /> */}
+              <AdminImage
+                courseId={basicCourse.id}
+                className="w-88 aspect-video h-56"
+                alt="Thumbnail"
               />
               <div className="flex flex-col justify-center gap-2">
                 <p className="flex flex-col">
@@ -601,11 +607,15 @@ const EditCourse: React.FC = () => {
                       rel="noopener noreferrer"
                       className="text-primary hover:underline underline-offset-2 text-lg font-medium"
                       // href={`${API_BASE}/uploads/courses/${basicCourse.videoUrl}`}
-                      href={`${API_BASE}/files/video/course/${basicCourse.id}`}
+                       href={`${API_BASE}/files/admin/video/course/${basicCourse.id}`}
                       target="_blank"
                     >
                       {t("View Video")}
                     </a>
+
+                    // <AdminVideoLink courseId={basicCourse.id}>
+                    //   {t("View Video")}
+                    // </AdminVideoLink>
                   ) : (
                     "—"
                   )}
@@ -674,14 +684,22 @@ const EditCourse: React.FC = () => {
                             }`}
                           />
                         </button>
-                        <a
+                        {/* <a
                           // href={`${API_BASE}/uploads/courses/${doc.fileName}`}
                           href={`${API_BASE}/files/document/${doc.id}`}
                           target="_blank"
                           rel="noopener noreferrer"
                         >
                           <FaExternalLinkAlt className="w-4 h-4 fill-primary cursor-pointer" />
-                        </a>
+                        </a> */}
+
+                        <AdminFileDownload
+                          fileId={doc.id}
+                          fileName={doc.fileName}
+                          type="document"
+                        >
+                          <FaExternalLinkAlt className="w-4 h-4 fill-primary cursor-pointer" />
+                        </AdminFileDownload>
                       </div>
                     </div>
                   </div>

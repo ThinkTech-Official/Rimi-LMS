@@ -10,6 +10,7 @@ import Spinner from "./loaders/Spinner";
 import useNotification from "../hooks/useNotification";
 import FetchingError from "./FetchingError";
 import { RxCross2 } from "react-icons/rx";
+import { AdminImage } from "../utils/AdminFileComponents";
 
 export const initialCategories = [
   "Health Insurance",
@@ -222,8 +223,13 @@ const AllCourses: React.FC<AllCoursesProps> = ({ onCreateCourse }) => {
                     onClick={() => handleSelectCourse(course.id)}
                   >
                     <div className="relative">
-                      <img
+                      {/* <img
                         src={course.imageUrl}
+                        alt={course.title}
+                        className="object-fill rounded-b-[2px] w-full h-40 sm:h-32 md:h-44"
+                      /> */}
+                      <AdminImage
+                        courseId={course.id}
                         alt={course.title}
                         className="object-fill rounded-b-[2px] w-full h-40 sm:h-32 md:h-44"
                       />
