@@ -4,6 +4,7 @@ import { API_BASE } from "../../utils/ulrs";
 import Spinner from "../loaders/Spinner";
 import { useTranslation } from "react-i18next";
 import { formatDate } from "../UserProfile";
+import { ClientFileDownload } from "../../utils/ClientFileComponents";
 
 interface CertRecord {
   id: number;
@@ -17,7 +18,6 @@ const ClientCertificates: React.FC = () => {
   const [certs, setCerts] = useState<CertRecord[]>([]);
   const [loading, setLoading] = useState(true);
   const { t } = useTranslation();
-
 
   // .get<CertRecord[]>(`${API_BASE}/certificates`)
   // href={`${API_BASE}/uploads/certificates/${c.fileName}`}
@@ -95,14 +95,21 @@ const ClientCertificates: React.FC = () => {
                   </span>
                 </div>
               </div>
-              <a
+              {/* <a
                 href={`${API_BASE}/files/certificate/${c.id}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="px-4 py-2 mt-2 bg-primary text-white cursor-pointer w-full text-center capitalize"
               >
                 {t("Download certificate")}
-              </a>
+              </a> */}
+              <ClientFileDownload
+                fileId={c.id}
+                fileName={`Certificate-${c.certNumber}.pdf`}
+                type="certificate" // This will call: /files/certificate/${certificateId}
+              >
+                Download Certificate
+              </ClientFileDownload>
             </div>
           </li>
         ))}

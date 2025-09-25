@@ -1,11 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import {
-  FaPause,
-  FaPlay,
-  FaVolumeMute,
-  FaVolumeUp,
-} from "react-icons/fa";
+import { FaPause, FaPlay, FaVolumeMute, FaVolumeUp } from "react-icons/fa";
 import Quiz from "./Quiz";
 import { MdFullscreen } from "react-icons/md";
 
@@ -23,6 +18,8 @@ import { BiExitFullscreen } from "react-icons/bi";
 import { useTranslation } from "react-i18next";
 import { HiOutlineDocumentCheck } from "react-icons/hi2";
 import FileTypeIcon from "../loaders/FileTypeIcon";
+import { API_BASE } from "../../utils/ulrs";
+import { ClientFileDownload } from "../../utils/ClientFileComponents";
 
 const CoursePlay = () => {
   const { id: courseId } = useParams<{ id: string }>();
@@ -456,8 +453,10 @@ const CoursePlay = () => {
           >
             <video
               ref={videoRef}
-              src={course?.videoUrl}
-              poster={course?.thumbnail}
+              // src={course?.videoUrl}
+              // poster={course?.thumbnail}
+              src={`${API_BASE}/files/public/video/course/${course?.id}`}
+              poster={`${API_BASE}/files/public/thumbnail/course/${course?.id}`}
               // controls
               // controlsList="nofullscreen"
               // disableRemotePlayback
@@ -628,7 +627,9 @@ const CoursePlay = () => {
                 <div className="absolute top-2.5 left-0 right-0 bottom-2.5 flex items-center justify-center pointer-events-none">
                   <div className="flex items-center gap-2 bg-black/40 px-3 py-1.5 rounded">
                     <Spinner className="w-4 h-4" />
-                    <span className="text-white text-xs">{t("Loading tests")}…</span>
+                    <span className="text-white text-xs">
+                      {t("Loading tests")}…
+                    </span>
                   </div>
                 </div>
               )}
@@ -707,14 +708,23 @@ const CoursePlay = () => {
                   {/* <p className="text-text-light text-sm">{mat.description}</p> */}
                 </div>
               </div>
-              <a
+              {/* <a
                 href={mat.url}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="px-4 py-1 sm:py-2 bg-primary text-base text-white font-medium hover:bg-indigo-700"
               >
                 {t("Open")}
-              </a>
+              </a> */}
+
+              <ClientFileDownload
+                fileId={mat.id}
+                fileName={mat.fileName}
+                type="document"
+                className="px-4 py-1 sm:py-2 bg-primary text-base text-white font-medium hover:bg-indigo-700"
+              >
+                {t("Open")}
+              </ClientFileDownload>
             </li>
           ))}
         </ul>

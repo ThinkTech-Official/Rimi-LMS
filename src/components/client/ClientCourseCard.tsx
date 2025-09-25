@@ -5,6 +5,7 @@ import { useAuth } from "../../context/AuthContext";
 import { RiProgress3Line } from "react-icons/ri";
 import Spinner from "../loaders/Spinner";
 import { useTranslation } from "react-i18next";
+import { ClientImage } from "../../utils/ClientFileComponents";
 
 interface ClientCourseCardProps {
   courseId: any;
@@ -51,8 +52,13 @@ const ClientCourseCard = ({
         }}
       >
         <div className="relative bg-blue-200 rounded-sm overflow-hidden h-52 xs:h-60">
-          <img
+          {/* <img
             src={imageUrl}
+            alt={title}
+            className="w-full h-full object-fill"
+          /> */}
+          <ClientImage
+            courseId={courseId} // Make sure the course object has an id field
             alt={title}
             className="w-full h-full object-fill"
           />

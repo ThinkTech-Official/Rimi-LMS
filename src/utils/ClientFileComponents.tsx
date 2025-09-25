@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import api from '../utils/api';
 import { FaExternalLinkAlt } from 'react-icons/fa';
 import { API_BASE } from './ulrs';
+import Spinner from '../components/loaders/Spinner';
 
 // Client Image Component
 interface ClientImageProps {
@@ -78,6 +79,52 @@ interface ClientFileDownloadProps {
   className?: string;
 }
 
+// export const ClientFileDownload: React.FC<ClientFileDownloadProps> = ({ 
+//   fileId, 
+//   fileName, 
+//   type = 'document',
+//   children,
+//   className = "cursor-pointer"
+// }) => {
+//   const [downloading, setDownloading] = useState(false);
+
+//   const handleDownload = async () => {
+//     if (downloading) return;
+    
+//     setDownloading(true);
+//     try {
+//       const response = await api.get(`${API_BASE}/files/client/document/${fileId}`, {
+//         responseType: 'blob'
+//       });
+      
+//       const url = window.URL.createObjectURL(response.data);
+//       const link = document.createElement('a');
+//       link.href = url;
+//       link.setAttribute('download', fileName);
+//       document.body.appendChild(link);
+//       link.click();
+//       link.remove();
+//       window.URL.revokeObjectURL(url);
+//     } catch (error) {
+//       console.error('Download failed:', error);
+//     } finally {
+//       setDownloading(false);
+//     }
+//   };
+
+//   return (
+//     <button 
+//       onClick={handleDownload} 
+//       className={className}
+//       disabled={downloading}
+//     >
+//       {children || <FaExternalLinkAlt className="w-4 h-4 fill-primary" />}
+//       {downloading && <span className="ml-1">...</span>}
+//     </button>
+//   );
+// };
+
+
 export const ClientFileDownload: React.FC<ClientFileDownloadProps> = ({ 
   fileId, 
   fileName, 
@@ -92,7 +139,18 @@ export const ClientFileDownload: React.FC<ClientFileDownloadProps> = ({
     
     setDownloading(true);
     try {
-      const response = await api.get(`${API_BASE}/files/client/document/${fileId}`, {
+      // Build the correct endpoint URL based on type
+      let endpoint: string;
+      if (type === 'certificate') {
+        endpoint = `${API_BASE}/files/certificate/${fileId}`;
+      } else if (type === 'document') {
+        endpoint = `${API_BASE}/files/client/document/${fileId}`;
+      } else {
+        // For any other type, assume it's a direct path like 'client/document'
+        endpoint = `${API_BASE}/files/${type}/${fileId}`;
+      }
+
+      const response = await api.get(endpoint, {
         responseType: 'blob'
       });
       
@@ -118,7 +176,7 @@ export const ClientFileDownload: React.FC<ClientFileDownloadProps> = ({
       disabled={downloading}
     >
       {children || <FaExternalLinkAlt className="w-4 h-4 fill-primary" />}
-      {downloading && <span className="ml-1">...</span>}
+      {downloading && <span className="ml-1"><Spinner /></span>}
     </button>
   );
 };
