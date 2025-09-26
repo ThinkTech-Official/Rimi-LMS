@@ -107,6 +107,7 @@ const ClientCertificates: React.FC = () => {
                 fileId={c.id}
                 fileName={`Certificate-${c.certNumber}.pdf`}
                 type="certificate" // This will call: /files/certificate/${certificateId}
+                className="px-4 py-2 mt-2 bg-primary text-white cursor-pointer w-full text-center capitalize"
               >
                 Download Certificate
               </ClientFileDownload>

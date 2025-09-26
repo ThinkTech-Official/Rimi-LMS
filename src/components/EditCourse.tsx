@@ -869,7 +869,7 @@ const EditCourse: React.FC = () => {
           </div>
           <button
             onClick={handleCreateTest}
-            className="inline-block capitalize text-sm sm:text-[16px] px-5 py-1 sm:py-3 bg-primary text-white font-semibold hover:bg-indigo-700 cursor-pointer transition-colors delay-150 w-fit"
+            className="inline-block capitalize text-sm sm:text-[16px] px-5 py-2 sm:py-3 bg-primary text-white font-semibold hover:bg-indigo-700 cursor-pointer transition-colors delay-150 w-fit"
           >
             {t("create new test")}
           </button>

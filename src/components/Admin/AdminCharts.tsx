@@ -118,7 +118,7 @@ const AdminCharts = () => {
                         : 20,
                   }}
                 />
-                <Tooltip labelClassName="text-[#1B1B1B] text-[16px]" />
+                <Tooltip labelClassName="text-[#1B1B1B] text-[16px] capitalize" />
                 <Line
                   type="linear"
                   dataKey="users"

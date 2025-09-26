@@ -83,7 +83,7 @@ const router = createBrowserRouter(
           element={<EditTest />}
         />
         {/* This is Test Route for Testig Certificate gen  */}
-        <Route path="/admin/test-cert" element={<TestCertificate />} />
+        {/* <Route path="/admin/test-cert" element={<TestCertificate />} /> */}
 
         {/*  */}
 
