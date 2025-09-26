@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import api from "../utils/api";
 import { FaExternalLinkAlt } from "react-icons/fa";
 import { API_BASE } from "./ulrs";
+import Spinner from "../components/loaders/Spinner";
+import { useTranslation } from "react-i18next";
 
 // Client Image Component
 interface ClientImageProps {
@@ -138,6 +140,7 @@ export const ClientFileDownload: React.FC<ClientFileDownloadProps> = ({
   className = "cursor-pointer",
 }) => {
   const [downloading, setDownloading] = useState(false);
+  const { t } = useTranslation();
 
   const handleDownload = async () => {
     if (downloading) return;
@@ -180,7 +183,12 @@ export const ClientFileDownload: React.FC<ClientFileDownloadProps> = ({
       className={className}
       disabled={downloading}
     >
-      {children || <FaExternalLinkAlt className="w-4 h-4 fill-primary" />}
+      {downloading ? (
+        <span className="text-white">{t("Downloading")}...</span>
+      ) : (
+        children || <FaExternalLinkAlt className="w-4 h-4 fill-primary" />
+      )}
+
       {/* {downloading && <span className="ml-1"><Spinner /></span>} */}
     </button>
   );

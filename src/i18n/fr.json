@@ -258,6 +258,7 @@
   "My certificates": "Mes certificats",
   "Issue date": "Date d'emission",
   "Download certificate": "Telecharger le certificat",
+  "Downloading":"Téléchargement",
   "Something went wrong": "Une erreur s'est produite",
   "Back to Dashboard": "Retour au dashboard",
   "Course with the name": "Cours avec le nom",
@@ -344,5 +345,9 @@
   "Course unpublished":"Cours inédit",
   "Failed to publish course":"Échec de la publication du cours",
   "Failed to unpublish course":"Échec de la publication du cours",
-  "Do not go back or close this page.":"Ne revenez pas en arrière et ne fermez pas cette page."
+  "Do not go back or close this page.":"Ne revenez pas en arrière et ne fermez pas cette page.",
+  "Loading profile":"Profil de chargement",
+  "Error fetching profile":"Erreur lors de la récupération du profil",
+  "Try again":"Essayer à nouveau",
+  "No course created in category in this category":"Aucun cours créé dans cette catégorie dans cette catégorie"
 }

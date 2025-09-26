@@ -21,5 +21,5 @@ export function useResetPassword() {
     }
   }, []);
 
-  return { resetPassword, loading, error };
+  return { resetPassword, loading, error, setError };
 }

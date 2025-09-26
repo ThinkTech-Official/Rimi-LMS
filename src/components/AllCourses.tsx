@@ -255,7 +255,9 @@ const AllCourses: React.FC<AllCoursesProps> = ({ onCreateCourse }) => {
                 <p className="text-center text-gray-500 italic">
                   {t("Course with the name")} "{searchTerm}" {t("not found")}
                 </p>
-              ) : null}
+              ) : <p className="text-center text-gray-500 italic">
+                  {t("No course created in category in this category")}
+                </p>}
             </div>
           </div>
         )}
