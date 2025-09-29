@@ -91,7 +91,7 @@ const AdminTrackCertificate: React.FC = () => {
       )}
 
       {certificate ? (
-        <div className="mt-6 border border-inputBorder p-2 sm:p-4">
+        <div className="mt-6 border border-inputBorder p-2 sm:p-4 relative">
           <h3 className="text-xl font-semibold text-green-700 mb-2 text-center">
             {t("Certificate Found")}
           </h3>
@@ -120,7 +120,7 @@ const AdminTrackCertificate: React.FC = () => {
             {certificate.certNumber}
           </p>
           {certificate.fileName && (
-            <p className="mt-2">
+            <p className="mt-2 absolute top-2 right-2">
               {/* <a
                 href={`${API_BASE}/uploads/certificates/${certificate.fileName}`}
                 target="_blank"

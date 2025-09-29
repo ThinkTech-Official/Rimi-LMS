@@ -181,9 +181,15 @@ export const AdminFileDownload: React.FC<AdminFileDownloadProps> = ({
       onClick={handleDownload} 
       className={className}
       disabled={downloading}
+
     >
-      {children || <FaExternalLinkAlt className="w-4 h-4 fill-primary" />}
-      {downloading && <span className="ml-1"><Spinner /></span>}
+      {downloading ? (
+        <div className="flex items-center w-6 h-6">
+          <Spinner className="w-4 h-4"/>
+        </div>
+      ) : (
+        children || <FaExternalLinkAlt className="w-4 h-4 fill-primary" />
+      )}
     </button>
   );
 };

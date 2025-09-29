@@ -673,7 +673,7 @@ const CoursePlay = () => {
         <h1 className="mt-6 text-xl sm:text-2xl font-semibold text-text-dark">
           {course?.name}
         </h1>
-        <p className="mt-2 text-text-light">
+        <p className="mt-2 text-text-light break-words">
           {showFull
             ? course?.description
             : course?.description.slice(0, 120) + "…"}

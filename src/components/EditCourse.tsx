@@ -634,7 +634,7 @@ const EditCourse: React.FC = () => {
               </ul>
             </div>
             {activeTab == "Description" && (
-              <p className="text-text-light-2">{basicCourse.description}</p>
+                <p className="text-text-light-2 break-words">{basicCourse.description}</p>
             )}
             {/* ================================================================ */}
 
@@ -728,7 +728,7 @@ const EditCourse: React.FC = () => {
                     </div>
 
                     {selectedFiles.length > 0 && (
-                      <div className="space-y-2">
+                      <div className="space-y-2 max-h-[300px] overflow-auto custom-scrollbar3">
                         <p className="text-sm font-medium">
                           {t("Selected Files")}:
                         </p>
@@ -778,7 +778,7 @@ const EditCourse: React.FC = () => {
                       }}
                       className="px-4 py-2 border border-inputBorder cursor-pointer"
                     >
-                      {t("Cancel")}
+                      {t("Close")}
                     </button>
                     <button
                       onClick={handleUploadDocuments}
@@ -1092,12 +1092,11 @@ const EditCourse: React.FC = () => {
       )}
 
       {/* Basic COurse Info Editing MOdal  */}
-
       {isBasicModalOpen && (
         <div className="fixed inset-0 h-screen bg-black/10 bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white m-3 shadow-md p-3 sm:p-6 w-full max-w-lg">
+          <div className="bg-white m-3 shadow-md p-3 sm:p-6 w-full max-w-lg max-h-[90%] overflow-y-auto custom-scrollbar3">
             <h3 className="text-lg font-semibold mb-4 text-text-dark">
-              Edit Course Details
+              {t("Edit Course Details")}
             </h3>
             <form onSubmit={handleBasicSubmit} className="space-y-4">
               {/* Name */}
