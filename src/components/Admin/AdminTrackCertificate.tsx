@@ -4,6 +4,7 @@ import { API_BASE } from "../../utils/ulrs";
 import { set, useForm, type SubmitHandler } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { RxCross2 } from "react-icons/rx";
+import { AdminCertificateDownload } from "../../utils/AdminFileComponents";
 
 const AdminTrackCertificate: React.FC = () => {
   const { certificate, loading, searchCertificate, setCertificate } =
@@ -119,14 +120,20 @@ const AdminTrackCertificate: React.FC = () => {
           </p>
           {certificate.fileName && (
             <p className="mt-2">
-              <a
+              {/* <a
                 href={`${API_BASE}/uploads/certificates/${certificate.fileName}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-primary underline underline-offset-2"
               >
                 {t("View Certificate")}
-              </a>
+              </a> */}
+              <AdminCertificateDownload
+                certificateId={certificate.id}
+                fileName={`Certificate-${certificate.id}.pdf`}
+              >
+                Download Certificate
+              </AdminCertificateDownload>
             </p>
           )}
         </div>
