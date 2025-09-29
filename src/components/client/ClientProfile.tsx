@@ -73,7 +73,8 @@ const ClientProfile: React.FC = () => {
       const updated = await updateProfile({ name: tempName });
       setEditMode(false);
       setTempName(updated.name ?? "");
-      await refetch();
+      // await refetch();
+      window.location.reload();
     } catch {
       triggerNotification({
         type: "error",
