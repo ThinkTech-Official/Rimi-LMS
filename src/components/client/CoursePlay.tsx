@@ -637,7 +637,6 @@ const CoursePlay = () => {
               {markersReady && (
                 <div className="absolute inset-4 -mt-3 pointer-events-none">
                   {course!.tests.map((test) => {
-                    console.log(test);
                     const pct = videoDuration
                       ? Math.min((test.startTime / videoDuration) * 100)
                       : 0;

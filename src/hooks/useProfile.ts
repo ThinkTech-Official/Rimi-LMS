@@ -20,7 +20,6 @@ export function useProfile() {
       const res = await api.post<UserProfile>(
         `${API_BASE}/client/auth/profile`
       );
-      console.log("from use profile", res.data);
       setProfile(res.data);
     } catch (err: any) {
       setError(err.response?.data?.message || err.message);

@@ -63,8 +63,6 @@ export function useFetchTestClient(
       .then((res: any) => {
         const raw = res.data;
 
-        console.log("from use fetch test clients", raw);
-
         const mappedQuestions: Question[] = raw.questions.map((q: any) => ({
           id: q.id.toString(),
           question: q.text,
@@ -83,7 +81,6 @@ export function useFetchTestClient(
         });
       })
       .catch((err: any) => {
-        console.error("useFetchTest error:", err);
         setError(err);
       })
       .finally(() => {

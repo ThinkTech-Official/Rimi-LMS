@@ -13,7 +13,6 @@ export const useAdminLogout = () => {
       // tell the server to revoke & clear cookies
       await adminApi.post(`${API_BASE}/admin/auth/logout`);
     } catch (error) {
-      console.log("Some error in logout", error);
     }
     await reload();
     // navigate to login

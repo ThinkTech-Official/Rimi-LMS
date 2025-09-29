@@ -53,7 +53,6 @@ export const useFetchCourses = () => {
           categoryId: c.categoryId ? c.categoryId : 0,
           description: c.description,
         }));
-        console.log("from fetch all courses", res);
         setCourses(normalized);
       })
       .catch((err) => setError(err.message))

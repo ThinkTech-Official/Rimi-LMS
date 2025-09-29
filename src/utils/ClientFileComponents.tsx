@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import api from "../utils/api";
 import { FaExternalLinkAlt } from "react-icons/fa";
 import { API_BASE } from "./ulrs";
-import Spinner from "../components/loaders/Spinner";
 import { useTranslation } from "react-i18next";
 
 // Client Image Component
@@ -36,7 +35,6 @@ export const ClientImage: React.FC<ClientImageProps> = ({
         setImageSrc(imageUrl);
         setError(false);
       } catch (error) {
-        console.error("Failed to load thumbnail:", error);
         setError(true);
       } finally {
         setLoading(false);
@@ -227,7 +225,6 @@ export const ClientFileDownload: React.FC<ClientFileDownloadProps> = ({
       link.remove();
       window.URL.revokeObjectURL(url);
     } catch (error) {
-      console.error("Download failed:", error);
     } finally {
       setDownloading(false);
     }
@@ -275,8 +272,6 @@ export const ClientCertificateDownload: React.FC<ClientCertificateDownloadProps>
 
   const handleDownload = async () => {
     if (downloading) return;
-
-    console.log('passing tis certificate id', certificateId)
     
     setDownloading(true);
     try {
@@ -293,7 +288,6 @@ export const ClientCertificateDownload: React.FC<ClientCertificateDownloadProps>
       link.remove();
       window.URL.revokeObjectURL(url);
     } catch (error) {
-      console.error('Certificate download failed:', error);
     } finally {
       setDownloading(false);
     }

@@ -332,9 +332,6 @@ const CreateCourse: React.FC<CreateCourseProps> = () => {
 
       if (invalidFiles.length > 0) {
         // invalid files
-        console.log(
-          `unsuported file types selected only allowed files type is ${allowedTypes}`
-        );
         triggerNotification({
           type: "error",
           message: `Unsuported file type(s)`,
@@ -381,8 +378,6 @@ const CreateCourse: React.FC<CreateCourseProps> = () => {
     data.documents.forEach((file) => {
       formData.append("documents", file);
     });
-
-    console.log([...formData.entries()]);
 
     try {
       const savedCourse = await createCourse(formData);

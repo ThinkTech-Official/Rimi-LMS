@@ -36,7 +36,6 @@ export const useUpdateTest = (courseId: string, testId: string) => {
       return res.data;
     } catch (err: any) {
       setError(err.response?.data?.message || err.message);
-      console.log("Error :", error);
       throw err;
     } finally {
       setLoading(false);

@@ -35,7 +35,6 @@ export const AdminCreateUser: React.FC = () => {
       });
       reset();
     } catch (error: any) {
-      console.log("error in creting client", error);
       let errorMessage = t("Failed to create client"); // fallback message
 
       if (error?.response?.data?.message) {

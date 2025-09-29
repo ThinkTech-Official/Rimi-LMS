@@ -35,7 +35,6 @@ const EditTest: React.FC = () => {
     loading: loadingSave,
     error: saveError,
   } = useUpdateTest(courseId!, testId!);
-  console.log(test);
 
   const [questions, setQuestions] = useState<QuestionDto[]>([
     {

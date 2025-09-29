@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useAdminCertificateSearch } from "../../hooks/useAdminCertificateSearch";
-import { API_BASE } from "../../utils/ulrs";
-import { set, useForm, type SubmitHandler } from "react-hook-form";
+import { useForm, type SubmitHandler } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { RxCross2 } from "react-icons/rx";
 import { AdminCertificateDownload } from "../../utils/AdminFileComponents";

@@ -18,10 +18,8 @@ export const useAdminAuth = () => {
     try {
       // POST /api/admin/auth/login
       const response = await adminApi.post(`${API_BASE}/admin/auth/login`, dto);
-      console.log(response);
       return true;
     } catch (err: any) {
-      console.log('from adminnauth hook when error', err)
       setError(err.response?.data?.message || err.message || "Login failed");
       throw err;
     } finally {

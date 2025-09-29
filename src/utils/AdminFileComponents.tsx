@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import adminApi from "../utils/adminApi";
 import { API_BASE } from "./ulrs";
 import Spinner from "../components/loaders/Spinner";
-import { MdOutlineFileDownload } from "react-icons/md";
 import { FaExternalLinkAlt } from "react-icons/fa";
 
 // Admin Image Component
@@ -36,7 +35,6 @@ export const AdminImage: React.FC<AdminImageProps> = ({
         setImageSrc(imageUrl);
         setError(false);
       } catch (error) {
-        console.error("Failed to load thumbnail:", error);
         setError(true);
       } finally {
         setLoading(false);
@@ -170,7 +168,6 @@ export const AdminFileDownload: React.FC<AdminFileDownloadProps> = ({
       link.remove();
       window.URL.revokeObjectURL(url);
     } catch (error) {
-      console.error('Download failed:', error);
     } finally {
       setDownloading(false);
     }
@@ -230,7 +227,6 @@ export const AdminCertificateDownload: React.FC<AdminCertificateDownloadProps> =
       link.remove();
       window.URL.revokeObjectURL(url);
     } catch (error) {
-      console.error('Certificate download failed:', error);
     } finally {
       setDownloading(false);
     }
@@ -289,7 +285,6 @@ export const AdminVideoLink: React.FC<AdminVideoLinkProps> = ({
         window.URL.revokeObjectURL(url);
       }, 1000);
     } catch (error) {
-      console.error("Video viewing failed:", error);
     } finally {
       setDownloading(false);
     }

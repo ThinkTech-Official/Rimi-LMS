@@ -32,7 +32,6 @@ export function useAdminCertificateSearch() {
         `${API_BASE}/certificate/verify/${certNumber}`
       );
       setCertificate(res.data);
-      console.log("From admin cert hook", res.data);
     } catch (err: any) {
       if (err.response?.status === 404) {
         setError("No such certificate found.");

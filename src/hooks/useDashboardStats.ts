@@ -18,7 +18,6 @@ export function useDashboardStats() {
     adminApi
       .get<DashboardStats>(`${API_BASE}/admin/dashboard`)
       .then((res) => {
-        console.log("from useDashboardStats ", res);
         if (mounted) setData(res.data);
       })
       .catch((err) => {

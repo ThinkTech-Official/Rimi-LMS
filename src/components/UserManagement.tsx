@@ -41,7 +41,6 @@ export const UserManagement: React.FC = () => {
   };
 
   const handleClientProfile = (id: any) => {
-    console.log(id);
     navigate(`/admin/users/${id}`);
   };
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {

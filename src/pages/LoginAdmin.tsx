@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 import { useAdminAuth, type SignInDto } from "../hooks/useAdminAuth";
 import { useAdminContext } from "../context/AdminContext";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import useNotification from "../hooks/useNotification";
 import { MdKeyboardArrowRight } from "react-icons/md";
@@ -31,8 +31,6 @@ const LoginAdmin: React.FC = () => {
     formState: { errors },
   } = useForm<SignInDto>();
   const { NotificationComponent, triggerNotification } = useNotification();
-  const location = useLocation();
-  const state = location.state;
   // useEffect(() => {
   //   if (state?.type && state?.message) {
   //     triggerNotification({
@@ -46,17 +44,13 @@ const LoginAdmin: React.FC = () => {
   // }, [state, triggerNotification, navigate, location.pathname]);
 
   const onSubmit: SubmitHandler<SignInDto> = async (data: SignInDto) => {
-    console.log(data);
     try {
       const ok = await login(data);
-      console.log('from login admin vaue of ok', ok)
       if (ok) {
         await reloadAdmin();
         navigate("/admin/home");
       }
     } catch (error: any) {
-      
-      console.error(error);
       const errorMessage = error?.response?.data?.message || error?.message || "Login failed"
       triggerNotification({
         type: "error",

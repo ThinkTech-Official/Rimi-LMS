@@ -37,7 +37,6 @@ export const useCreateTest = (courseId: string) => {
       );
       return response.data;
     } catch (err: any) {
-      console.log('error from test creation failed',err)
       setError(err.response?.data?.message || err.message);
       throw err;
     } finally {

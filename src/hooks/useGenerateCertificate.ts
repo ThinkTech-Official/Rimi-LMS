@@ -46,7 +46,6 @@ export function useGenerateCertificate({
         if (!cancelled) setCertData(res.data);
       })
       .catch((err) => {
-        console.error("Certificate fetch/create error:", err);
         if (!cancelled) setStatus("error");
       });
     return () => {
@@ -92,11 +91,9 @@ export function useGenerateCertificate({
         // Verify the certificate record is properly updated
 const updatedCert = uploadResponse.data;
 if (!updatedCert?.fileName) {
-  console.error('Upload response missing fileName:', updatedCert);
   throw new Error('Certificate upload failed - no file reference');
 }
 
-console.log(`Certificate ${certData.id} successfully updated with file: ${updatedCert.fileName}`);
 
 if (cancelled) return;
 
@@ -108,7 +105,6 @@ setCertData(updatedCert);
         setStatus("done");
         navigate("/client/certificates");
       } catch (err) {
-        console.error("Certificate generation error:", err);
         if (!cancelled) setStatus("error");
       }
     })();

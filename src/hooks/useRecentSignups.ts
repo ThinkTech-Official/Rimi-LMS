@@ -23,7 +23,6 @@ export function useRecentSignups(page: number = 1, limit: number = 10) {
       )
       .then((res) => {
         if (!mounted) return;
-        console.log("from recent sign ups ", res.data);
         setUsers(res.data.recentUsers);
         setTotalCount(res.data.totalCount);
       })

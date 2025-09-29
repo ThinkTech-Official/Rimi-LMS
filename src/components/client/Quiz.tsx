@@ -43,8 +43,6 @@ const Quiz: FC<QuizProps> = ({
 
   const questions = test.questions;
 
-  console.log("from quiz component printing the test", test);
-
   // countdown timer
   useEffect(() => {
     if (finished) return;
@@ -106,7 +104,6 @@ const Quiz: FC<QuizProps> = ({
           }
       );
     } catch (err) {
-      console.error("Submission failed", err);
     }
   }
 
