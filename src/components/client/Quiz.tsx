@@ -205,7 +205,7 @@ const Quiz: FC<QuizProps> = ({
   const sel = answers[q.id];
 
   return (
-    <div className="w-full h-full bg-[#F3F3F3] flex flex-col items-center justify-center overflow-auto relative">
+    <div className="w-full h-full bg-[#F3F3F3] flex flex-col items-center justify-center relative pt-10">
       {/* Header: timer */}
       <div className="flex flex-col justify-center items-center mb-6 gap-3">
         <div className="text-xl font-medium flex items-center gap-2">
@@ -227,7 +227,7 @@ const Quiz: FC<QuizProps> = ({
       </div>
 
       {/* Question */}
-      <div className="w-full max-w-2xl px-6 mt-1">
+      <div className="w-full max-w-2xl px-6 mt-1 h-[80%] overflow-auto pb-10 custom-scrollbar3">
         <div className="flex flex-col border-b border-[#D4D4D4] pb-6">
           <div className="flex justify-between items-center">
             <span className="text-text-light font-semibold text-base">

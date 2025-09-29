@@ -24,5 +24,5 @@ export function useUpdateAdminPassword() {
     }
   }
 
-  return { updatePassword, loading, error, success };
+  return { updatePassword, loading, error, success, setError };
 }

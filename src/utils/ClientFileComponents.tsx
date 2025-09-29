@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react';
-import api from '../utils/api';
-import { FaExternalLinkAlt } from 'react-icons/fa';
-import { API_BASE } from './ulrs';
-import Spinner from '../components/loaders/Spinner';
+import { useState, useEffect } from "react";
+import api from "../utils/api";
+import { FaExternalLinkAlt } from "react-icons/fa";
+import { API_BASE } from "./ulrs";
+import Spinner from "../components/loaders/Spinner";
+import { useTranslation } from "react-i18next";
 
 // Client Image Component
 interface ClientImageProps {
@@ -12,27 +13,30 @@ interface ClientImageProps {
   fallbackSrc?: string;
 }
 
-export const ClientImage: React.FC<ClientImageProps> = ({ 
-  courseId, 
-  className = "", 
+export const ClientImage: React.FC<ClientImageProps> = ({
+  courseId,
+  className = "",
   alt = "Image",
-  fallbackSrc
+  fallbackSrc,
 }) => {
-  const [imageSrc, setImageSrc] = useState('');
+  const [imageSrc, setImageSrc] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
   useEffect(() => {
     const fetchImage = async () => {
       try {
-        const response = await api.get(`${API_BASE}/files/client/thumbnail/course/${courseId}`, {
-          responseType: 'blob'
-        });
+        const response = await api.get(
+          `${API_BASE}/files/client/thumbnail/course/${courseId}`,
+          {
+            responseType: "blob",
+          }
+        );
         const imageUrl = URL.createObjectURL(response.data);
         setImageSrc(imageUrl);
         setError(false);
       } catch (error) {
-        console.error('Failed to load thumbnail:', error);
+        console.error("Failed to load thumbnail:", error);
         setError(true);
       } finally {
         setLoading(false);
@@ -50,7 +54,9 @@ export const ClientImage: React.FC<ClientImageProps> = ({
 
   if (loading) {
     return (
-      <div className={`${className} bg-gray-200 animate-pulse flex items-center justify-center`}>
+      <div
+        className={`${className} bg-gray-200 animate-pulse flex items-center justify-center`}
+      >
         <span className="text-gray-500">Loading...</span>
       </div>
     );
@@ -61,7 +67,9 @@ export const ClientImage: React.FC<ClientImageProps> = ({
       return <img src={fallbackSrc} alt={alt} className={className} />;
     }
     return (
-      <div className={`${className} bg-gray-200 flex items-center justify-center`}>
+      <div
+        className={`${className} bg-gray-200 flex items-center justify-center`}
+      >
         <span className="text-gray-500">No image</span>
       </div>
     );
@@ -125,9 +133,9 @@ export const ClientImage: React.FC<ClientImageProps> = ({
 // // };
 
 
-// export const ClientFileDownload: React.FC<ClientFileDownloadProps> = ({ 
-//   fileId, 
-//   fileName, 
+// export const ClientFileDownload: React.FC<ClientFileDownloadProps> = ({
+//   fileId,
+//   fileName,
 //   type = 'document',
 //   children,
 //   className = "cursor-pointer"
@@ -136,7 +144,7 @@ export const ClientImage: React.FC<ClientImageProps> = ({
 
 //   const handleDownload = async () => {
 //     if (downloading) return;
-    
+
 //     setDownloading(true);
 //     try {
 //       // Build the correct endpoint URL based on type
@@ -153,7 +161,7 @@ export const ClientImage: React.FC<ClientImageProps> = ({
 //       const response = await api.get(endpoint, {
 //         responseType: 'blob'
 //       });
-      
+
 //       const url = window.URL.createObjectURL(response.data);
 //       const link = document.createElement('a');
 //       link.href = url;
@@ -170,8 +178,8 @@ export const ClientImage: React.FC<ClientImageProps> = ({
 //   };
 
 //   return (
-//     <button 
-//       onClick={handleDownload} 
+//     <button
+//       onClick={handleDownload}
 //       className={className}
 //       disabled={downloading}
 //     >
@@ -196,42 +204,48 @@ export const ClientFileDownload: React.FC<ClientFileDownloadProps> = ({
   fileId, 
   fileName, 
   children,
-  className = "cursor-pointer"
+  className = "cursor-pointer",
 }) => {
   const [downloading, setDownloading] = useState(false);
+  const { t } = useTranslation();
 
   const handleDownload = async () => {
     if (downloading) return;
-    
+
     setDownloading(true);
     try {
       const response = await api.get(`${API_BASE}/files/client/document/${fileId}`, {
         responseType: 'blob'
       });
-      
+
       const url = window.URL.createObjectURL(response.data);
-      const link = document.createElement('a');
+      const link = document.createElement("a");
       link.href = url;
-      link.setAttribute('download', fileName);
+      link.setAttribute("download", fileName);
       document.body.appendChild(link);
       link.click();
       link.remove();
       window.URL.revokeObjectURL(url);
     } catch (error) {
-      console.error('Download failed:', error);
+      console.error("Download failed:", error);
     } finally {
       setDownloading(false);
     }
   };
 
   return (
-    <button 
-      onClick={handleDownload} 
+    <button
+      onClick={handleDownload}
       className={className}
       disabled={downloading}
     >
-      {children || <FaExternalLinkAlt className="w-4 h-4 fill-primary" />}
-      {downloading && <span className="ml-1"><Spinner /></span>}
+      {downloading ? (
+        <span className="text-white">{t("Downloading")}...</span>
+      ) : (
+        children || <FaExternalLinkAlt className="w-4 h-4 fill-primary" />
+      )}
+
+      {/* {downloading && <span className="ml-1"><Spinner /></span>} */}
     </button>
   );
 };
@@ -260,6 +274,8 @@ export const ClientCertificateDownload: React.FC<ClientCertificateDownloadProps>
 
   const handleDownload = async () => {
     if (downloading) return;
+
+    console.log('passing tis certificate id', certificateId)
     
     setDownloading(true);
     try {

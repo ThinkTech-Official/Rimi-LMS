@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react';
-import adminApi from '../utils/adminApi';
-import { FaExternalLinkAlt } from 'react-icons/fa';
-import { API_BASE } from './ulrs';
-import Spinner from '../components/loaders/Spinner';
+import { useState, useEffect } from "react";
+import adminApi from "../utils/adminApi";
+import { API_BASE } from "./ulrs";
+import Spinner from "../components/loaders/Spinner";
+import { MdOutlineFileDownload } from "react-icons/md";
+import { FaExternalLinkAlt } from "react-icons/fa";
 
 // Admin Image Component
 interface AdminImageProps {
@@ -12,27 +13,30 @@ interface AdminImageProps {
   fallbackSrc?: string;
 }
 
-export const AdminImage: React.FC<AdminImageProps> = ({ 
-  courseId, 
-  className = "", 
+export const AdminImage: React.FC<AdminImageProps> = ({
+  courseId,
+  className = "",
   alt = "Image",
-  fallbackSrc
+  fallbackSrc,
 }) => {
-  const [imageSrc, setImageSrc] = useState('');
+  const [imageSrc, setImageSrc] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
   useEffect(() => {
     const fetchImage = async () => {
       try {
-        const response = await adminApi.get(`${API_BASE}/files/admin/thumbnail/course/${courseId}`, {
-          responseType: 'blob'
-        });
+        const response = await adminApi.get(
+          `${API_BASE}/files/admin/thumbnail/course/${courseId}`,
+          {
+            responseType: "blob",
+          }
+        );
         const imageUrl = URL.createObjectURL(response.data);
         setImageSrc(imageUrl);
         setError(false);
       } catch (error) {
-        console.error('Failed to load thumbnail:', error);
+        console.error("Failed to load thumbnail:", error);
         setError(true);
       } finally {
         setLoading(false);
@@ -50,9 +54,9 @@ export const AdminImage: React.FC<AdminImageProps> = ({
 
   if (loading) {
     return (
-      <div className={`${className} bg-gray-200 animate-pulse flex items-center justify-center`}>
-        <span className="text-gray-500">Loading...</span>
-      </div>
+      <div
+        className={`${className} bg-gray-300 animate-pulse flex items-center justify-center`}
+      ></div>
     );
   }
 
@@ -61,7 +65,9 @@ export const AdminImage: React.FC<AdminImageProps> = ({
       return <img src={fallbackSrc} alt={alt} className={className} />;
     }
     return (
-      <div className={`${className} bg-gray-200 flex items-center justify-center`}>
+      <div
+        className={`${className} bg-gray-200 flex items-center justify-center`}
+      >
         <span className="text-gray-500">No image</span>
       </div>
     );
@@ -250,35 +256,38 @@ interface AdminVideoLinkProps {
 export const AdminVideoLink: React.FC<AdminVideoLinkProps> = ({
   courseId,
   children,
-  className = "text-primary hover:underline underline-offset-2 text-lg font-medium"
+  className = "text-primary hover:underline underline-offset-2 text-lg font-medium",
 }) => {
   const [downloading, setDownloading] = useState(false);
 
   const handleViewVideo = async () => {
     if (downloading) return;
-    
+
     setDownloading(true);
     try {
-      const response = await adminApi.get(`${API_BASE}/files/admin/video/course/${courseId}`, {
-        responseType: 'blob'
-      });
-      
+      const response = await adminApi.get(
+        `${API_BASE}/files/admin/video/course/${courseId}`,
+        {
+          responseType: "blob",
+        }
+      );
+
       const url = window.URL.createObjectURL(response.data);
-      window.open(url, '_blank');
-      
+      window.open(url, "_blank");
+
       // Clean up after a delay
       setTimeout(() => {
         window.URL.revokeObjectURL(url);
       }, 1000);
     } catch (error) {
-      console.error('Video viewing failed:', error);
+      console.error("Video viewing failed:", error);
     } finally {
       setDownloading(false);
     }
   };
 
   return (
-    <button 
+    <button
       onClick={handleViewVideo}
       className={className}
       disabled={downloading}

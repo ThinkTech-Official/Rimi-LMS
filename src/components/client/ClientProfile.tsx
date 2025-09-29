@@ -9,7 +9,7 @@ import { IoMdClose } from "react-icons/io";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 import useNotification from "../../hooks/useNotification";
 import { useTranslation } from "react-i18next";
-import { useForm } from "react-hook-form";
+import { set, useForm } from "react-hook-form";
 
 const ClientProfile: React.FC = () => {
   const {
@@ -27,6 +27,7 @@ const ClientProfile: React.FC = () => {
     resetPassword,
     loading: savingPwd,
     // error: pwdError,
+    setError: setResetPasswordError,
   } = useResetPassword();
 
   const [editMode, setEditMode] = useState(false);
@@ -59,7 +60,7 @@ const ClientProfile: React.FC = () => {
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
-        setShowResetPasswordModal(false);
+        handleCloseModal();
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
@@ -87,20 +88,21 @@ const ClientProfile: React.FC = () => {
   };
   const handleCloseModal = () => {
     setShowResetPasswordModal(false);
+    setResetPasswordError(null);
     reset();
   };
   if (loadingProfile)
     return (
       <div className="fixed top-1/2 left-1/2 flex flex-col items-center gap-2">
-        <Spinner className="w-10 h-10" /> <p>Loading profile…</p>
+        <Spinner className="w-10 h-10" /> <p>{t("Loading profile")}…</p>
       </div>
     );
   if (profileError)
     return (
       <div className="p-4 text-red-600">
-        Error fetching profile: {profileError}{" "}
+        {t("Error fetching profile")}: {profileError}{" "}
         <button onClick={refetch} className="underline">
-          Try again
+          {t("Try again")}
         </button>
       </div>
     );
@@ -147,9 +149,9 @@ const ClientProfile: React.FC = () => {
                   onClick={handleNameSave}
                   disabled={savingName}
                   title="Save Name"
-                  className="bg-primary text-white px-3 py-1 cursor-pointer"
+                  className="bg-primary text-white px-3 py-1 cursor-pointer text-nowrap"
                 >
-                  {savingName ? "Saving…" : "Save"}
+                  {savingName ? t("Saving") : t("Save")}
                 </button>
                 <button onClick={() => setEditMode(false)} title="Cancel">
                   <TbX className="w-5 h-5 text-text-light cursor-pointer" />

@@ -49,6 +49,7 @@ export const GenerateCertificatePage: React.FC = () => {
       <div className="flex flex-col justify-center items-center gap-3 fixed top-1/2 left-1/2">
         <SquareLoader />
         <p>{t("Processing Certificate")}...</p>
+        <p>{t("Do not go back or close this page.")}</p>
       </div>
 
       {/* Hidden Certificate for html2canvas */}

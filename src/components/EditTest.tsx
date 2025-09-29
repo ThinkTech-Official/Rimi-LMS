@@ -140,22 +140,29 @@ const EditTest: React.FC = () => {
     });
   };
 
-  const toggleCorrect = (qid: number, oid: number) => {
-    setQuestions((prev) => {
-      const updated = prev.map((q) =>
-        q.id === qid
-          ? {
-              ...q,
-              options: q.options.map((o) =>
-                o.id === oid ? { ...o, isCorrect: !o.isCorrect } : o
-              ),
+   const toggleCorrect = (qid: number, oid: number) => {
+    const updatedQuestions = questions.map((q) => {
+      if (q.id === qid) {
+        const clicked = q.options.find((o) => o.id === oid);
+
+        const isCurrentlyCorrect = clicked?.isCorrect;
+
+        return {
+          ...q,
+          options: q.options.map((o) => {
+            if (o.id === oid) {
+              // toggle the clicked one
+              return { ...o, isCorrect: !o.isCorrect };
             }
-          : q
-      );
-      const q = updated.find((q) => q.id === qid)!;
-      updateErrorsForQuestion(qid, q);
-      return updated;
+            // if we are selecting a new correct one → reset others
+            return isCurrentlyCorrect ? o : { ...o, isCorrect: false };
+          }),
+        };
+      }
+      return q;
     });
+    setQuestions(updatedQuestions);
+    updateErrorsForQuestion(qid, updatedQuestions.find((q) => q.id === qid)!);
   };
 
   const addQuestion = () => {
