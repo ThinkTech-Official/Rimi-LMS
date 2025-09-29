@@ -5,6 +5,7 @@ import { set, useForm, type SubmitHandler } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { RxCross2 } from "react-icons/rx";
 import { AdminCertificateDownload } from "../../utils/AdminFileComponents";
+import { MdOutlineFileDownload } from "react-icons/md";
 
 const AdminTrackCertificate: React.FC = () => {
   const { certificate, loading, searchCertificate, setCertificate } =
@@ -132,7 +133,7 @@ const AdminTrackCertificate: React.FC = () => {
                 certificateId={certificate.id}
                 fileName={`Certificate-${certificate.id}.pdf`}
               >
-                Download Certificate
+                <MdOutlineFileDownload className="w-7 h-7 mr-2 fill-primary cursor-pointer" />
               </AdminCertificateDownload>
             </p>
           )}
