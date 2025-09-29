@@ -4,7 +4,10 @@ import { API_BASE } from "../../utils/ulrs";
 import Spinner from "../loaders/Spinner";
 import { useTranslation } from "react-i18next";
 import { formatDate } from "../UserProfile";
-import { ClientFileDownload } from "../../utils/ClientFileComponents";
+import {
+  ClientCertificateDownload,
+  ClientFileDownload,
+} from "../../utils/ClientFileComponents";
 
 interface CertRecord {
   id: number;
@@ -103,13 +106,20 @@ const ClientCertificates: React.FC = () => {
               >
                 {t("Download certificate")}
               </a> */}
-              <ClientFileDownload
+              {/* <ClientFileDownload
                 fileId={c.id}
                 fileName={`Certificate-${c.certNumber}.pdf`}
                 type="certificate" // This will call: /files/certificate/${certificateId}
               >
                 Download Certificate
-              </ClientFileDownload>
+              </ClientFileDownload> */}
+
+              <ClientCertificateDownload
+                certificateId={c.id}
+                fileName={`Certificate-${c.certNumber}.pdf`}
+              >
+                Download Certificate
+              </ClientCertificateDownload>
             </div>
           </li>
         ))}

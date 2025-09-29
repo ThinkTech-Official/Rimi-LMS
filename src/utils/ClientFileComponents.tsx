@@ -70,14 +70,60 @@ export const ClientImage: React.FC<ClientImageProps> = ({
   return <img src={imageSrc} alt={alt} className={className} />;
 };
 
-// Client File Download Component
-interface ClientFileDownloadProps {
-  fileId: number;
-  fileName: string;
-  type?: 'document' | 'certificate';
-  children?: React.ReactNode;
-  className?: string;
-}
+// // Client File Download Component
+// interface ClientFileDownloadProps {
+//   fileId: number;
+//   fileName: string;
+//   type?: 'document' | 'certificate';
+//   children?: React.ReactNode;
+//   className?: string;
+// }
+
+// // export const ClientFileDownload: React.FC<ClientFileDownloadProps> = ({ 
+// //   fileId, 
+// //   fileName, 
+// //   type = 'document',
+// //   children,
+// //   className = "cursor-pointer"
+// // }) => {
+// //   const [downloading, setDownloading] = useState(false);
+
+// //   const handleDownload = async () => {
+// //     if (downloading) return;
+    
+// //     setDownloading(true);
+// //     try {
+// //       const response = await api.get(`${API_BASE}/files/client/document/${fileId}`, {
+// //         responseType: 'blob'
+// //       });
+      
+// //       const url = window.URL.createObjectURL(response.data);
+// //       const link = document.createElement('a');
+// //       link.href = url;
+// //       link.setAttribute('download', fileName);
+// //       document.body.appendChild(link);
+// //       link.click();
+// //       link.remove();
+// //       window.URL.revokeObjectURL(url);
+// //     } catch (error) {
+// //       console.error('Download failed:', error);
+// //     } finally {
+// //       setDownloading(false);
+// //     }
+// //   };
+
+// //   return (
+// //     <button 
+// //       onClick={handleDownload} 
+// //       className={className}
+// //       disabled={downloading}
+// //     >
+// //       {children || <FaExternalLinkAlt className="w-4 h-4 fill-primary" />}
+// //       {downloading && <span className="ml-1">...</span>}
+// //     </button>
+// //   );
+// // };
+
 
 // export const ClientFileDownload: React.FC<ClientFileDownloadProps> = ({ 
 //   fileId, 
@@ -93,7 +139,18 @@ interface ClientFileDownloadProps {
     
 //     setDownloading(true);
 //     try {
-//       const response = await api.get(`${API_BASE}/files/client/document/${fileId}`, {
+//       // Build the correct endpoint URL based on type
+//       let endpoint: string;
+//       if (type === 'certificate') {
+//         endpoint = `${API_BASE}/files/certificate/${fileId}`;
+//       } else if (type === 'document') {
+//         endpoint = `${API_BASE}/files/client/document/${fileId}`;
+//       } else {
+//         // For any other type, assume it's a direct path like 'client/document'
+//         endpoint = `${API_BASE}/files/${type}/${fileId}`;
+//       }
+
+//       const response = await api.get(endpoint, {
 //         responseType: 'blob'
 //       });
       
@@ -119,16 +176,25 @@ interface ClientFileDownloadProps {
 //       disabled={downloading}
 //     >
 //       {children || <FaExternalLinkAlt className="w-4 h-4 fill-primary" />}
-//       {downloading && <span className="ml-1">...</span>}
+//       {downloading && <span className="ml-1"><Spinner /></span>}
 //     </button>
 //   );
 // };
 
 
+// ============================================
+// 2. CLIENT FILE DOWNLOAD COMPONENT (Documents only)
+// ============================================
+interface ClientFileDownloadProps {
+  fileId: number;
+  fileName: string;
+  children?: React.ReactNode;
+  className?: string;
+}
+
 export const ClientFileDownload: React.FC<ClientFileDownloadProps> = ({ 
   fileId, 
   fileName, 
-  type = 'document',
   children,
   className = "cursor-pointer"
 }) => {
@@ -139,18 +205,7 @@ export const ClientFileDownload: React.FC<ClientFileDownloadProps> = ({
     
     setDownloading(true);
     try {
-      // Build the correct endpoint URL based on type
-      let endpoint: string;
-      if (type === 'certificate') {
-        endpoint = `${API_BASE}/files/certificate/${fileId}`;
-      } else if (type === 'document') {
-        endpoint = `${API_BASE}/files/client/document/${fileId}`;
-      } else {
-        // For any other type, assume it's a direct path like 'client/document'
-        endpoint = `${API_BASE}/files/${type}/${fileId}`;
-      }
-
-      const response = await api.get(endpoint, {
+      const response = await api.get(`${API_BASE}/files/client/document/${fileId}`, {
         responseType: 'blob'
       });
       
@@ -164,6 +219,64 @@ export const ClientFileDownload: React.FC<ClientFileDownloadProps> = ({
       window.URL.revokeObjectURL(url);
     } catch (error) {
       console.error('Download failed:', error);
+    } finally {
+      setDownloading(false);
+    }
+  };
+
+  return (
+    <button 
+      onClick={handleDownload} 
+      className={className}
+      disabled={downloading}
+    >
+      {children || <FaExternalLinkAlt className="w-4 h-4 fill-primary" />}
+      {downloading && <span className="ml-1"><Spinner /></span>}
+    </button>
+  );
+};
+
+
+
+
+
+// ============================================
+// 3. CLIENT CERTIFICATE DOWNLOAD COMPONENT
+// ============================================
+interface ClientCertificateDownloadProps {
+  certificateId: number;
+  fileName: string;
+  children?: React.ReactNode;
+  className?: string;
+}
+
+export const ClientCertificateDownload: React.FC<ClientCertificateDownloadProps> = ({ 
+  certificateId, 
+  fileName, 
+  children,
+  className = "cursor-pointer"
+}) => {
+  const [downloading, setDownloading] = useState(false);
+
+  const handleDownload = async () => {
+    if (downloading) return;
+    
+    setDownloading(true);
+    try {
+      const response = await api.get(`${API_BASE}/files/certificate/${certificateId}`, {
+        responseType: 'blob'
+      });
+      
+      const url = window.URL.createObjectURL(response.data);
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', fileName);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Certificate download failed:', error);
     } finally {
       setDownloading(false);
     }

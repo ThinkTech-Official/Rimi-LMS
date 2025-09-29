@@ -83,11 +83,26 @@ export function useGenerateCertificate({
         // 2) Upload the PDF
         const form = new FormData();
         form.append("file", blob, `${certData.certNumber}.pdf`);
-        await api.post(
+        const uploadResponse = await api.post(
           `${API_BASE}/courses/${courseId}/certificate/${certData.id}/upload`,
           form
         );
-        if (cancelled) return;
+        
+
+        // Verify the certificate record is properly updated
+const updatedCert = uploadResponse.data;
+if (!updatedCert?.fileName) {
+  console.error('Upload response missing fileName:', updatedCert);
+  throw new Error('Certificate upload failed - no file reference');
+}
+
+console.log(`Certificate ${certData.id} successfully updated with file: ${updatedCert.fileName}`);
+
+if (cancelled) return;
+
+
+// Update local state with the updated certificate data
+setCertData(updatedCert);
 
         // 3) Done!
         setStatus("done");

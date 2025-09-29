@@ -70,11 +70,70 @@ export const AdminImage: React.FC<AdminImageProps> = ({
   return <img src={imageSrc} alt={alt} className={className} />;
 };
 
-// Admin File Download Component
+// // Admin File Download Component
+// interface AdminFileDownloadProps {
+//   fileId: number;
+//   fileName: string;
+//   type?: 'document' | 'certificate';
+//   children?: React.ReactNode;
+//   className?: string;
+// }
+
+// export const AdminFileDownload: React.FC<AdminFileDownloadProps> = ({ 
+//   fileId, 
+//   fileName, 
+//   type = 'document',
+//   children,
+//   className = "cursor-pointer"
+// }) => {
+//   const [downloading, setDownloading] = useState(false);
+
+//   const handleDownload = async () => {
+//     if (downloading) return;
+    
+//     setDownloading(true);
+//     try {
+//       const response = await adminApi.get(`${API_BASE}/files/admin/document/${fileId}`, {
+//         responseType: 'blob'
+//       });
+      
+//       const url = window.URL.createObjectURL(response.data);
+//       const link = document.createElement('a');
+//       link.href = url;
+//       link.setAttribute('download', fileName);
+//       document.body.appendChild(link);
+//       link.click();
+//       link.remove();
+//       window.URL.revokeObjectURL(url);
+//     } catch (error) {
+//       console.error('Download failed:', error);
+//     } finally {
+//       setDownloading(false);
+//     }
+//   };
+
+//   return (
+//     <button 
+//       onClick={handleDownload} 
+//       className={className}
+//       disabled={downloading}
+//     >
+//       {children || <FaExternalLinkAlt className="w-4 h-4 fill-primary" />}
+//       {downloading && <span className="ml-1"><Spinner /></span>}
+//     </button>
+//   );
+// };
+
+
+
+
+
+// ============================================
+// 2. ADMIN FILE DOWNLOAD COMPONENT (Documents only)
+// ============================================
 interface AdminFileDownloadProps {
   fileId: number;
   fileName: string;
-  type?: 'document' | 'certificate';
   children?: React.ReactNode;
   className?: string;
 }
@@ -82,7 +141,6 @@ interface AdminFileDownloadProps {
 export const AdminFileDownload: React.FC<AdminFileDownloadProps> = ({ 
   fileId, 
   fileName, 
-  type = 'document',
   children,
   className = "cursor-pointer"
 }) => {
@@ -123,6 +181,64 @@ export const AdminFileDownload: React.FC<AdminFileDownloadProps> = ({
     </button>
   );
 };
+
+// ============================================
+// 3. ADMIN CERTIFICATE DOWNLOAD COMPONENT
+// ============================================
+interface AdminCertificateDownloadProps {
+  certificateId: number | string;
+  fileName: string;
+  children?: React.ReactNode;
+  className?: string;
+}
+
+export const AdminCertificateDownload: React.FC<AdminCertificateDownloadProps> = ({ 
+  certificateId, 
+  fileName, 
+  children,
+  className = "cursor-pointer"
+}) => {
+  const [downloading, setDownloading] = useState(false);
+
+  const handleDownload = async () => {
+    if (downloading) return;
+    
+    setDownloading(true);
+    try {
+      const response = await adminApi.get(`${API_BASE}/files/admin/certificate/${certificateId}`, {
+        responseType: 'blob'
+      });
+      
+      const url = window.URL.createObjectURL(response.data);
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', fileName);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Certificate download failed:', error);
+    } finally {
+      setDownloading(false);
+    }
+  };
+
+  return (
+    <button 
+      onClick={handleDownload} 
+      className={className}
+      disabled={downloading}
+    >
+      {children || <FaExternalLinkAlt className="w-4 h-4 fill-primary" />}
+      {downloading && <span className="ml-1"><Spinner /></span>}
+    </button>
+  );
+};
+
+
+// ================== Admin Video LInk =============
+
 
 // Admin Video Link Component
 interface AdminVideoLinkProps {

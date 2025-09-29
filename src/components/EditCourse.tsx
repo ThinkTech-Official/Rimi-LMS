@@ -696,7 +696,7 @@ const EditCourse: React.FC = () => {
                         <AdminFileDownload
                           fileId={doc.id}
                           fileName={doc.fileName}
-                          type="document"
+                          // type="document"
                         >
                           <FaExternalLinkAlt className="w-4 h-4 fill-primary cursor-pointer" />
                         </AdminFileDownload>
