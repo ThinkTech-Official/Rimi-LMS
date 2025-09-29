@@ -236,8 +236,11 @@ export const AdminCertificateDownload: React.FC<AdminCertificateDownloadProps> =
       className={className}
       disabled={downloading}
     >
-      {children || <FaExternalLinkAlt className="w-4 h-4 fill-primary" />}
-      {downloading && <span className="ml-1"><Spinner /></span>}
+      {downloading ?
+        <Spinner className="w-5 h-5 mr-2 disabled: cursor-default"/>
+       : (
+        children || <FaExternalLinkAlt className="w-4 h-4 fill-primary" />
+      )}
     </button>
   );
 };

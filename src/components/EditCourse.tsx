@@ -17,7 +17,6 @@ import { CiFileOn } from "react-icons/ci";
 import { MdCancel, MdOutlineFileDownload } from "react-icons/md";
 import FetchingError from "./FetchingError";
 import { useToggleCoursePublish } from "../hooks/useToggleCoursePublish";
-import { FaExternalLinkAlt } from "react-icons/fa";
 
 import { useUploadDocuments } from "../hooks/useUploadDocuments";
 import { useDeleteDocument } from "../hooks/useDeleteDocument";
@@ -25,7 +24,7 @@ import FileTypeIcon from "./loaders/FileTypeIcon";
 import { RxCross2 } from "react-icons/rx";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 import { RenderPageNumbers } from "./RenderPageNumbers";
-import { AdminFileDownload, AdminImage, AdminVideoLink } from "../utils/AdminFileComponents";
+import { AdminFileDownload, AdminImage } from "../utils/AdminFileComponents";
 
 const testHeaders = [
   "Test Name",
@@ -40,15 +39,6 @@ const DeleteCourseInfo = [
   "The course video file",
   "All tests and their questions",
   "All certificates and test results",
-];
-
-//sample document names
-const Documents = [
-  "Document 1",
-  "Document 2",
-  "Document 3",
-  "Document 4",
-  "Document 5",
 ];
 
 const EditCourse: React.FC = () => {
@@ -115,8 +105,6 @@ const EditCourse: React.FC = () => {
   } = useAdminDeleteCourse(Number(courseId!));
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [isDeleteDocumentModalOpen, setIsDeleteDocumentModalOpen] =
-    useState(false);
 
   const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
   const [videoFile, setVideoFile] = useState<File | null>(null);
@@ -128,7 +116,6 @@ const EditCourse: React.FC = () => {
     id: number;
     name: string;
   } | null>(null);
-  const [localDocuments, setLocalDocuments] = useState<any[]>([]);
 
   // documents hook
   const {
@@ -661,7 +648,7 @@ const EditCourse: React.FC = () => {
                     {t("Upload Documents")}
                   </button>
                 </div>
-                {basicCourse.documents?.map((doc, index) => (
+                {basicCourse.documents?.map((doc, _) => (
                   <div
                     key={doc.id}
                     className="flex items-center gap-3 p-2 hover:bg-gray-50 rounded-md transition-colors"
