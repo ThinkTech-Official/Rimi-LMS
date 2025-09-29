@@ -6,7 +6,6 @@ import { useTranslation } from "react-i18next";
 import { formatDate } from "../UserProfile";
 import {
   ClientCertificateDownload,
-  ClientFileDownload,
 } from "../../utils/ClientFileComponents";
 
 interface CertRecord {
@@ -118,8 +117,9 @@ const ClientCertificates: React.FC = () => {
               <ClientCertificateDownload
                 certificateId={c.id}
                 fileName={`Certificate-${c.certNumber}.pdf`}
+                className="px-4 py-2 mt-2 bg-primary text-white cursor-pointer w-full text-center capitalize"
               >
-                Download Certificate
+                {t("Download certificate")}
               </ClientCertificateDownload>
             </div>
           </li>

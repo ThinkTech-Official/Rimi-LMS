@@ -271,6 +271,7 @@ export const ClientCertificateDownload: React.FC<ClientCertificateDownloadProps>
   className = "cursor-pointer"
 }) => {
   const [downloading, setDownloading] = useState(false);
+  const { t } = useTranslation(); 
 
   const handleDownload = async () => {
     if (downloading) return;
@@ -304,8 +305,13 @@ export const ClientCertificateDownload: React.FC<ClientCertificateDownloadProps>
       className={className}
       disabled={downloading}
     >
-      {children || <FaExternalLinkAlt className="w-4 h-4 fill-primary" />}
-      {downloading && <span className="ml-1"><Spinner /></span>}
+      {downloading ? (
+        <span className="text-white disabled:cursor-default">{t("Downloading")}...</span>
+      ) : (
+        children || <FaExternalLinkAlt className="w-4 h-4 fill-primary" />
+      )}
+      {/* {children || <FaExternalLinkAlt className="w-4 h-4 fill-primary" />}
+      {downloading && <span className="ml-1"><Spinner /></span>} */}
     </button>
   );
 };

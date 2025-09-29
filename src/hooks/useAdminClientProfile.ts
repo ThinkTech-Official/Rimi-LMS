@@ -8,6 +8,7 @@ export interface Certificate {
   courseName: string;
   issueDate: string;
   imageUrl: string;
+  certNumber: string;
 }
 
 export interface Course {

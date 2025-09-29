@@ -5,7 +5,6 @@ import { ImUser } from "react-icons/im";
 import { IoMdClose } from "react-icons/io";
 // import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { useParams } from "react-router-dom";
-import { API_BASE } from "../utils/ulrs";
 import { useAdminResetPasswordOfClient } from "../hooks/useAdminResetPasswordOfClient";
 import Spinner from "./loaders/Spinner";
 import { useTranslation } from "react-i18next";
@@ -17,6 +16,7 @@ import {
   AdminCertificateDownload,
   AdminImage,
 } from "../utils/AdminFileComponents";
+import { MdOutlineFileDownload } from "react-icons/md";
 
 interface PasswordForm {
   newPwd: string;
@@ -246,7 +246,13 @@ export const UserProfile: React.FC = () => {
                             {cert.id}
                           </span>
                         </div>
-                        <div className="flex justify-between">
+                        <div className="text-sm text-text-dark font-semibold">
+                          {t("Certificate")} Number:{" "}
+                          <span className="text-text-light font-normal">
+                            {cert.certNumber}
+                          </span>
+                        </div>
+                        <div className="flex justify-between items-center">
                           <div className="text-sm text-text-dark font-semibold">
                             {t("Issued at")}:{" "}
                             <span className="text-text-light font-normal">
@@ -267,7 +273,7 @@ export const UserProfile: React.FC = () => {
                             certificateId={cert.id}
                             fileName={`Certificate-${cert.id}.pdf`}
                           >
-                            Download Certificate
+                            <MdOutlineFileDownload className="w-7 h-7 mr-2 fill-primary cursor-pointer" />
                           </AdminCertificateDownload>
                         </div>
                       </div>
