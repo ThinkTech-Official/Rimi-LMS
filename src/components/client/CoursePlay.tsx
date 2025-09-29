@@ -720,10 +720,9 @@ const CoursePlay = () => {
               <ClientFileDownload
                 fileId={mat.id}
                 fileName={mat.fileName}
-                type="document"
-                className="px-4 py-1 sm:py-2 bg-primary text-base text-white font-medium hover:bg-indigo-700"
+                className="px-4 py-1 sm:py-2 bg-primary text-base text-white font-medium hover:bg-indigo-700 cursor-pointer"
               >
-                {t("Open")}
+                {t("Download")}
               </ClientFileDownload>
             </li>
           ))}
