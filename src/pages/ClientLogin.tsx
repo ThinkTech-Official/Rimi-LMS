@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 import { useForm } from "react-hook-form";
 import type { SubmitHandler } from "react-hook-form";
@@ -37,6 +37,22 @@ const LoginClient: React.FC = () => {
 
   const { login, loading, error } = useLogin();
   const { reload } = useAuth();
+
+
+  useEffect(() => {
+    // page title
+    document.title = 'Agent Training portal - Rimi';
+    
+    // description
+    const metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription) {
+      metaDescription.setAttribute('content', 
+        'Secure login for rimi agents training portal. Access training and certification programs.'
+      );
+    }
+  }, []);
+
+
 
   const onSubmit: SubmitHandler<LoginFormInput> = async (data) => {
     try {

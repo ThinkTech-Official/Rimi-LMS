@@ -1,0 +1,13 @@
+
+User-agent: *
+Allow: /$
+
+Disallow: /admin
+Disallow: /client
+Disallow: /adminlogin
+Disallow: /dashboard
+Disallow: /courses
+Disallow: /api/
+
+Sitemap: https://www.rimitrainingportal.com/sitemap.xml
+
