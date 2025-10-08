@@ -48,8 +48,6 @@ export function useAdminClientProfile() {
         const res = await adminApi.get<CLientProfileData>(
           `${API_BASE}/admin/users/${id}/profile`
         );
-
-        console.log("from useAdmin CLient Profile ", res.data);
         setData(res.data);
         setError(null);
       } catch (err: any) {

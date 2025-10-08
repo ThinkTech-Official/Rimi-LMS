@@ -21,8 +21,6 @@ export function useLogin() {
       });
       return response.data;
     } catch (err: any) {
-      console.log('Server error response:', err.response?.data);
-      console.log('Error status:', err.response?.status);
       setError(err.response?.data?.message || err.message);
       throw err;
     } finally {

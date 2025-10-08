@@ -166,9 +166,6 @@ export const useFetchTests = (
         questionCount: t.questionCount || 0,
       }));
       
-      console.log('from useFetchTests ', response);
-      console.log('from useFetchTests Question Count is normalized ', normalized);
-      
       setTests(normalized);
       setTotal(response.data.total);
     } catch (err: any) {

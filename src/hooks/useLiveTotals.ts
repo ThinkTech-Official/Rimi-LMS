@@ -20,7 +20,6 @@ export function useLiveTotals() {
       .get<LiveTotals>(`${API_BASE}/admin/dashboard/live`)
       .then((res) => {
         if (mounted) {
-          console.log("from live totals", res.data);
           setTotals(res.data);
         }
       })

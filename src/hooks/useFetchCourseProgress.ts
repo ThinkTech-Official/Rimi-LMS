@@ -21,8 +21,6 @@ export const useFetchCourseProgress = (courseId: number) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  console.log("from use fetch course progress hook cpurse id is", courseId);
-
   useEffect(() => {
     if (courseId == null) return;
 

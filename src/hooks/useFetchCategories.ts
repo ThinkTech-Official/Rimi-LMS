@@ -20,7 +20,6 @@ export const useFetchCategories = () => {
     axios
       .get<Category[]>(`${API_BASE}/categories`)
       .then((res) => {
-        console.log("from fetch categories", res.data);
         setCategories(res.data);
       })
 

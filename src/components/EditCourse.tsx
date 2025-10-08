@@ -162,9 +162,6 @@ const EditCourse: React.FC = () => {
 
       if (invalidFiles.length > 0) {
         // invalid files
-        console.log(
-          `unsuported file types selected only allowed files type is ${allowedTypes}`
-        );
         triggerNotification({
           type: "error",
           message: `Unsuported file type(s)`,
@@ -470,7 +467,6 @@ const EditCourse: React.FC = () => {
       const updated = await togglePublish(desired);
 
       // 3) **Confirm** with whatever the server actually saved
-      console.log(updated);
       if (updated.id) {
         setIsCoursePublished(updated.liveStatus);
         triggerNotification({

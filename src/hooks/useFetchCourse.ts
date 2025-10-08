@@ -80,8 +80,6 @@ export function useFetchCourse(courseId?: string) {
       .then((res: any) => {
         const raw = res.data;
 
-        console.log('from hook for fetcheh single course', raw)
-
         // Safely handle missing arrays
         const rawTests = raw.tests ?? [];
         const rawDocs = raw.documents ?? [];
@@ -118,7 +116,6 @@ export function useFetchCourse(courseId?: string) {
         });
       })
       .catch((err: any) => {
-        console.error('useFetchCourse error:', err);
         setError(err);
       })
       .finally(() => {

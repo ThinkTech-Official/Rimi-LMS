@@ -45,13 +45,11 @@ adminApi.interceptors.response.use(
       originalReq?.url?.includes("/admin/auth/login") ||
       originalReq?.url?.includes("/admin/auth/refresh")
     ) {
-      console.log("Auth endpoint request failed, not intercepting");
       return Promise.reject(error);
     }
 
     // not handle 401s if on the login page
     if (window.location.pathname.includes("login")) {
-      console.log("On login page, not intercepting 401");
       return Promise.reject(error);
     }
 
@@ -83,7 +81,6 @@ adminApi.interceptors.response.use(
           processQueue(err);
           // window.location.href = "/adminlogin";
           if (!window.location.pathname.includes("login")) {
-            console.log("Redirecting to login page");
             window.location.href = "/adminlogin";
           }
           reject(err);

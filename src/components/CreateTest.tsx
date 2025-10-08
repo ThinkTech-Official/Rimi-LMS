@@ -239,8 +239,6 @@ const CreateTest: React.FC = () => {
       })),
     };
 
-    console.log("from create test submit", dto);
-
     try {
       await createTest(dto);
       navigate(`/admin/edit-course/${courseId}`, {
@@ -250,7 +248,6 @@ const CreateTest: React.FC = () => {
         },
       });
     } catch (error: any) {
-      console.error("Test creation error:", error);
 
       const errorMessage =
         error.response?.data?.message ||

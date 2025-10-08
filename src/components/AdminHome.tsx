@@ -61,7 +61,6 @@ const AdminHome: React.FC = () => {
   const totalPages = Math.ceil(totalCount / pageSize);
 
   const handleClientProfile = (id: any) => {
-    console.log(id);
     navigate(`/admin/users/${id}`);
   };
 const colors = ["#E9E5F3", "#E0EDF4", "#E9E5F3", "#FEEEF5"];

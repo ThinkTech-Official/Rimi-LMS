@@ -17,7 +17,6 @@ interface ClientCourseCardProps {
 
 const ClientCourseCard = ({
   courseId,
-  imageUrl,
   title,
   duration,
   description,
@@ -26,8 +25,6 @@ const ClientCourseCard = ({
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { progress, loading } = useFetchCourseProgress(courseId);
-  console.log("from client course card course id is ", courseId);
-  console.log("from client course card course id is ", duration);
   const percent = loading ? 0 : progress?.percentComplete ?? 0;
 
   const handleStartCourse = (id: number) => {

@@ -23,10 +23,8 @@ export function useAdminCreateClient() {
         `${API_BASE}/admin/auth/create-client`,
         dto
       );
-      console.log("user Created ");
       setSuccess(true);
     } catch (err: any) {
-      console.log('error from use admin create client hook',err)
       setError(
         err.response?.data?.message || err.response?.data?.error || err.message
       );

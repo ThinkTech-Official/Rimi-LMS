@@ -28,11 +28,9 @@ const ClientCertificates: React.FC = () => {
     api
       .get<CertRecord[]>(`${API_BASE}/certificates`)
       .then((res) => {
-        console.log("from client cetificates ", res.data);
         setCerts(res.data);
       })
       .catch((err) => {
-        console.error("Error fetching certificates:", err);
         setCerts([]);
       })
       .finally(() => setLoading(false));

@@ -16,7 +16,6 @@ export const useToggleCoursePublish = (courseId: number) => {
       `${API_BASE}/courses/${courseId}/publish`,
       { live: liveStatus } //  plain JSON
     );
-    console.log("from toggle course ", res.data);
     return res.data; //  return the updated course object
   };
 

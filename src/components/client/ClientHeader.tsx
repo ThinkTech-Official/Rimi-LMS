@@ -23,8 +23,6 @@ const ClientHeader: React.FC = () => {
   const languageDropdown = useRef<HTMLDivElement>(null);
   const profileDropdown = useRef<HTMLDivElement>(null);
 
-  console.log("from client head user value", user);
-
   const { logout, loading: logOutLoading, error: logOutError } = useLogout();
 
   useEffect(() => {
@@ -52,7 +50,6 @@ const ClientHeader: React.FC = () => {
       setIsLanguageSelectOpen(false);
       return;
     }
-    console.log(lang);
 
     i18n.changeLanguage(lang);
     setSelectedLanguage(lang);
@@ -78,7 +75,6 @@ const ClientHeader: React.FC = () => {
       await logout();
       navigate("/");
     } catch {
-      console.error("Logout failed:", logOutError);
     }
   };
 

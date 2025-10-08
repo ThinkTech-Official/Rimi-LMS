@@ -40,7 +40,6 @@ export function useAdminFetchCourse(courseId: string | null) {
     adminApi
       .get<BasicCourse>(`${API_BASE}/courses/${courseId}/basic`)
       .then((r) => {
-        console.log('new basic course',r.data);
         setBasicCourse(r.data);
       })
       .catch((err) =>
