@@ -136,7 +136,7 @@ const CertificateFrench: React.FC<CertificateProps> = ({
                 fontWeight: 200,
               }}
             >
-              Ceci certifie que
+              Ce document certifie que 
             </p>
             <p
               style={{
@@ -159,11 +159,7 @@ const CertificateFrench: React.FC<CertificateProps> = ({
                 marginTop: "-0.5rem",
               }}
             >
-              a suivi avec succès {courseTitle}. Cet
-              accomplissement reflète le dévouement, les connaissances et les
-              compétences démontrés dans la compréhension des principes
-              d’assurance, des politiques, du service client et des normes de
-              conformité établies par le programme de formation RIMI Assurance.
+              a complété avec succès la formation intitulée {courseTitle}. Cette réussite témoigne de son engagement, de ses connaissances approfondies et des compétences démontrées dans la compréhension des principes de l'assurance, des politiques internes, du service à la clientèle ainsi que des normes de conformité établies par le programme de formation de RIMI Assurance. 
             </p>
             <div
               style={{
