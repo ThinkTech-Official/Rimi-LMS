@@ -131,7 +131,6 @@ const Certificate: React.FC<CertificateProps> = ({
         <div
           style={{
             width: "100%",
-            backgroundColor: "#2b00b7",
             padding: "16px",
             paddingBottom: "0",
             height: "fit-content",
@@ -146,13 +145,13 @@ const Certificate: React.FC<CertificateProps> = ({
               justifyContent: "center",
               gap: "0.25rem",
               fontFamily: "'Rufina', serif",
-              color: "white",
+              color: "#4D4D4D",
               border: "1px solid #CB5A31",
               borderBottom: "none",
             }}
           >
             <img
-              src="/RIMI.svg"
+              src="/rimilogo.png"
               alt=""
               style={{
                 width: "110px",
@@ -183,27 +182,12 @@ const Certificate: React.FC<CertificateProps> = ({
                   paddingLeft: "0.25rem",
                   paddingRight: "0.25rem",
                   zIndex: 5,
-                  backgroundColor: "#2b00b7",
                   position: "relative",
                 }}
               >
                 of Completion
               </h2>
-              <div
-                style={{
-                  border: "0.57px solid #FFFFFF",
-                  width: "500px",
-                  position: "absolute",
-                  zIndex: 0,
-                  top: "80%",
-                }}
-              ></div>
             </div>
-            <img
-              src="/certCurve.svg"
-              alt=""
-              style={{ marginTop: "1.3rem", marginBottom: "-1px" }}
-            />
           </div>
         </div>
         <div
@@ -290,52 +274,7 @@ const Certificate: React.FC<CertificateProps> = ({
             >
               CERTIFICATE WAS AWARDED BY
             </span>
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "10%",
-                width: "100%",
-                justifyContent: "center",
-                color: "#4D4D4D",
-                fontWeight: 200,
-              }}
-            >
-              <div className="flex flex-col w-[300px] text-center justify-center items-center">
-                <span>
-                  <img src="/signature.png" alt="director" className="h-24" />
-                </span>
-                <span
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "0.75rem",
-                    width: "300px",
-                    textAlign: "center",
-                    borderTop: "1px solid #000000",
-                  }}
-                >
-                  Director RIMI
-                </span>
-              </div>
-              <div className="flex flex-col w-[300px] text-center justify-center items-center">
-                <span>
-                  <img src="/signature.png" alt="director" className="h-24" />
-                </span>
-                <span
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "0.75rem",
-                    width: "300px",
-                    textAlign: "center",
-                    borderTop: "1px solid #000000",
-                  }}
-                >
-                  Head of Training & Development RIMI
-                </span>
-              </div>
-            </div>
+            <span style={{ color: "#4D4D4D", fontSize:"18px", marginTop:"-1rem", marginBottom:"1rem" }}>Head of Training & Development RIMI</span>
           </div>
         </div>
       </div>

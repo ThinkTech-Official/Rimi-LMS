@@ -59,7 +59,7 @@ const LoginClient: React.FC = () => {
       await login(data);
       // await refreshUser();
       await reload();
-      navigate("/client");
+      navigate("/advisor");
     } catch(error: any) {
       const errorMessage = error?.response?.data?.message || error?.message || "Login failed"
       triggerNotification({
@@ -147,7 +147,7 @@ const LoginClient: React.FC = () => {
             />
           </div>
           <h3 className="text-center text-base font-semibold text-primary mb-4">
-            {t("Sign in as client")}
+            {t("Sign in as Advisor")}
           </h3>
           {/* Heading */}
           <h2 className="text-center text-2xl font-bold text-neutral-800 mb-8 capitalize">
@@ -243,6 +243,12 @@ const LoginClient: React.FC = () => {
               {loading ? `${t("Signing In")}...` : t("Sign In")}
             </button>
           </form>
+          <p className="text-text-light-2 text-center mt-4">
+                  New to our platform?{" "}
+                  <a href="/signup" className="text-primary font-semibold hover:text-indigo-700 hover:underline transition-all delay-100">
+                    Sign up
+                  </a>
+                </p>
         </div>
       </div>
       {NotificationComponent}

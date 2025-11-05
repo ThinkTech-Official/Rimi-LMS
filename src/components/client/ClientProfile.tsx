@@ -115,7 +115,7 @@ const ClientProfile: React.FC = () => {
         onClick={() => window.history.back()}
         className="text-primary font-medium flex items-center gap-2 mb-4 cursor-pointer"
       >
-        &gt; {t("back to course")}
+        &lt; {t("back to course")}
       </button>
 
       <div className="flex flex-col mt-8">

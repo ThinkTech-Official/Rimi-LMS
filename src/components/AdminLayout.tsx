@@ -42,7 +42,7 @@ export const AdminLayout: React.FC = () => {
       url: "/admin/all-courses",
     },
     {
-      label: "Add Client",
+      label: "Add Advisor",
       icon: RiUserAddLine,
       key: "add-user",
       url: "/admin/add-user",

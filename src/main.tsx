@@ -38,12 +38,14 @@ import AdminError from "./components/Admin/AdminError.tsx";
 import ClientError from "./components/client/ClientError.tsx";
 import AdminCreateAdmin from "./components/Admin/AdminCreateAdmin.tsx";
 import i18n from "./i18n/i18.ts";
+import SignupPage from "./components/client/Signup.tsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <>
       {/* Public / Login */}
       <Route path="/" element={<LoginClient />} />
+      <Route path="/signup" element={<SignupPage />} />
       <Route path="/adminlogin" element={<LoginAdmin />} />
 
       {/* Admin-only routes */}
@@ -99,7 +101,7 @@ const router = createBrowserRouter(
         }
         errorElement={<ClientError />}
       >
-        <Route path="/client" element={<ClientLayout />}>
+        <Route path="/advisor" element={<ClientLayout />}>
           {/* /client */}
           <Route index element={<ClientHome />} />
           <Route path="certificates" element={<ClientCertificates />} />

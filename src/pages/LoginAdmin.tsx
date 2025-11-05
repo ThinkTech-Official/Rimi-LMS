@@ -122,7 +122,7 @@ const LoginAdmin: React.FC = () => {
           </div>
           <Link to="/" className="flex items-center gap-2">
             <FaUserLock className="text-primary" />
-            <p className="text-primary font-semibold">Client SignIn</p>
+            <p className="text-primary font-semibold">{t("Advisor SignIn")}</p>
           </Link>
         </div>
       </header>

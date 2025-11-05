@@ -12,12 +12,12 @@ import { useTranslation } from "react-i18next";
 import Footer from "../Footer";
 
 const menuItems = [
-  { label: "home", icon: HomeIcon, key: "home", url: "/client" },
+  { label: "home", icon: HomeIcon, key: "home", url: "/advisor" },
   {
     label: "certificates",
     icon: PiCertificateLight,
     key: "certificates",
-    url: "/client/certificates",
+    url: "/advisor/certificates",
   },
 ];
 

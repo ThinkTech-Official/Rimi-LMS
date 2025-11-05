@@ -30,12 +30,12 @@ export const AdminCreateUser: React.FC = () => {
       await createClient({ name, email, password });
       triggerNotification({
         type: "success",
-        message: t("Client created successfully"),
+        message: t("Advisor created successfully"),
         duration: 3000,
       });
       reset();
     } catch (error: any) {
-      let errorMessage = t("Failed to create client"); // fallback message
+      let errorMessage = t("Failed to create Advisor"); // fallback message
 
       if (error?.response?.data?.message) {
         // If backend sends structured error response
@@ -58,7 +58,7 @@ export const AdminCreateUser: React.FC = () => {
   return (
     <div className="w-[90%] sm:w-md mx-auto p-3 sm:p-6 bg-white shadow-lg mt-[10%] sm:mt-[5%]">
       <h2 className="text-xl text-center font-semibold mb-4 text-text-dark">
-        {t("Create Client")}
+        {t("Create Advisor")}
       </h2>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -201,7 +201,7 @@ export const AdminCreateUser: React.FC = () => {
           disabled={loading}
           className="w-full p-2 sm:py-3 bg-primary text-white font-semibold cursor-pointer transition-all delay-100 shadow hover:bg-indigo-700"
         >
-          {loading ? `${t("Creating")}…` : t("Create User")}
+          {loading ? `${t("Creating")}…` : t("Create Advisor")}
         </button>
       </form>
       {NotificationComponent}

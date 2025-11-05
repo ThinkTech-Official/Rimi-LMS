@@ -8,12 +8,12 @@ const Certificates: React.FC = () => {
       {selectedLanguage === "en" ? (
         <div className="w-[1050px] mx-auto m-4 border">
           <div className="flex flex-col bg-white mx-auto">
-            <div className="w-full bg-primary p-4 pb-0 h-fit">
-              <div className="w-full flex flex-col items-center justify-center gap-1 font-rufina text-white border border-b-0 border-[#CB5A31]">
-                <img src="/RIMI.svg" alt="" className="w-[110px] mt-10" />
+            <div className="w-full p-4 pb-0 h-fit">
+              <div className="w-full flex flex-col items-center justify-center gap-1 font-rufina text-[#4D4D4D] border border-b-0 border-[#CB5A31]">
+                <img src="/rimilogo.png" alt="" className="w-[110px] mt-10" />
                 <h1 className=" text-[4rem] uppercase mt-2">Certificate</h1>
                 <div className="relative w-full flex justify-center">
-                  <h2 className=" text-[2rem] -mt-5 uppercase bg-primary px-1 z-5">
+                  <h2 className=" text-[2rem] -mt-5 uppercase px-1 z-5 text-[#4D4D4D]">
                     of Completion
                   </h2>
                   <div
@@ -21,7 +21,6 @@ const Certificates: React.FC = () => {
                     style={{ border: "0.57px solid #FFFFFF" }}
                   ></div>
                 </div>
-                <img src="/certCurve.svg" alt="" className="mt-4" />
               </div>
             </div>
             <div className="bg-white m-4 mt-0">
@@ -52,64 +51,10 @@ const Certificates: React.FC = () => {
                     <span className="font-extralight">1232354664</span>
                   </div>
                 </div>
-                <span className="text-[#4D4D4D] font-extralight my-4 text-[22px]">
+                <span className="text-[#4D4D4D] font-extralight my-4 text-[24px]">
                   CERTIFICATE WAS AWARDED BY
                 </span>
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "10%",
-                    width: "100%",
-                    justifyContent: "center",
-                    color: "#4D4D4D",
-                    fontWeight: 200,
-                  }}
-                >
-                  <div className="flex flex-col w-[350px] text-center justify-center items-center">
-                    <span>
-                      <img
-                        src="/signature.png"
-                        alt="director"
-                        className="h-24"
-                      />
-                    </span>
-                    <span
-                      style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: "0.75rem",
-                        width: "350px",
-                        textAlign: "center",
-                        borderTop: "1px solid #000000",
-                      }}
-                    >
-                      Directeur RIMI
-                    </span>
-                  </div>
-                  <div className="flex flex-col w-[350px] text-center justify-center items-center">
-                    <span>
-                      <img
-                        src="/signature.png"
-                        alt="director"
-                        className="h-24"
-                      />
-                    </span>
-                    <span
-                      style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: "0.75rem",
-                        width: "350px",
-                        textAlign: "center",
-                        borderTop: "1px solid #000000",
-                        textWrap: "nowrap",
-                      }}
-                    >
-                      Responsable Formation & Développement RIMI
-                    </span>
-                  </div>
-                </div>
+               <span className="text-[#4D4D4D] text-lg -mt-3">Head of Training & Development RIMI</span>
               </div>
             </div>
           </div>
@@ -134,7 +79,6 @@ const Certificates: React.FC = () => {
             <div
               style={{
                 width: "100%",
-                backgroundColor: "#2b00b7",
                 padding: "16px",
                 paddingBottom: "0",
                 height: "fit-content",
@@ -149,13 +93,12 @@ const Certificates: React.FC = () => {
                   justifyContent: "center",
                   gap: "0.25rem",
                   fontFamily: "'Rufina', serif",
-                  color: "white",
                   border: "1px solid #CB5A31",
                   borderBottom: "none",
                 }}
               >
                 <img
-                  src="/RIMI.svg"
+                  src="/rimilogo.png"
                   alt=""
                   style={{
                     width: "110px",
@@ -166,14 +109,13 @@ const Certificates: React.FC = () => {
                   style={{
                     fontSize: "4rem",
                     textTransform: "uppercase",
-                    marginTop: "-1rem",
+                    color: "#4D4D4D",
                   }}
                 >
                   Certificat
                 </h1>
                 <div
                   style={{
-                    position: "relative",
                     width: "100%",
                     display: "flex",
                     justifyContent: "center",
@@ -183,11 +125,9 @@ const Certificates: React.FC = () => {
                     style={{
                       fontSize: "2rem",
                       textTransform: "uppercase",
-                      paddingLeft: "0.25rem",
-                      paddingRight: "0.25rem",
                       zIndex: 5,
-                      backgroundColor: "#2b00b7",
-                      position: "relative",
+                      color: "#4D4D4D",
+                      marginTop: "-1.25rem",
                     }}
                   >
                     de réussite
@@ -202,11 +142,6 @@ const Certificates: React.FC = () => {
                     }}
                   ></div>
                 </div>
-                <img
-                  src="/certCurve.svg"
-                  alt=""
-                  style={{ marginTop: "1.3rem", marginBottom: "-1px" }}
-                />
               </div>
             </div>
             <div
@@ -243,7 +178,7 @@ const Certificates: React.FC = () => {
                   style={{
                     fontSize: "6.5rem",
                     color: "#4D4D4D",
-                    marginTop: "-3.5rem",
+                    marginTop: "-1.5rem",
                     fontFamily: '"MonteCarlo", cursive',
                     paddingBottom: "20px",
                     textTransform: "capitalize",
@@ -295,61 +230,7 @@ const Certificates: React.FC = () => {
                 >
                   CERTIFICAT DÉLIVRÉ PAR
                 </span>
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "10%",
-                    width: "100%",
-                    justifyContent: "center",
-                    color: "#4D4D4D",
-                    fontWeight: 200,
-                  }}
-                >
-                  <div className="flex flex-col w-[350px] text-center justify-center items-center">
-                    <span>
-                      <img
-                        src="/signature.png"
-                        alt="director"
-                        className="h-24"
-                      />
-                    </span>
-                    <span
-                      style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: "0.75rem",
-                        width: "350px",
-                        textAlign: "center",
-                        borderTop: "1px solid #000000",
-                      }}
-                    >
-                      Directeur RIMI
-                    </span>
-                  </div>
-                  <div className="flex flex-col w-[350px] text-center justify-center items-center">
-                    <span>
-                      <img
-                        src="/signature.png"
-                        alt="director"
-                        className="h-24"
-                      />
-                    </span>
-                    <span
-                      style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: "0.75rem",
-                        width: "350px",
-                        textAlign: "center",
-                        borderTop: "1px solid #000000",
-                        textWrap: "nowrap",
-                      }}
-                    >
-                      Responsable Formation & Développement RIMI
-                    </span>
-                  </div>
-                </div>
+                <span style={{ color: "#4D4D4D", fontSize:"18px", marginTop:"-1rem" }}>Responsable de la formation et du développement RIMI</span>
               </div>
             </div>
           </div>
