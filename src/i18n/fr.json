@@ -352,5 +352,16 @@
   "Try again": "Réessayer",
   "No course created in this category": "Aucun cours créé dans cette catégorie",
   "Edit Course Details": "Modifier les détails sur le cours",
-  "Advisor SignIn": "Conseiller SignIn"
+  "Advisor SignIn": "Conseiller SignIn",
+  "Create Your Account":"Créez votre compte",
+  "Join as an advisor and start your journey":"Rejoignez-nous en tant que conseiller et commencez votre parcours.",
+  "Full Name":"Nom et prénom",
+  "Agent Code":"Code de l'agent",
+  "Create Account":"Créer un compte",
+  "Already have an account?":"Vous avez déjà un compte ?",
+  "Enter your full name":"Entrer votre nom et prrenom",
+  "Enter your agent code":"Entrer votre code d'agent",
+  "Enter your email":"Entrer votre adresse email",
+  "Enter your password":"Entrer votre mot de passe",
+  "Re-enter your password":"Re-entrer votre mot de passe"
 }

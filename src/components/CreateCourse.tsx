@@ -7,7 +7,7 @@ import { useCreateCourse } from "../hooks/useCreateCourse";
 import { useFetchCategories } from "../hooks/useFetchCategories";
 import { useCreateCategory } from "../hooks/useCreateCategory";
 import { useTranslation } from "react-i18next";
-import { useForm, Controller, set } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import Spinner from "./loaders/Spinner";
 import { FaAngleDown } from "react-icons/fa6";
 import { CiFileOn } from "react-icons/ci";
@@ -21,6 +21,7 @@ export interface CreateCourseDto {
   documents: File[];
   duration: number | null;
   category: string;
+  language: string;
 }
 
 interface CreateCourseProps {
@@ -67,6 +68,7 @@ const CreateCourse: React.FC<CreateCourseProps> = () => {
       category: "",
     },
   });
+  const languages = ["English", "French"];
 
   const [addingCat, setAddingCat] = useState<boolean>(false);
   const [newCategory, setNewCategory] = useState<string>("");
@@ -77,10 +79,13 @@ const CreateCourse: React.FC<CreateCourseProps> = () => {
     null
   );
   const categoryButtonRef = useRef<HTMLDivElement>(null);
+  const languageButtonRef = useRef<HTMLDivElement>(null);
   // Watch form values
   const watchedVideo = watch("video");
   const watchedThumbnail = watch("thumbnail");
   const watchedDocuments = watch("documents");
+  const [isLanguageOpen, setIsLanguageOpen] = useState(false);
+  const [selectedLanguage, setSelectedLanguage] = useState<string>("");
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -90,7 +95,14 @@ const CreateCourse: React.FC<CreateCourseProps> = () => {
       ) {
         setIsCategoryOpen(false);
       }
+      if (
+        languageButtonRef.current &&
+        !languageButtonRef.current.contains(e.target as Node)
+      ) {
+        setIsLanguageOpen(false);
+      }
     };
+
     document.addEventListener("click", handleClickOutside);
     return () => {
       document.removeEventListener("click", handleClickOutside);
@@ -492,7 +504,7 @@ const CreateCourse: React.FC<CreateCourseProps> = () => {
               </div>
 
               {/* category dropdown & add */}
-              <div className="flex flex-col">
+              <div className="flex flex-col sm:flex-row gap-8"><div className="flex flex-col">
                 <label>{t("category")}</label>
                 <Controller
                   name="category"
@@ -633,6 +645,66 @@ const CreateCourse: React.FC<CreateCourseProps> = () => {
                   </p>
                 )}
               </div>
+              <div className="flex flex-col">
+                <label>{t("Language")}</label>
+                <Controller
+                  name="language"
+                  control={control}
+                  rules={{ required: "Please select a language" }}
+                  render={({ field }) => (
+                    <>
+                      <div className="flex flex-col sm:flex-row gap-2 sm:items-center">
+                        <div
+                          className="relative w-[250px]"
+                          ref={languageButtonRef}
+                        >
+                          <button
+                            type="button"
+                            className="w-full border border-inputBorder px-3 py-2 focus:border-0 focus:ring-1 focus:ring-primary capitalize flex items-center justify-between text-left text-text-light cursor-pointer"
+                            onClick={() => setIsLanguageOpen((prev) => !prev)}
+                          >
+                            <span
+                              className="capitalize truncate"
+                              title={selectedLanguage || "Select Language"}
+                            >
+                              {selectedLanguage || "Select Language"}
+                            </span>
+                            <FaAngleDown
+                              className={`ml-2 cursor-pointer transition-transform ${
+                                isLanguageOpen ? "rotate-180" : ""
+                              }`}
+                            />
+                          </button>
+
+                          {isLanguageOpen && (
+                            <div className="absolute mt-[2px] top-full left-0 w-full bg-white border border-inputBorder shadow-md z-10">
+                              {languages.map((lang) => (
+                                <div
+                                  key={lang}
+                                  title={lang}
+                                  className={`px-4 py-2 hover:bg-gray-200 text-text-light cursor-pointer capitalize ${
+                                    selectedLanguage === lang
+                                      ? "bg-primary text-white hover:bg-gray-200 hover:text-text-light"
+                                      : ""
+                                  }`}
+                                  onClick={() => {
+                                    setSelectedLanguage(lang);
+                                    setIsLanguageOpen(false);
+                                    field.onChange(lang);
+                                    clearErrors("language");
+                                  }}
+                                >
+                                  {lang}
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </>
+                  )}
+                />
+              </div></div>
 
               {/* file uploads */}
               <div className="flex flex-col md:col-span-2">

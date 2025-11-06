@@ -35,7 +35,7 @@ const LoginClient: React.FC = () => {
     previousSelectedLanguage as Language
   );
 
-  const { login, loading, error } = useLogin();
+  const { login, loading } = useLogin();
   const { reload } = useAuth();
 
 
