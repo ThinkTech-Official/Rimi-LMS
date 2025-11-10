@@ -7,6 +7,7 @@ import Spinner from "../loaders/Spinner";
 import FetchingError from "../FetchingError";
 import { useTranslation } from "react-i18next";
 import { RxCross2 } from "react-icons/rx";
+import useNotification from "../../hooks/useNotification";
 
 const ClientHome = () => {
   // Fetching categories
@@ -29,12 +30,31 @@ const ClientHome = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const allCategory = { id: 0, name: "All" };
   const visibleCategories = [
-  allCategory,
-  ...categories.filter(cat =>
-    courses.some(course => course.categoryId === cat.id)
-  ),
-];
+    allCategory,
+    ...categories.filter((cat) =>
+      courses.some((course) => course.categoryId === cat.id)
+    ),
+  ];
   const { t } = useTranslation();
+  const { triggerNotification, NotificationComponent } =
+    useNotification("top-center");
+
+  // Safari detection effect
+  useEffect(() => {
+    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+
+    if (isSafari) {
+      triggerNotification({
+        type: "warning",
+        message: t(
+          "For the best experience, please use Chrome or Firefox browser."
+        ),
+        duration: 8000,
+      });
+    }
+  }, []);
+  //
+
   // First time category loading leads to default first one
   useEffect(() => {
     if (categories.length > 0 && selectedCategoryId === null) {
@@ -103,6 +123,8 @@ const ClientHome = () => {
   if (catError || courseError) return <FetchingError />;
 
   return (
+    <>
+    {NotificationComponent}
     <main className="flex-1 p-2 sm:p-8 sm:pr-0 overflow-auto space-y-6">
       {/* Header */}
       <h1 className="text-2xl font-bold text-gray-900 capitalize">
@@ -179,6 +201,7 @@ const ClientHome = () => {
         </div>
       )}
     </main>
+    </>
   );
 };
 

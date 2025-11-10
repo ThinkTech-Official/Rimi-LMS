@@ -97,7 +97,7 @@ const ClientHeader: React.FC = () => {
   };
 
   const handleProfileClick = () => {
-    navigate("/client/profile");
+    navigate("/advisor/profile");
     toggleProfileMenu();
   };
 
