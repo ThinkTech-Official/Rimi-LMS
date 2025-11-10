@@ -261,6 +261,7 @@ const EditCourse: React.FC = () => {
     duration: "",
     thumbnail: "",
     videoUrl: "",
+    language: "en",
   });
 
   useEffect(() => {
@@ -271,6 +272,7 @@ const EditCourse: React.FC = () => {
       duration: basicCourse.duration?.toString() ?? "",
       thumbnail: basicCourse.thumbnail ?? "",
       videoUrl: basicCourse.videoUrl ?? "",
+      language: basicCourse.language ?? "en",
     });
     setIsCoursePublished(basicCourse.liveStatus ?? false);
   }, [basicCourse]);
@@ -279,7 +281,8 @@ const EditCourse: React.FC = () => {
 
     if (name === "name") {
       if (!value.trim()) error = "Name is required";
-      else if (value.trim().length < 6) error = "Name must be at least 6 characters";
+      else if (value.trim().length < 6)
+        error = "Name must be at least 6 characters";
       else if (value.trim().length > 100)
         error = "Name must be less than 100 characters";
     }
@@ -471,7 +474,9 @@ const EditCourse: React.FC = () => {
         setIsCoursePublished(updated.liveStatus);
         triggerNotification({
           type: "success",
-          message: t(`Course ${updated.liveStatus ? "published" : "unpublished"}`),
+          message: t(
+            `Course ${updated.liveStatus ? "published" : "unpublished"}`
+          ),
         });
       }
     } catch {
@@ -590,16 +595,15 @@ const EditCourse: React.FC = () => {
                       rel="noopener noreferrer"
                       className="text-primary hover:underline underline-offset-2 text-lg font-medium"
                       // href={`${API_BASE}/uploads/courses/${basicCourse.videoUrl}`}
-                       href={`${API_BASE}/files/admin/video/course/${basicCourse.id}`}
+                      href={`${API_BASE}/files/admin/video/course/${basicCourse.id}`}
                       target="_blank"
                     >
                       {t("View Video")}
                     </a>
-
+                  ) : (
                     // <AdminVideoLink courseId={basicCourse.id}>
                     //   {t("View Video")}
                     // </AdminVideoLink>
-                  ) : (
                     "—"
                   )}
                 </p>
@@ -630,7 +634,9 @@ const EditCourse: React.FC = () => {
               </ul>
             </div>
             {activeTab == "Description" && (
-                <p className="text-text-light-2 break-words">{basicCourse.description}</p>
+              <p className="text-text-light-2 break-words">
+                {basicCourse.description}
+              </p>
             )}
             {/* ================================================================ */}
 
@@ -1135,6 +1141,25 @@ const EditCourse: React.FC = () => {
                   </p>
                 </div>
               </div>
+
+              {/* langauge edit */}
+              <div>
+                <label className="block text-sm font-medium mb-1 capitalize">
+                  {t("language")}
+                </label>
+                <select
+                  name="language"
+                  value={basicForm.language}
+                  onChange={(e) =>
+                    setBasicForm((f) => ({ ...f, language: e.target.value }))
+                  }
+                  className="px-4 py-2 sm:py-3 w-full border border-inputBorder focus:border-0 focus:outline-none focus:ring focus:ring-primary capitalize"
+                >
+                  <option value="en">English</option>
+                  <option value="fr">Français</option>
+                </select>
+              </div>
+
               {/* Thumbnail */}
               <div className="flex flex-col md:col-span-2">
                 <label className="block text-sm font-medium mb-1">
@@ -1213,6 +1238,17 @@ const EditCourse: React.FC = () => {
                   className="px-4 py-2 sm:py-3 w-full border border-inputBorder focus:border-0 focus:outline-none focus:ring focus:ring-primary read-only:cursor-not-allowed"
                 />
               </div>
+
+              {/* Langauge DISPLAY */}
+              <p className="flex flex-col">
+                <span className="font-medium text-lg capitalize">
+                  {t("Language")}:
+                </span>
+                <span className="text-text-light-2 capitalize">
+                  {basicCourse!.language === "en" ? "English" : "Français"}
+                </span>
+              </p>
+
               {/* Buttons */}
               <div className="flex justify-end space-x-2">
                 <button

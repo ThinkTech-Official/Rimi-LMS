@@ -6,6 +6,9 @@ export interface UserProfile {
   id: number;
   email: string;
   name?: string;
+  language: string; // Language field ('en' | 'fr')
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export function useProfile() {

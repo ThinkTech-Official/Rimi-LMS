@@ -19,9 +19,9 @@ export function useSignup() {
     setLoading(true);
     setError(null);
     try {
-      const response = await api.post(`${API_BASE}/client/auth/signup`, {
+      const response = await api.post(`${API_BASE}/client/auth/open-signup`, 
         formData
-      });
+      );
       return response.data;
     } catch (err: any) {
       setError(err.response?.data?.message || err.message);

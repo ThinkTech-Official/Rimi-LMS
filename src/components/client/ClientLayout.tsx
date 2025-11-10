@@ -46,7 +46,7 @@ const ClientLayout: React.FC = () => {
 
   const handleLogoClick = () => {
     setActive("home");
-    navigate("/client");
+    navigate("/advisor");
   };
 
   return (

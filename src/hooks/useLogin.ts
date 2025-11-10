@@ -7,6 +7,17 @@ interface Credentials {
   password: string;
 }
 
+// Response now includes user object with language
+interface LoginResponse {
+  message: string;
+  user: {
+    id: number;
+    email: string;
+    name?: string;
+    language: string; 
+  };
+}
+
 export function useLogin() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);

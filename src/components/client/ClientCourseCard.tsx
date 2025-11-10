@@ -28,11 +28,11 @@ const ClientCourseCard = ({
   const percent = loading ? 0 : progress?.percentComplete ?? 0;
 
   const handleStartCourse = (id: number) => {
-    navigate(`/client/play/${id}`);
+    navigate(`/advisor/play/${id}`);
   };
 
   const handleGenerate = () => {
-    navigate(`/client/certificate/generate/${courseId}`, {
+    navigate(`/advisor/certificate/generate/${courseId}`, {
       state: { courseTitle: title, userName: user?.name },
     });
   };

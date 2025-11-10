@@ -21,6 +21,7 @@ export interface CreateCourseDto {
   documents: File[];
   duration: number | null;
   category: string;
+  language: string;
 }
 
 interface CreateCourseProps {
@@ -45,6 +46,9 @@ const CreateCourse: React.FC<CreateCourseProps> = () => {
     setError: setCatCreateError,
   } = useCreateCategory();
 
+  // langauge
+  const [selectedLanguage, setSelectedLanguage] = useState<string>("en");
+
   // Duration
   const [duration, setDuration] = useState<number | null>(null);
 
@@ -65,6 +69,7 @@ const CreateCourse: React.FC<CreateCourseProps> = () => {
       thumbnail: null,
       documents: [],
       category: "",
+      language: "en",
     },
   });
 
@@ -357,6 +362,7 @@ const CreateCourse: React.FC<CreateCourseProps> = () => {
     const formData = new FormData();
     formData.append("name", data.name);
     formData.append("description", data.description);
+    formData.append("language", selectedLanguage);
 
     if (selectedCategoryId !== undefined) {
       formData.append("categoryId", String(selectedCategoryId));
@@ -632,6 +638,24 @@ const CreateCourse: React.FC<CreateCourseProps> = () => {
                     {t(String(errors.category.message))}
                   </p>
                 )}
+              </div>
+
+              {/* Language Dropdown */}
+              <div className="flex flex-col">
+                <label className="text-sm text-text-light-2 mb-1 capitalize">
+                  {t("language")}
+                </label>
+                <select
+                  value={selectedLanguage}
+                  onChange={(e) => {
+                    setSelectedLanguage(e.target.value);
+                    setValue("language", e.target.value);
+                  }}
+                  className="w-[250px] border border-inputBorder px-3 py-2 focus:outline-none focus:ring-1 focus:ring-primary capitalize"
+                >
+                  <option value="en">English</option>
+                  <option value="fr">Français</option>
+                </select>
               </div>
 
               {/* file uploads */}

@@ -19,7 +19,8 @@ export interface BasicCourse {
   videoUrl: string | null;
   duration: number | null;
   liveStatus: boolean | null;
-  documents: document[]
+  documents: document[];
+  language: string;
 }
 
 /**

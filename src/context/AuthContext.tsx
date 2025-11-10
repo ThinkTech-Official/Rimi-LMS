@@ -5,6 +5,7 @@ import {
   useEffect,
   type ReactNode,
 } from "react";
+import { useTranslation } from "react-i18next";
 import api from "../utils/api";
 import { API_BASE } from "../utils/ulrs";
 
@@ -12,6 +13,7 @@ export interface User {
   userId: number;
   email: string;
   name?: string;
+  language: string; // 'en' | 'fr'
 }
 
 interface AuthContextType {
@@ -32,6 +34,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { i18n } = useTranslation();
 
   const loadProfile = async () => {
     setLoading(true);
@@ -39,6 +42,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     try {
       const res = await api.post<User>(`${API_BASE}/client/auth/profile`);
       setUser(res.data);
+
+      if (res.data.language) {
+        i18n.changeLanguage(res.data.language);
+      }
+
     } catch (err: any) {
       setUser(null);
       setError(err.response?.data?.message || err.message);

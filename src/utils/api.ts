@@ -18,8 +18,11 @@ const processQueue = (error: any, tokenRefreshed = false) => {
 };
 
 
+// const isAuthEndpoint = (url = '') =>
+//   /\/client\/auth\/(login|signup|refresh)/.test(url);
+
 const isAuthEndpoint = (url = '') =>
-  /\/client\/auth\/(login|signup|refresh)/.test(url);
+  /\/client\/auth\/(login|signup|refresh|forgot-password|reset-password-with-token|verify-reset-token)/.test(url);
 
 api.interceptors.response.use(
   (resp) => resp,

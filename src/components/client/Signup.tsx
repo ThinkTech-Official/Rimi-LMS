@@ -69,22 +69,51 @@ const SignupPage = () => {
     setIsLanguageSelectOpen(false);
   };
 
+  // const onSubmit: SubmitHandler<SignupFormInput> = async (data) => {
+  //   try {
+  //     await signup(data);
+  //     // await refreshUser();
+  //     await reload();
+  //     navigate("/");
+  //   } catch (error: any) {
+  //     const errorMessage =
+  //       error?.response?.data?.message || error?.message || "Login failed";
+  //     triggerNotification({
+  //       type: "error",
+  //       message: errorMessage || t("Login failed"),
+  //       duration: 3000,
+  //     });
+  //   }
+  // };
+
+
   const onSubmit: SubmitHandler<SignupFormInput> = async (data) => {
-    try {
-      await signup(data);
-      // await refreshUser();
-      await reload();
-      navigate("/");
-    } catch (error: any) {
-      const errorMessage =
-        error?.response?.data?.message || error?.message || "Login failed";
-      triggerNotification({
-        type: "error",
-        message: errorMessage || t("Login failed"),
-        duration: 3000,
-      });
-    }
-  };
+  try {
+    const response = await signup(data);
+    
+    
+    triggerNotification({
+      type: "success",
+      message: t("Account created successfully! Redirecting to login page..."),
+      duration: 3000, 
+    });
+
+   
+    setTimeout(() => {
+      navigate("/"); 
+    }, 3000); 
+
+  } catch (error: any) {
+    const errorMessage =
+      error?.response?.data?.message || error?.message || "Signup failed";
+    triggerNotification({
+      type: "error",
+      message: errorMessage || t("Signup failed"),
+      duration: 4000, 
+    });
+  }
+};
+
 
   return (
     <div className="min-h-screen bg-white">

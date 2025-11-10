@@ -19,6 +19,7 @@ export function useAdminUpdateCourseBasic(courseId: number) {
       name: string;
       description: string;
       duration: string;
+      language: string;
     },
     thumbnailFile: File | null,
     videoFile: File | null
@@ -31,6 +32,7 @@ export function useAdminUpdateCourseBasic(courseId: number) {
       fd.append("name", form.name);
       fd.append("description", form.description);
       fd.append("duration", form.duration);
+      fd.append("language", form.language);
       if (thumbnailFile) {
         fd.append("thumbnail", thumbnailFile);
       }

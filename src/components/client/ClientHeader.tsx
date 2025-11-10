@@ -7,6 +7,7 @@ import { MdKeyboardArrowRight } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { useLogout } from "../../hooks/useLogout";
 import { useAuth } from "../../context/AuthContext";
+import { useUpdateLanguage } from "../../hooks/useUpdateLanguage";
 
 const ClientHeader: React.FC = () => {
   const [isLanguageSelectOpen, setIsLanguageSelectOpen] = useState(false);
@@ -24,6 +25,7 @@ const ClientHeader: React.FC = () => {
   const profileDropdown = useRef<HTMLDivElement>(null);
 
   const { logout, loading: logOutLoading, error: logOutError } = useLogout();
+  const { updateLanguage, loading: updatingLanguage } = useUpdateLanguage(); 
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -45,15 +47,53 @@ const ClientHeader: React.FC = () => {
       document.removeEventListener("click", handleClickOutside);
     };
   }, []);
-  const handleLanguageSelect = (lang: Language) => {
+
+  // const handleLanguageSelect = (lang: Language) => {
+  //   if (lang === selectedLanguage) {
+  //     setIsLanguageSelectOpen(false);
+  //     return;
+  //   }
+
+  //   i18n.changeLanguage(lang);
+  //   setSelectedLanguage(lang);
+  //   setIsLanguageSelectOpen(false);
+  // };
+
+
+   // UPDATED: Now saves to database
+  
+  //   Langauge saves to database
+   const handleLanguageSelect = async (lang: Language) => {
     if (lang === selectedLanguage) {
       setIsLanguageSelectOpen(false);
       return;
     }
 
-    i18n.changeLanguage(lang);
-    setSelectedLanguage(lang);
-    setIsLanguageSelectOpen(false);
+    // Prevent multiple clicks while updating
+    if (updatingLanguage) return;
+
+    try {
+      // 1. Save to backend database
+      await updateLanguage(lang);
+
+      // 2. Update i18n (UI translations)
+      i18n.changeLanguage(lang);
+      setSelectedLanguage(lang);
+      setIsLanguageSelectOpen(false);
+
+      // 3. Reload page to get courses filtered by new language
+      // Backend automatically filters courses based on users language
+      window.location.reload();
+
+    } catch (error) {
+      console.error('Failed to update language:', error);
+      
+      // Fallback ==> Still update UI even if backend fails
+      // User can continue using app, language just won't persist
+      i18n.changeLanguage(lang);
+      setSelectedLanguage(lang);
+      setIsLanguageSelectOpen(false);
+    }
   };
 
   const handleProfileClick = () => {

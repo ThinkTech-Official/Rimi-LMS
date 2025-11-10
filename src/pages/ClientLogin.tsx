@@ -38,21 +38,19 @@ const LoginClient: React.FC = () => {
   const { login, loading } = useLogin();
   const { reload } = useAuth();
 
-
   useEffect(() => {
     // page title
-    document.title = 'Agent Training portal - Rimi';
-    
+    document.title = "Agent Training portal - Rimi";
+
     // description
     const metaDescription = document.querySelector('meta[name="description"]');
     if (metaDescription) {
-      metaDescription.setAttribute('content', 
-        'Secure login for rimi agents training portal. Access training and certification programs.'
+      metaDescription.setAttribute(
+        "content",
+        "Secure login for rimi agents training portal. Access training and certification programs."
       );
     }
   }, []);
-
-
 
   const onSubmit: SubmitHandler<LoginFormInput> = async (data) => {
     try {
@@ -60,8 +58,9 @@ const LoginClient: React.FC = () => {
       // await refreshUser();
       await reload();
       navigate("/advisor");
-    } catch(error: any) {
-      const errorMessage = error?.response?.data?.message || error?.message || "Login failed"
+    } catch (error: any) {
+      const errorMessage =
+        error?.response?.data?.message || error?.message || "Login failed";
       triggerNotification({
         type: "error",
         message: errorMessage || t("Login failed"),
@@ -243,12 +242,25 @@ const LoginClient: React.FC = () => {
               {loading ? `${t("Signing In")}...` : t("Sign In")}
             </button>
           </form>
+
+          <div className="text-center mt-4">
+            <Link
+              to="/forgot-password"
+              className="text-sm text-primary font-medium hover:text-indigo-700 hover:underline transition-all"
+            >
+              Forgot Password?
+            </Link>
+          </div>
+
           <p className="text-text-light-2 text-center mt-4">
-                  New to our platform?{" "}
-                  <a href="/signup" className="text-primary font-semibold hover:text-indigo-700 hover:underline transition-all delay-100">
-                    Sign up
-                  </a>
-                </p>
+            New to our platform?{" "}
+            <a
+              href="/signup"
+              className="text-primary font-semibold hover:text-indigo-700 hover:underline transition-all delay-100"
+            >
+              Sign up
+            </a>
+          </p>
         </div>
       </div>
       {NotificationComponent}
