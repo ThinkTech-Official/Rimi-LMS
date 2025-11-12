@@ -1237,7 +1237,7 @@ const EditCourse: React.FC = () => {
               {/* Duration (auto) */}
               <div>
                 <label className="block text-sm font-medium mb-1">
-                  Duration (sec)
+                  {t("Duration")} (sec)
                 </label>
                 <input
                   type="number"
