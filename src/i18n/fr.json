@@ -411,5 +411,7 @@
   "Go to Login Now":"Accédez à la section Connexion.",
   "Name must be at least 2 characters":"Le nom doit comporter au moins 2 caractères.",
   "Supported formats":"Formats pris en charge",
-  "Category name must be unique (case-insensitive)":"Le nom de la catégorie doit être unique (sans tenir compte de la casse)."
+  "Category name must be unique (case-insensitive)":"Le nom de la catégorie doit être unique (sans tenir compte de la casse).",
+  "Edit Category":"Modifier la catégorie",
+  "Logout":"Déconnexion"
 }
