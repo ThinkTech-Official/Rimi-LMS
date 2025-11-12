@@ -40,19 +40,19 @@ const ClientHome = () => {
     useNotification("top-center");
 
   // Safari detection effect
-  useEffect(() => {
-    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+  // useEffect(() => {
+  //   const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 
-    if (isSafari) {
-      triggerNotification({
-        type: "warning",
-        message: t(
-          "For the best experience, please use Chrome or Firefox browser."
-        ),
-        duration: 8000,
-      });
-    }
-  }, []);
+  //   if (isSafari) {
+  //     triggerNotification({
+  //       type: "warning",
+  //       message: t(
+  //         "For the best experience, please use Chrome or Firefox browser."
+  //       ),
+  //       duration: 8000,
+  //     });
+  //   }
+  // }, []);
   //
 
   // First time category loading leads to default first one
