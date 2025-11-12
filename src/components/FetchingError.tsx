@@ -7,7 +7,7 @@ const FetchingError: React.FC = () => {
   const isClient = url.includes("client");
   const { t } = useTranslation();
   const handleBackToHome = () =>
-    isClient ? navigate("/client") : navigate("/admin/home");
+    isClient ? navigate("/advisor") : navigate("/admin/home");
   return (
     <div className="p-4 fixed w-full left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center max-w-sm sm:max-w-xl ml-6">
       <img src="/Failed.png" alt="Not Found" className="w-24 md:w-32" />

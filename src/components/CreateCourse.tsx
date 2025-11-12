@@ -47,7 +47,7 @@ const CreateCourse: React.FC<CreateCourseProps> = () => {
   } = useCreateCategory();
 
   // langauge
-  const [selectedLanguage, setSelectedLanguage] = useState<string>("en");
+  const [selectedLanguage, setSelectedLanguage] = useState<string>("");
 
   // Duration
   const [duration, setDuration] = useState<number | null>(null);
@@ -69,7 +69,7 @@ const CreateCourse: React.FC<CreateCourseProps> = () => {
       thumbnail: null,
       documents: [],
       category: "",
-      language: "en",
+      language: "",
     },
   });
 
@@ -86,6 +86,16 @@ const CreateCourse: React.FC<CreateCourseProps> = () => {
   const watchedVideo = watch("video");
   const watchedThumbnail = watch("thumbnail");
   const watchedDocuments = watch("documents");
+  const languageButtonRef = useRef<HTMLDivElement>(null);
+  const [isLanguageOpen, setIsLanguageOpen] = useState(false);
+  const languages = [{
+    label:"English",
+    value: "en",
+
+  }, {
+    label:"French",
+    value: "fr",
+  }];
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -94,6 +104,12 @@ const CreateCourse: React.FC<CreateCourseProps> = () => {
         !categoryButtonRef.current.contains(e.target as Node)
       ) {
         setIsCategoryOpen(false);
+      }
+      if (
+        languageButtonRef.current &&
+        !languageButtonRef.current.contains(e.target as Node)
+      ) {
+        setIsLanguageOpen(false);
       }
     };
     document.addEventListener("click", handleClickOutside);
@@ -384,7 +400,7 @@ const CreateCourse: React.FC<CreateCourseProps> = () => {
     data.documents.forEach((file) => {
       formData.append("documents", file);
     });
-
+console.log('selectedLanguage',selectedLanguage)
     try {
       const savedCourse = await createCourse(formData);
       navigate(`/admin/edit-course/${savedCourse.id}`, {
@@ -515,7 +531,7 @@ const CreateCourse: React.FC<CreateCourseProps> = () => {
                       ) : (
                         <div className="flex flex-col sm:flex-row gap-2 sm:items-center">
                           <div
-                            className="relative w-[250px]"
+                            className="relative w-[260px]"
                             ref={categoryButtonRef}
                           >
                             <button
@@ -530,14 +546,14 @@ const CreateCourse: React.FC<CreateCourseProps> = () => {
                                     ? categories.find(
                                         (cat) => cat.id === selectedCategoryId
                                       )?.name
-                                    : "Select Category"
+                                    : t("Select Category")
                                 }`}
                               >
                                 {selectedCategoryId
                                   ? categories.find(
                                       (cat) => cat.id === selectedCategoryId
                                     )?.name
-                                  : "Select Category"}
+                                  : t("Select Category")}
                               </span>
                               <FaAngleDown
                                 className={`ml-2 cusor-pointer transition-transform ${
@@ -642,230 +658,270 @@ const CreateCourse: React.FC<CreateCourseProps> = () => {
 
               {/* Language Dropdown */}
               <div className="flex flex-col">
+                <label>{t("Language")}</label>
+                <Controller
+                  name="language"
+                  control={control}
+                  rules={{ required: "Please select a language" }}
+                  render={({ field }) => (
+                    <>
+                      <div className="flex flex-col sm:flex-row gap-2 sm:items-center">
+                        <div
+                          className="relative w-[260px]"
+                          ref={languageButtonRef}
+                        >
+                          <button
+                            type="button"
+                            className="w-full border border-inputBorder px-3 py-2 focus:border-0 focus:ring-1 focus:ring-primary capitalize flex items-center justify-between text-left text-text-light cursor-pointer"
+                            onClick={() => setIsLanguageOpen((prev) => !prev)}
+                          >
+                            <span
+                              className="capitalize truncate"
+                              title={selectedLanguage || t("Select Language")}
+                            >
+                              {selectedLanguage || t("Select Language")}
+                            </span>
+                            <FaAngleDown
+                              className={`ml-2 cursor-pointer transition-transform ${
+                                isLanguageOpen ? "rotate-180" : ""
+                              }`}
+                            />
+                          </button>
+
+                          {isLanguageOpen && (
+                            <div className="absolute mt-[2px] top-full left-0 w-full bg-white border border-inputBorder shadow-md z-10">
+                              {languages.map((lang) => (
+                                <div
+                                  key={lang.label}
+                                  title={lang.label}
+                                  className={`px-4 py-2 hover:bg-gray-200 text-text-light cursor-pointer capitalize ${
+                                    selectedLanguage === lang.value
+                                      ? "bg-primary text-white hover:bg-gray-200 hover:text-text-light"
+                                      : ""
+                                  }`}
+                                  onClick={() => {
+                                    setSelectedLanguage(lang.value);
+                                    setIsLanguageOpen(false);
+                                    field.onChange(lang.label);
+                                    clearErrors("language");
+                                  }}
+                                >
+                                  {lang.label}
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </>
+                  )}
+                />
+              </div>
+            </div>
+
+            {/* file uploads */}
+            <div className="flex flex-col md:col-span-2">
+              <label className="mb-1 font-medium text-sm text-text-light-2">
+                {t("documents")} ({t("optional")})
+              </label>
+
+              {!watchedDocuments || watchedDocuments.length === 0 ? (
+                <div className="flex flex-col items-start space-y-2">
+                  <p className="text-sm text-gray-500">{t("No files added")}</p>
+                  <label className="inline-block capitalize px-4 py-2 bg-primary text-white cursor-pointer hover:bg-indigo-700 text-sm">
+                    {t("choose file")}
+                    <input
+                      type="file"
+                      multiple
+                      onChange={handleDocsChange}
+                      className="hidden"
+                    />
+                  </label>
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  <ul className="list-disc list-inside text-sm text-gray-700">
+                    {watchedDocuments.map((doc, index) => (
+                      <ul key={index} className="flex gap-1 items-center">
+                        <CiFileOn /> {doc.name} ({(doc.size / 1024).toFixed(1)}{" "}
+                        KB){" "}
+                        <MdCancel
+                          title="Remove File"
+                          className="cursor-pointer"
+                          onClick={() => handleRemoveDoc(index)}
+                        />
+                      </ul>
+                    ))}
+                  </ul>
+                  <label className="inline-block px-4 py-2 bg-primary text-white first-letter:capitalize cursor-pointer hover:bg-indigo-700 text-sm">
+                    {t("choose more files")}
+                    <input
+                      type="file"
+                      multiple
+                      onChange={handleDocsChange}
+                      className="hidden"
+                    />
+                  </label>
+                </div>
+              )}
+              <p className="text-sm text-text-light-2 mt-2">
+                Supported formats: .doc, .docx, .xls, .xlsx, .ppt, .pptx, .pdf,
+                .txt, .rtf, .odt, .ods, .odp, .md, .csv
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+              {/* Add Video */}
+              <div className="flex flex-col">
                 <label className="text-sm text-text-light-2 mb-1 capitalize">
-                  {t("language")}
+                  {t("add video")}
                 </label>
-                <select
-                  value={selectedLanguage}
-                  onChange={(e) => {
-                    setSelectedLanguage(e.target.value);
-                    setValue("language", e.target.value);
-                  }}
-                  className="w-[250px] border border-inputBorder px-3 py-2 focus:outline-none focus:ring-1 focus:ring-primary capitalize"
-                >
-                  <option value="en">English</option>
-                  <option value="fr">Français</option>
-                </select>
-              </div>
+                <Controller
+                  name="video"
+                  control={control}
+                  rules={{
+                    required: "Please select a video",
+                    validate: {
+                      fileType: (file) => {
+                        if (!file) return "Please select a video";
 
-              {/* file uploads */}
-              <div className="flex flex-col md:col-span-2">
-                <label className="mb-1 font-medium text-sm text-text-light-2">
-                  {t("documents")} ({t("optional")})
-                </label>
+                        const validVideoTypes = [
+                          // Common web formats
+                          "video/mp4",
+                          "video/webm",
+                          "video/ogg",
+                          "video/avi",
+                          "video/mov",
+                          "video/wmv",
+                          "video/flv",
+                          "video/mkv",
+                          "video/m4v",
+                          "video/3gp",
+                          "video/3g2",
+                          // iOS specific formats
+                          "video/quicktime",
+                          // Additional formats
+                          "video/x-msvideo", // .avi
+                          "video/x-ms-wmv", // .wmv
+                          "video/x-flv", // .flv
+                          "video/x-matroska", // .mkv
+                        ];
 
-                {!watchedDocuments || watchedDocuments.length === 0 ? (
-                  <div className="flex flex-col items-start space-y-2">
-                    <p className="text-sm text-gray-500">
-                      {t("No files added")}
-                    </p>
-                    <label className="inline-block capitalize px-4 py-2 bg-primary text-white cursor-pointer hover:bg-indigo-700 text-sm">
-                      {t("choose file")}
-                      <input
-                        type="file"
-                        multiple
-                        onChange={handleDocsChange}
-                        className="hidden"
-                      />
-                    </label>
-                  </div>
-                ) : (
-                  <div className="space-y-2">
-                    <ul className="list-disc list-inside text-sm text-gray-700">
-                      {watchedDocuments.map((doc, index) => (
-                        <ul key={index} className="flex gap-1 items-center">
-                          <CiFileOn /> {doc.name} (
-                          {(doc.size / 1024).toFixed(1)} KB){" "}
-                          <MdCancel
-                            title="Remove File"
-                            className="cursor-pointer"
-                            onClick={() => handleRemoveDoc(index)}
-                          />
-                        </ul>
-                      ))}
-                    </ul>
-                    <label className="inline-block px-4 py-2 bg-primary text-white first-letter:capitalize cursor-pointer hover:bg-indigo-700 text-sm">
-                      {t("choose more files")}
-                      <input
-                        type="file"
-                        multiple
-                        onChange={handleDocsChange}
-                        className="hidden"
-                      />
-                    </label>
-                  </div>
-                )}
-                <p className="text-sm text-text-light-2 mt-2">
-                  Supported formats: .doc, .docx, .xls, .xlsx, .ppt, .pptx,
-                  .pdf, .txt, .rtf, .odt, .ods, .odp, .md, .csv
-                </p>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                {/* Add Video */}
-                <div className="flex flex-col">
-                  <label className="text-sm text-text-light-2 mb-1 capitalize">
-                    {t("add video")}
-                  </label>
-                  <Controller
-                    name="video"
-                    control={control}
-                    rules={{
-                      required: "Please select a video",
-                      validate: {
-                        fileType: (file) => {
-                          if (!file) return "Please select a video";
-
-                          const validVideoTypes = [
-                            // Common web formats
-                            "video/mp4",
-                            "video/webm",
-                            "video/ogg",
-                            "video/avi",
-                            "video/mov",
-                            "video/wmv",
-                            "video/flv",
-                            "video/mkv",
-                            "video/m4v",
-                            "video/3gp",
-                            "video/3g2",
-                            // iOS specific formats
-                            "video/quicktime",
-                            // Additional formats
-                            "video/x-msvideo", // .avi
-                            "video/x-ms-wmv", // .wmv
-                            "video/x-flv", // .flv
-                            "video/x-matroska", // .mkv
-                          ];
-
-                          if (!validVideoTypes.includes(file.type)) {
-                            return "Please select a valid video file";
-                          }
-                          return true;
-                        },
+                        if (!validVideoTypes.includes(file.type)) {
+                          return "Please select a valid video file";
+                        }
+                        return true;
                       },
-                    }}
-                    render={({ field }) => (
-                      <label className="flex items-center justify-center h-32 border border-inputBorder cursor-pointer hover:border-primary">
-                        <input
-                          type="file"
-                          accept="video/*,.mp4,.webm,.ogg,.avi,.mov,.wmv,.flv,.mkv,.m4v,.3gp,.3g2"
-                          className="hidden"
-                          onChange={(e) => {
-                            const file = e.target.files?.[0];
-                            if (file) {
-                              // Additional client-side validation
-                              const validExtensions = [
-                                ".mp4",
-                                ".webm",
-                                ".ogg",
-                                ".avi",
-                                ".mov",
-                                ".wmv",
-                                ".flv",
-                                ".mkv",
-                                ".m4v",
-                                ".3gp",
-                                ".3g2",
-                              ];
+                    },
+                  }}
+                  render={({ field }) => (
+                    <label className="flex items-center justify-center h-32 border border-inputBorder cursor-pointer hover:border-primary">
+                      <input
+                        type="file"
+                        accept="video/*,.mp4,.webm,.ogg,.avi,.mov,.wmv,.flv,.mkv,.m4v,.3gp,.3g2"
+                        className="hidden"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            // Additional client-side validation
+                            const validExtensions = [
+                              ".mp4",
+                              ".webm",
+                              ".ogg",
+                              ".avi",
+                              ".mov",
+                              ".wmv",
+                              ".flv",
+                              ".mkv",
+                              ".m4v",
+                              ".3gp",
+                              ".3g2",
+                            ];
 
-                              const fileExtension = file.name
-                                .toLowerCase()
-                                .substring(file.name.lastIndexOf("."));
-                              const isValidExtension =
-                                validExtensions.includes(fileExtension);
+                            const fileExtension = file.name
+                              .toLowerCase()
+                              .substring(file.name.lastIndexOf("."));
+                            const isValidExtension =
+                              validExtensions.includes(fileExtension);
 
-                              if (!isValidExtension) {
-                                // Reset the input
-                                e.target.value = "";
-                                setError("video", {
-                                  type: "manual",
-                                  message: t(
-                                    "Please select a valid video file"
-                                  ),
-                                });
-                                return;
-                              }
+                            if (!isValidExtension) {
+                              // Reset the input
+                              e.target.value = "";
+                              setError("video", {
+                                type: "manual",
+                                message: t("Please select a valid video file"),
+                              });
+                              return;
                             }
+                          }
 
-                            handleVideoChange(e);
-                            field.onChange(file);
-                          }}
-                        />
-                        <span className="text-[#59BDE2] flex items-center gap-4 p-4">
-                          <img src="/VideoUpload.svg" alt="" />
-                          {watchedVideo
-                            ? watchedVideo.name
-                            : t("select file to upload")}
-                        </span>
-                      </label>
-                    )}
-                  />
-                  {duration !== null && (
-                    <p className="text-xs text-text-light-2 mt-2">
-                      Video length: {Math.floor(duration / 60)}min{" "}
-                      {duration % 60}s
-                    </p>
+                          handleVideoChange(e);
+                          field.onChange(file);
+                        }}
+                      />
+                      <span className="text-[#59BDE2] flex items-center gap-4 p-4">
+                        <img src="/VideoUpload.svg" alt="" />
+                        {watchedVideo
+                          ? watchedVideo.name
+                          : t("select file to upload")}
+                      </span>
+                    </label>
                   )}
+                />
+                {duration !== null && (
                   <p className="text-xs text-text-light-2 mt-2">
-                    {t(
-                      "Select single video from your local storage * Max. upto 5Gb per video"
-                    )}
+                    Video length: {Math.floor(duration / 60)}min {duration % 60}
+                    s
                   </p>
-                  {errors.video && (
-                    <p className="text-red-500 text-sm mt-1">
-                      {t(String(errors.video.message))}
-                    </p>
+                )}
+                <p className="text-xs text-text-light-2 mt-2">
+                  {t(
+                    "Select single video from your local storage * Max. upto 5Gb per video"
                   )}
-                </div>
+                </p>
+                {errors.video && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {t(String(errors.video.message))}
+                  </p>
+                )}
+              </div>
 
-                {/* Add Thumbnail */}
-                <div className="flex flex-col">
-                  <label className="text-sm text-text-light-2 mb-1 capitalize">
-                    {t("add thumbnail image")}
-                  </label>
-                  <Controller
-                    name="thumbnail"
-                    control={control}
-                    rules={{ required: "Please select a thumbnail image" }}
-                    render={({ field }) => (
-                      <label className="flex items-center justify-center h-32 border border-inputBorder cursor-pointer hover:border-primary">
-                        <input
-                          type="file"
-                          accept=".png,.jpg,.jpeg,image/png,image/jpeg"
-                          className="hidden"
-                          onChange={handleThumbnailChange}
-                        />
-                        <span className="text-[#59BDE2] flex items-center gap-2">
-                          <MdUpload className="text-[#59BDE2] w-7 h-7" />
-                          {watchedThumbnail
-                            ? watchedThumbnail.name
-                            : t("Please select PNG or JPEG file")}
-                        </span>
-                      </label>
-                    )}
-                  />
-                  <p className="text-xs text-text-light-2 mt-2">
-                    {t(
-                      "Recommended Image Size: 1200px x 1200px, PNG or JPEG file only"
-                    )}
-                  </p>
-                  {errors.thumbnail && (
-                    <p className="text-red-500 text-sm mt-1">
-                      {t(String(errors.thumbnail.message))}
-                    </p>
+              {/* Add Thumbnail */}
+              <div className="flex flex-col">
+                <label className="text-sm text-text-light-2 mb-1 capitalize">
+                  {t("add thumbnail image")}
+                </label>
+                <Controller
+                  name="thumbnail"
+                  control={control}
+                  rules={{ required: "Please select a thumbnail image" }}
+                  render={({ field }) => (
+                    <label className="flex items-center justify-center h-32 border border-inputBorder cursor-pointer hover:border-primary">
+                      <input
+                        type="file"
+                        accept=".png,.jpg,.jpeg,image/png,image/jpeg"
+                        className="hidden"
+                        onChange={handleThumbnailChange}
+                      />
+                      <span className="text-[#59BDE2] flex items-center gap-2">
+                        <MdUpload className="text-[#59BDE2] w-7 h-7" />
+                        {watchedThumbnail
+                          ? watchedThumbnail.name
+                          : t("Please select PNG or JPEG file")}
+                      </span>
+                    </label>
                   )}
-                </div>
+                />
+                <p className="text-xs text-text-light-2 mt-2">
+                  {t(
+                    "Recommended Image Size: 1200px x 1200px, PNG or JPEG file only"
+                  )}
+                </p>
+                {errors.thumbnail && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {t(String(errors.thumbnail.message))}
+                  </p>
+                )}
               </div>
             </div>
           </section>

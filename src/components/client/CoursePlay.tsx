@@ -405,7 +405,7 @@ const CoursePlay = () => {
     return (
       <div className="fixed top-1/2 left-1/2 flex flex-col items-center gap-2">
         <Spinner className="w-10 h-10" />
-        <p>Loading Course...</p>
+        <p>{t("Loading Course")}...</p>
       </div>
     );
   if (errorCourse) return <p>Error: {errorCourse}</p>;
@@ -441,7 +441,7 @@ const CoursePlay = () => {
           onClick={() => navigate(-1)}
           className="text-primary font-medium underline underline-offset-2 flex items-center gap-2 cursor-pointer"
         >
-          &lt; Back To Courses
+          &lt; {t("Back To Courses")}
         </button>
 
         <div className="mt-6 bg-black overflow-hidden relative max-w-[1100px] 2xl:max-w-[1200px]">
