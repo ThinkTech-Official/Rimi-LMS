@@ -728,7 +728,7 @@ const EditCourse: React.FC = () => {
                         className="w-full px-3 py-2 border border-inputBorder focus:outline-none focus:ring focus:ring-primary hidden"
                       />
                       <p className="text-sm text-text-light-2 mt-2">
-                        Supported formats: .doc, .docx, .xls, .xlsx, .ppt,
+                        {t("Supported formats")}: .doc, .docx, .xls, .xlsx, .ppt,
                         .pptx, .pdf, .txt, .rtf, .odt, .ods, .odp, .md, .csv
                       </p>
                     </div>
@@ -871,7 +871,7 @@ const EditCourse: React.FC = () => {
 
       {loading ? (
         <div className="flex flex-col justify-center items-center w-full">
-          <Spinner className="w-6 h-6" /> <p>Loading...</p>
+          <Spinner className="w-6 h-6" /> <p>{t("Loading...")}</p>
         </div>
       ) : error ? (
         <p className="text-red-500">{error}</p>

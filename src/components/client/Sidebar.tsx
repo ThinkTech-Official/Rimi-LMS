@@ -13,7 +13,7 @@ const Sidebar: FC<SidebarProps> = ({ active, setActive }) => (
     <img
       src="/rimilogo.png"
       alt="RIMI logo"
-      className="w-24 h-11 mb-8 object-contain"
+      className="w-24 h-11 mb-8 object-contain cursor-pointer"
     />
     <nav className="space-y-2">
       <button

@@ -408,5 +408,8 @@
   "Password Reset Successful":"Réinitialisation du mot de passe réussie",
   "Your password has been successfully reset. You can now login with your new password.":"Votre mot de passe a été réinitialisé avec succès. Vous pouvez maintenant vous connecter avec votre nouveau mot de passe.",
   "Redirecting to login page...":"Redirection vers la page de connexion...",
-  "Go to Login Now":"Accédez à la section Connexion."
+  "Go to Login Now":"Accédez à la section Connexion.",
+  "Name must be at least 2 characters":"Le nom doit comporter au moins 2 caractères.",
+  "Supported formats":"Formats pris en charge",
+  "Category name must be unique (case-insensitive)":"Le nom de la catégorie doit être unique (sans tenir compte de la casse)."
 }

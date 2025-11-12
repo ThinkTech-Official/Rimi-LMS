@@ -92,9 +92,7 @@ const SignupPage = () => {
 
       triggerNotification({
         type: "success",
-        message: t(
-          "Account created successfully!"
-        ),
+        message: t("Account created successfully!"),
         duration: 3000,
       });
 
@@ -160,7 +158,10 @@ const SignupPage = () => {
             </button>
 
             {isLanguageSelectOpen && (
-              <div className="absolute mt-4 w-24 2xl:w-28 rounded-sm shadow-lg bg-white border border-gray-200 z-10" ref={languageRef}>
+              <div
+                className="absolute mt-4 w-24 2xl:w-28 rounded-sm shadow-lg bg-white border border-gray-200 z-10"
+                ref={languageRef}
+              >
                 <ul className="py-1 text-sm 2xl:text-lg text-gray-700">
                   <li>
                     <button
@@ -196,7 +197,7 @@ const SignupPage = () => {
       <div className="flex min-h-[calc(100vh-60px)]">
         {/* Left Column - Design Section */}
 
-        <div className="w-full p-5 my-auto">
+        <div className="w-full p-5 sm:my-auto">
           <div className="w-full flex items-center justify-center px-0 sm:px-6">
             <div className="w-full max-w-md">
               {/* <div className="flex justify-start px-8 mb-2">
@@ -237,7 +238,7 @@ const SignupPage = () => {
                       id="name"
                       type="text"
                       {...register("name", {
-                        required: "Full name is required",
+                        required: "Name is required",
                         minLength: {
                           value: 2,
                           message: "Name must be at least 2 characters",
@@ -249,7 +250,7 @@ const SignupPage = () => {
 
                     {errors.name && (
                       <p className="text-red-600 text-sm mt-1">
-                        {errors.name.message}
+                       {t(String(errors.name.message))}
                       </p>
                     )}
                   </div>
@@ -283,7 +284,7 @@ const SignupPage = () => {
 
                     {errors.email && (
                       <p className="text-red-600 text-sm mt-1">
-                        {errors.email.message}
+                        {t(String(errors.email.message))}
                       </p>
                     )}
                   </div>
@@ -319,7 +320,7 @@ const SignupPage = () => {
 
                     {errors.agentCode && (
                       <p className="text-red-600 text-sm mt-1">
-                        {errors.agentCode.message}
+                        {t(String(errors.agentCode.message))}
                       </p>
                     )}
                   </div>
@@ -376,7 +377,7 @@ const SignupPage = () => {
 
                     {errors.password && (
                       <p className="text-red-600 text-sm mt-1">
-                        {errors.password.message}
+                       {t(String(errors.password.message))}
                       </p>
                     )}
                   </div>
@@ -423,7 +424,7 @@ const SignupPage = () => {
 
                     {errors.confirmPassword && (
                       <p className="text-red-600 text-sm mt-1">
-                        {errors.confirmPassword.message}
+                        {t(String(errors.confirmPassword.message))}
                       </p>
                     )}
                   </div>
@@ -458,24 +459,28 @@ const SignupPage = () => {
         {/* Right Column - Form Section */}
         <div className="hidden lg:flex xl:w-3/5 bg-gradient-to-br from-primary via-indigo-700 to-indigo-900 relative overflow-hidden">
           {/* Background Image */}
-          <img src="/Signup.png" alt="" className="absolute  object-cover min-w-full" />
+          <img
+            src="/Signup.png"
+            alt=""
+            className="absolute  object-cover min-w-full"
+          />
 
           {/* Content Container */}
           <div className="relative flex flex-col justify-center items-center px-12 text-white w-full">
             <img src="/RIMI.png" alt="rimi" className="mb-5 w-36" />
 
             {/* Main Heading */}
-            <h1 className="text-5xl font-bold text-center mb-6 leading-tight text-white">
-              Welcome to the
-              <br />
-              <span className="text-white">Future of Training</span>
+            <h1 className="text-4xl font-semibold text-center mb-6 leading-tight text-white">
+              <span className="text-white">
+                Welcome to Rimi Advisor Training and Certification Portal
+              </span>
             </h1>
 
             {/* Subheading */}
-            <p className="text-lg text-white/90 text-center max-w-lg leading-relaxed">
+            {/* <p className="text-lg text-white/90 text-center max-w-lg leading-relaxed">
               Join thousands of agents advancing their careers through our
               comprehensive training and certification programs
-            </p>
+            </p> */}
           </div>
         </div>
       </div>

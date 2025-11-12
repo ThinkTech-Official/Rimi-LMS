@@ -54,7 +54,7 @@ export const UserManagement: React.FC = () => {
     return (
       <div className="fixed top-1/2 left-1/2 flex flex-col items-center gap-2">
         <Spinner className="w-10 h-10" />{" "}
-        <p className="text-text-light">{t("Loading…")}</p>
+        <p className="text-text-light">{t("Loading...")}</p>
       </div>
     );
   if (error)

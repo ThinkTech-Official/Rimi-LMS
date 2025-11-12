@@ -765,7 +765,7 @@ console.log('selectedLanguage',selectedLanguage)
                 </div>
               )}
               <p className="text-sm text-text-light-2 mt-2">
-                Supported formats: .doc, .docx, .xls, .xlsx, .ppt, .pptx, .pdf,
+                {t("Supported formats")}: .doc, .docx, .xls, .xlsx, .ppt, .pptx, .pdf,
                 .txt, .rtf, .odt, .ods, .odp, .md, .csv
               </p>
             </div>

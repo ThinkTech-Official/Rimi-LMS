@@ -74,7 +74,7 @@ const ResetPassword: React.FC = () => {
       if (!result.valid) {
         triggerNotification({
           type: "error",
-          message: result.message || t("Invalid or expired reset token"),
+          message: t(String(result.message)) || t("Invalid or expired reset token"),
           duration: 5000,
         });
       }
@@ -259,8 +259,8 @@ const ResetPassword: React.FC = () => {
         </Link>
       </header>
 
-      <div className="flex items-center justify-center px-4 min-h-[calc(100vh-64px)]">
-        <div className="w-full max-w-md bg-white p-6 sm:p-8 border border-[#E9EEF1] shadow-lg text-center">
+      <div className="flex items-center justify-center p-4 min-h-[calc(100vh-64px)]">
+        <div className="w-full max-w-md bg-white p-6 sm:p-8 border border-[#E9EEF1] shadow-lg">
           <h2 className="text-center text-xl  sm:text-2xl font-bold text-text-dark mb-4">
             {t("Create New Password")}
           </h2>

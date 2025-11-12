@@ -68,7 +68,7 @@ const ClientLayout: React.FC = () => {
                 <img
                   src="/rimilogo.png"
                   alt="RIMI"
-                  className="h-11 w-[100px] ml-4 mt-[10px]"
+                  className="h-11 w-[100px] ml-4 mt-[10px] cursor-pointer"
                   onClick= {handleLogoClick}
                 />
                 <ChevronLeftIcon
