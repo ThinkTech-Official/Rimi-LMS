@@ -14,7 +14,7 @@ import { useAdminUpdateCourseBasic } from "../hooks/useAdminUpdateCourseBasic";
 import { useAdminDeleteCourse } from "../hooks/useAdminDeleteCourse";
 import { formatTime } from "../hooks/useFetchCourses";
 import { CiFileOn } from "react-icons/ci";
-import { MdCancel, MdOutlineFileDownload } from "react-icons/md";
+import { MdCancel, MdClose, MdOutlineFileDownload } from "react-icons/md";
 import FetchingError from "./FetchingError";
 import { useToggleCoursePublish } from "../hooks/useToggleCoursePublish";
 
@@ -507,6 +507,10 @@ const EditCourse: React.FC = () => {
       });
     }
   };
+
+  useEffect(() => {
+    document.body.style.overflow = isBasicModalOpen ? "hidden" : "";
+  }, [isBasicModalOpen]);
 
   if (error || basicInfoError) {
     return <FetchingError />;
@@ -1096,7 +1100,12 @@ const EditCourse: React.FC = () => {
       {/* Basic COurse Info Editing MOdal  */}
       {isBasicModalOpen && (
         <div className="fixed inset-0 h-screen bg-black/10 bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white m-3 shadow-md p-3 sm:p-6 w-full max-w-lg max-h-[90%] overflow-y-auto custom-scrollbar3">
+          <div className="relative bg-white m-3 shadow-md p-3 sm:p-6 w-full max-w-lg max-h-[90%] overflow-y-auto custom-scrollbar3">
+            <MdClose
+              onClick={() => setIsBasicModalOpen(false)}
+              className="absolute top-3 right-3 cursor-pointer text-text-light-2 hover:text-text-dark"
+              size={24}
+            />
             <h3 className="text-lg font-semibold mb-4 text-text-dark">
               {t("Edit Course Details")}
             </h3>

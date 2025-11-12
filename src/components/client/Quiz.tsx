@@ -146,7 +146,7 @@ const Quiz: FC<QuizProps> = ({
               <span>
                 {t("Score")} : {((correctCount / questions.length) * 100).toFixed(2)}%
               </span>
-              <span>{t("Progress")}</span>
+              <span className="capitalize">{t("progress")}</span>
             </div>
           </div>
           {passed ? (
@@ -163,7 +163,7 @@ const Quiz: FC<QuizProps> = ({
             <div className="flex flex-col gap-1 items-center mt-2">
               <PiSmileySad className="text-[#797878] w-8 h-8" />
               <span className="text-lg text-[#CD4947] font-semibold">
-                {t("You Didn’t Pass This Time")}
+                {t("You Didn't Pass This Time")}
               </span>
               <p className="text-base text-[#747474] text-center">
                 {t("Don't worry! You can rewatch the video and try the quiz again to move forward.")}

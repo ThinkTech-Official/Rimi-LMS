@@ -63,7 +63,7 @@ const LoginClient: React.FC = () => {
         error?.response?.data?.message || error?.message || "Login failed";
       triggerNotification({
         type: "error",
-        message: errorMessage || t("Login failed"),
+        message: t(errorMessage) || t("Login failed"),
         duration: 3000,
       });
     }
@@ -142,7 +142,7 @@ const LoginClient: React.FC = () => {
             <img
               src="/rimilogo.png"
               alt="RIMI Logo"
-              className="h-12 w-32 sm:h-[75px] sm:w-40"
+              className="h-14 w-32 sm:h-[75px] sm:w-40"
             />
           </div>
           <h3 className="text-center text-base font-semibold text-primary mb-4">
@@ -248,12 +248,12 @@ const LoginClient: React.FC = () => {
               to="/forgot-password"
               className="text-sm text-primary font-medium hover:text-indigo-700 hover:underline transition-all"
             >
-              Forgot Password?
+              {t("Forgot Password?")}
             </Link>
           </div>
 
           <p className="text-text-light-2 text-center mt-4">
-            New to our platform?{" "}
+            {t("New to our platform?")}{" "}
             <a
               href="/signup"
               className="text-primary font-semibold hover:text-indigo-700 hover:underline transition-all delay-100"

@@ -54,7 +54,7 @@ const LoginAdmin: React.FC = () => {
       const errorMessage = error?.response?.data?.message || error?.message || "Login failed"
       triggerNotification({
         type: "error",
-        message: errorMessage || t("Login failed"),
+        message: t(errorMessage) || t("Login failed"),
         duration: 3000,
       });
     }

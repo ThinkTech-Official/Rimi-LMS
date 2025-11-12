@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 import { useForm } from "react-hook-form";
 import type { SubmitHandler } from "react-hook-form";
@@ -86,39 +86,48 @@ const SignupPage = () => {
   //   }
   // };
 
-
   const onSubmit: SubmitHandler<SignupFormInput> = async (data) => {
-  try {
-    const response = await signup(data);
-    
-    
-    triggerNotification({
-      type: "success",
-      message: t("Account created successfully! Redirecting to login page..."),
-      duration: 3000, 
-    });
+    try {
+      const response = await signup(data);
 
-   
-    setTimeout(() => {
-      navigate("/"); 
-    }, 3000); 
+      triggerNotification({
+        type: "success",
+        message: t(
+          "Account created successfully!"
+        ),
+        duration: 3000,
+      });
 
-  } catch (error: any) {
-    const errorMessage =
-      error?.response?.data?.message || error?.message || "Signup failed";
-    triggerNotification({
-      type: "error",
-      message: errorMessage || t("Signup failed"),
-      duration: 4000, 
-    });
-  }
-};
-
-
+      setTimeout(() => {
+        navigate("/");
+      }, 3000);
+    } catch (error: any) {
+      const errorMessage =
+        error?.response?.data?.message || error?.message || "Signup failed";
+      triggerNotification({
+        type: "error",
+        message: errorMessage || t("Signup failed"),
+        duration: 4000,
+      });
+    }
+  };
+  const languageRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (
+        languageRef.current &&
+        !languageRef.current.contains(e.target as Node)
+      ) {
+        setIsLanguageSelectOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
   return (
     <div className="min-h-screen bg-white">
       {/* Header */}
-      <header className="bg-white border-b border-gray-200 flex items-center justify-end px-6 sm:px-14 space-x-4 py-4 gap-3">
+      <header className="bg-white border-b border-gray-200 flex items-center justify-end px-6 sm:px-14 space-x-4 py-4 gap-3 z-50">
         <div className="flex gap-6 items-center">
           <div className="relative">
             <button
@@ -151,7 +160,7 @@ const SignupPage = () => {
             </button>
 
             {isLanguageSelectOpen && (
-              <div className="absolute mt-4 w-24 2xl:w-28 rounded-sm shadow-lg bg-white border border-gray-200 z-10">
+              <div className="absolute mt-4 w-24 2xl:w-28 rounded-sm shadow-lg bg-white border border-gray-200 z-10" ref={languageRef}>
                 <ul className="py-1 text-sm 2xl:text-lg text-gray-700">
                   <li>
                     <button
@@ -184,34 +193,39 @@ const SignupPage = () => {
       </header>
       {/* Main Content */}
 
-      <div className="flex min-h-screen my-6 mx-4 sm:mx-10 border border-gray-300  shadow-lg">
+      <div className="flex min-h-[calc(100vh-60px)]">
         {/* Left Column - Design Section */}
 
-        <div className="w-full sm:p-5">
-          <div className="w-full flex items-center justify-center px-0 sm:px-6 py-8">
+        <div className="w-full p-5 my-auto">
+          <div className="w-full flex items-center justify-center px-0 sm:px-6">
             <div className="w-full max-w-md">
-              {/* Mobile logo */}
-
-              <div className="flex justify-start px-8 mb-2">
+              {/* <div className="flex justify-start px-8 mb-2">
                 <img
                   src="/rimilogo.png"
                   alt="RIMI Logo"
-                  className="h:12 w-28 sm:h-16 sm:w-32"
+                  className="h:12 w-28 sm:h-16 sm:w-32 absolute left-16"
                 />
-              </div>
+              </div> */}
 
-              <div className="bg-white p-8 pt-4 sm:pt-8">
-                <div className="mb-8">
-                  <h2 className="text-2xl font-bold text-text-dark">
+              <div className="bg-white">
+                <div className="mb-3 lg:hidden">
+                  <img
+                    src="/rimilogo.png"
+                    alt="RIMI Logo"
+                    className="h:12 w-24 sm:h-16 sm:w-32"
+                  />
+                </div>
+                <div className="mb-4 sm:mb-8">
+                  <h2 className="text-xl sm:text-2xl font-bold text-text-dark">
                     {t("Create Your Account")}
                   </h2>
 
-                  <p className="text-text-light-2 text-base">
+                  <p className="text-text-light-2 text-sm sm:text-base">
                     {t("Join as an advisor and start your journey")}
                   </p>
                 </div>
 
-                <form className="space-y-3">
+                <form className="space-y-2 sm:space-y-3">
                   {/* Full Name */}
 
                   <div>
@@ -442,45 +456,23 @@ const SignupPage = () => {
           </div>
         </div>
         {/* Right Column - Form Section */}
-        <div className="hidden lg:flex lg:w-3/5 bg-gradient-to-br from-primary via-indigo-700 to-indigo-900 relative overflow-hidden z-0">
-          {/* Animated Background Elements */}
+        <div className="hidden lg:flex xl:w-3/5 bg-gradient-to-br from-primary via-indigo-700 to-indigo-900 relative overflow-hidden">
+          {/* Background Image */}
+          <img src="/Signup.png" alt="" className="absolute  object-cover min-w-full" />
 
-          {/* <div className="absolute inset-0">
-            <div className="absolute top-1/4 left-10 w-72 h-72 bg-purple-500 opacity-20 rounded-full blur-3xl animate-pulse"></div>
+          {/* Content Container */}
+          <div className="relative flex flex-col justify-center items-center px-12 text-white w-full">
+            <img src="/RIMI.png" alt="rimi" className="mb-5 w-36" />
 
-            <div
-              className="absolute bottom-1/4 right-10 w-96 h-96 bg-blue-500 opacity-15 rounded-full blur-3xl animate-pulse"
-              style={{ animationDelay: "1s" }}
-            ></div>
-
-            <div
-              className="absolute top-1/2 left-1/3 w-64 h-64 bg-pink-500 opacity-10 rounded-full blur-3xl animate-pulse"
-              style={{ animationDelay: "2s" }}
-            ></div>
-          </div> */}
-
-          {/* Grid Pattern Overlay */}
-
-          <div
-            className="absolute inset-0 opacity-10"
-            style={{
-              backgroundImage:
-                "linear-gradient(rgba(255,255,255,.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.1) 1px, transparent 1px)",
-
-              backgroundSize: "50px 50px",
-            }}
-          ></div>
-
-          <div className="relative z-10 flex flex-col justify-center items-center px-6 text-white w-full">
-            {/* Main Heading with Animation */}
-
+            {/* Main Heading */}
             <h1 className="text-5xl font-bold text-center mb-6 leading-tight text-white">
               Welcome to the
               <br />
-              <span className="">Future of Training</span>
+              <span className="text-white">Future of Training</span>
             </h1>
 
-            <p className="text-xl text-white text-center mb-16 max-w-lg leading-relaxed">
+            {/* Subheading */}
+            <p className="text-lg text-white/90 text-center max-w-lg leading-relaxed">
               Join thousands of agents advancing their careers through our
               comprehensive training and certification programs
             </p>
