@@ -103,7 +103,7 @@ setCertData(updatedCert);
 
         // 3) Done!
         setStatus("done");
-        navigate("/client/certificates");
+        navigate("/advisor/certificates");
       } catch (err) {
         if (!cancelled) setStatus("error");
       }
