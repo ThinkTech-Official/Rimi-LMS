@@ -413,5 +413,7 @@
   "Supported formats":"Formats pris en charge",
   "Category name must be unique (case-insensitive)":"Le nom de la catégorie doit être unique (sans tenir compte de la casse).",
   "Edit Category":"Modifier la catégorie",
-  "Logout":"Déconnexion"
+  "Logout":"Déconnexion",
+  "Welcome to Rimi Advisor Training and Certification Portal":"Bienvenue sur le portail de formation et de certification des conseillers RIMI",
+  "your.email@example.com":"votre.email@exemple.com"
 }

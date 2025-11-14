@@ -593,6 +593,12 @@ const EditCourse: React.FC = () => {
                       : "—"}
                   </span>
                 </p>
+                <p className="flex flex-col">
+                  <span className="font-medium text-lg">{t("Language")}:</span>{" "}
+                  <span className="text-text-light-2">
+                    {basicCourse.language === "en" ? "English" : "French"}
+                  </span>
+                </p>
                 <p>
                   {basicCourse.videoUrl ? (
                     <a
@@ -1154,7 +1160,7 @@ const EditCourse: React.FC = () => {
               {/* langauge edit */}
               <div>
                 <label className="block text-sm font-medium mb-1 capitalize">
-                  {t("language")}
+                  {t("Language")}
                 </label>
                 <select
                   name="language"

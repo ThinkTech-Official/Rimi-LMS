@@ -139,7 +139,7 @@ const EditTest: React.FC = () => {
     });
   };
 
-   const toggleCorrect = (qid: number, oid: number) => {
+  const toggleCorrect = (qid: number, oid: number) => {
     const updatedQuestions = questions.map((q) => {
       if (q.id === qid) {
         const clicked = q.options.find((o) => o.id === oid);
@@ -394,6 +394,11 @@ const EditTest: React.FC = () => {
                   placeholder={t("start time placeholder")}
                   className="w-full border border-inputBorder px-4 py-3 focus:outline-none focus:ring-1 focus:ring-primary"
                 />
+                {!errors.startTime && (
+                  <p className="text-text-light-2 text-xs">
+                    {t("Course duration")}: {courseDuration}sec
+                  </p>
+                )}
                 {errors.startTime && (
                   <p className="text-red-500 text-xs mt-1">
                     {errors.startTime.message}

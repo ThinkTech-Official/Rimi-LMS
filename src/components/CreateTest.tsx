@@ -248,7 +248,6 @@ const CreateTest: React.FC = () => {
         },
       });
     } catch (error: any) {
-
       const errorMessage =
         error.response?.data?.message ||
         error.response?.data?.error ||

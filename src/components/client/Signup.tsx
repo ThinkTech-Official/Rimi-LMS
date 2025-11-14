@@ -278,7 +278,7 @@ const SignupPage = () => {
                           message: "Invalid email address",
                         },
                       })}
-                      placeholder="your.email@example.com"
+                      placeholder={t("your.email@example.com")}
                       className="w-full bg-white border border-inputBorder px-4 py-2 sm:py-3 focus:border-0 focus:outline-none focus:ring-1 focus:ring-primary text-black/80 placeholder:text-black/50"
                     />
 
@@ -472,7 +472,7 @@ const SignupPage = () => {
             {/* Main Heading */}
             <h1 className="text-4xl font-semibold text-center mb-6 leading-tight text-white">
               <span className="text-white">
-                Welcome to Rimi Advisor Training and Certification Portal
+                {t("Welcome to Rimi Advisor Training and Certification Portal")}
               </span>
             </h1>
 
