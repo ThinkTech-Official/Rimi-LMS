@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 import { useForm } from "react-hook-form";
 import type { SubmitHandler } from "react-hook-form";
@@ -37,6 +37,7 @@ const LoginClient: React.FC = () => {
 
   const { login, loading } = useLogin();
   const { reload } = useAuth();
+  const languageDropdown = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     // page title
@@ -81,11 +82,26 @@ const LoginClient: React.FC = () => {
     setSelectedLanguage(lang);
     setIsLanguageSelectOpen(false);
   };
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (
+        languageDropdown.current &&
+        !languageDropdown.current.contains(e.target as Node)
+      ) {
+        setIsLanguageSelectOpen(false);
+      }
+    };
+    document.addEventListener("click", handleClickOutside);
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, []);
   return (
     <div className="min-h-screen">
       <header className="bg-white border-b border-[#E9EEF1] flex items-center justify-end px-6 sm:px-14 space-x-4 py-4 gap-3">
         <div className="flex gap-6 items-center">
-          <div className="relative">
+          <div className="relative" ref={languageDropdown}>
             <button
               role="language-btn"
               className="flex items-center gap-2 text-primary text-[16px] 2xl:text-xl font-medium relative cursor-pointer"

@@ -650,7 +650,7 @@ console.log('selectedLanguage',selectedLanguage)
                   )}
                 />
                 {errors.category && (
-                  <p className="text-red-500 text-sm mt-1">
+                  <p className="text-red-500 text-sm">
                     {t(String(errors.category.message))}
                   </p>
                 )}
@@ -716,7 +716,13 @@ console.log('selectedLanguage',selectedLanguage)
                     </>
                   )}
                 />
+                 {errors.language && (
+                <p className="text-red-500 text-sm">
+                  {t(String(errors.language.message))}
+                </p>
+              )}
               </div>
+             
             </div>
 
             {/* file uploads */}

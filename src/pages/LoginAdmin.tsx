@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 import { useAdminAuth, type SignInDto } from "../hooks/useAdminAuth";
 import { useAdminContext } from "../context/AdminContext";
@@ -31,6 +31,7 @@ const LoginAdmin: React.FC = () => {
     formState: { errors },
   } = useForm<SignInDto>();
   const { NotificationComponent, triggerNotification } = useNotification();
+  const languageDropdown = useRef<HTMLDivElement>(null);
   // useEffect(() => {
   //   if (state?.type && state?.message) {
   //     triggerNotification({
@@ -51,7 +52,8 @@ const LoginAdmin: React.FC = () => {
         navigate("/admin/home");
       }
     } catch (error: any) {
-      const errorMessage = error?.response?.data?.message || error?.message || "Login failed"
+      const errorMessage =
+        error?.response?.data?.message || error?.message || "Login failed";
       triggerNotification({
         type: "error",
         message: t(errorMessage) || t("Login failed"),
@@ -72,11 +74,26 @@ const LoginAdmin: React.FC = () => {
     setSelectedLanguage(lang);
     setIsLanguageSelectOpen(false);
   };
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (
+        languageDropdown.current &&
+        !languageDropdown.current.contains(e.target as Node)
+      ) {
+        setIsLanguageSelectOpen(false);
+      }
+    };
+    document.addEventListener("click", handleClickOutside);
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, []);
   return (
     <div className="min-h-screen">
       <header className="bg-white border-b border-[#E9EEF1] flex items-center justify-end px-6 sm:px-14 space-x-4 py-4 gap-3">
         <div className="flex gap-6 items-center">
-          <div className="relative">
+          <div className="relative" ref={languageDropdown}>
             <button
               role="language-btn"
               className="flex items-center gap-2 text-primary text-[16px] 2xl:text-xl font-medium relative cursor-pointer"
