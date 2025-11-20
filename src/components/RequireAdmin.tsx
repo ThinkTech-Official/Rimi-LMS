@@ -16,7 +16,7 @@ export const RequireAdmin: React.FC<RequireAdminProps> = ({ children }) => {
   //  can show a spinner or nothing
   if (loading) {
     return (
-      <div className="fixed flex flex-col gap-2 items-center justify-center top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+      <div className="fixed flex flex-col gap-2 items-center justify-center top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-nowrap">
         <AuthLoader />
         <p>{t("Authenticating")}...</p>
       </div>

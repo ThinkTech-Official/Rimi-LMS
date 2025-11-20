@@ -53,7 +53,7 @@ export const AdminImage: React.FC<AdminImageProps> = ({
   if (loading) {
     return (
       <div
-        className={`${className} bg-gray-300 animate-pulse flex items-center justify-center`}
+        className={`${className} bg-gray-300 animate-pulse w-full xs:w-88`}
       ></div>
     );
   }

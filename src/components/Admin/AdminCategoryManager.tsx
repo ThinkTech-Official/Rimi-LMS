@@ -149,7 +149,7 @@ const AdminCategoryManager: React.FC = () => {
 
       {deleting && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/10">
-          <div className="bg-white text-text-light-2 w-full max-w-md p-6 rounded shadow-lg flex flex-col gap-6">
+          <div className="bg-white text-text-light-2 w-full max-w-md p-6 rounded shadow-lg flex flex-col gap-6 m-2">
             <p>{t("Are you sure you want to delete this category?")}</p>
             <div className="flex gap-2 justify-end">
               <button

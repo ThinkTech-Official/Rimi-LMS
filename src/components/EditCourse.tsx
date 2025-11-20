@@ -164,7 +164,7 @@ const EditCourse: React.FC = () => {
         // invalid files
         triggerNotification({
           type: "error",
-          message: `Unsuported file type(s)`,
+          message: t("Unsupported file type(s)"),
           duration: 3000,
         });
         return;
@@ -509,8 +509,8 @@ const EditCourse: React.FC = () => {
   };
 
   useEffect(() => {
-    document.body.style.overflow = isBasicModalOpen ? "hidden" : "";
-  }, [isBasicModalOpen]);
+    document.body.style.overflow = isBasicModalOpen || isUploadModalOpen || isDeleteModalOpen ? "hidden" : "";
+  }, [isBasicModalOpen, isUploadModalOpen, isDeleteModalOpen]);
 
   if (error || basicInfoError) {
     return <FetchingError />;
@@ -1105,8 +1105,8 @@ const EditCourse: React.FC = () => {
 
       {/* Basic COurse Info Editing MOdal  */}
       {isBasicModalOpen && (
-        <div className="fixed inset-0 h-screen bg-black/10 bg-opacity-50 flex items-center justify-center z-50">
-          <div className="relative bg-white m-3 shadow-md p-3 sm:p-6 w-full max-w-lg max-h-[90%] overflow-y-auto custom-scrollbar3">
+        <div className="fixed inset-0 h-screen bg-black/10 bg-opacity-50 flex sm:items-center justify-center z-50">
+          <div className="relative bg-white mx-3 mt-10 shadow-md p-3 sm:p-6 w-full max-w-lg max-h-[70vh] sm:max-h-[90vh] overflow-y-auto custom-scrollbar3">
             <MdClose
               onClick={() => setIsBasicModalOpen(false)}
               className="absolute top-3 right-3 cursor-pointer text-text-light-2 hover:text-text-dark"

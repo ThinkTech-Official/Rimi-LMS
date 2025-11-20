@@ -52,7 +52,7 @@ export const UserManagement: React.FC = () => {
 
   if (loading)
     return (
-      <div className="fixed top-1/2 left-1/2 flex flex-col items-center gap-2">
+      <div className="fixed flex flex-col gap-2 items-center justify-center top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-nowrap">
         <Spinner className="w-10 h-10" />{" "}
         <p className="text-text-light">{t("Loading...")}</p>
       </div>
@@ -189,7 +189,7 @@ export const UserManagement: React.FC = () => {
                 style={{ border: "1px solid #AAA9A9" }}
               >
                 {users.length == 0 ? (
-                  <p className="p-2 text-red-500">
+                  <p className="p-2 text-red-500 text-nowrap text-sm sm:text-base">
                     {t("Users with the name")} "{search}" {t("not found")}.
                   </p>
                 ) : (

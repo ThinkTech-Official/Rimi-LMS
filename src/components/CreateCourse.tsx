@@ -355,7 +355,7 @@ const CreateCourse: React.FC<CreateCourseProps> = () => {
         // invalid files
         triggerNotification({
           type: "error",
-          message: `Unsuported file type(s)`,
+          message: t("Unsupported file type(s)"),
           duration: 3000,
         });
         return;

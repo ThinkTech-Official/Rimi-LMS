@@ -94,7 +94,7 @@ const ClientProfile: React.FC = () => {
   };
   if (loadingProfile)
     return (
-      <div className="fixed top-1/2 left-1/2 flex flex-col items-center gap-2">
+      <div className="fixed flex flex-col gap-2 items-center justify-center top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-nowrap">
         <Spinner className="w-10 h-10" /> <p>{t("Loading profile")}…</p>
       </div>
     );

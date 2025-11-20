@@ -417,5 +417,6 @@
   "Welcome to Rimi Advisor Training and Certification Portal":"Bienvenue sur le portail de formation et de certification des conseillers RIMI",
   "your.email@example.com":"votre.email@exemple.com",
   "No courses found.":"Aucun cours trouvé.",
-  "Please select a language":"Veuillez sélectionner une langue"
+  "Please select a language":"Veuillez sélectionner une langue",
+  "Unsupported file type(s)":"Types de fichiers non pris en charge"
 }

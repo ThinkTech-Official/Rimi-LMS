@@ -46,7 +46,7 @@ export const GenerateCertificatePage: React.FC = () => {
 
   return (
     <div className="p-8">
-      <div className="flex flex-col justify-center items-center gap-3 fixed top-1/2 left-1/2">
+      <div className="fixed flex flex-col gap-2 items-center justify-center top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-nowrap">
         <SquareLoader />
         <p>{t("Processing Certificate")}...</p>
         <p>{t("Do not go back or close this page.")}</p>
