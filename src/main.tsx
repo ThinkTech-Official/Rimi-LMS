@@ -41,6 +41,7 @@ import i18n from "./i18n/i18.ts";
 import SignupPage from "./components/client/Signup.tsx";
 import ForgotPassword from "./components/client/Forgotpassword.tsx";
 import ResetPassword from "./components/client/Resetpassword.tsx";
+import VideoPlay from "./components/client/VideoPlay.tsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -49,8 +50,8 @@ const router = createBrowserRouter(
       <Route path="/" element={<LoginClient />} />
       <Route path="/signup" element={<SignupPage />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
-      <Route path="/reset-password" element={<ResetPassword />} /> 
-      
+      <Route path="/reset-password" element={<ResetPassword />} />
+
       <Route path="/adminlogin" element={<LoginAdmin />} />
 
       {/* Admin-only routes */}
@@ -118,6 +119,7 @@ const router = createBrowserRouter(
             element={<GenerateCertificatePage />}
           />
         </Route>
+        <Route path="/video/:id" element={<VideoPlay />} />
       </Route>
       <Route path="*" element={<NotFound />} />
     </>

@@ -6,6 +6,7 @@ import { RiProgress3Line } from "react-icons/ri";
 import Spinner from "../loaders/Spinner";
 import { useTranslation } from "react-i18next";
 import { ClientImage } from "../../utils/ClientFileComponents";
+import { EyeIcon } from "@heroicons/react/24/outline";
 
 interface ClientCourseCardProps {
   courseId: any;
@@ -86,6 +87,16 @@ const ClientCourseCard = ({
               )}
             </div>
           </div>
+          {
+            percent === 100 ? (
+              <div 
+                className="absolute top-12 right-3 text-[#6F6B7D] bg-white p-1 rounded-full flex items-center justify-center cursor-pointer"
+                onClick={() => window.open(`/video/${courseId}`, '_blank')}
+              >
+            <EyeIcon className="w-5 h-5 text-[#6F6B7D]"/>
+          </div>
+            ) : null
+          }
         </div>
         <h2 className="text-lg font-semibold text-gray-900 line-clamp-1 first-letter:capitalize">
           {title}
